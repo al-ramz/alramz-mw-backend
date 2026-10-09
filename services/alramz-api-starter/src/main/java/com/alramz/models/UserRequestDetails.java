@@ -1,0 +1,13 @@
+package com.alramz.models;
+
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class UserRequestDetails {
+    private String userId;
+    private String bearerToken;
+}
+

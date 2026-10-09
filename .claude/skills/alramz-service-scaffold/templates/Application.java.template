@@ -1,0 +1,37 @@
+package com.alramz;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+
+@SpringBootApplication
+public class __APP_CLASS__ {
+
+	private static final Logger log = LoggerFactory.getLogger(__APP_CLASS__.class);
+
+	public static void main(String[] args) {
+		SpringApplication.run(__APP_CLASS__.class, args);
+	}
+
+	@Bean
+	ApplicationRunner runner(Environment env) {
+		return args -> {
+			String port = env.getProperty("server.port", "8080");
+			String host = env.getProperty("server.address", "localhost");
+			String appName = env.getProperty("spring.application.name", "unknown");
+			String[] activeProfiles = env.getActiveProfiles();
+			String profile = activeProfiles.length > 0 ? String.join(", ", activeProfiles) : "default";
+			log.info("========================================");
+			log.info("Application:  {}", appName);
+			log.info("Profile:      {}", profile);
+			log.info("Host:         {}", host);
+			log.info("Port:         {}", port);
+			log.info("========================================");
+		};
+	}
+
+}

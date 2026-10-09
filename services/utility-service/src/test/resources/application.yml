@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: utility-service
+  liquibase:
+    change-log: classpath:db/changelog/test/db.changelog-master.yaml
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.H2Dialect
+
+cipher:
+  password: 1234567890123456
+
+# @SpringBootTest boots without a profile, so this file (not application-test.yml) is what tests load.
+# The middleware datasource must be on for DatasourceConfiguration and the audit-log changelog.
+company:
+  datasource:
+    middleware:
+      enabled: true
+      url: jdbc:h2:mem:testdb
+      driverClassName: org.h2.Driver
+      username: sa
+      password:
+      plainPassword: sa
+      startup-validation:
+        enabled: false
+      pool:
+        maximum-pool-size: 5
+        minimum-idle: 1
+
+# FinouxProperties.baseUrl must be non-blank at startup.
+adapter:
+  finoux:
+    base-url: https://finoux-test.example.invalid

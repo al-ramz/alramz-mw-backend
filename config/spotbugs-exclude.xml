@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter
+        xmlns="https://spotbugs.github.io/spotbugs/4.8.3/filter/3"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://spotbugs.github.io/spotbugs/4.8.3/filter/3 https://spotbugs.github.io/spotbugs/4.8.3/filter/3.xsd">
+
+    <Match>
+        <Class name="~.*\*_.*"/>
+    </Match>
+
+    <Match>
+        <Class name="~.*Model.*"/>
+    </Match>
+
+    <Match>
+        <Class name="~.*Api.*"/>
+    </Match>
+
+    <Match>
+        <Class name="~.*Generated.*"/>
+    </Match>
+
+</FindBugsFilter>

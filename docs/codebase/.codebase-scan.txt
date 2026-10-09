@@ -1,0 +1,360 @@
+
+=== DIRECTORY TREE (max depth 3, source files only) ===
+.DS_Store
+.claude
+.claude/plans
+.claude/plans/reference-data-generic-crud-framework.md
+.claude/settings.local.json
+.claude/skills
+.claude/skills/acquire-codebase-knowledge
+.claude/skills/acquire-codebase-knowledge/SKILL.md
+.claude/skills/acquire-codebase-knowledge/assets
+.claude/skills/acquire-codebase-knowledge/references
+.claude/skills/acquire-codebase-knowledge/scripts
+.claude/skills/alramz-service-scaffold
+.claude/skills/alramz-service-scaffold/SKILL.md
+.claude/skills/alramz-service-scaffold/templates
+.github
+.github/API_DOCS_SETUP.md
+.github/DEPLOYMENT-GUIDE.md
+.github/SECRETS.md
+.github/actions
+.github/actions/build-service
+.github/actions/build-service/action.yaml
+.github/actions/deploy-aca
+.github/actions/deploy-aca/action.yaml
+.github/actions/deploy-aks
+.github/actions/deploy-aks/action.yaml
+.github/actions/detect-services
+.github/actions/detect-services/action.yaml
+.github/actions/drift-detect
+.github/actions/drift-detect/action.yaml
+.github/actions/env-config
+.github/actions/env-config/action.yaml
+.github/actions/maven-publish
+.github/actions/maven-publish/action.yml
+.github/actions/maven-static-analysis
+.github/actions/maven-static-analysis/action.yml
+.github/actions/maven-test
+.github/actions/maven-test/action.yml
+.github/actions/smoke-test
+.github/actions/smoke-test/action.yaml
+.github/actions/terraform-validate
+.github/actions/terraform-validate/action.yaml
+.github/config
+.github/config/environments.json
+.github/deployment
+.github/deployment/scripts
+.github/deployment/scripts/render-template.sh
+.github/deployment/templates
+.github/deployment/templates/containerapp-template.yaml
+.github/deployment/templates/kubernetes
+.github/docker
+.github/docker/Dockerfile
+.github/secret-sync-map.json
+.github/service-deployment-catalogue
+.github/service-deployment-catalogue/service-register.yml
+.github/workflows
+.github/workflows/api-docs-deploy.yml
+.github/workflows/api-spec-sync.yml
+.github/workflows/cicd.yml
+.github/workflows/feature-deploy-fast.yml
+.github/workflows/feature-deploy.yml
+.github/workflows/pr-validation.yml
+.github/workflows/promote.yml
+.github/workflows/restart-pods.yml
+.github/workflows/rollback.yml
+.github/workflows/sync-secrets-to-keyvault.yml
+.github/workflows/terraform.yml
+.gitignore
+.idea
+.idea/.gitignore
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/jarRepositories.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.kilo
+.kilo/.gitignore
+.kilo/agent-manager.json
+.kilo/kilo.jsonc
+.kilo/package-lock.json
+.kilo/package.json
+.kilo/plans
+.kilo/plans/1786516943408-etrade-validation-plan.md
+.kilo/plans/1786672067039-datasource-framework-plan.md
+.kilo/plans/1786953287166-docker-compose-release-plan.md
+.kilo/plans/1787033168793-github-actions-pipeline-rewrite.md
+.kilo/plans/1788326939754-cicd-multi-env-optimization.md
+.kilo/plans/1788424228983-dfm-onboarding-api-plan.md
+.kilo/plans/1788758816857-rest-api-audit-plan.md
+.kilo/plans/1788761976833-github-code-quality-governance.md
+.kilo/plans/1788862234195-seqlog-integration.md
+.kilo/plans/1789062829390-multienvironment-kustomize-argocd-plan.md
+.kilo/plans/1789549855315-aop-method-execution-logger.md
+.kilo/plans/1789557426077-reference-data-framework-plan.md
+.kilo/plans/1789981972784-register-consumer-fields.md
+.kilo/plans/1790093600900-reference-data-service-plan.md
+.kilo/plans/1790160488029-azure-managed-redis-cache-plan.md
+.kilo/plans/remove-language-islamicmode.md
+.kilo/worktrees
+.kilo/worktrees/.metadata_never_index
+.kilo/worktrees/carbonated-kookaburra
+.kilo/worktrees/carbonated-kookaburra/.claude
+.kilo/worktrees/carbonated-kookaburra/.github
+.kilo/worktrees/carbonated-kookaburra/.gitignore
+.kilo/worktrees/carbonated-kookaburra/.kilo
+.kilo/worktrees/carbonated-kookaburra/CLAUDE.md
+.kilo/worktrees/carbonated-kookaburra/README.md
+.kilo/worktrees/carbonated-kookaburra/commands.md
+.kilo/worktrees/carbonated-kookaburra/config
+.kilo/worktrees/carbonated-kookaburra/db-seed.sql
+.kilo/worktrees/carbonated-kookaburra/docs
+.kilo/worktrees/carbonated-kookaburra/infra
+.kilo/worktrees/carbonated-kookaburra/k8s
+.kilo/worktrees/carbonated-kookaburra/pom.xml
+.kilo/worktrees/carbonated-kookaburra/release
+.kilo/worktrees/carbonated-kookaburra/scripts
+.kilo/worktrees/carbonated-kookaburra/services
+.kilo/worktrees/meowing-tarascosaurus
+.kilo/worktrees/meowing-tarascosaurus/.claude
+.kilo/worktrees/meowing-tarascosaurus/.github
+.kilo/worktrees/meowing-tarascosaurus/.gitignore
+.kilo/worktrees/meowing-tarascosaurus/.kilo
+.kilo/worktrees/meowing-tarascosaurus/CLAUDE.md
+.kilo/worktrees/meowing-tarascosaurus/README.md
+.kilo/worktrees/meowing-tarascosaurus/commands.md
+.kilo/worktrees/meowing-tarascosaurus/config
+.kilo/worktrees/meowing-tarascosaurus/db-seed.sql
+.kilo/worktrees/meowing-tarascosaurus/docs
+.kilo/worktrees/meowing-tarascosaurus/infra
+.kilo/worktrees/meowing-tarascosaurus/k8s
+.kilo/worktrees/meowing-tarascosaurus/pom.xml
+.kilo/worktrees/meowing-tarascosaurus/release
+.kilo/worktrees/meowing-tarascosaurus/scripts
+.kilo/worktrees/meowing-tarascosaurus/services
+.kilo/worktrees/pie-maraca
+.kilo/worktrees/pie-maraca/.github
+.kilo/worktrees/pie-maraca/.gitignore
+.kilo/worktrees/pie-maraca/.kilo
+.kilo/worktrees/pie-maraca/README.md
+.kilo/worktrees/pie-maraca/docs
+.kilo/worktrees/pie-maraca/infra
+.kilo/worktrees/pie-maraca/pom.xml
+.kilo/worktrees/pie-maraca/services
+.kilo/worktrees/superb-sagittarius
+.kilo/worktrees/superb-sagittarius/.github
+.kilo/worktrees/superb-sagittarius/.gitignore
+.kilo/worktrees/superb-sagittarius/.kilo
+.kilo/worktrees/superb-sagittarius/README.md
+.kilo/worktrees/superb-sagittarius/docs
+.kilo/worktrees/superb-sagittarius/infra
+.kilo/worktrees/superb-sagittarius/services
+.tmp
+.vscode
+.vscode/launch.json
+.vscode/settings.json
+CLAUDE.md
+README.md
+commands.md
+config
+config/checkstyle.xml
+config/pmd.xml
+config/spotbugs-exclude.xml
+db-seed.sql
+docs
+docs/LOCAL-SETUP.md
+docs/QUICK-START.md
+docs/cicd.svg
+docs/codebase
+docs/codebase/.codebase-scan.txt
+docs/finalCloudFlocusedComponentDiagram-v-0-0-1.svg
+docs/templates
+docs/templates/docs.html
+docs/templates/index.html
+docs/virtual-network-strategy.svg
+e2e
+e2e/alramz-onbaording-apis-uie.postman_collection.json
+e2e/local.postman_environment.json
+infra
+infra/aks.md
+infra/environments
+infra/environments/dev.tfvars
+infra/environments/preprod.tfvars
+infra/environments/prod.tfvars
+infra/environments/qa.tfvars
+infra/environments/shared-platform.tfvars
+infra/management-tools
+infra/management-tools/docker-compose.yaml
+infra/modules
+infra/modules/acr
+infra/modules/acr/main.tf
+infra/modules/acr/outputs.tf
+infra/modules/acr/variables.tf
+infra/modules/acr/versions.tf
+infra/modules/aks
+infra/modules/aks/main.tf
+infra/modules/aks/outputs.tf
+infra/modules/aks/variables.tf
+infra/modules/aks/versions.tf
+infra/modules/apim
+infra/modules/apim/main.tf
+
+=== STACK DETECTION (manifest files) ===
+
+--- pom.xml ---
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.alramz</groupId>
+    <artifactId>alramz-mw-oss</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>alramz-mw-oss</name>
+    <description>Al Ramz Microservices Workspace</description>
+
+    <modules>
+        <module>services/alramz-common-bom</module>
+        <module>services/alramz-api-starter</module>
+        <module>services/data-validation-service</module>
+        <module>services/alramz-notification-service</module>
+        <module>services/reference-data-service</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+
+=== ENTRY POINTS ===
+No common entry points found. Check 'main' or 'scripts.start' in manifest files above.
+
+=== LINTING AND FORMATTING CONFIG ===
+No linting or formatting config files found in project root.
+
+=== ENVIRONMENT VARIABLE TEMPLATES ===
+No .env.example or .env.template found. Identify required environment variables by searching the code and config for environment variable reads.
+
+=== TODO / FIXME / HACK (production code only, test dirs excluded) ===
+.kilo/worktrees/pie-maraca/services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:300: //TODO sendNotification(invalidSchedulingJobs, rejectedSchedulingJobs);
+.kilo/worktrees/meowing-tarascosaurus/services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:394: //TODO sendNotification(invalidSchedulingJobs, rejectedSchedulingJobs);
+.kilo/worktrees/carbonated-kookaburra/services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:394: //TODO sendNotification(invalidSchedulingJobs, rejectedSchedulingJobs);
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:28: TODO_LIMIT = 60
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:320: return todos[:TODO_LIMIT]
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:617: # TODOs
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+.claude/skills/acquire-codebase-knowledge/scripts/scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:394: //TODO sendNotification(invalidSchedulingJobs, rejectedSchedulingJobs);
+
+=== GIT RECENT COMMITS (last 20) ===
+359e12a Scheduled Jobs for Cache Upload
+d4a8dee Reference Data Service
+b5c4c9d Scafolded reference-data-service
+5b10064 Update LoggingExceptionHandler.java
+7f1a80b Db chnaged
+67f89f0 ReferenceData --> GlobalConfigurationSettings
+f17b084 Updated Compose for local azure stack
+1e7effd Cosmetic Changes
+3dcaf80 Update docs.html
+02af426 Update docs.html
+b4e4355 Update docs.html
+2786826 Add logout button to API documentation
+ea33a07 Fix spec file path resolution - correct directory structure
+b53db96 Fix YAML multiline syntax - use run: | for heredoc
+8c483ca Fix YAML syntax error in manifest injection step
+89b3111 Fix API manifest injection - use Python for proper JSON handling
+8ef5c72 Fix GitHub Actions output format for JSON specs
+0052cb4 Fix workflow secrets handling - use environment variables in if conditions
+61707f3 Fix GitHub workflow if condition syntax
+87f115f Fix GitHub workflow secrets syntax errors
+
+=== HIGH-CHURN FILES (last 90 days, top 20) ===
+  61 services/data-validation-service/src/main/java/com/alramz/DataValidationServiceApplication.java
+  49 .github/workflows/cicd.yml
+  18 services/data-validation-service/apiCollection.http
+  15 .github/actions/deploy-aca/action.yaml
+  14 services/alramz-api-starter/pom.xml
+  14 infra/environments/dev.tfvars
+  14 .github/workflows/sync-secrets-to-keyvault.yml
+  13 README.md
+  13 services/data-validation-service/pom.xml
+  12 .github/workflows/api-docs-deploy.yml
+  12 infra/stacks/dev/main.tf
+  12 .github/workflows/terraform.yml
+  11 .gitignore
+  10 services/data-validation-service/src/main/resources/application-dev.yml
+  10 services/data-validation-service/specs/apiSpecs.yaml
+  10 services/data-validation-service/src/main/java/com/alramz/controllers/DataValidationController.java
+  10 services/alramz-common-bom/pom.xml
+  10 .github/service-deployment-catalogue/dev.yml
+   9 services/data-validation-service/src/main/resources/application.yml
+   9 .github/workflows/deploy-qa.yml
+
+=== MONOREPO SIGNALS ===
+Sub-package directory found: services/
+
+=== CODE METRICS ===
+Total files scanned: 2253
+Total lines of code: 70670
+
+Files by language:
+  Other: 1440
+  Java: 809
+  JavaScript: 3
+  Python: 1
+
+Top 10 largest files:
+infra/stacks/dev/.terraform/providers/registry.terraform.io/hashicorp/azurerm/4.81.0/darwin_arm64/terraform-provider-azurerm_v4.81.0_x5: 224431.1KB
+infra/stacks/dev/.terraform/providers/registry.terraform.io/hashicorp/external/2.4.1/darwin_arm64/terraform-provider-external_v2.4.1_x5: 16857.2KB
+logs/data-validation-service.log: 2710.5KB
+services/reference-data-service/logs/reference-data-service.log: 2506.1KB
+logs/reference-data-service.log: 2329.6KB
+services/data-validation-service/logs/data-validation-service.2026-09-17.0.log.gz: 818.8KB
+.kilo/worktrees/meowing-tarascosaurus/services/data-validation-service/logs/onboarding-api-docs.md: 775.2KB
+.kilo/worktrees/carbonated-kookaburra/services/data-validation-service/logs/onboarding-api-docs.md: 775.2KB
+services/data-validation-service/logs/onboarding-api-docs.md: 775.2KB
+logs/data-validation-service.2026-09-17.0.log.gz: 748.0KB
+
+=== CI/CD PIPELINES ===
+CI/CD: GitHub Actions
+
+=== CONTAINERS & ORCHESTRATION ===
+Orchestration: Kubernetes configs found
+
+=== SECURITY & COMPLIANCE ===
+No security configs detected.
+
+=== PERFORMANCE & TESTING ===
+No performance testing configs detected.
+
+=== SCAN COMPLETE ===

@@ -1,0 +1,118 @@
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/docker/db.changelog-master.yaml
+
+server:
+  address: 0.0.0.0
+  port: 8080
+  host: localhost
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+company:
+  redis:
+    deployment:
+      mode: local
+    connection:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
+      timeout: ${REDIS_TIMEOUT:2s}
+    cache:
+      mappings:
+        global-config:
+          table: global_configuration_settings
+          cache-key: alramz:reference-data:v1:global-config
+          reload-strategy: explicit
+          ttl: ${CACHE_TTL:3600s}
+          enabled: true
+  logging:
+    json:
+      enabled: false
+      pretty-print: false
+    correlation-id:
+      response-header: true
+    request:
+      enabled: true
+      include-headers: true
+      include-payload: true
+    response:
+      enabled: true
+      include-payload: true
+    aspect:
+      enabled: true
+    performance:
+      threshold: 1000ms
+    database-logging:
+      enabled: true
+      include-request-payload: true
+      include-response-payload: true
+      cleanup-cron: "0 0 2 * * *"
+      retention-days: 7
+      excluded-paths:
+        - /api/v1/info
+        - /actuator/**
+        - /swagger-ui/**
+        - /v3/api-docs/**
+    seq:
+      enabled: true
+      url: http://seq:80
+  datasource:
+    middleware:
+      enabled: true
+      url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://postgres:5432/alramzmwdb?sslmode=disable}
+      username: ${COMPANY_DATASOURCE_MIDDLEWARE_USERNAME:alramzmw}
+      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD:alramz!321*}
+      driverClassName: ${COMPANY_DATASOURCE_MIDDLEWARE_DRIVERCLASSNAME:org.postgresql.Driver}
+      startup-validation:
+        enabled: ${COMPANY_DATASOURCE_MIDDLEWARE_STARTUP_VALIDATION_ENABLED:false}
+      pool:
+        maximum-pool-size: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MAXIMUM_POOL_SIZE:10}
+        minimum-idle: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MINIMUM_IDLE:2}
+      sql-logging:
+        enabled: false
+    brok:
+      enabled: ${COMPANY_DATASOURCE_BROK_ENABLED:true}
+      url: ${COMPANY_DATASOURCE_BROK_URL:jdbc:oracle:thin:@//172.25.1.218:1521/BROKDEV}
+      username: ${COMPANY_DATASOURCE_BROK_USERNAME:insight}
+      plainPassword: ${COMPANY_DATASOURCE_BROK_PLAINPASSWORD:RAMZ}
+      driverClassName: ${COMPANY_DATASOURCE_BROK_DRIVERCLASSNAME:oracle.jdbc.OracleDriver}
+      startup-validation:
+        enabled: ${COMPANY_DATASOURCE_BROK_STARTUP_VALIDATION_ENABLED:false}
+      pool:
+        maximum-pool-size: ${COMPANY_DATASOURCE_BROK_POOL_MAXIMUM_POOL_SIZE:10}
+        minimum-idle: ${COMPANY_DATASOURCE_BROK_POOL_MINIMUM_IDLE:2}
+      sql-logging:
+        enabled: false
+      oracle:
+        connectTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_CONNECT_TIMEOUT:10000}
+        readTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_READ_TIMEOUT:60000}
+        defaultRowPrefetch: ${COMPANY_DATASOURCE_BROK_ORACLE_DEFAULT_ROW_PREFETCH:100}
+
+  scheduler:
+    management-endpoints:
+      enabled: true
+    pool-size: 5
+    thread-group-name: reference-data-scheduled-tasks
+    thread-name-prefix: ReferenceData-TaskScheduler-Worker-
+
+  jwt:
+    enabled: true
+    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+    login-url: /api/auth/login
+    register-url: /api/auth/register
+    refresh-url: /api/auth/refresh
+    logout-url: /api/auth/logout
+    validate-url: /api/auth/validate
+    permit-all-urls:
+      - /api/v1/info
+
+
+cipher:
+  password: ${CIPHER_PASSWORD:UseMostSecretKey}

@@ -1,0 +1,124 @@
+@baseUrl=http://localhost:8081
+
+@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZWZlcmVuY2VfZGF0YV9hcHAiLCJpYXQiOjE3OTEzNjk4MTYsImV4cCI6MTc5MTM3MDcxNiwicm9sZXMiOlsiQVBQX1JFRkVSRU5DRV9EQVRBIl0sImFwcGxpY2F0aW9uIjoicmVmZXJlbmNlLWRhdGEtc2VydmljZSIsImVudmlyb25tZW50IjoibG9jYWwifQ.CSbDTIllLvN881n6SVDjb8AfABcukO5PNJfth066Soc
+
+###
+GET {{baseUrl}}/api/v1/info
+
+###
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+    "authType": "JWT",
+    "consumer": "reference_data_app",
+    "email": "reference.data@alramz.ae",
+    "consumerPassword": "password123",
+    "roles": ["APP_REFERENCE_DATA"],
+    "application": "reference-data-service",
+    "environment": "local"
+}
+
+###
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "consumer": "reference_data_app",
+    "consumerPassword": "password123"
+}
+
+### Deep Health - Done
+GET {{baseUrl}}/api/v1/health/deep
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get Data From Cache by Key: Done
+GET {{baseUrl}}/api/v1/cache/entries/global-config
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get Cache Status 
+GET {{baseUrl}}/api/v1/cache/entries/global-config/status
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Flush Cache: Done
+DELETE {{baseUrl}}/api/v1/cache/entries/global-config/flush
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Reaload Cache: Done
+POST {{baseUrl}}/api/v1/cache/entries/global-config/reload
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get Relationship Managers
+GET {{baseUrl}}/api/v1/relationship-managers
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get Commissions By Relationship Manager
+POST {{baseUrl}}/api/v1/relationship-managers/commissions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "startDate": "2024-01-01",
+    "endDate": "2024-01-03",
+    "relationshipManagerCodes": ["5000"]
+}
+
+### Get Commissions By Relationship Manager -ve test case
+POST {{baseUrl}}/api/v1/relationship-managers/commissions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "startDate": "20240101",
+    "endDate": "2024-12-31",
+    "relationshipManagerCodes": ["5000"]
+}
+
+### Scheduler Management APIs (requires company.scheduler.management-endpoints.enabled=true)
+
+### Get Scheduler Status
+GET {{baseUrl}}/api/secured/scheduler/stat
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Stop Scheduler
+POST {{baseUrl}}/api/secured/scheduler/stop
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Restart Scheduler
+POST {{baseUrl}}/api/secured/scheduler/restart
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "jobGroupName": "referenceData"
+}
+
+### Restart Scheduler for Specific Jobs
+POST {{baseUrl}}/api/secured/scheduler/refresh/jobs
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "jobGroupName": "referenceData",
+    "jobIds": ["cacheReloadJob"]
+}
+
+### Unregister Jobs
+POST {{baseUrl}}/api/secured/scheduler/unregister/jobs
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+["cacheReloadJob"]
+
+### Hard Stop Scheduler
+POST {{baseUrl}}/api/secured/scheduler/hardstop
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

@@ -1,0 +1,22 @@
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/test/db.changelog-master.yaml
+
+company:
+  datasource:
+    middleware:
+      enabled: true
+      url: jdbc:h2:mem:testdb
+      driverClassName: org.h2.Driver
+      username: sa
+      password:
+      plainPassword: sa
+      startup-validation:
+        enabled: false
+      pool:
+        maximum-pool-size: 5
+        minimum-idle: 1
+      sql-logging:
+        enabled: false
+    brok:
+      enabled: false

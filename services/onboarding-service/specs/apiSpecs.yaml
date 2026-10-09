@@ -1,0 +1,944 @@
+openapi: 3.0.3
+
+info:
+  title: IBAN Validation API
+  version: 1.0.0
+  description: API to validate an IBAN and retrieve bank information.
+
+servers:
+  - url: http://localhost:8080
+    description: Local Development
+  - url: https://api-dev.alramz.com/validation
+    description: Development Environment
+  - url: https://api-test.alramz.com/validation
+    description: Test Environment
+  - url: https://api-preprod.alramz.com/validation
+    description: Pre-Production Environment
+  - url: https://api.alramz.com/validation
+    description: Production Environment
+
+security:
+  - BearerAuth: []
+
+paths:
+  /iban/validate:
+    post:
+      tags:
+        - IBAN
+      summary: Validate IBAN
+      description: Validates an IBAN and returns bank details along with validation results.
+      operationId: validateIBAN
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IBANRequest'
+            example:
+              IBAN: AE460260001015862843301
+
+      responses:
+        '200':
+          description: IBAN validated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  bank_data:
+                    countryISO3: ARE
+                    bic: ADCBAEAAXXX
+                    branch: null
+                    bank: ABU DHABI COMMERCIAL BANK
+                    address: ADCB BUILDING, SALAM STREET
+                    city: ABU DHABI
+                    state: null
+                    zip: "939"
+                    phone: null
+                    fax: null
+                    www: null
+                    email: null
+                    country: United Arab Emirates
+                    country_iso: AE
+                    account: "0012552369920001"
+                    bank_code: "003"
+                    branch_code: ""
+                  validations:
+                    chars:
+                      code: "006"
+                      message: IBAN does not contain illegal characters
+                    account:
+                      code: "004"
+                      message: Account Number check digit is not performed for this bank or branch
+                    iban:
+                      code: "001"
+                      message: IBAN Check digit is correct
+                    structure:
+                      code: "005"
+                      message: IBAN structure is correct
+                    length:
+                      code: "003"
+                      message: IBAN Length is correct
+                    country_support:
+                      code: "007"
+                      message: Country supports IBAN standard
+
+        '401':
+          description: Unauthorized - Missing or invalid JWT bearer token
+
+        '400':
+          description: Invalid request
+
+        '500':
+          description: Internal server error
+
+  /veriphone/verify:
+    post:
+      tags:
+        - VeriPhone
+      summary: Verify phone number
+      description: Validates a phone number and returns phone metadata.
+      operationId: verifyPhone
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneRequest'
+            example:
+              phone: "971502540238"
+      responses:
+        '200':
+          description: Phone verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  status: success
+                  phone: "971502540238"
+                  phone_valid: true
+                  phone_type: mobile
+                  phone_region: United Arab Emirates
+                  country: United Arab Emirates
+                  country_code: AE
+                  country_prefix: "971"
+                  international_number: "971502540238"
+                  local_number: "0502540238"
+                  e164: "971502540238"
+                  carrier: du
+
+        '401':
+          description: Unauthorized - Missing or invalid JWT bearer token
+
+        '400':
+          description: Invalid request
+
+        '500':
+          description: Internal server error
+
+  /existing-data/validation:
+    post:
+      tags:
+        - ExistingData
+      summary: Validate existing data
+      description: Checks if an email, passport, NIN, username, EID, third-party UUID, or mobile number exists in the external system.
+      operationId: validateExistingData
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationRequest'
+            examples:
+              email:
+                summary: Email exists validation
+                value:
+                  validationType: "EMAIL_EXISTS"
+                  referenceNo: "1"
+                  email: "solattupuram@alramz.ae"
+              passport:
+                summary: Passport exists validation
+                value:
+                  validationType: "PASSPORT_EXISTS"
+                  referenceNo: "100"
+                  passportNumber: "XY1152302"
+              nin:
+                summary: NIN exists validation
+                value:
+                  validationType: "NIN_EXISTS"
+                  referenceNo: "200"
+                  nin: "1234567890"
+              username:
+                summary: Username exists validation
+                value:
+                  validationType: "USERNAME_EXISTS"
+                  referenceNo: "300"
+                  username: "yasser1"
+              eid:
+                summary: EID exists validation
+                value:
+                  validationType: "EID_EXISTS"
+                  referenceNo: "400"
+                  eidNumber: "784-1989-0751424-8"
+              tp_uuid:
+                summary: Third-party UUID exists validation
+                value:
+                  validationType: "TP_UUID_EXISTS"
+                  referenceNo: "500"
+                  uuid: "101296594260088743321545352540"
+                  thirdParty: "Google"
+              mobile:
+                summary: Mobile number exists validation
+                value:
+                  validationType: "MOBILE_EXISTS"
+                  referenceNo: "600"
+                  mobileNumber: "971502573881"
+
+      responses:
+        '200':
+          description: Validation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  validationType: "EMAIL_EXISTS"
+                  exists: true
+                  valid: true
+                  message: "Email already exists"
+                  referenceNo: "1"
+
+        '401':
+          description: Unauthorized - Missing or invalid JWT bearer token
+
+        '400':
+          description: Invalid request
+
+        '500':
+          description: Internal server error
+
+  /dfm/onboarding:
+    post:
+      tags:
+        - DFM Onboarding
+      summary: DFM Onboarding
+      description: Processes a DFM customer onboarding request.
+      operationId: onboard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingRequest'
+      responses:
+         '200':
+           description: Onboarding request accepted and persisted
+           content:
+             application/json:
+                schema:
+                  $ref: '#/components/schemas/OnboardingResponse'
+                example:
+                  response_code: "200"
+                  member_reference_number: "550e8400-e29b-41d4-a716-446655440000"
+                  member_client_id: "550e8400-e29b-41d4-a716-446655440000"
+         '401':
+           description: Unauthorized - Missing or invalid JWT bearer token
+           content:
+             application/json:
+                schema:
+                  $ref: '#/components/schemas/OnboardingResponse'
+                example:
+                  response_code: "401"
+                  response_message: "Unauthorized - Invalid or missing JWT bearer token"
+         '400':
+           description: Validation or business failure
+           content:
+             application/json:
+                schema:
+                  $ref: '#/components/schemas/OnboardingResponse'
+                example:
+                  response_code: "400"
+                  response_message: "Email Address (cust_email) is missing"
+                  member_reference_number: "550e8400-e29b-41d4-a716-446655440000"
+                  internal_error_code: "ONB011"
+         '500':
+           description: Internal server error
+           content:
+             application/json:
+                schema:
+                  $ref: '#/components/schemas/OnboardingResponse'
+                example:
+                  response_code: "500"
+                  response_message: "Internal Server Error"
+                  member_reference_number: "550e8400-e29b-41d4-a716-446655440000"
+                  internal_error_code: "ONB011"
+         '503':
+           description: External system unavailable
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer token authentication. Include token in Authorization header.
+
+  schemas:
+    IBANRequest:
+      type: object
+      required:
+        - IBAN
+      properties:
+        IBAN:
+          type: string
+          description: International Bank Account Number
+          minLength: 1
+          maxLength: 30
+          example: AE460260001015862843301
+
+    GenericResponse:
+      type: object
+      required:
+        - responseCode
+        - responseMessage
+        - response
+      properties:
+        responseCode:
+          type: string
+          example: "200"
+
+        responseMessage:
+          type: string
+          example: OK
+
+        response:
+          type: object
+
+        correlationId:
+          type: string
+          format: uuid
+          description: Correlation ID for request tracing
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+    IBANValidationResponse:
+      type: object
+      properties:
+        bank_data:
+          $ref: '#/components/schemas/BankData'
+        sepa_data:
+          $ref: '#/components/schemas/SepaData'
+        validations:
+          $ref: '#/components/schemas/Validations'
+        errors:
+          type: array
+          items:
+            type: object
+
+    SepaData:
+      type: object
+      properties:
+        SCT:
+          type: string
+          example: "NO"
+
+        SDD:
+          type: string
+          example: "NO"
+
+        COR1:
+          type: string
+          example: "NO"
+
+        B2B:
+          type: string
+          example: "NO"
+
+        SCC:
+          type: string
+          example: "NO"
+
+    BankData:
+      type: object
+      properties:
+
+        countryISO3:
+          type: string
+          example: ARE
+
+        bic:
+          type: string
+          example: ADCBAEAAXXX
+
+        branch:
+          type: string
+          nullable: true
+
+        bank:
+          type: string
+          example: ABU DHABI COMMERCIAL BANK
+
+        address:
+          type: string
+          example: ADCB BUILDING, SALAM STREET
+
+        city:
+          type: string
+          example: ABU DHABI
+
+        state:
+          type: string
+          nullable: true
+
+        zip:
+          type: string
+          example: "939"
+
+        phone:
+          type: string
+          nullable: true
+
+        fax:
+          type: string
+          nullable: true
+
+        www:
+          type: string
+          nullable: true
+
+        email:
+          type: string
+          nullable: true
+
+        country:
+          type: string
+          example: United Arab Emirates
+
+        country_iso:
+          type: string
+          example: AE
+
+        account:
+          type: string
+          example: "0012552369920001"
+
+        bank_code:
+          type: string
+          example: "003"
+
+        branch_code:
+          type: string
+          example: ""
+
+    Validations:
+      type: object
+      properties:
+
+        chars:
+          $ref: '#/components/schemas/ValidationResult'
+
+        account:
+          $ref: '#/components/schemas/ValidationResult'
+
+        iban:
+          $ref: '#/components/schemas/ValidationResult'
+
+        structure:
+          $ref: '#/components/schemas/ValidationResult'
+
+        length:
+          $ref: '#/components/schemas/ValidationResult'
+
+        country_support:
+          $ref: '#/components/schemas/ValidationResult'
+
+    ValidationResult:
+      type: object
+      properties:
+
+        code:
+          type: string
+          example: "001"
+
+        message:
+          type: string
+          example: IBAN Check digit is correct
+
+    PhoneRequest:
+      type: object
+      required:
+        - phone
+      properties:
+        phone:
+          type: string
+          minLength: 3
+          maxLength: 15
+          description: Phone number in international format without spaces.
+          example: "971502540238"
+
+    PhoneValidationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+
+        phone:
+          type: string
+          example: "971502540238"
+
+        phone_valid:
+          type: boolean
+          example: true
+
+        phone_type:
+          type: string
+          example: mobile
+
+        phone_region:
+          type: string
+          example: United Arab Emirates
+
+        country:
+          type: string
+          example: United Arab Emirates
+
+        country_code:
+          type: string
+          example: AE
+
+        country_prefix:
+          type: string
+          example: "971"
+
+        international_number:
+          type: string
+          example: "971502540238"
+
+        local_number:
+          type: string
+          example: "0502540238"
+
+        e164:
+          type: string
+          example: "971502540238"
+
+        carrier:
+          type: string
+          example: du
+
+    ValidationRequest:
+      type: object
+      required:
+        - validationType
+        - referenceNo
+      properties:
+        validationType:
+          type: string
+          enum: [EMAIL_EXISTS, PASSPORT_EXISTS, NIN_EXISTS, USERNAME_EXISTS, EID_EXISTS, TP_UUID_EXISTS, MOBILE_EXISTS]
+          description: Type of validation to perform
+        referenceNo:
+          type: string
+          description: Client reference number
+        email:
+          type: string
+          format: email
+          description: Email address to validate (required for EMAIL_EXISTS)
+        passportNumber:
+          type: string
+          description: Passport number to validate (required for PASSPORT_EXISTS)
+        emiratesId:
+          type: string
+          description: Emirates ID to validate (reserved for future)
+        nin:
+          type: string
+          description: National ID to validate (required for NIN_EXISTS)
+        username:
+          type: string
+          description: Username to validate (required for USERNAME_EXISTS)
+        eidNumber:
+          type: string
+          description: Emirates ID number to validate (required for EID_EXISTS)
+        uuid:
+          type: string
+          description: Third-party UUID to validate (required for TP_UUID_EXISTS)
+        thirdParty:
+          type: string
+          description: Third-party provider name (required for TP_UUID_EXISTS)
+        mobileNumber:
+          type: string
+          description: Mobile number to validate (required for MOBILE_EXISTS)
+
+    ValidationResponse:
+      type: object
+      required:
+        - validationType
+        - exists
+        - valid
+        - message
+        - referenceNo
+      properties:
+        validationType:
+          type: string
+        exists:
+          type: boolean
+        valid:
+          type: boolean
+        message:
+          type: string
+        referenceNo:
+          type: string
+
+    OnboardingRequest:
+      type: object
+      required:
+        - securitykey
+        - request_id
+        - cust_mobile
+        - cust_email
+        - cust_nin
+        - fatca_uscitizen
+        - kyc_match
+      properties:
+        securitykey:
+          type: string
+          minLength: 1
+          description: Consumer-issued security/API key
+        request_id:
+          type: string
+          minLength: 1
+          description: Caller-supplied unique request identifier
+        cust_mobile:
+          type: string
+          minLength: 1
+          description: Customer mobile number. 971 prefix is normalized to 00 internally.
+        cust_email:
+          type: string
+          format: email
+          minLength: 1
+          description: Customer email address
+        cust_nin:
+          type: string
+          minLength: 1
+          description: Customer National ID Number
+        eid_dob:
+          type: string
+          format: date
+          description: EID date of birth
+        eid_expirydate:
+          type: string
+          format: date
+          description: EID expiry date
+        eid_fullname:
+          type: string
+          description: Full name as per EID
+        eid_no:
+          type: string
+          minLength: 1
+          description: EID number
+        eid_issuedate:
+          type: string
+          format: date
+          description: EID issue date
+        eid_primaryid:
+          type: string
+          description: EID primary identifier
+        eid_secondaryid:
+          type: string
+          description: EID secondary identifier
+        eid_sex:
+          type: string
+          description: Gender per EID
+        eid_residencyexpirydate:
+          type: string
+          format: date
+          description: Residency expiry date
+        eid_residencynumber:
+          type: string
+          description: Residency number
+        eid_familyid:
+          type: string
+          description: Family ID
+        eid_nationality:
+          type: string
+          description: Nationality code
+        eid_arabicfullname:
+          type: string
+          description: Full name in Arabic as per EID
+        eid_attachment_front:
+          type: string
+          description: Front side of EID image as base64
+        eid_attachment_back:
+          type: string
+          description: Back side of EID image as base64
+        eid_attachment_type:
+          type: string
+          description: MIME/file type of the EID attachment
+        pp_dob:
+          type: string
+          format: date
+          description: Passport date of birth
+        pp_expirydate:
+          type: string
+          format: date
+          description: Passport expiry date
+        pp_fullname:
+          type: string
+          description: Full name as per passport
+        pp_no:
+          type: string
+          description: Passport number
+        pp_nationality:
+          type: string
+          description: Passport nationality code
+        pp_primaryid:
+          type: string
+          description: Passport primary identifier
+        pp_secondaryid:
+          type: string
+          description: Passport secondary identifier
+        pp_sex:
+          type: string
+          description: Gender per passport
+        pp_attachment:
+          type: string
+          description: Passport image as base64
+        pp_attachment_type:
+          type: string
+          description: MIME/file type of the passport attachment
+        pinf_address:
+          type: string
+          description: Address
+        pinf_city:
+          type: string
+          description: City
+        pinf_mothername:
+          type: string
+          description: Mother's full name
+        pinf_pobox:
+          type: string
+          description: PO box
+        pinf_phone:
+          type: string
+          description: Phone number
+        pinf_country:
+          type: string
+          description: Country code
+        pinf_signatureimage:
+          type: string
+          description: Signature image as base64
+        pinf_signatureimage_type:
+          type: string
+          description: MIME/file type of the signature attachment
+        pay_method:
+          type: string
+          description: Preferred payment method
+        pay_aed_iban:
+          type: string
+          description: AED-denominated IBAN
+        pay_usd_iban:
+          type: string
+          description: USD-denominated IBAN
+        pay_frn_iban:
+          type: string
+          description: Foreign-currency IBAN
+        pay_frn_swift:
+          type: string
+          description: SWIFT/BIC code for the foreign-currency account
+        pay_cor_iban:
+          type: string
+          description: Correspondent bank IBAN
+        pay_cor_swift:
+          type: string
+          description: Correspondent bank SWIFT/BIC code
+        pay_routecode:
+          type: string
+          description: Bank routing code
+        portfolio_options:
+          type: string
+          description: Selected portfolio/product options
+        emp_status:
+          type: string
+          description: Employment status
+        emp_name:
+          type: string
+          description: Employer name
+        emp_position:
+          type: string
+          description: Job title / position
+        emp_marketorissuer:
+          type: string
+          description: Flag indicating whether the employer is a market/issuer entity
+        emp_marketorissuer_company:
+          type: string
+          description: Name of the related market/issuer company
+        emp_relatedtomarketemployee:
+          type: string
+          description: Flag indicating whether the customer is related to a market employee
+        emp_relateds:
+          $ref: '#/components/schemas/EmpRelateds'
+          description: Document list of related-persons entries
+        inc_source:
+          type: string
+          description: Source of income
+        inc_range:
+          type: string
+          description: Annual income range/bracket
+        inv_knowledge:
+          type: string
+          description: Extent of investment knowledge
+        inv_strategy:
+          type: string
+          description: Investment strategy
+        inv_instrument:
+          type: string
+          description: Instruments the customer has knowledge of / trades
+        inv_risk:
+          type: string
+          description: Investment risk tolerance
+        inv_amount:
+          type: string
+          description: Intended investment amount
+        inv_knowledge_trading:
+          type: string
+          description: Trading knowledge level
+        inv_knowledge_source:
+          type: string
+          description: Source of investment knowledge
+        inv_education:
+          type: string
+          description: Education level
+        inv_trade_prev:
+          type: string
+          description: Previous trading experience/knowledge
+        inv_trade_freq:
+          type: string
+          description: Expected trading frequency
+        inv_risk_high:
+          type: string
+          description: Acknowledgement of high-risk investment awareness
+        inv_equity:
+          type: string
+          description: Net equity
+        inv_sca:
+          type: string
+          description: Accredited by authority flag
+        inv_sca_authority:
+          type: string
+          description: Accredited by authority list
+        inv_sca_type:
+          type: string
+          description: Accredited by authority type
+        inv_qualified:
+          type: string
+          description: Qualified investor flag
+        csr_resident:
+          type: string
+          description: Indicates whether the customer is tax-resident outside the UAE
+        csr:
+          $ref: '#/components/schemas/Csr'
+          description: Common Reporting Standard (CRS) tax-residency details
+        fatca_uscitizen:
+          type: string
+          minLength: 1
+          description: FATCA US-citizen flag
+        fatca_tin:
+          type: string
+          description: US Taxpayer Identification Number
+        kyc_match:
+          type: string
+          minLength: 1
+          description: Background-check / KYC match result
+        kyc_match_details:
+          $ref: '#/components/schemas/KycMatchDetails'
+          description: Detailed KYC/background-check match information
+
+    EmpRelated:
+      type: object
+      properties:
+        emp_relatednames:
+          type: string
+          description: Full name of the related person
+        emp_related_relations:
+          type: string
+          description: Relationship to the customer
+        emp_related_company:
+           type: string
+           description: Company/employer of the related person
+
+    EmpRelateds:
+      type: object
+      properties:
+        emp_related:
+          type: array
+          description: List of related persons
+          items:
+            $ref: '#/components/schemas/EmpRelated'
+
+    KycMatchDetails:
+      type: object
+      additionalProperties:
+        type: string
+
+    CsrCountries:
+      type: object
+      properties:
+        csr_country:
+          type: string
+          description: Country of tax residency
+        csr_havetin:
+          type: string
+          description: Whether a Tax Identification Number is held for that country
+        csr_tin:
+          type: string
+          description: The TIN value, if held
+        csr_notinreason:
+          type: string
+          description: Reason code for not holding a TIN
+        csr_whynotinissued:
+          type: string
+          description: Explanation for why no TIN was issued
+
+    Csr:
+      type: object
+      properties:
+        csr_countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CsrCountries'
+
+    OnboardingResponse:
+      type: object
+      required:
+        - response_code
+        - member_reference_number
+      properties:
+        response_code:
+          type: string
+          example: "200"
+        response_message:
+          type: string
+          example: OK
+        member_reference_number:
+          type: string
+          format: uuid
+          description: Member reference number for traceability
+        member_client_id:
+          type: string
+          format: uuid
+          description: Member client ID (same as member reference number on success)
+        internal_error_code:
+          type: string
+          description: Internal error code for failures

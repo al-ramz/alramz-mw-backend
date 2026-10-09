@@ -1,0 +1,79 @@
+@baseUrl=http://localhost:8082
+
+### Info
+GET {{baseUrl}}/api/v1/info
+
+###
+
+### Send Email - Simple
+POST {{baseUrl}}/api/v1/email/send
+Content-Type: application/json
+
+{
+    "to": "gtalele@alramz.ae",
+    "subject": "Test Email from Spring Boot",
+    "from": "notification@alramz.ae",
+    "body": "This is a Gaurav test email body."
+}
+
+###
+
+### Send Email - With Attachment
+POST {{baseUrl}}/api/v1/email/send
+Content-Type: application/json
+
+{
+    "to": "recipient@example.com",
+    "subject": "Test Email with Attachment",
+    "from": "sender@example.com",
+    "body": "<h1>Hello</h1><p>Please find the attachment.</p>",
+    "attachments": [
+        {
+            "name": "document.pdf",
+            "content": "base64-encoded-pdf-data"
+        }
+    ]
+}
+
+###
+
+### Scheduler Management APIs (requires company.scheduler.management-endpoints.enabled=true)
+
+### Get Scheduler Status
+GET {{baseUrl}}/api/secured/scheduler/stat
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Stop Scheduler
+POST {{baseUrl}}/api/secured/scheduler/stop
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Restart Scheduler
+POST {{baseUrl}}/api/secured/scheduler/restart
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "jobGroupName": "notification"
+}
+
+### Restart Scheduler for Specific Jobs
+POST {{baseUrl}}/api/secured/scheduler/refresh/jobs
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "jobGroupName": "notification",
+    "jobIds": []
+}
+
+### Unregister Jobs
+POST {{baseUrl}}/api/secured/scheduler/unregister/jobs
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Hard Stop Scheduler
+POST {{baseUrl}}/api/secured/scheduler/hardstop
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

@@ -1,0 +1,9 @@
+com.alramz.logging.config.LoggingAutoConfiguration
+com.alramz.scheduler.config.SchedulerAutoConfiguration
+com.alramz.jwt.config.JwtAutoConfiguration
+com.alramz.datasource.config.EncryptionAutoConfiguration
+com.alramz.datasource.config.MiddlewareDataSourceAutoConfiguration
+com.alramz.datasource.config.BrokDataSourceAutoConfiguration
+com.alramz.datasource.config.IntegrationDataSourceAutoConfiguration
+com.alramz.globalconfigurationsettings.config.GlobalConfigurationSettingsAutoConfiguration
+com.alramz.tracing.config.TracingAutoConfiguration

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="relationship.manager.find.active">
+        SELECT RM_NO, RM_NAME_EN, RM_NAME_AR
+        FROM CB_RELATION_MANAGER
+        WHERE NVL(RM_DISABLES, 'N') != 'Y'
+    </entry>
+    <entry key="relationship.manager.commissions.find">
+    SELECT
+        cmc.CL_MAIN_CLIENT_ID AS CLIENT_NUMBER,
+        cmc.CLE_CLIENT_NAME AS CLIENT_NAME,
+        SUM(ih.TOTAL) AS TRADING_VOLUME,
+        SUM(ih.LOC_OFFICE_COMM / 2) AS RECEIVED_COMMISSION
+    FROM INVOICE_HEADER ih
+    JOIN CB_CLIENT cc
+        ON cc.CL_CLIENT_ID = ih.CLIENT_ID
+    JOIN CB_MAIN_CLIENT cmc
+        ON cc.CL_MAIN_CLIENT_ID = cmc.CL_MAIN_CLIENT_ID
+    LEFT JOIN CB_SEC_COMP csc
+        ON ih.COMP_ID = csc.SC_COMP_ID
+    WHERE ih.TOTAL_COMM &lt;&gt; 0.0
+      AND ih.INV_DATE &gt;= :startDate
+      AND ih.INV_DATE &lt; :endDate + 1
+    GROUP BY
+        cmc.CL_MAIN_CLIENT_ID,
+        cmc.CLE_CLIENT_NAME
+    ORDER BY
+        cmc.CLE_CLIENT_NAME
+    </entry>   
+</properties>

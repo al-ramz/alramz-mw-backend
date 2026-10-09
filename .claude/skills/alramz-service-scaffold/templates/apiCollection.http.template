@@ -1,0 +1,32 @@
+@baseUrl=http://localhost:__PORT__
+
+### Get a token first by registering + logging in below, then paste it here.
+@authToken=
+
+###
+GET {{baseUrl}}/api/v1/info
+
+###
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+    "authType": "JWT",
+    "consumer": "__SERVICE_NAME_UNDERSCORE___app",
+    "email": "__SERVICE_NAME__@alramz.ae",
+    "consumerPassword": "password123",
+    "roles": ["APP___SERVICE_NAME_UPPER___USER"],
+    "application": "__SERVICE_NAME__",
+    "environment": "local"
+}
+
+###
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "consumer": "__SERVICE_NAME_UNDERSCORE___app",
+    "consumerPassword": "password123"
+}
+
+###

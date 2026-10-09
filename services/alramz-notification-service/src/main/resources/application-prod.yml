@@ -1,0 +1,39 @@
+server:
+  address: 0.0.0.0
+  port: 8082
+  host: localhost
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:notificationsdb}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASSNAME:org.h2.Driver}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+
+app:
+  email:
+    service-provider: ${APP_EMAIL_SERVICE_PROVIDER:MICROSOFT_GRAPH}
+    max-subject-length: 255
+    max-body-length: 10000
+    max-attachments: 10
+    max-attachment-size-bytes: 10485760
+
+  graph:
+    tenant-id: ${AZURE_TENANT_ID}
+    client-id: ${AZURE_CLIENT_ID}
+    client-secret: ${AZURE_CLIENT_SECRET}
+    graph-scopes: https://graph.microsoft.com/.default
+
+company:
+  jwt:
+    enabled: true
+    permit-all-urls:
+      - /api/v1/info
+      - /api/v1/email/send
+  scheduler:
+    management-endpoints:
+      enabled: true
+  logging:
+    seq:
+      enabled: true
+      url: http://seq:80

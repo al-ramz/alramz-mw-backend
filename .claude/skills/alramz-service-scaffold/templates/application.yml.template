@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: __SERVICE_NAME__
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+server:
+  host: localhost

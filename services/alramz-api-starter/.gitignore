@@ -1,0 +1,177 @@
+# ==============================
+# Terraform
+# ==============================
+
+# Local .terraform directories
+**/.terraform/*
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Terraform plan files
+*.tfplan
+*.plan
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Lock file
+# Uncomment the next line if you DO NOT want to commit the provider lock file.
+# Recommended: keep .terraform.lock.hcl in Git.
+# .terraform.lock.hcl
+
+# Variable files containing secrets
+*.auto.tfvars
+*.auto.tfvars.json
+terraform.tfvars
+terraform.tfvars.json
+*.secrets.tfvars
+*.secrets.tfvars.json
+
+# Backend configuration (optional if it contains secrets)
+backend.tfvars
+
+# ==============================
+# Azure
+# ==============================
+
+# Azure CLI
+.azure/
+
+# Service principal credentials
+*.pem
+*.pfx
+*.p12
+*.key
+
+# ==============================
+# IDEs
+# ==============================
+
+# VS Code
+.vscode/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Visual Studio
+.vs/
+
+# ==============================
+# OS Files
+# ==============================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Logs
+# ==============================
+
+*.log
+
+# ==============================
+# Temporary files
+# ==============================
+
+*.tmp
+*.temp
+*.bak
+*.drawio
+
+notes.md
+
+notes.md
+.env
+.xlsx
+.png
+**/docs/**
+
+.kilo/**
+
+**/target/**
+
+**/*.class
+
+**/**.class
+
+**/target/
+
+# Maven
+**/target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+crash.log
+
+terraform.tfvars
+*.auto.tfvars

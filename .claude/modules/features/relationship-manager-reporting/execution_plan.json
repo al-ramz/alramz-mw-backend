@@ -1,0 +1,184 @@
+{
+  "feature_slug": "relationship-manager-reporting",
+  "spec_path": ".claude/modules/features/relationship-manager-reporting/spec.md",
+  "howtos_consulted": [
+    ".claude/howtos/new-endpoint-elicitation-checklist.md",
+    ".claude/howtos/openapi-contract-first-controllers.md",
+    ".claude/howtos/api-collection-http-requests.md",
+    ".claude/howtos/exception-handling.md",
+    ".claude/howtos/multi-datasource-and-jpa.md",
+    ".claude/howtos/jwt-security-and-public-endpoints.md",
+    ".claude/howtos/configuration-properties.md",
+    ".claude/howtos/request-response-and-db-audit-logging.md",
+    ".claude/howtos/liquibase-migrations.md",
+    ".claude/howtos/testing-patterns.md"
+  ],
+  "target_services": ["reference-data-service"],
+  "target_files": [
+    {
+      "path": "services/reference-data-service/specs/apiSpecs.yaml",
+      "status": "modified",
+      "change_summary": "Amend existing file (verified current content: has /info, /health/deep, four /cache/entries/... ops, spec-root security: - BearerAuth: [], real 3(+1)-field GenericResponse). Add new tag `RelationshipManagers` with two operations: GET /relationship-managers (operationId getRelationshipManagers, no request body, responses 200/401/500 each with a real filled-in example per spec.md Section 3a) and POST /relationship-managers/commissions (operationId getCommissionsByRelationshipManager, requestBody $ref CommissionsByRelationshipManagerRequest, responses 200/400/401/500 each with a real example per Section 3b). Add components.schemas entries: RelationshipManager {id:integer, nameEn:string, nameAr:string}, RelationshipManagerListResult {relationshipManagers: array of RelationshipManager}, CommissionResult {clientNumber, clientName:string, tradingVolume, receivedCommission: number}, RelationshipManagerCommissionsSummary {totalTradingVolume, totalReceivedCommission: number, results: array of CommissionResult}, CommissionsByRelationshipManagerRequest {startDate, endDate: type string with pattern \"^$|\\\\d{4}-\\\\d{2}-\\\\d{2}\" per Section 3b's design note (NOT format: date), relationshipManagerCodes: array of string, all fields optional}. Both operations inherit the file's existing spec-root `security: - BearerAuth: []` (no per-operation security override, per this repo's convention). Confirmed no operationId/tag/path collision with the 6 existing operations."
+    },
+    {
+      "path": "services/reference-data-service/apiCollection.http",
+      "status": "modified",
+      "change_summary": "File already defines @baseUrl=http://localhost:8081, @authToken=<jwt>, and register/login blocks (verified by reading the file). Add a `### Get Relationship Managers` block (GET {{baseUrl}}/api/v1/relationship-managers, Authorization: Bearer {{authToken}}, no body) and a `### Get Commissions By Relationship Manager` block (POST {{baseUrl}}/api/v1/relationship-managers/commissions, JSON body with startDate/endDate/relationshipManagerCodes), placed near the existing RedisCache/Health blocks and before the trailing 'Scheduler Management APIs' section. Add a paired `### Get Commissions By Relationship Manager -ve test case` block with a non-ISO startDate (e.g. \"20240101\") to exercise the 400 path, per this repo's IBAN/phone negative-case convention."
+    },
+    {
+      "path": "services/reference-data-service/src/main/resources/application-dev.yml",
+      "status": "modified",
+      "change_summary": "Verified current content has company.datasource.middleware only, no brok block. Add company.datasource.brok block mirrored verbatim from data-validation-service's application-dev.yml (enabled: true, url: jdbc:oracle:thin:@//172.25.1.218:1521/BROKDEV, username: insight, plainPassword: RAMZ, driverClassName: oracle.jdbc.OracleDriver, startup-validation.enabled: false, pool.maximum-pool-size: 10/minimum-idle: 2, sql-logging.enabled: false, oracle.{connectTimeout:10000, readTimeout:60000, defaultRowPrefetch:100}). No permit-all-urls change."
+    },
+    {
+      "path": "services/reference-data-service/src/main/resources/application-test.yml",
+      "status": "modified",
+      "change_summary": "Verified current content has company.datasource.middleware only (Postgres). Add the identical company.datasource.brok block used in -dev (data-validation-service's own application-test.yml carries the same literal brok block as its -dev, confirmed by reading both files), so all 5 profiles stay byte-identical for this datasource per spec.md Section 2."
+    },
+    {
+      "path": "services/reference-data-service/src/main/resources/application-preprod.yml",
+      "status": "modified",
+      "change_summary": "Verified current content has company.datasource.middleware only. Add the identical company.datasource.brok block (data-validation-service uses the same plainPassword-based block in its own -preprod, a known imperfect precedent per spec.md Section 2's residual note — mirrored as-is, not upgraded to cipher.password, since CLAUDE.md instructs copying real repo precedent)."
+    },
+    {
+      "path": "services/reference-data-service/src/main/resources/application-prod.yml",
+      "status": "modified",
+      "change_summary": "Verified current content has company.datasource.middleware only. Add the identical company.datasource.brok block (matches data-validation-service's own -prod file verbatim, confirmed by reading it)."
+    },
+    {
+      "path": "services/reference-data-service/src/main/resources/application-docker.yml",
+      "status": "modified",
+      "change_summary": "Verified current content has company.datasource.middleware only. Add company.datasource.brok using the env-var-interpolated form (${COMPANY_DATASOURCE_BROK_*} with the same defaults) matching data-validation-service's application-docker.yml:62-78 verbatim."
+    },
+    {
+      "path": "services/reference-data-service/src/main/resources/sql/sql-queries.xml",
+      "status": "modified",
+      "change_summary": "Currently an empty <properties></properties> scaffold (verified), already registered via application.yml's sql.file list — no new registration needed. Add two <entry> keys: `relationship.manager.find.active` (SELECT RM_NO, RM_NAME_EN, RM_NAME_AR FROM CB_RELATION_MANAGER WHERE <RM_DISABLES exclusion predicate, Q1>) and `relationship.manager.commissions.find` (INVOICE_HEADER -> CB_CLIENT -> CB_MAIN_CLIENT join for client identity, CB_SEC_COMP join for SC_ISLAMIC, INV_DATE BETWEEN :startDate AND :endDate, RM-code predicate pair joined with AND per Q2—see spec.md Section 4). Both queries use named parameters only (:startDate, :endDate, :codes), never string concatenation."
+    },
+    {
+      "path": "services/reference-data-service/src/main/java/com/alramz/repository/RelationshipManagerRepository.java",
+      "status": "new",
+      "change_summary": "New package com.alramz.repository (named to match data-validation-service's own, per spec.md Section 2 — confirmed this package does not yet exist in reference-data-service). Interface per spec.md Section 3c: List<RelationshipManager> findActiveRelationshipManagers(); List<CommissionResult> findCommissionsByRelationshipManager(LocalDate startDate, LocalDate endDate, List<String> relationshipManagerCodes); RelationshipManager/CommissionResult are the OpenAPI-generated model classes (com.alramz.model), reused directly as domain types, not a parallel hand-written DTO family."
+    },
+    {
+      "path": "services/reference-data-service/src/main/java/com/alramz/repository/RelationshipManagerRepositoryImpl.java",
+      "status": "new",
+      "change_summary": "@Repository implementing RelationshipManagerRepository, constructor-injecting @Qualifier(\"brokNamedParameterJdbcTemplate\") NamedParameterJdbcTemplate + SqlQueriesManager (pattern modeled on DfmOnboardingRepositoryImpl.java's structure, since it is the only existing @Repository using NamedParameterJdbcTemplate+SqlQueriesManager in this repo; NinTradingNumberValidationServiceTest.java is the closest test-style precedent since it is the only existing brok-datasource consumer). Loads relationship.manager.find.active / relationship.manager.commissions.find via sqlQueriesManager.getSQLQueryFromConfig(...), binds parameters via MapSqlParameterSource (startDate, endDate, and a dynamic :codes expansion for the IN clause — never positional ? or string concatenation), maps rows to the generated RelationshipManager/CommissionResult models. Wraps any SQLException/DataAccessException from either method in RelationshipManagerLookupException (edge case #11)."
+    },
+    {
+      "path": "services/reference-data-service/src/main/java/com/alramz/service/RelationshipManagerService.java",
+      "status": "new",
+      "change_summary": "New interface per spec.md Section 3c: RelationshipManagerListResult getAllRelationshipManagers(); RelationshipManagerCommissionsSummary getCommissionsByRelationshipManager(CommissionsByRelationshipManagerRequest request). Introduces a service.impl subpackage that has no local reference-data-service precedent (its existing services — RedisCacheService, CacheAuditService, SchedulerLockService — are concrete classes with no interface), but matches spec.md's explicit method signatures and the interface+impl+repository layering it cites from data-validation-service — noted in technical_gaps, not a deviation introduced by this plan."
+    },
+    {
+      "path": "services/reference-data-service/src/main/java/com/alramz/service/impl/RelationshipManagerServiceImpl.java",
+      "status": "new",
+      "change_summary": "@Service implementing RelationshipManagerService, constructor-injecting RelationshipManagerRepository. getAllRelationshipManagers(): delegate to repository.findActiveRelationshipManagers(), map to RelationshipManagerListResult. getCommissionsByRelationshipManager(request): implement Q3's blank/absent/invalid-date logic explicitly — startDate/endDate isBlank() or null -> apply defaults (1900-01-01 / 2999-01-01 respectively); else LocalDate.parse(value), catching DateTimeParseException and rethrowing as InvalidDateRangeException (edge case #5); relationshipManagerCodes null/empty -> pass through as no-filter to the repository; delegate to repository.findCommissionsByRelationshipManager(startDate, endDate, codes); sum totalTradingVolume/totalReceivedCommission via BigDecimal over the returned CommissionResult rows (never a string round-trip, per spec.md Section 3b); build RelationshipManagerCommissionsSummary. Any repository-thrown RelationshipManagerLookupException propagates unchanged."
+    },
+    {
+      "path": "services/reference-data-service/src/main/java/com/alramz/controllers/RelationshipManagerController.java",
+      "status": "new",
+      "change_summary": "New controller, `implements RelationshipManagersApi` (generated from the new apiSpecs.yaml tag), @RestController @RequestMapping(\"/api/v1\") (existing RedisCacheController precedent), constructor-injecting RelationshipManagerService. getRelationshipManagers() and getCommissionsByRelationshipManager(CommissionsByRelationshipManagerRequest) both carry @Override, @JwtSecured(roles = \"APP_REFERENCE_DATA\") (reused role, matches RedisCacheController), and @Loggable; each delegates to the service and wraps the result in a GenericResponse (responseCode \"200\", responseMessage \"OK\", response = the mapped result), matching the shape RedisCacheController already uses. No business logic in the controller body."
+    },
+    {
+      "path": "services/reference-data-service/src/main/java/com/alramz/exception/RelationshipManagerLookupException.java",
+      "status": "new",
+      "change_summary": "New exception package com.alramz.exception in reference-data-service (confirmed via .claude/howtos/exception-handling.md and direct inspection that this package does not exist here today). Plain RuntimeException subclass (message-only constructor), following ExternalSystemException's shape — no HTTP status embedded in the exception itself. Used for any brok datasource/SQL failure on either endpoint (edge case #11 -> 500)."
+    },
+    {
+      "path": "services/reference-data-service/src/main/java/com/alramz/exception/InvalidDateRangeException.java",
+      "status": "new",
+      "change_summary": "Plain RuntimeException subclass (message-only constructor, same shape as RelationshipManagerLookupException/ExternalSystemException). Thrown by RelationshipManagerServiceImpl when a non-blank, pattern-matching but calendar-invalid startDate/endDate fails LocalDate.parse (edge case #5 -> 400)."
+    },
+    {
+      "path": "services/reference-data-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+      "status": "new",
+      "change_summary": "First service-owned exception handler for reference-data-service (today it has only the starter's LoggingExceptionHandler safety net — confirmed via howto + package search). @RestControllerAdvice(basePackages = \"com.alramz.controllers\") @Order(0), following data-validation-service's GlobalExceptionHandler shape but WITHOUT its path-branching (isValidationRequest/isOnboardingRequest) or the dead-code OnboardingExceptionHandler pattern — reference-data-service has exactly one response envelope family (GenericResponse), so one handler method per exception type suffices per exception-handling.md §5's simpler-service guidance. Handlers: RelationshipManagerLookupException -> 500 GenericResponse (response: null, correlationId populated from X-Correlation-Id header, matching Section 3a/3b's 500 examples which include correlationId); InvalidDateRangeException -> 400 GenericResponse (response: null, no correlationId, matching the 400 examples which omit it); MethodArgumentNotValidException -> 400 GenericResponse with a field-describing responseMessage (edge case #4, Jakarta @Pattern failure on startDate/endDate); HttpMessageNotReadableException -> 400 GenericResponse (\"Malformed JSON request\", edge cases #6/#13); catch-all Exception -> 500 GenericResponse. None of the handlers leak raw exception detail into the body."
+    }
+  ],
+  "test_files": [
+    {
+      "path": "services/reference-data-service/src/test/java/com/alramz/repository/RelationshipManagerRepositoryImplTest.java",
+      "status": "new",
+      "covers": "Section 8 bullet: repository injects @Qualifier(\"brokNamedParameterJdbcTemplate\"), never unqualified. Mockito-mocked NamedParameterJdbcTemplate + SqlQueriesManager (modeled on NinTradingNumberValidationServiceTest's mock-JdbcTemplate style, the closest existing brok-consumer test in this repo — no existing repository-layer test precedent for the NamedParameterJdbcTemplate+SqlQueriesManager shape itself). Verifies: findActiveRelationshipManagers() loads the `relationship.manager.find.active` key and maps rows to RelationshipManager; findCommissionsByRelationshipManager() loads `relationship.manager.commissions.find`, builds named parameters for startDate/endDate/codes (including the dynamic IN-list expansion), and maps rows to CommissionResult. Cannot assert the RM_DISABLES / Q2 AND-join predicate's actual exclusion semantics end-to-end (no live Oracle schema in CI) — see technical_gaps."
+    },
+    {
+      "path": "services/reference-data-service/src/test/java/com/alramz/service/impl/RelationshipManagerServiceImplTest.java",
+      "status": "new",
+      "covers": "getAllRelationshipManagers() passthrough/mapping (edge case #1, zero-active-RMs -> empty list, 200). Q3: startDate/endDate omitted vs. \"\" (blank) both resolve to the same LocalDate defaults (1900-01-01/2999-01-01), verified by asserting the exact LocalDate values passed to the mocked repository for both request variants (edge cases #2/#3). Non-blank pattern-matching-but-invalid date (\"2024-13-45\") throws InvalidDateRangeException (edge case #5). relationshipManagerCodes omitted/[] passed through as no-filter (edge case #7); [\"3031\"] alone passed through unchanged (edge case #8). Q2/edge case #9: mocked repository returning an empty list for a mixed [\"3031\", other] request (simulating what the AND-joined SQL produces) yields totalTradingVolume=0, totalReceivedCommission=0, results=[] — exercises the service's zero-row handling, not the SQL AND-join itself (see technical_gaps). BigDecimal summation correctness over multiple CommissionResult rows (Section 3b)."
+    },
+    {
+      "path": "services/reference-data-service/src/test/java/com/alramz/controllers/RelationshipManagerControllerTest.java",
+      "status": "new",
+      "covers": "Controller constructed directly with a mocked RelationshipManagerService (Mockito-first, no @WebMvcTest/MockMvc, per testing-patterns.md and DataValidationControllerTest.java's shape). Verifies getRelationshipManagers() and getCommissionsByRelationshipManager(request) delegate to the service and return a 200 GenericResponse wrapping the service's result unchanged."
+    },
+    {
+      "path": "services/reference-data-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java",
+      "status": "new",
+      "covers": "One test per @ExceptionHandler method (modeled on OnboardingExceptionHandlerTest.java's plain-`new`-instantiation + mock(HttpServletRequest.class) shape): RelationshipManagerLookupException -> 500 with correlationId populated from X-Correlation-Id; InvalidDateRangeException -> 400; MethodArgumentNotValidException -> 400 with a field-describing message (edge case #4); HttpMessageNotReadableException -> 400 (edge cases #6/#13); catch-all Exception -> 500. Asserts HTTP status + GenericResponse body shape for each, confirming no raw exception detail leaks (Section 8's exception-handling acceptance bullet)."
+    }
+  ],
+  "liquibase_changeset": {
+    "applicable": false,
+    "next_changeset_file": null,
+    "profile_folders": []
+  },
+  "config_changes": {
+    "permit_all_urls": [],
+    "new_properties": [
+      "company.datasource.brok.* enabled and configured (url, username, plainPassword, driverClassName, startup-validation.enabled, pool.{maximum-pool-size,minimum-idle}, sql-logging.enabled, oracle.{connectTimeout,readTimeout,defaultRowPrefetch}) across application-{dev,test,preprod,prod,docker}.yml — this is an existing starter-owned ConfigurationProperties prefix (DatasourceProperties.brok, alramz-api-starter) being enabled for the first time in reference-data-service, not a new @ConfigurationProperties class; no new starter code or AutoConfiguration.imports entry needed."
+    ],
+    "masking_keys_to_add": []
+  },
+  "execution_steps": [
+    "Step 1: Add company.datasource.brok block (mirrored verbatim from data-validation-service) to application-dev.yml, application-test.yml, application-preprod.yml, application-prod.yml, and the env-var-interpolated form to application-docker.yml. No permit-all-urls change in any profile.",
+    "Step 2: Amend specs/apiSpecs.yaml — add the RelationshipManagers tag, both operations (GET /relationship-managers, POST /relationship-managers/commissions) with bare paths, and the 5 new components.schemas entries, each response status carrying a real example body.",
+    "Step 3: Add the relationship.manager.find.active and relationship.manager.commissions.find entries to src/main/resources/sql/sql-queries.xml, named-parameter style, implementing Q1's RM_DISABLES exclusion and Q2's AND-preserved Islamic-office/RM-code predicate pair.",
+    "Step 4: Run `mvn -pl services/reference-data-service -am clean test-compile` to regenerate RelationshipManagersApi/model classes from the updated spec before writing the controller (per openapi-contract-first-controllers.md).",
+    "Step 5: Create com.alramz.exception.RelationshipManagerLookupException and InvalidDateRangeException.",
+    "Step 6: Create com.alramz.exception.GlobalExceptionHandler (@RestControllerAdvice(basePackages = \"com.alramz.controllers\"), @Order(0)) with handlers for both new typed exceptions plus MethodArgumentNotValidException, HttpMessageNotReadableException, and a catch-all Exception — single GenericResponse shape, no path-branching.",
+    "Step 7: Create com.alramz.repository.RelationshipManagerRepository + RelationshipManagerRepositoryImpl, qualifying brokNamedParameterJdbcTemplate explicitly, loading SQL via SqlQueriesManager, wrapping failures in RelationshipManagerLookupException.",
+    "Step 8: Create com.alramz.service.RelationshipManagerService + RelationshipManagerServiceImpl implementing Q3's blank/absent/invalid-date handling and the BigDecimal totals summation.",
+    "Step 9: Create com.alramz.controllers.RelationshipManagerController implementing RelationshipManagersApi, with @JwtSecured(roles = \"APP_REFERENCE_DATA\") and @Loggable on both methods, delegating to the service.",
+    "Step 10: Add the two (plus one negative-case) request blocks to apiCollection.http, near the existing RedisCache/Health blocks and before the Scheduler Management APIs section.",
+    "Step 11: Write RelationshipManagerRepositoryImplTest, RelationshipManagerServiceImplTest, RelationshipManagerControllerTest, and GlobalExceptionHandlerTest covering Section 6's edge-case table as far as unit-testable (see technical_gaps for the SQL-level Q1/Q2 limitation).",
+    "Step 12: Run `mvn -pl services/reference-data-service -am clean test` and confirm it passes before calling the feature done (CLAUDE.md verification rule)."
+  ],
+  "technical_gaps": [
+    {
+      "area": "test-coverage",
+      "description": "Section 8's acceptance criteria for Q1 (\"a disabled-flagged RM is excluded from the response\") and Q2 (the 3031+other-code empty-result behavior) are both implemented as SQL predicates inside the externalized query text, not as Java logic. This repo's Mockito-only test convention (no live Oracle datasource in CI, no @DataJpaTest-equivalent for brok) means unit tests can only verify the correct query key is loaded and that row-mapping is correct (Q1), or that the service correctly zeroes totals/empties results when the repository returns no rows (Q2) — neither test can assert the SQL predicate's exclusion/AND-join semantics end-to-end.",
+      "recommendation_or_open_question": "This is the same residual risk spec.md Section 4/9 already flags (RM_DISABLES column semantics unverified; commissions query itself a reconstruction pending DBA/live-source confirmation before production sign-off) — not a new gap introduced by this plan, just carried forward and made explicit against the concrete acceptance-criteria wording. No action needed in 02_plan; 03_implement/QA should close this via the DBA verification step spec.md already calls for, not by inventing a fake integration test."
+    },
+    {
+      "area": "other",
+      "description": "The new com.alramz.exception.GlobalExceptionHandler is scoped to basePackages = \"com.alramz.controllers\", which also covers the service's existing RedisCacheController and ApplicationController. Any previously-unhandled exception from those existing controllers (e.g. a generic RuntimeException) will now be caught by this new handler's catch-all Exception method and returned as a GenericResponse-shaped 500, instead of falling through to the starter's LoggingExceptionHandler's plain {timestamp,status,error,message,correlationId} shape as it does today.",
+      "recommendation_or_open_question": "This is spec-directed (spec.md Section 2 explicitly says to add this handler following data-validation-service's GlobalExceptionHandler shape, scoped the same way), and arguably an improvement (consistent envelope), but it is a behavior change beyond the two new endpoints that spec.md doesn't discuss explicitly. Flagging for awareness; not blocking since it's easily reversible (narrow the @RestControllerAdvice's assignableTypes to RelationshipManagerController only, if isolation is preferred later)."
+    },
+    {
+      "area": "other",
+      "description": "Adding company.datasource.brok to application-test.yml (src/main/resources) mirrors data-validation-service's own precedent, but this is the first time reference-data-service will have this block in that file. Because @SpringBootTest(properties=\"spring.profiles.active=test\") merges src/test/resources/application.yml (H2, plain spring.datasource.* + JPA) with src/main/resources/application-test.yml (this profile's company.datasource.middleware + now brok, pointing at real Postgres/Oracle hosts), the smoke test context will now also attempt to build a brokDataSource bean during the existing JUnit suite.",
+      "recommendation_or_open_question": "Expected to be a no-op at context-load time because startup-validation.enabled=false (same as data-validation-service's own smoke test, which already tolerates this), but this is a new-for-this-service interaction, not something previously exercised here. Step 12's `mvn -pl services/reference-data-service -am clean test` run will confirm; if it fails, the fix is isolating the brok block out of application-test.yml's merge path, not touching src/test/resources/application.yml's H2 config."
+    },
+    {
+      "area": "other",
+      "description": "com.alramz.service.RelationshipManagerService is planned as an interface with a service.impl subpackage implementation, per spec.md Section 3c's explicit method signatures and its citation of data-validation-service's interface+impl+repository layering. reference-data-service's own existing services (RedisCacheService, CacheAuditService, SchedulerLockService) are concrete classes with no interface and no service.impl subpackage.",
+      "recommendation_or_open_question": "Not a deviation introduced by this plan — spec.md already made this choice explicitly (Section 2/3c) because the repository-layer precedent for this feature is data-validation-service, not reference-data-service's own Redis-cache code. Noted for awareness only."
+    },
+    {
+      "area": "other",
+      "description": "While inspecting reference-data-service's config package, found com.alramz.config.MiddlewareDataSourceProperties — a @Configuration @ConfigurationProperties(prefix = \"company.datasource.middleware\") class with zero references anywhere else in the codebase (confirmed via grep). It appears to be dead/orphaned scaffold code, duplicating the same prefix already bound by the starter's DatasourceProperties.middleware.",
+      "recommendation_or_open_question": "Out of scope for this feature (does not touch brok or this feature's files) — flagged only because it was encountered during grounding; not part of target_files, not to be cleaned up here."
+    }
+  ],
+  "plan_critique": {
+    "acceptance_criteria_coverage": "partial — every Section 8 bullet has a corresponding target_files/test_files/execution_steps entry, but the Q1 (RM_DISABLES exclusion) and Q2 (3031+other-code empty-result) bullets can only be unit-tested down to 'correct query key + correct empty-result handling', not the actual SQL predicate semantics, because that logic lives entirely in the externalized SQL text and this repo has no live-Oracle/integration test tier. See technical_gaps.",
+    "blast_radius_concerns": [
+      "New GlobalExceptionHandler (basePackages = com.alramz.controllers, @Order(0)) will also intercept exceptions from the pre-existing RedisCacheController/ApplicationController, changing their unhandled-exception response shape from the starter's generic map to this feature's GenericResponse — spec-directed, not accidental, but a real cross-endpoint behavior change worth confirming is acceptable.",
+      "company.datasource.brok newly enabled across all 5 reference-data-service profiles, including application-test.yml, which now merges into the JUnit 'test' Spring profile alongside the pre-existing H2/JPA test config — expected to be inert (startup-validation.enabled=false) but is a new interaction for this service."
+    ],
+    "confidence": "medium",
+    "notes": "The weakest part of this plan is the same one spec.md's own Self-Critique already names: the commissions query and the RM_DISABLES predicate are implemented against a reconstructed/assumed SQL shape that this repo's test conventions (Mockito-only, no live Oracle datasource, no integration-test tier for brok) cannot fully verify — the planned tests close the gap as far as this repo's own testing conventions allow (query-key correctness, parameter binding, row mapping, and the service-layer arithmetic/date logic that genuinely is pure Java), but the literal wording of two Section 8 acceptance bullets (exclusion of a disabled RM; the exact AND-join empty-result behavior) is only fully closed by the DBA/live-schema verification spec.md Section 4/9 already defers to production sign-off, not by anything 02_plan or 03_implement can do internally.",
+    "user_decisions": []
+  }
+}

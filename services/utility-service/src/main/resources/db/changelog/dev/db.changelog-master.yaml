@@ -1,0 +1,5 @@
+# Profile: dev
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/dev/sql
+      errorIfMissingOrEmpty: false

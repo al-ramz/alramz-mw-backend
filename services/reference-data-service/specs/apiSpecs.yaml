@@ -1,0 +1,523 @@
+openapi: 3.0.3
+
+info:
+  title: Reference Data API
+  version: 1.0.0
+  description: API for managing and retrieving reference data.
+
+servers:
+  - url: http://localhost:8080
+    description: Local Development
+  - url: https://api-dev.alramz.com/reference-data
+    description: Development Environment
+  - url: https://api-test.alramz.com/reference-data
+    description: Test Environment
+  - url: https://api-preprod.alramz.com/reference-data
+    description: Pre-Production Environment
+  - url: https://api.alramz.com/reference-data
+    description: Production Environment
+
+security:
+  - BearerAuth: []
+
+paths:
+  /info:
+    get:
+      tags:
+        - Info
+      summary: Service info
+      description: Returns basic service information.
+      operationId: getInfo
+      responses:
+        '200':
+          description: Info retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  service: reference-data-service
+                  version: 1.0.0
+
+  /health/deep:
+    get:
+      tags:
+        - Health
+      summary: Deep health check
+      description: Returns database and Redis reachability status.
+      operationId: checkDeepHealth
+      responses:
+        '200':
+          description: Health check completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  databaseReachable: true
+                  redisReachable: true
+                  overallStatus: "UP"
+                  timestamp: "2024-01-01T00:00:00Z"
+
+
+
+  /cache/entries/{cacheKey}/flush:
+    delete:
+      tags:
+        - RedisCache
+      summary: Flush cache for a specific mapping
+      description: Deletes the mapped Redis cache key for the specified cache mapping.
+      operationId: flushCache
+      parameters:
+        - name: cacheKey
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The cache mapping name (e.g., global-config)
+      responses:
+        '200':
+          description: Cache flushed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "Cache flushed successfully"
+
+  /cache/entries/{cacheKey}/reload:
+    post:
+      tags:
+        - RedisCache
+      summary: Reload cache for a specific mapping
+      description: Reloads cached settings from database into Redis cache using atomic replacement.
+      operationId: reloadCache
+      parameters:
+        - name: cacheKey
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The cache mapping name (e.g., global-config)
+      responses:
+        '200':
+          description: Cache reloaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "Cache reloaded successfully"
+                response:
+                  - id: 1
+                    identifier: "CONFIG_1"
+                    identifierType: "SYSTEM"
+                    identifierText: "Sample text"
+                    status: "ACTIVE"
+
+  /cache/entries/{cacheKey}/status:
+    get:
+      tags:
+        - RedisCache
+      summary: Get cache status for a specific mapping
+      description: Returns metadata about the cache including existence, entry count, and Redis availability.
+      operationId: getCacheStatus
+      parameters:
+        - name: cacheKey
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The cache mapping name (e.g., global-config)
+      responses:
+        '200':
+          description: Cache status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  cacheKey: "alramz:reference-data:v1:global-config"
+                  exists: true
+                  entryCount: 10
+                  sourceTable: "global_configuration_settings"
+                  redisAvailable: true
+                  ttl: 3600
+
+
+
+  /cache/entries/{cacheKey}:
+    get:
+      tags:
+        - RedisCache
+      summary: Get cached entries for a specific mapping
+      description: Returns all cached entries for the specified cache mapping. Falls back to database on cache miss.
+      operationId: getCacheEntriesByKey
+      parameters:
+        - name: cacheKey
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The cache mapping name (e.g., global-config)
+      responses:
+        '200':
+          description: Cache entries retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  - id: 1
+                    identifier: "CONFIG_1"
+                    identifierType: "SYSTEM"
+                    identifierText: "Sample text"
+                    status: "ACTIVE"
+
+  /relationship-managers:
+    get:
+      tags:
+        - RelationshipManagers
+      summary: List relationship managers
+      description: Returns all relationship managers that are not flagged disabled.
+      operationId: getRelationshipManagers
+      responses:
+        '200':
+          description: Relationship managers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  relationshipManagers:
+                    - id: 101
+                      nameEn: "John Smith"
+                      nameAr: "جون سميث"
+        '401':
+          description: Missing or invalid JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "401"
+                responseMessage: "Unauthorized"
+                response: null
+        '500':
+          description: Unable to retrieve relationship managers due to a brok datasource/query failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Unable to retrieve relationship managers"
+                response: null
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+
+  /relationship-managers/commissions:
+    post:
+      tags:
+        - RelationshipManagers
+      summary: Commissions and trading-volume report by relationship manager
+      description: Returns commission/trading-volume totals, optionally filtered by date range and/or relationship-manager codes.
+      operationId: getCommissionsByRelationshipManager
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionsByRelationshipManagerRequest'
+            example:
+              startDate: "2024-01-01"
+              endDate: "2024-12-31"
+              relationshipManagerCodes: ["3031"]
+      responses:
+        '200':
+          description: Commissions report retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  totalTradingVolume: 187500.75
+                  totalReceivedCommission: 937.50
+                  results:
+                    - clientNumber: "C-10293"
+                      clientName: "Acme Trading LLC"
+                      tradingVolume: 125000.50
+                      receivedCommission: 625.25
+        '400':
+          description: Malformed request body or an invalid startDate/endDate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "400"
+                responseMessage: "startDate: must be blank or a valid ISO-8601 date (YYYY-MM-DD)"
+                response: null
+        '401':
+          description: Missing or invalid JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "401"
+                responseMessage: "Unauthorized"
+                response: null
+        '500':
+          description: Unable to retrieve commission report due to a brok datasource/query failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Unable to retrieve commission report"
+                response: null
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+
+components:
+  schemas:
+    GenericResponse:
+      type: object
+      required:
+        - responseCode
+        - responseMessage
+        - response
+      properties:
+        responseCode:
+          type: string
+          example: "200"
+
+        responseMessage:
+          type: string
+          example: OK
+
+        response:
+          type: object
+
+        correlationId:
+          type: string
+          format: uuid
+          description: Correlation ID for request tracing
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+    GlobalConfigurationSetting:
+      type: object
+      required:
+        - id
+        - identifier
+        - identifierType
+        - identifierText
+        - status
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+
+        identifier:
+          type: string
+          example: "CONFIG_1"
+
+        identifierType:
+          type: string
+          example: "SYSTEM"
+
+        identifierText:
+          type: string
+          example: "Sample text"
+
+        status:
+          type: string
+          example: "ACTIVE"
+
+    CacheStatus:
+      type: object
+      required:
+        - cacheKey
+        - exists
+        - entryCount
+        - sourceTable
+        - redisAvailable
+        - ttl
+      properties:
+        cacheKey:
+          type: string
+          example: "alramz:reference-data:v1:global-config"
+
+        exists:
+          type: boolean
+          example: true
+
+        entryCount:
+          type: integer
+          format: int64
+          example: 10
+
+        sourceTable:
+          type: string
+          example: "global_configuration_settings"
+
+        redisAvailable:
+          type: boolean
+          example: true
+
+        ttl:
+          type: integer
+          format: int64
+          example: 3600
+
+        cacheSizeBytes:
+          type: integer
+          format: int64
+          description: Optional cache size in bytes
+          example: 1024
+          nullable: true
+
+    DeepHealthResponse:
+      type: object
+      required:
+        - databaseReachable
+        - redisReachable
+        - overallStatus
+        - timestamp
+      properties:
+        databaseReachable:
+          type: boolean
+          example: true
+
+        redisReachable:
+          type: boolean
+          example: true
+
+        overallStatus:
+          type: string
+          example: "UP"
+
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-01-01T00:00:00Z"
+
+        details:
+          type: object
+          description: Optional additional health details
+          nullable: true
+
+    RelationshipManager:
+      type: object
+      required:
+        - id
+        - nameEn
+        - nameAr
+      properties:
+        id:
+          type: integer
+          example: 101
+
+        nameEn:
+          type: string
+          example: "John Smith"
+
+        nameAr:
+          type: string
+          example: "جون سميث"
+
+    RelationshipManagerListResult:
+      type: object
+      required:
+        - relationshipManagers
+      properties:
+        relationshipManagers:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelationshipManager'
+
+    CommissionResult:
+      type: object
+      required:
+        - clientNumber
+        - clientName
+        - tradingVolume
+        - receivedCommission
+      properties:
+        clientNumber:
+          type: string
+          example: "C-10293"
+
+        clientName:
+          type: string
+          example: "Acme Trading LLC"
+
+        tradingVolume:
+          type: number
+          example: 125000.50
+
+        receivedCommission:
+          type: number
+          example: 625.25
+
+    RelationshipManagerCommissionsSummary:
+      type: object
+      required:
+        - totalTradingVolume
+        - totalReceivedCommission
+        - results
+      properties:
+        totalTradingVolume:
+          type: number
+          example: 187500.75
+
+        totalReceivedCommission:
+          type: number
+          example: 937.50
+
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommissionResult'
+
+    CommissionsByRelationshipManagerRequest:
+      type: object
+      properties:
+        startDate:
+          type: string
+          pattern: "^$|\\d{4}-\\d{2}-\\d{2}"
+          example: "2024-01-01"
+          description: "ISO-8601 date (YYYY-MM-DD); blank or absent defaults to 1900-01-01"
+
+        endDate:
+          type: string
+          pattern: "^$|\\d{4}-\\d{2}-\\d{2}"
+          example: "2024-12-31"
+          description: "ISO-8601 date (YYYY-MM-DD); blank or absent defaults to 2999-01-01"
+
+        relationshipManagerCodes:
+          type: array
+          items:
+            type: string
+          example: ["3031"]

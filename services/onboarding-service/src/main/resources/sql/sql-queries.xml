@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="schedule.job.select.by.group">
+        SELECT * FROM schedule_job WHERE job_group_name = ? AND enable = 'Y'
+    </entry>
+    <entry key="schedule.job.count.by.group">
+        SELECT COUNT(*) FROM schedule_job WHERE job_group_name = ?
+    </entry>
+    <entry key="nin.trading.number.check.exists">
+        SELECT
+            CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM BV_PAR_CL_NIN_DET
+                    WHERE UPPER(EXCHANGE_ID) = UPPER(?)
+                    AND UPPER(NIN) = UPPER(?)
+                )
+                THEN 1
+                ELSE 0
+            END AS NIN_EXISTS,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM BV_PAR_CL_NIN_DET
+                    WHERE UPPER(EXCHANGE_ID) = UPPER(?)
+                    AND UPPER(C_ACCOUNT) LIKE UPPER(?)
+                )
+                THEN 1
+                ELSE 0
+            END AS TRADING_NUMBER_EXISTS
+        FROM DUAL
+    </entry>
+    <entry key="dfm.onboarding.insert">
+        INSERT INTO DFM_ONBOARDING_REQUESTS (
+            REQUEST_ID, MOBILE_NUMBER, EMAIL_ADDRESS, NIN,
+            EID_DATE_OF_BIRTH, EID_EXPIRY_DATE, EID_FULL_NAME, EID_NUMBER, EID_ISSUE_DATE,
+            EID_PRIMARY_ID, EID_SECONDARY_ID, EID_GENDER, EID_RESIDENCY_EXPIRY_DATE, EID_RESIDENCY_NUMBER,
+            EID_FAMILY_ID, EID_NATIONALITY, EID_FULL_NAME_ARABIC, EID_ATTACHMENT_FRONT, EID_ATTACHMENT_BACK,
+            EID_ATTACHMENT_TYPE, PP_DATE_OF_BIRTH, PP_EXPIRY_DATE, PP_FULL_NAME, PP_NUMBER,
+            PP_NATIONALITY, PP_PRIMARY_ID, PP_SECONDARY_ID, PP_GENDER, PP_ATTACHMENT,
+            PP_ATTACHMENT_TYPE, ADDRESS, CITY_NAME, MOTHER_NAME, POBOX,
+            PHONE, COUNTRY, SIGNATURE_ATTACHMENT, SIGNATURE_ATTACHMENT_TYPE, PAYMENT_METHOD,
+            PAYMENT_AED_IBAN, PAYMENT_USD_IBAN, PAYMENT_FRN_IBAN, PAYMENT_FRN_SWIFT, PAYMENT_COR_IBAN,
+            PAYMENT_COR_SWIFT, PAYMENT_ROUTE_CODE, PORTFOLIO_OPTIONS, EMPLOYMENT_STATUS, EMPLOYER_NAME,
+            EMPLOYMENT_POSITION, EMPLOYER_MARKET_OR_ISSUER, EMPLOYER_MARKET_OR_ISSUER_COMPANIES, RELATED_TO_MARKET_EMPLOYEE,
+            RELATED_TO_MARKET_EMPLOYEE_RELATIVES_JSON, SOURCE_OF_INCOME, ANNUAL_INCOME_RANGE, INVESTMENT_KNOWLEDGE_EXTENT,
+            INVESTMENT_STRATEGY, INVESTMENT_KNOWLEDGE_INSTRUMENTS, INVESTMENT_RISK_TOLERANCE, INVESTMENT_AMOUNT,
+            INVESTMENT_KNOWLEDGE_IN_TRADING, INVESTMENT_KNOWLEDGE_SOURCE, EDUCATION_LEVEL, INVESTMENT_PREVIOUS_KNOWLEDGE,
+            INVESTMENT_FREQUENCY, INVESTMENT_HIGH_RISK_AWARENESS, INVESTMENT_NET_EQUITY, ACCREDITED_BY_AUTHORITY,
+            ACCREDITED_BY_AUTHORITY_LIST, ACCREDITED_BY_AUTHORITY_TYPE, QUALIFIED_INVESTOR, CSR_JSON,
+            FATCA_US_CITIZEN, FATCA_TIN, BACKGROUND_CHECK, BACKGROUND_CHECK_JSON,
+            CASH_TRADING_NUMBER, MARGIN_TRADING_NUMBER, MEMBER_REFERENCE_NUMBER, ACCOUNT_STATUS, USER_CODE, FIT_NUMBER,
+            DFM_REQUEST_TIME, DFM_ACCOUNT_UPDATE_REQUEST_TIME, BACK_OFFICE_ONBOARDING_REQUEST_TIME, KYC_UPDATE_REQUEST_TIME
+        ) VALUES (
+            :requestId, :custMobile, :custEmail, :custNin,
+            :eidDob, :eidExpirydate, :eidFullname, :eidNo, :eidIssuedate,
+            :eidPrimaryid, :eidSecondaryid, :eidSex, :eidResidencyexpirydate, :eidResidencynumber,
+            :eidFamilyid, :eidNationality, :eidArabicfullname, :eidAttachmentFront, :eidAttachmentBack,
+            :eidAttachmentType, :ppDob, :ppExpirydate, :ppFullname, :ppNo,
+            :ppNationality, :ppPrimaryid, :ppSecondaryid, :ppSex, :ppAttachment,
+            :ppAttachmentType, :pinfAddress, :pinfCity, :pinfMothername, :pinfPobox,
+            :pinfPhone, :pinfCountry, :pinfSignatureimage, :pinfSignatureimageType, :payMethod,
+            :payAedIban, :payUsdIban, :payFrnIban, :payFrnSwift, :payCorIban,
+            :payCorSwift, :payRoutecode, :portfolioOptions, :empStatus, :empName,
+            :empPosition, :empMarketorissuer, :empMarketorissuerCompany, :empRelatedtomarketemployee,
+            :empRelatedsJson, :incSource, :incRange, :invKnowledge,
+            :invStrategy, :invInstrument, :invRisk, :invAmount,
+            :invKnowledgeTrading, :invKnowledgeSource, :invEducation, :invTradePrev,
+            :invTradeFreq, :invRiskHigh, :invEquity, :invSca,
+            :invScaAuthority, :invScaType, :invQualified, :csrJson,
+            :fatcaUscitizen, :fatcaTin, :kycMatch, :kycMatchDetailsJson,
+            :cashTradingNumber, :marginTradingNumber, :memberReferenceNumber, :accountStatus, :userCode, :fitNumber,
+            :dfmRequestTime, :dfmAccountUpdateRequestTime, :backOfficeOnboardingRequestTime, :kycUpdateRequestTime
+        )
+    </entry>
+</properties>

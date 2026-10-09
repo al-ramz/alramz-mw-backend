@@ -1,0 +1,193 @@
+openapi: 3.0.3
+
+info:
+  title: Utility Service API
+  version: 1.0.0
+  description: API for utility service.
+
+servers:
+  - url: http://localhost:8083
+    description: Local Development
+  - url: https://api-dev.alramz.com/utility
+    description: Development Environment
+  - url: https://api-test.alramz.com/utility
+    description: Test Environment
+  - url: https://api-preprod.alramz.com/utility
+    description: Pre-Production Environment
+  - url: https://api.alramz.com/utility
+    description: Production Environment
+
+security:
+  - BearerAuth: []
+
+paths:
+  /community/posts:
+    post:
+      tags:
+        - Community
+      summary: Publish a community post
+      description: Publishes an admin post to the Finoux community platform (InsertPostData).
+      operationId: createCommunityPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityPostRequest'
+            example:
+              postedUserId: 2
+              username: admin
+              postedBy: admin
+              postDesc: "<p>Market update: DFM index closes higher</p>"
+              tagSymbol: "1234"
+      responses:
+        '201':
+          description: Post published successfully
+          headers:
+            Location:
+              schema: { type: string }
+              example: /api/v1/community/posts/4747
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "201"
+                responseMessage: "Created"
+                errorCode: null
+                errorMsg: null
+                correlationId: "2afe4a42-44f7-4e12-aae7-df0e42d4d757"
+                response:
+                  post:
+                    postId: 4747
+                    postedUserId: 2
+                    postedBy: admin
+                    status: ACTIVE
+                    createdAt: "2025-07-24T16:40:42+00:00"
+                    publishedAt: "2025-07-24T16:40:42+00:00"
+                    postType: "2"
+        '400':
+          description: Request validation failure
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "400"
+                responseMessage: "Bad Request"
+                errorCode: "FNX003"
+                errorMsg: "postedBy must be at most 45 characters"
+                correlationId: "2afe4a42-44f7-4e12-aae7-df0e42d4d757"
+        '401':
+          description: Unauthorized - Missing or invalid JWT bearer token
+        '403':
+          description: Forbidden - caller lacks APP_UTILITY role
+        '500':
+          description: Internal server error or Finoux reported a backend/business failure
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: "FNX011"
+                errorMsg: "Finoux did not confirm the post (isSuccess=false)"
+                correlationId: "2afe4a42-44f7-4e12-aae7-df0e42d4d757"
+        '503':
+          description: Finoux unreachable or timed out
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "503"
+                responseMessage: "Service Unavailable"
+                errorCode: "FNX012"
+                errorMsg: "Finoux community service unavailable"
+                correlationId: "2afe4a42-44f7-4e12-aae7-df0e42d4d757"
+
+  # Add every new endpoint's contract here BEFORE writing the controller — the
+  # openapi-generator-maven-plugin (bound to `generate`, see pom.xml) produces interface-only
+  # Spring MVC stubs (com.alramz.api) and DTOs (com.alramz.model) from this file on every build.
+  # A hand-written @RestController implements the generated interface; it is not written from
+  # scratch against this YAML by hand.
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    GenericResponse:
+      type: object
+      properties:
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        response:
+          type: object
+        correlationId:
+          type: string
+          format: uuid
+        errorCode:
+          type: string
+          nullable: true
+        errorMsg:
+          type: string
+          nullable: true
+
+    CommunityPostRequest:
+      type: object
+      required: [postedUserId, username, postedBy, postDesc]
+      properties:
+        postedUserId:
+          type: integer
+          format: int64
+          description: Admin user code (p_posted_user_id). Accepted in the body for this migration — no user-identity-token claim exists yet.
+        username:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Admin user name (p_user_name).
+        postedBy:
+          type: string
+          minLength: 1
+          maxLength: 45
+          description: Display name shown on the post (p_posted_by).
+        postDesc:
+          type: string
+          minLength: 1
+          description: Post body, HTML allowed, sanitised server-side before forwarding to Finoux (p_post_desc). 10000-char cap is enforced post-sanitisation (see FNX004), not as a raw-input constraint here.
+        tagSymbol:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Company tag (p_tag_sc_comp_id), optional.
+
+    CommunityPostResponse:
+      type: object
+      properties:
+        post:
+          $ref: '#/components/schemas/CommunityPost'
+
+    CommunityPost:
+      type: object
+      properties:
+        postId:
+          type: integer
+          format: int64
+        postedUserId:
+          type: integer
+          format: int64
+        postedBy:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE]
+        createdAt:
+          type: string
+          format: date-time
+        publishedAt:
+          type: string
+          format: date-time
+        postType:
+          type: string

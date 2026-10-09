@@ -1,0 +1,19 @@
+# This goes at src/test/resources/application.yml (NOT src/main) — it's what @SpringBootTest
+# actually boots against: real H2, not the profile files above.
+spring:
+  application:
+    name: __SERVICE_NAME__
+  liquibase:
+    change-log: classpath:db/changelog/test/db.changelog-master.yaml
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.H2Dialect
+
+cipher:
+  password: 1234567890123456

@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: onboarding-service
+  liquibase:
+    change-log: classpath:db/changelog/test/db.changelog-master.yaml
+
+company:
+  datasource:
+    middleware:
+      enabled: true
+      url: jdbc:h2:mem:testdb
+      driverClassName: org.h2.Driver
+      username: sa
+      password:
+      plainPassword: sa
+      startup-validation:
+        enabled: false
+      pool:
+        maximum-pool-size: 5
+        minimum-idle: 1
+
+cipher:
+  password: 1234567890123456
+
+adapter:
+  external-iban-service:
+    base-url: http://api.iban.com
+    request-timeout: 15
+  external-veriphone-service:
+    base-url: http://api.veriphone.io
+    request-timeout: 15
+  etrade:
+    base-url: https://etradeqa.alramz.ae
+    client-id: 1
+    client-secret: R@mZS4qR5t
+    request-timeout: "30"
+    token-ttl-seconds: 3000
+    token-path: /IntegrationAPI/IntegrationWServices/GetClientToken
+    validations:
+      EMAIL_EXISTS:
+        path: /IntegrationAPI/IntegrationWServices/IfEmailExists
+        method: POST
+        request-mapping:
+          Reference_No: referenceNo
+          emailAddress: email
+      PASSPORT_EXISTS:
+        path: /IntegrationAPI/IntegrationWServices/IfPassportExists
+        method: POST
+        request-mapping:
+          Reference_No: referenceNo
+          pp_number: passportNumber
+      USERNAME_EXISTS:
+        path: /IntegrationAPI/IntegrationWServices/IfUsernameExists
+        method: POST
+        request-mapping:
+          Reference_No: referenceNo
+          username: username
+      EID_EXISTS:
+        path: /IntegrationAPI/IntegrationWServices/IfEidExists
+        method: POST
+        request-mapping:
+          Reference_No: referenceNo
+          eid_number: eidNumber
+      TP_UUID_EXISTS:
+        path: /IntegrationAPI/IntegrationWServices/IfTPUUIDExists
+        method: POST
+        request-mapping:
+          Reference_No: referenceNo
+          UUID: uuid
+          thirdParty: thirdParty
+      MOBILE_EXISTS:
+        path: /IntegrationAPI/IntegrationWServices/IfMobileExists
+        method: POST
+        request-mapping:
+          MobileNo: mobileNumber

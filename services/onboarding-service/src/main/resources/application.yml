@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: onboarding-service
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+server:
+  host: localhost
+
+sql:
+  file: classpath:sql/global-configuration-settings-queries.xml,classpath:sql/sql-queries.xml
+
+management:
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
+  opentelemetry:
+    resource-attributes:
+      deployment.environment: ${spring.profiles.active:default}
+    tracing:
+      export:
+        otlp:
+          endpoint: ${TRACING_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+    logging:
+      export:
+        otlp:
+          endpoint: ${LOGS_OTLP_ENDPOINT:http://localhost:3100/otlp/v1/logs}
+  observations:
+    annotations:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}   # Grafana dashboard filters on this label
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true                # buckets for the p95/p99 panels
+  otlp:
+    metrics:
+      export:
+        enabled: false   # Jaeger accepts traces only

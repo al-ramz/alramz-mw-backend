@@ -1,0 +1,100 @@
+# Instantiate this once per profile: application-dev.yml, application-preprod.yml, application-prod.yml.
+# application-docker.yml and application-test.yml have their own templates (different shape) — see
+# application-docker.yml.template and application-test.yml.template.
+#
+# Placeholders:
+#   __PROFILE__            dev | preprod | prod
+#   __SERVICE_NAME__       kebab-case service name, e.g. reward-engine-service
+#   __THREAD_PREFIX__      PascalCase short name for scheduler thread names, e.g. RewardEngine
+#   __PORT__               dev: a free port in the 808x range not already used by another service;
+#                           preprod/prod: 8080 (Kubernetes Service fronts it — see service.yaml)
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/__PROFILE__/db.changelog-master.yaml
+
+server:
+  address: 0.0.0.0
+  port: __PORT__
+  host: localhost
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+cipher:
+  password: UseMostSecretKey
+
+company:
+  scheduler:
+    pool-size: 5
+    thread-group-name: __SERVICE_NAME__-scheduled-tasks-
+    thread-name-prefix: __THREAD_PREFIX__-TaskScheduler-Worker-
+
+  logging:
+    json:
+      enabled: false
+      pretty-print: false
+    correlation-id:
+      response-header: true
+    request:
+      enabled: true
+      include-headers: true
+      include-payload: true
+    response:
+      enabled: true
+      include-payload: true
+    aspect:
+      enabled: true
+    performance:
+      threshold: 1000ms
+    database-logging:
+      enabled: true
+      include-request-payload: true
+      include-response-payload: true
+      cleanup-cron: "0 0 2 * * *"
+      retention-days: 7
+      excluded-paths:
+        - /api/v1/info
+        - /actuator/**
+        - /swagger-ui/**
+        - /v3/api-docs/**
+    seq:
+      enabled: true
+
+  jwt:
+    enabled: true
+    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+    login-url: /api/auth/login
+    register-url: /api/auth/register
+    refresh-url: /api/auth/refresh
+    logout-url: /api/auth/logout
+    validate-url: /api/auth/validate
+    permit-all-urls:
+      - /api/v1/info
+      # Add every new public endpoint here instead of writing ad hoc Spring Security config.
+
+  # DB-less services: delete the whole `datasource:` block below (and the corresponding pom.xml /
+  # Liquibase pieces — see SKILL.md "DB-less services" variant).
+  datasource:
+    middleware:
+      enabled: true
+      url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://localhost:5432/alramzmwdb}
+      username: ${COMPANY_DATASOURCE_MIDDLEWARE_USERNAME:alramzmw}
+      # __PROFILE__ == dev: plainPassword is acceptable (dev-only, logs a warning).
+      # __PROFILE__ == preprod or prod: replace plainPassword with cipher-encrypted `password` +
+      # `passwordVector` (cipher.password above activates PWProtector) — never commit a plaintext
+      # password for a non-dev profile. See CLAUDE.md "Do Not Use / Anti-Patterns".
+      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD:alramz!321*}
+      driverClassName: ${COMPANY_DATASOURCE_MIDDLEWARE_DRIVERCLASSNAME:org.postgresql.Driver}
+      startup-validation:
+        enabled: ${COMPANY_DATASOURCE_MIDDLEWARE_STARTUP_VALIDATION_ENABLED:false}
+      pool:
+        maximum-pool-size: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MAXIMUM_POOL_SIZE:10}
+        minimum-idle: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MINIMUM_IDLE:2}
+      sql-logging:
+        enabled: false
+    # Enable `brok` and/or `integration` here (same shape as `middleware`, plus an `oracle:` block
+    # for brok) only if this service actually talks to those datasources — each is an independent
+    # Hikari pool and must be injected with an explicit @Qualifier (see CLAUDE.md §4).

@@ -1,0 +1,57 @@
+@baseUrl=http://localhost:8083
+
+### Get a token first by registering + logging in below, then paste it here.
+@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1dGlsaXR5X3NlcnZpY2VhcHAiLCJpYXQiOjE3OTE1MzM2MTQsImV4cCI6MTc5MTUzNDUxNCwicm9sZXMiOlsiQVBQX1VUSUxJVFkiXSwiYXBwbGljYXRpb24iOiJ1dGlsaXR5LXNlcnZpY2UiLCJlbnZpcm9ubWVudCI6ImxvY2FsIn0.wAZvRs-bVJYEjhk6EerU88K23davozaKcVocwqTU-zg
+
+GET {{baseUrl}}/api/v1/info
+
+###
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+    "authType": "JWT",
+    "consumer": "utility_serviceapp",
+    "email": "utility-service@alramz.ae",
+    "consumerPassword": "password123",
+    "roles": ["APP_UTILITY"],
+    "application": "utility-service",
+    "environment": "local"
+}
+
+###
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "consumer": "utility_serviceapp",
+    "consumerPassword": "password123"
+}
+
+### Publish Community Post
+POST {{baseUrl}}/api/v1/community/posts
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postedUserId": 2,
+    "username": "admin",
+    "postedBy": "admin",
+    "postDesc": "<p>Market update: DFM index closes higher</p>",
+    "tagSymbol": "1234"
+}
+
+### Publish Community Post -ve test case (blank postedBy)
+POST {{baseUrl}}/api/v1/community/posts
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postedUserId": 2,
+    "username": "admin",
+    "postedBy": "",
+    "postDesc": "<p>Market update: DFM index closes higher</p>",
+    "tagSymbol": "1234"
+}
+
+###

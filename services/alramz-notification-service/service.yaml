@@ -1,0 +1,15 @@
+container:
+  cpu: "0.5"
+  memory: "1Gi"
+  targetPort: 8082
+
+scale:
+  minReplicas: 1
+  maxReplicas: 5
+
+ingress:
+  external: true
+
+environment:
+  springProfile: dev
+  javaOpts: "-Xms256m -Xmx512m"

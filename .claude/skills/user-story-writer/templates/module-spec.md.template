@@ -1,0 +1,148 @@
+# __MODULE_NAME__
+
+**Epic:** `__EPIC_REF__` — <one line on what this module covers and, if it bundles
+several flows into one un-numbered deliverable per explicit instruction, say so here>
+· **Deliverable:** User Stories · **Priority:** __PRIORITY__
+
+**Status:** Draft v0.1 — <one line summarizing this revision's content>.
+**Owner:** __OWNER_TRACK__
+
+## Document control
+
+|Item|Detail|
+|-|-|
+|Source — functional (mobile)|<file/artifact name — what it contains, how many screenshots, what's missing>|
+|Source — functional (web + notes)|<file/artifact name — BA notes + embedded screenshots, any caveats about capture quality>|
+|Source — review (round 1)|<reviewer/PO clarification, what it closed>|
+|Source — technical|<Solution Design excerpt, or **Not provided.** state plainly if so — every op name stays `[X]`>|
+|Source — commercial|<NFR targets, or **Not consulted.**>|
+|Upstream module|<modules this one depends on/cross-references, and whether that dependency is confirmed or `[X]`>|
+|Related deliverables|Requirements · UI schema · UI design · Documentation — status of each|
+|Blocking open questions|<count and one-line status — kept in sync with §5's table>|
+
+**Provenance tags:** `[S]` = BA spec (notes/docx) · `[SC]` = screenshot (web or mobile) ·
+`[D]` = solution design · `[R]` = reviewer/PO decision · `[X]` = derived by writer,
+needs confirmation.
+
+### Decisions log
+
+|Version|Decision|Effect|
+|-|-|-|
+|v0.1|<first-draft scoping decision, e.g. why several flows are bundled into one doc>|<IDs this determines, e.g. flat `__CODE__` prefix with no sub-numbering>|
+|v0.1|<any explicitly-excluded item found in source material during drafting>|<not referenced anywhere in this document>|
+
+---
+
+## 1. Scope
+
+**In scope:** <every entry point, flow, and state this doc covers, each ending in its
+provenance tag(s), e.g. `[S]`,`[SC]`>.
+
+**Out of scope:**
+
+|Item|Why|Owner|
+|-|-|-|
+|<adjacent flow only referenced as a shared entry point/hyperlink>|<why it's not fully specified here>|<owning module/team>|
+|<backend/ops process this doc's actions trigger but doesn't itself perform>|<confirmed out of scope, tag>|<owning team>|
+
+**Platforms:** <Web/mobile, any layout differences worth calling out up front>.
+
+## 2. Actors
+
+|Actor|Description|
+|-|-|
+|<primary user role>|<what they do in this module>|
+|<a gated/partial-access user variant, if any>|<what's blocked/allowed for them, tag>|
+|System — BFF|<what it assembles/validates/orchestrates>|
+|External — <system name>|<its role, tag>|
+
+## 3. Ownership boundary
+
+<One line stating whether a design excerpt exists to confirm this against; if not, say
+every row is `[X]` by analogy with other modules.>
+
+|Capability|Owner|Our responsibility|
+|-|-|-|
+|<capability>|<owning team>|<what this module's FE/BFF is responsible for vs. what's authoritative elsewhere>|
+
+## 4. Key concepts
+
+* **<Term>** — <definition, distinguishing it from anything easily confused with it>
+  `[tag]`.
+* **<Term confirmed by review>** — <definition> **(confirmed vN.N)** `[tag]`,`[R]`.
+
+---
+
+## 5. Open questions & conflicts
+
+None of the questions below is treated as blocking — each carries a proposed default so
+drafting can proceed — but none is reviewer-confirmed yet either, unless marked closed.
+
+|ID|Question|Why it's open|Proposed default|Blocking?|
+|-|-|-|-|-|
+|OQ-1|<question>|<why no source answers it>|<default to draft against>|—|
+
+<When closed:>
+|~~OQ-1~~|~~<question>~~|~~<why it was open>~~|**Closed vN.N — confirmed: <answer>.** <IDs updated/added>.|—|
+
+---
+
+## 6. Business rules
+
+|ID|Rule|Source|
+|-|-|-|
+|BR-__CODE__-1|<declarative rule sentence>|`[tag]`|
+|BR-__CODE__-2|**Confirmed vN.N:** <rule sentence, with the confirmation folded in>.|`[tag]`,`[R]`|
+
+---
+
+## 7. Requirements traceability
+
+|Req ID|Requirement|Stories|Source|
+|-|-|-|-|
+|__CODE__-R-1|<one-line capability statement>|US-__CODE__-1|`[tag]`|
+
+---
+
+## 8. Validation matrix
+
+"Yes" = that layer performs the check.
+
+|Validation|FE|BFF|External|
+|-|-|-|-|
+|<check>|Yes/No/—|Yes (authoritative)/—|<external system, if any>|
+
+---
+
+## 9. User stories
+
+### Epic A — <name, e.g. "Getting into the module">
+
+### US-__CODE__-1 — <short, outcome-oriented title>
+
+> **As a** <role>
+> **I want to** <capability>
+> **So that** <benefit>
+
+**Satisfies:** __CODE__-R-1 · **Operation `[X]`:** `<op name, or [X] placeholder if no design excerpt>`
+**Screen `[SC]`:** <what the screenshot(s)/notes show — cite specifics>
+
+**Acceptance criteria**
+
+* **AC-1.1** — Given <precondition>, when <action>, then <expected result> (BR-__CODE__-1).
+* **AC-1.2** — Given <precondition>, when <action>, then <expected result> (BR-__CODE__-2).
+
+**Test cases**
+
+|TC ID|AC|Type|Layer|Precondition|Steps|Expected|
+|-|-|-|-|-|-|-|
+|TC-01.01|1.1|Functional|FE|<precondition>|<steps>|<expected>|
+|TC-01.02|1.2|Negative|BFF|<precondition>|<steps calling the API directly>|`<ERROR_CODE>` (4xx)|
+
+---
+
+<Repeat the US-__CODE__-N card for every story, grouped under further `### Epic <Letter>`
+headers as the module's flow naturally breaks down (e.g. core happy-path steps, gating/
+edge states, ancillary read-only screens last). A gating story (profile tier, KYC
+expiry, account restriction, etc.) always includes a negative AC + TC row exercising the
+BFF directly with the exact error code, per SKILL.md §6.>

@@ -1,0 +1,7 @@
+# Instantiate once per profile at:
+#   src/main/resources/db/changelog/{dev,docker,preprod,prod}/db.changelog-master.yaml
+#   src/test/resources/db/changelog/test/db.changelog-master.yaml
+# __PROFILE__ = dev | docker | preprod | prod | test (matching the directory it's placed in)
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/__PROFILE__/sql

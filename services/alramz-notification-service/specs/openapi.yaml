@@ -1,0 +1,263 @@
+openapi: 3.0.3
+
+info:
+  title: Email Send API
+  version: 1.0.0
+  description: API to send emails with optional attachments via Microsoft Graph or other providers.
+
+servers:
+  - url: http://localhost:8082
+    description: Local Development
+  - url: https://api-dev.alramz.com/notification
+    description: Development Environment
+  - url: https://api-test.alramz.com/notification
+    description: Test Environment
+  - url: https://api-preprod.alramz.com/notification
+    description: Pre-Production Environment
+  - url: https://api.alramz.com/notification
+    description: Production Environment
+
+security:
+  - BearerAuth: []
+
+paths:
+  /api/v1/email/send:
+    post:
+      tags:
+        - Email
+      summary: Send email
+      description: Sends an email to a recipient with optional attachments.
+      operationId: sendEmail
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+            examples:
+              simple:
+                value:
+                  to: "recipient@example.com"
+                  subject: "Test Email from Spring Boot"
+                  from: "sender@example.com"
+                  body: "<h1>Hello</h1><p>This is a test email body.</p>"
+              withAttachment:
+                value:
+                  to: "recipient@example.com"
+                  subject: "Test Email with Attachment"
+                  from: "sender@example.com"
+                  body: "<h1>Hello</h1><p>Please find the attachment.</p>"
+                  attachments:
+                    - name: "document.pdf"
+                      content: "base64-encoded-pdf-data"
+
+      responses:
+        '200':
+          description: Email sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailSendResponse'
+              example:
+                correlationID: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                status: "SUCCESS"
+                responseCode: "200"
+                responseMessage: "OK"
+                provider: "MICROSOFT_GRAPH"
+                sentTo: "recipient@example.com"
+                sentAt: "2025-01-01T12:00:00Z"
+                traceId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+
+        '401':
+          description: Unauthorized - Missing or invalid JWT bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                responseCode: "401"
+                responseMessage: "Unauthorized"
+                error: "Missing or invalid JWT bearer token"
+
+        '400':
+          description: Bad Request - Missing or invalid required field
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingField:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    error: "Phone number is required"
+                invalidEmailFormat:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Invalid Email Format"
+                    error: "Email address fails RFC 5322 validation"
+                invalidSubjectLength:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Invalid Subject Length"
+                    error: "Subject exceeds 255 characters"
+                invalidBodyLength:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Invalid Body Length"
+                    error: "Body exceeds 10,000 characters"
+                invalidAttachmentCount:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Invalid Attachment Count"
+                    error: "More than 10 attachments"
+                invalidAttachmentSize:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Invalid Attachment Size"
+                    error: "Attachment exceeds 10 MB"
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                error: "Unhandled internal exception"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer token authentication. Include token in Authorization header.
+
+  schemas:
+    EmailRequest:
+      type: object
+      required:
+        - to
+        - subject
+        - from
+        - body
+      properties:
+        to:
+          type: string
+          format: email
+          description: Recipient email address
+          example: "recipient@example.com"
+        subject:
+          type: string
+          maxLength: 255
+          description: Email subject
+          example: "Test Email from Spring Boot"
+        from:
+          type: string
+          format: email
+          description: Sender email address
+          example: "sender@example.com"
+        body:
+          type: string
+          maxLength: 10000
+          description: Email body (HTML supported)
+          example: "<h1>Hello</h1><p>This is a test email body.</p>"
+        attachments:
+          type: array
+          maxItems: 10
+          description: Optional email attachments
+          items:
+            $ref: '#/components/schemas/EmailAttachment'
+
+    EmailAttachment:
+      type: object
+      required:
+        - name
+        - content
+      properties:
+        name:
+          type: string
+          description: Attachment file name
+          example: "document.pdf"
+        content:
+          type: string
+          format: byte
+          description: Base64-encoded attachment content
+          example: "base64-encoded-pdf-data"
+
+    EmailSendResponse:
+      type: object
+      required:
+        - correlationID
+        - status
+        - responseCode
+        - responseMessage
+        - provider
+        - sentTo
+        - sentAt
+        - traceId
+      properties:
+        correlationID:
+          type: string
+          format: uuid
+          description: Unique correlation identifier for the request
+          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        status:
+          type: string
+          description: Operation status
+          example: "SUCCESS"
+        responseCode:
+          type: string
+          description: HTTP-style response code
+          example: "200"
+        responseMessage:
+          type: string
+          description: Human-readable response message
+          example: "OK"
+        provider:
+          type: string
+          description: Email service provider used
+          example: "MICROSOFT_GRAPH"
+        sentTo:
+          type: string
+          format: email
+          description: Recipient email address
+          example: "recipient@example.com"
+        sentAt:
+          type: string
+          format: date-time
+          description: Timestamp when email was sent
+          example: "2025-01-01T12:00:00Z"
+        traceId:
+          type: string
+          format: uuid
+          description: Distributed tracing identifier
+          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        error:
+          type: string
+          description: Detailed error message (present only on error)
+          example: "Phone number is required"
+
+    ErrorResponse:
+      type: object
+      required:
+        - responseCode
+        - responseMessage
+        - error
+      properties:
+        responseCode:
+          type: string
+          description: HTTP-style response code
+          example: "400"
+        responseMessage:
+          type: string
+          description: Human-readable response message
+          example: "Bad Request"
+        error:
+          type: string
+          description: Detailed error message
+          example: "Phone number is required"

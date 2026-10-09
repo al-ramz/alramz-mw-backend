@@ -1,0 +1,598 @@
+{
+  "info": {
+    "_postman_id": "79eaa874-0060-4cf0-b84e-0ca78754e687",
+    "name": "AlramzMWCollection",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58438826",
+    "_collection_link": "https://go.postman.co/collection/58438826-79eaa874-0060-4cf0-b84e-0ca78754e687?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "onboarding-apis",
+      "item": [
+        {
+          "name": "01_login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n          pm.response.to.have.status(200);\n      });\n\n      pm.test(\"accessToken is present and not null/empty\", function () {\n          const response = pm.response.json();\n\n          pm.expect(response).to.have.property(\"accessToken\");\n          pm.expect(response.accessToken).to.not.be.null;\n          pm.expect(response.accessToken).to.not.be.undefined;\n          pm.expect(response.accessToken).to.not.equal(\"\");\n      });\n\n      pm.test(\"refreshToken is present and not null/empty\", function () {\n          const response = pm.response.json();\n\n          pm.expect(response).to.have.property(\"refreshToken\");\n          pm.expect(response.refreshToken).to.not.be.null;\n          pm.expect(response.refreshToken).to.not.be.undefined;\n          pm.expect(response.refreshToken).to.not.equal(\"\");\n      });\n\n      pm.collectionVariables.set(\"v_access_token\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n        \"consumer\": \"{{v_onboarding_consumer}}\",\n        \"consumerPassword\": \"{{v_consumer_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}:{{onboarding-service-port}}/api/auth/login",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{onboarding-service-port}}",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02_validateIBAN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\nlet jsonData = pm.response.json();\n\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});\n\npm.test(\"Correlation ID is present\", function () {\n    pm.expect(jsonData.correlationId).to.be.a(\"string\").and.not.empty;\n});\n\npm.test(\"Bank data is present\", function () {\n    pm.expect(jsonData.response.bank_data).to.be.an(\"object\");\n});\n\npm.test(\"Errors array is empty\", function () {\n    pm.expect(jsonData.response.errors).to.be.an(\"array\").that.is.empty;\n});\n\npm.test(\"SEPA services are not supported\", function () {\n    const sepa = jsonData.response.sepa_data;\n\n    pm.expect(sepa.B2B).to.eql(\"NO\");\n    pm.expect(sepa.COR1).to.eql(\"NO\");\n    pm.expect(sepa.SCC).to.eql(\"NO\");\n    pm.expect(sepa.SCT).to.eql(\"NO\");\n    pm.expect(sepa.SDD).to.eql(\"NO\");\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"onboarding-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumerPassword\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"IBAN\": \"AE460260001015862843301\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}:{{onboarding-service-port}}/api/v1/iban/validate",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{onboarding-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "iban",
+                "validate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04_dfm_onboarding",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"onboarding-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumerPassword\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n      pm.test(\"HTTP status code is 200\", function () {\n          pm.response.to.have.status(200);\n      });\n\n      pm.test(\"response_code is '200'\", function () {\n          pm.expect(jsonData).to.have.property(\"response_code\");\n          pm.expect(jsonData.response_code).to.eql(\"200\");\n      });\n\n      pm.test(\"member_reference_number is present and is a valid UUID\", function () {\n          pm.expect(jsonData).to.have.property(\"member_reference_number\");\n          pm.expect(jsonData.member_reference_number).to.be.a(\"string\");\n          pm.expect(jsonData.member_reference_number).to.match(\n              /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i\n          );\n      });\n\n      pm.test(\"member_client_id is present and is a valid UUID\", function () {\n          pm.expect(jsonData).to.have.property(\"member_client_id\");\n          pm.expect(jsonData.member_client_id).to.be.a(\"string\");\n          pm.expect(jsonData.member_client_id).to.match(\n              /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i\n          );\n      });\n\n      pm.test(\"member_reference_number matches member_client_id\", function () {\n          pm.expect(jsonData.member_reference_number).to.eql(jsonData.member_client_id);\n      });\n\n      pm.test(\"internal_error_code is null\", function () {\n          pm.expect(jsonData).to.have.property(\"internal_error_code\");\n          pm.expect(jsonData.internal_error_code).to.be.null;\n      });\n\n      pm.test(\"response_message is null\", function () {\n          pm.expect(jsonData).to.have.property(\"response_message\");\n          pm.expect(jsonData.response_message).to.be.null;\n      });\n\n      pm.test(\"Response body has all required fields\", function () {\n          pm.expect(jsonData).to.have.all.keys(\n              \"response_code\",\n              \"member_reference_number\",\n              \"internal_error_code\",\n              \"member_client_id\",\n              \"response_message\"\n          );\n      });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n        \"request_id\": \"f20b9d03-856e-4eca-9ee8-fb37fe7384g556\",\n        \"portfolio_options\": \"Cash\",\n        \"securitykey\": \"0981650c-de45-4f16-8f4a-1698c0dd0195\",\n        \"cust_mobile\": \"009715034235\",\n        \"cust_email\": \"gaurav12@alramz.ae\",\n        \"cust_nin\": \"SYA6269323\",\n        \"eid_dob\": \"1993-09-06\",\n        \"eid_expirydate\": \"2031-06-07\",\n        \"eid_fullname\": \"IBRAHIM AMMAR DANNOUeA\",\n        \"eid_no\": \"784-1993-6269323-4\",\n        \"eid_issuedate\": \"1900-01-01\",\n        \"eid_primaryid\": \"DANNOURA\",\n        \"eid_secondaryid\": \"IBRAHIM AMMAR\",\n        \"eid_sex\": \"M\",\n        \"eid_residencyexpirydate\": \"1900-01-01\",\n        \"eid_residencynumber\": \"\",\n        \"eid_familyid\": \"\",\n        \"eid_nationality\": \"SYR\",\n        \"eid_arabicfullname\": \"ابراهيم عمار دنوره\",\n        \"eid_attachment_front\": \"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\",\n        \"eid_attachment_back\": \"/9j/4AAQSkZJRgABAQAASABIAAD/4QBYRXhpZgAATU0AKgAAAAgAAgESAAMAAAABAAEAAIdpAAQAAAABAAAAJgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAACTqADAAQAAAABAAABawAAAAD/wAARCAFrAk4DAREAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwACAgICAgIDAgIDBAMDAwQGBAQEBAYHBgYGBgYHCAcHBwcHBwgICAgICAgICgoKCgoKDAwMDAwNDQ0NDQ0NDQ0N/9sAQwECAgIDAwMGAwMGDgkICQ4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4O/90ABABK/9oADAMBAAIRAxEAPwDc+AvwctfDel23ivxNCtxrN3EGgRwMW0bcgD/bPGT26V5M6znoNux9QxREcNk+lKNO5lzakxjHpzW3Kw9oSRxqB90fWmok3bZKFQHIXBp3DsTKoHOKGnYakO2j+6KnluUp2AKo6c1Si7D5rjgn+zT5bhz3FAHof6UuXzHzsULj+lVbTUfMmO3LjqBWUtC4y5tx+07flHNKMrbicrj8HOcCquCdx2M/8A66Oa5VgxSAPbmj3R2Y8g/lRzEu/UeMevFP5juxw/Hj61SE2PDHOB171pz26iuyRG7kUXvuO7Q7cP8AIquZdUNXWw8e9Z83cvmHA+tO7FYfn61V2Tddhc+1MLdRwNS7sQ7NWmNXHAn61PMhc2oL9Pxp86HcXI6Hp70c1w5hwZeh5qudA3ccJBjnn8Kr2kScyHFx/eH51pGSZalclD59q39p5hqO+an56pTTJuKJh7VtGomWnccJAeK6YzubRlc//2Q==\",\n        \"eid_attachment_type\": \"jpg\",\n        \"pp_dob\": \"1900-01-01\",\n        \"pp_expirydate\": \"1900-01-01\",\n        \"pp_fullname\": \"\",\n        \"pp_no\": \"\",\n        \"pp_nationality\": \"\",\n        \"pp_primaryid\": \"\",\n        \"pp_secondaryid\": \"\",\n        \"pp_sex\": \"\",\n        \"pp_attachment_type\": \"\",\n        \"pinf_address\": \"Dubai\",\n        \"pinf_city\": \"Dubai\",\n        \"pinf_mothername\": \"\",\n        \"pinf_pobox\": \"0\",\n        \"pinf_phone\": \"\",\n        \"pinf_country\": \"ARE\",\n        \"pinf_signatureimage_type\": \"jpg\",\n        \"pinf_signatureimage\": \"/9j/4AAQSkZJRgABAQAASABIAAD/4QCARXhpZgAATU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABIAAAAAQAAAEgAAAABAAKgAgAEAAAAAQAAATugAwAEAAAAAQAAAMsAAAAA/+0AOFBob3Rvc2hvcCAzLjAAOEJJTQQEAAAAAAAAOEJJTQQlAAAAAAAQ1B2M2Y8AsgTpgAmY7PhCfv/AABEIAMsBOwMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2wBDABYWFhYWFiYWFiY2JiYmNkk2NjY2SVxJSUlJSVxvXFxcXFxcb29vb29vb2+GhoaGhoacnJycnK+vr6+vr6+vr6//2wBDARsdHS0pLUwpKUy3fGZ8t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7f/3QAEABT/2gAMAwEAAhEDEQA/AOuooooAKKKKACiiigAooooAKKKKACiiigAoopkyPJH5aNs3cZ9B3NAE1FQwW8dvH5aZOepPU/WpqACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//0uuooooAKKKKACiiigAooooAKKKKACiiigAooooAKydTT7OY79P+WbYf6MOP0OK06R1DqUYAgjBFAFkEEZByDWVY/6LfXFn/D/AKxfow5/rUWnyvbO2nTH5l5iJ7r6fUVdkj2skqffjOR7joaAJ6KKKACiiigAooooAKw9PO/V9QlP/TNf/Hf8a3K5/S/8Aj/wC0f897mU/8AoNAGzdXCW8RlfkDgD1PYVnWNu5dtRuh+9l+6v91Oy0+8/0vUY7foIh5r/AOB/KtSgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==\",\n        \"pinf_signatureimage_type\": \"jpg\",\n        \"pay_method\": \"iVESTOR\",\n        \"pay_aed_iban\": \"AE710240060520225728601\",\n        \"pay_usd_iban\": \"\",\n        \"pay_frn_iban\": \"\",\n        \"pay_frn_swift\": \"\",\n        \"pay_cor_iban\": \"\",\n        \"pay_cor_swift\": \"\",\n        \"pay_routecode\": \"\",\n        \"emp_status\": \"1\",\n        \"emp_name\": \"Park dental\",\n        \"emp_position\": \"Others\",\n        \"emp_marketorissuer\": \"2\",\n        \"emp_marketorissuer_company\": \"\",\n        \"emp_relatedtomarketemployee\": \"2\",\n        \"emp_relateds\": {\n            \"emp_related\": [\n                {\n                    \"emp_relatednames\": \"\",\n                    \"emp_related_relations\": \"\",\n                    \"emp_related_company\": \"\"\n                }\n            ]\n        },\n        \"inc_source\": \"2\",\n        \"inc_range\": \"2\",\n        \"inv_knowledge\": \"1\",\n        \"inv_strategy\": \"2\",\n        \"inv_instrument\": \"2\",\n        \"inv_risk\": \"1\",\n        \"inv_amount\": \"5000\",\n        \"inv_knowledge_trading\": \"3\",\n        \"inv_knowledge_source\": \"4\",\n        \"inv_education\": \"3\",\n        \"inv_trade_prev\": \"1\",\n        \"inv_trade_freq\": \"1\",\n        \"inv_risk_high\": \"2\",\n        \"inv_equity\": \"1\",\n        \"inv_sca\": \"1\",\n        \"inv_sca_authority\": \"\",\n        \"inv_sca_type\": \"\",\n        \"inv_qualified\": \"1\",\n        \"csr_resident\": \"2\",\n        \"csr\": {\n            \"csr_countries\": [\n                {\n                    \"csr_country\": \"ARE\",\n                    \"csr_havetin\": \"2\",\n                    \"csr_tin\": \"\",\n                    \"csr_notinreason\": \"C\",\n                    \"csr_whynotinissued\": \"No TIN required\"\n                }\n            ]\n        },\n        \"fatca_uscitizen\": \"2\",\n        \"fatca_tin\": \"\",\n        \"kyc_match\": \"false\",\n        \"kyc_match_details\": {\n            \"backgroundCheck\": null\n        }\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}:{{onboarding-service-port}}/api/v1/dfm/onboarding",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{onboarding-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "dfm",
+                "onboarding"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03_veriphone",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"onboarding-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumerPassword\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n// 1. HTTP and response status\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});\n\n// 2. Correlation ID\npm.test(\"Correlation ID is present\", function () {\n    pm.expect(jsonData.correlationId).to.be.a(\"string\").and.not.empty;\n});\n\n// 3. Phone response object\npm.test(\"Phone response object is present\", function () {\n    pm.expect(jsonData.response).to.be.an(\"object\");\n});\n\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"971502540238\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}:{{onboarding-service-port}}/api/v1/veriphone/verify",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{onboarding-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "veriphone",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "reference-data-apis",
+      "item": [
+        {
+          "name": "01_deep_health_check",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"reference-data-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_reference_data_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n// 1. HTTP status\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Response status\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});\n\n// 3. Correlation ID\npm.test(\"Correlation ID is present\", function () {\n    pm.expect(jsonData.correlationId).to.be.a(\"string\").and.not.empty;\n});\n\n// 4. Deep health response structure\npm.test(\"Health response object is present\", function () {\n    pm.expect(jsonData.response).to.be.an(\"object\");\n    pm.expect(jsonData.response.details).to.be.an(\"object\");\n});\n\n// 5. Overall application health\npm.test(\"Overall status is UP\", function () {\n    pm.expect(jsonData.response.overallStatus).to.eql(\"UP\");\n});\n\n// 6. Redis health\npm.test(\"Redis status is connected\", function () {\n    pm.expect(jsonData.response.details.redis).to.eql(\"connected\");\n});\n\npm.test(\"Redis is reachable\", function () {\n    pm.expect(jsonData.response.redisReachable).to.eql(true);\n});\n\n// 7. Database health\npm.test(\"Database status is connected\", function () {\n    pm.expect(jsonData.response.details.database).to.eql(\"connected\");\n});\n\npm.test(\"Database is reachable\", function () {\n    pm.expect(jsonData.response.databaseReachable).to.eql(true);\n});\n// 9. Reachability flags must be boolean\npm.test(\"Redis and database reachability flags are boolean\", function () {\n    pm.expect(jsonData.response.redisReachable).to.be.a(\"boolean\");\n    pm.expect(jsonData.response.databaseReachable).to.be.a(\"boolean\");\n});\n\n// 10. Combined dependency health\npm.test(\"All dependencies are healthy\", function () {\n    const response = jsonData.response;\n\n    pm.expect(response.overallStatus).to.eql(\"UP\");\n    pm.expect(response.redisReachable).to.eql(true);\n    pm.expect(response.databaseReachable).to.eql(true);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{reference-data-service-port}}/api/v1/health/deep",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{reference-data-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "health",
+                "deep"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02_get_global_config",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"reference-data-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_reference_data_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n// 1. HTTP status\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Response status\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{reference-data-service-port}}/api/v1/cache/entries/global-config",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{reference-data-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "cache",
+                "entries",
+                "global-config"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03_get-cache-status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n// 1. HTTP status\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Response status\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"reference-data-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_reference_data_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{reference-data-service-port}}/api/v1/cache/entries/global-config/status",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{reference-data-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "cache",
+                "entries",
+                "global-config",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04_cache_flush",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"reference-data-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_reference_data_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n// 1. HTTP status\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Response status\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{reference-data-service-port}}/api/v1/cache/entries/global-config/flush",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{reference-data-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "cache",
+                "entries",
+                "global-config",
+                "flush"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05_reload_cache",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n// 1. HTTP status\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Response status\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"reference-data-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_reference_data_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{reference-data-service-port}}/api/v1/cache/entries/global-config/reload",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{reference-data-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "cache",
+                "entries",
+                "global-config",
+                "reload"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "06_get_relationship_managers",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"reference-data-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_reference_data_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n// 1. HTTP status\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Response status\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{reference-data-service-port}}/api/v1/relationship-managers",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{reference-data-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "relationship-managers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "07_get_commissions_for_relationship_managers",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\n// 1. HTTP status\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Response status\npm.test(\"Response code is 200\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n});\n\npm.test(\"Response message is OK\", function () {\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"reference-data-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_reference_data_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"startDate\": \"2024-01-01\",\n    \"endDate\": \"2024-01-03\",\n    \"relationshipManagerCodes\": [\"5000\"]\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}:{{reference-data-service-port}}/api/v1/relationship-managers/commissions",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{reference-data-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "relationship-managers",
+                "commissions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "v_access_token",
+      "value": ""
+    }
+  ]
+}

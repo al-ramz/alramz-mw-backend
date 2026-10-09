@@ -1,0 +1,5 @@
+# Profile: docker
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/docker/sql
+      errorIfMissingOrEmpty: false

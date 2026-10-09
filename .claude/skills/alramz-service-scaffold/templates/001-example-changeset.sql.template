@@ -1,0 +1,16 @@
+--liquibase formatted sql
+--changeset __AUTHOR__:001-__CHANGE_DESCRIPTION__
+
+-- Example only — replace with this service's first real table, or delete this file and the
+-- matching entries in the other profile sql/ folders if the service has no schema on day one.
+-- Copy this same file into EVERY profile's sql/ folder (dev, docker, preprod, prod, and
+-- src/test/resources/db/changelog/test/sql) — there is no shared changelog location in this repo
+-- (see CLAUDE.md §4 Liquibase migrations). Add a --rollback statement where practical, and never
+-- edit this file again once it has run anywhere — append a new numbered file instead.
+
+-- CREATE TABLE __EXAMPLE_TABLE__ (
+--     id BIGSERIAL PRIMARY KEY,
+--     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+-- );
+-- rollback DROP TABLE __EXAMPLE_TABLE__;

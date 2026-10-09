@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="global.configuration.settings.find">
+        SELECT
+            ID,
+            IDENTIFIER,
+            IDENTIFIER_TYPE,
+            IDENTIFIER_TEXT,
+            STATUS
+        FROM GLOBAL_CONFIGURATION_SETTINGS
+        WHERE IDENTIFIER = :identifier
+    </entry>
+    <entry key="global.configuration.settings.find.with.type">
+        SELECT
+            ID,
+            IDENTIFIER,
+            IDENTIFIER_TYPE,
+            IDENTIFIER_TEXT,
+            STATUS
+        FROM GLOBAL_CONFIGURATION_SETTINGS
+        WHERE IDENTIFIER = :identifier
+          AND IDENTIFIER_TYPE LIKE :identifierType
+    </entry>
+    <entry key="global.configuration.settings.find.with.status">
+        SELECT
+            ID,
+            IDENTIFIER,
+            IDENTIFIER_TYPE,
+            IDENTIFIER_TEXT,
+            STATUS
+        FROM GLOBAL_CONFIGURATION_SETTINGS
+        WHERE IDENTIFIER = :identifier
+          AND STATUS = :status
+    </entry>
+    <entry key="global.configuration.settings.find.with.type.and.status">
+        SELECT
+            ID,
+            IDENTIFIER,
+            IDENTIFIER_TYPE,
+            IDENTIFIER_TEXT,
+            STATUS
+        FROM GLOBAL_CONFIGURATION_SETTINGS
+        WHERE IDENTIFIER = :identifier
+          AND IDENTIFIER_TYPE LIKE :identifierType
+          AND STATUS = :status
+    </entry>
+    <entry key="global.configuration.settings.find.identifier.texts">
+        SELECT IDENTIFIER_TEXT
+        FROM GLOBAL_CONFIGURATION_SETTINGS
+        WHERE IDENTIFIER = :identifier
+    </entry>
+    <entry key="global.configuration.settings.find.identifier.texts.with.type">
+        SELECT IDENTIFIER_TEXT
+        FROM GLOBAL_CONFIGURATION_SETTINGS
+        WHERE IDENTIFIER = :identifier
+          AND IDENTIFIER_TYPE LIKE :identifierType
+    </entry>
+    <entry key="global.configuration.settings.find.identifier.texts.with.status">
+        SELECT IDENTIFIER_TEXT
+        FROM GLOBAL_CONFIGURATION_SETTINGS
+        WHERE IDENTIFIER = :identifier
+          AND STATUS = :status
+    </entry>
+    <entry key="global.configuration.settings.find.identifier.texts.with.type.and.status">
+        SELECT IDENTIFIER_TEXT
+        FROM GLOBAL_CONFIGURATION_SETTINGS
+        WHERE IDENTIFIER = :identifier
+          AND IDENTIFIER_TYPE LIKE :identifierType
+          AND STATUS = :status
+    </entry>
+    <entry key="global.configuration.settings.update">
+        UPDATE GLOBAL_CONFIGURATION_SETTINGS
+        SET IDENTIFIER_TEXT = :identifierText
+        WHERE IDENTIFIER = :identifier
+          AND IDENTIFIER_TYPE LIKE :identifierType
+          AND STATUS = :status
+    </entry>
+    <entry key="global.configuration.settings.update.without.status">
+        UPDATE GLOBAL_CONFIGURATION_SETTINGS
+        SET IDENTIFIER_TEXT = :identifierText
+        WHERE IDENTIFIER = :identifier
+          AND IDENTIFIER_TYPE LIKE :identifierType
+    </entry>
+</properties>

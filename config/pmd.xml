@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PMD xmlns="https://pmd.github.io/pmd-7.x/schema/pmd-ruleset.xsd"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="https://pmd.github.io/pmd-7.x/schema/pmd-ruleset.xsd https://pmd.github.io/pmd-7.x/schema/pmd-ruleset.xsd">
+
+    <description>Al Ramz Code Quality Rules</description>
+
+    <rule ref="category/java/bestpractices.xml"/>
+    <rule ref="category/java/codestyle.xml"/>
+    <rule ref="category/java/design.xml"/>
+    <rule ref="category/java/errorprone.xml"/>
+    <rule ref="category/java/security.xml"/>
+
+</PMD>

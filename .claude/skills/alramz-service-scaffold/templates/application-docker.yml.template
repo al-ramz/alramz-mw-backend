@@ -1,0 +1,82 @@
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/docker/db.changelog-master.yaml
+
+server:
+  address: 0.0.0.0
+  port: 8080
+  host: localhost
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+company:
+  logging:
+    json:
+      enabled: false
+      pretty-print: false
+    correlation-id:
+      response-header: true
+    request:
+      enabled: true
+      include-headers: true
+      include-payload: true
+    response:
+      enabled: true
+      include-payload: true
+    aspect:
+      enabled: true
+    performance:
+      threshold: 1000ms
+    database-logging:
+      enabled: true
+      include-request-payload: true
+      include-response-payload: true
+      cleanup-cron: "0 0 2 * * *"
+      retention-days: 7
+      excluded-paths:
+        - /api/v1/info
+        - /actuator/**
+        - /swagger-ui/**
+        - /v3/api-docs/**
+    seq:
+      enabled: true
+      url: http://seq:80
+
+  # DB-less services: delete this block — see SKILL.md "DB-less services" variant.
+  datasource:
+    middleware:
+      enabled: true
+      url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://postgres:5432/alramzmwdb?sslmode=disable}
+      username: ${COMPANY_DATASOURCE_MIDDLEWARE_USERNAME:alramzmw}
+      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD:alramz!321*}
+      driverClassName: ${COMPANY_DATASOURCE_MIDDLEWARE_DRIVERCLASSNAME:org.postgresql.Driver}
+      startup-validation:
+        enabled: ${COMPANY_DATASOURCE_MIDDLEWARE_STARTUP_VALIDATION_ENABLED:false}
+      pool:
+        maximum-pool-size: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MAXIMUM_POOL_SIZE:10}
+        minimum-idle: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MINIMUM_IDLE:2}
+      sql-logging:
+        enabled: false
+
+  scheduler:
+    pool-size: 5
+    thread-group-name: __SERVICE_NAME__-scheduled-tasks
+    thread-name-prefix: __THREAD_PREFIX__-TaskScheduler-Worker-
+
+  jwt:
+    enabled: true
+    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+    login-url: /api/auth/login
+    register-url: /api/auth/register
+    refresh-url: /api/auth/refresh
+    logout-url: /api/auth/logout
+    validate-url: /api/auth/validate
+    permit-all-urls:
+      - /api/v1/info
+
+cipher:
+  password: ${CIPHER_PASSWORD:UseMostSecretKey}
