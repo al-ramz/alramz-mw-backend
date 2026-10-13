@@ -64,6 +64,7 @@ jobs:
     outputs:
       services: ${{ steps.detect.outputs.services }}
       deploy_services: ${{ steps.detect.outputs.deploy_services }}
+      library_services: ${{ steps.detect.outputs.library_services }}
       has_changes: ${{ steps.detect.outputs.has_changes }}
       has_deploy_changes: ${{ steps.detect.outputs.has_deploy_changes }}
       tag: ${{ steps.tag.outputs.tag }}
@@ -105,14 +106,15 @@ jobs:
             echo "tag=dev-${GITHUB_SHA:0:8}" >> "$GITHUB_OUTPUT"
           fi
 
+  # Only shared libraries (BOM, starter) go to GitHub Packages; service JARs ship inside their images.
   publish-maven:
     needs: detect-services
-    if: needs.detect-services.outputs.has_changes == 'true' || needs.detect-services.outputs.has_deploy_changes == 'true'
+    if: needs.detect-services.outputs.library_services != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        service: ${{ fromJson(needs.detect-services.outputs.services == '[]' && needs.detect-services.outputs.deploy_services != '[]' && needs.detect-services.outputs.deploy_services || (needs.detect-services.outputs.services != '[]' && needs.detect-services.outputs.services || '["__none__"]')) }}
+        service: ${{ fromJson(needs.detect-services.outputs.library_services) }}
     permissions:
       contents: read
       packages: write
@@ -121,7 +123,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Publish to GitHub Packages
-        if: ${{ matrix.service != '__none__' }}
         uses: ./.github/actions/maven-publish
         with:
           service-path: services/${{ matrix.service }}
@@ -130,17 +131,8 @@ jobs:
           skip-tests: true
           github-token: ${{ secrets.GH_TOKEN }}
 
-      - name: Upload JAR artifact
-        if: ${{ matrix.service != '__none__' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.service }}-jar
-          path: services/${{ matrix.service }}/target/${{ matrix.service }}-*.jar
-          retention-days: 7
-          if-no-files-found: ignore
-
   build:
-    needs: [detect-services, publish-maven, resolve-env]
+    needs: [detect-services, resolve-env]
     if: needs.detect-services.outputs.has_deploy_changes == 'true'
     runs-on: ubuntu-latest
     strategy:
@@ -155,25 +147,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download JAR artifact
+      - name: Set up Java
         if: ${{ matrix.service != '__none__' }}
-        uses: actions/download-artifact@v4
+        uses: actions/setup-java@v4
         with:
-          name: ${{ matrix.service }}-jar
-          path: ./jar-download
+          distribution: temurin
+          java-version: '21'
+          cache: maven
 
-      - name: Place JAR in target
+      # -am builds the BOM and starter from source, so no GitHub Packages access is needed
+      - name: Build JAR
         if: ${{ matrix.service != '__none__' }}
         shell: bash
-        run: |
-          SVC="${{ matrix.service }}"
-          mkdir -p "services/$SVC/target"
-          if ls jar-download/*.jar >/dev/null 2>&1; then
-            cp jar-download/*.jar "services/$SVC/target/"
-          else
-            echo "::error::No JAR artifact found for $SVC"
-            exit 1
-          fi
+        run: mvn -B -ntp -pl services/${{ matrix.service }} -am package -DskipTests
 
       - name: Build and push image
         if: ${{ matrix.service != '__none__' }}

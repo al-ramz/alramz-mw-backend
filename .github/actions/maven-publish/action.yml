@@ -84,34 +84,6 @@ runs:
         </settings>
         EOF
 
-    # GitHub Packages never overwrites: releases fail with 409 and every SNAPSHOT deploy
-    # adds a new timestamped set of assets. Delete the same version first so it is replaced.
-    - name: Delete existing package version
-      shell: bash
-      env:
-        GH_TOKEN: ${{ inputs.github-token }}
-      run: |
-        set -euo pipefail
-        cd ${{ inputs.service-path }}
-        eval_prop() { mvn -B -q -ntp help:evaluate -Dexpression="$1" -DforceStdout; }
-        PKG="$(eval_prop project.groupId).$(eval_prop project.artifactId)"
-        VERSION="$(eval_prop project.version)"
-        API="/orgs/${{ github.repository_owner }}/packages/maven/$PKG"
-
-        # 404 = package not published yet
-        VERSIONS=$(gh api "$API/versions" --paginate --jq '.[] | "\(.id) \(.name)"' 2>/dev/null || true)
-        ID=$(awk -v v="$VERSION" '$2 == v { print $1 }' <<<"$VERSIONS")
-        if [ -z "$ID" ]; then
-          echo "No existing $PKG:$VERSION, nothing to delete"
-        elif [ "$(grep -c . <<<"$VERSIONS")" -eq 1 ]; then
-          # GitHub refuses to delete the last version of a package; delete the package itself
-          echo "Deleting package $PKG (only version: $VERSION)"
-          gh api -X DELETE "$API"
-        else
-          echo "Deleting $PKG:$VERSION (version id $ID)"
-          gh api -X DELETE "$API/versions/$ID"
-        fi
-
     - name: Publish to GitHub Packages
       shell: bash
       env:

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: utility-service
+    name: utility-service-1
   profiles:
     active: dev
   jpa:

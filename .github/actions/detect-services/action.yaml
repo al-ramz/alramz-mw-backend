@@ -27,6 +27,9 @@ outputs:
   deploy_services:
     description: JSON array of changed services that are deployable (keys in service-register.yml)
     value: ${{ steps.detect.outputs.deploy_services }}
+  library_services:
+    description: JSON array of changed non-deployable modules (shared libraries such as the BOM and starter)
+    value: ${{ steps.detect.outputs.library_services }}
   has_changes:
     description: Whether any service changed
     value: ${{ steps.detect.outputs.has_changes }}
@@ -106,3 +109,4 @@ runs:
 
         echo "services=$SERVICES_JSON" >> "$GITHUB_OUTPUT"
         echo "deploy_services=$DEPLOY_JSON" >> "$GITHUB_OUTPUT"
+        echo "library_services=$(jq -c --argjson deploy "$DEPLOY_JSON" '. - $deploy' <<<"$SERVICES_JSON")" >> "$GITHUB_OUTPUT"
