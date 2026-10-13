@@ -1,0 +1,23 @@
+# Deployable services (keys gate image build/deploy in cicd.yml via detect-services).
+# Seeded by hand; tag/digest/image/history are maintained by the update-catalogue CI job.
+services:
+  alramz-notification-service:
+    tag: ""
+    digest: ""
+    image: ""
+    history: []
+  onboarding-service:
+    tag: ""
+    digest: ""
+    image: ""
+    history: []
+  reference-data-service:
+    tag: ""
+    digest: ""
+    image: ""
+    history: []
+  utility-service:
+    tag: ""
+    digest: ""
+    image: ""
+    history: []

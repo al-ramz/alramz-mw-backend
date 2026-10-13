@@ -1,0 +1,55 @@
+{
+  "dev": {
+    "resourceGroup": "alramz-dev-rg",
+    "aksCluster": "alramz-dev-aks",
+    "aksNamespace": "dev",
+    "apimName": "alramz-dev-apim",
+    "keyVault": "alramz-dev-key-vault",
+    "keyVaultTenantId": "",
+    "managedIdentityClientId": "",
+    "domain": "dev.alramz.io"
+  },
+  "test": {
+    "resourceGroup": "alramz-test-rg",
+    "aksCluster": "alramz-test-aks",
+    "aksNamespace": "test",
+    "apimName": "",
+    "keyVault": "",
+    "keyVaultTenantId": "",
+    "managedIdentityClientId": "",
+    "domain": "test.alramz.io"
+  },
+  "qa": {
+    "resourceGroup": "alramz-qa-rg",
+    "aksCluster": "alramz-qa-aks",
+    "aksNamespace": "qa",
+    "apimName": "alramz-qa-apim",
+    "keyVault": "alramz-qa-key-vault",
+    "keyVaultTenantId": "",
+    "managedIdentityClientId": "",
+    "domain": "qa.alramz.io"
+  },
+  "preprod": {
+    "resourceGroup": "alramz-preprod-rg",
+    "aksCluster": "alramz-preprod-aks",
+    "aksNamespace": "preprod",
+    "apimName": "alramz-preprod-apim",
+    "keyVault": "alramz-preprod-key-vault",
+    "keyVaultTenantId": "",
+    "managedIdentityClientId": "",
+    "domain": "preprod.alramz.io"
+  },
+  "prod": {
+    "resourceGroup": "alramz-prod-rg",
+    "aksCluster": "alramz-prod-aks",
+    "aksNamespace": "prod",
+    "apimName": "alramz-prod-apim",
+    "keyVault": "alramz-prod-key-vault",
+    "keyVaultTenantId": "",
+    "managedIdentityClientId": "",
+    "domain": "alramz.io"
+  },
+  "acr": {
+    "server": "alramzregistry.azurecr.io"
+  }
+}
