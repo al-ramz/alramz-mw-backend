@@ -146,6 +146,8 @@ runs:
           SERVICE_NAME=${{ inputs.service-name }}
           JAR_FILE=target/${{ inputs.service-name }}-*.jar
         tags: ${{ steps.image-ref.outputs.image }}
+        # Links every service image in this monorepo to the source repo (repo Packages tab + access)
+        labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
         push: true
         cache-from: type=registry,ref=${{ steps.image-ref.outputs.cache-image }}
         cache-to: type=registry,ref=${{ steps.image-ref.outputs.cache-image }},mode=max

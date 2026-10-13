@@ -183,7 +183,8 @@ jobs:
           service-name: ${{ matrix.service }}
           acr-name: ${{ needs.resolve-env.outputs.acr-server }}
           image-tag: ${{ needs.detect-services.outputs.tag }}
-          github-token: ${{ secrets.GH_TOKEN }}
+          # GITHUB_TOKEN (job has packages: write) can create GHCR packages and links them to this repo
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
