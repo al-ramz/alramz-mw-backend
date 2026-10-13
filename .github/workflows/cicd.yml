@@ -415,8 +415,9 @@ jobs:
 
             ENTRY=$(jq -n --arg tag "$TAG" --arg digest "$DIGEST" --arg ts "$TS" --arg env "dev" \
               '{tag:$tag, digest:$digest, deployedAt:$ts, deployedBy:"github-actions[bot]",environment:$env}')
-            yq -i --argjson entry "$ENTRY" \
-              ".services[\"$SVC\"].history = [\$entry] + .services[\"$SVC\"].history" "$REGISTER"
+            # mikefarah/yq has no --argjson; env() parses the JSON entry into an object
+            ENTRY="$ENTRY" yq -i \
+              ".services[\"$SVC\"].history = [env(ENTRY)] + (.services[\"$SVC\"].history // [])" "$REGISTER"
             yq -i ".services[\"$SVC\"].history = (.services[\"$SVC\"].history)[0:3]" "$REGISTER"
           done
           if [ "$FOUND" -eq 0 ]; then

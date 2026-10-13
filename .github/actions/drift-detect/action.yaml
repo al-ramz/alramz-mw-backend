@@ -122,7 +122,7 @@ runs:
 
           REPORT=$(echo "$REPORT" | jq -c \
             --arg svc "$SVC" --arg expected "$EXPECTED" --arg actual "$ACTUAL" --argjson drift "$DRIFT" \
-            '. + [{service:$svc, expected-image:$expected, actual-image:$actual, drift-detected:$drift}]')
+            '. + [{service:$svc, "expected-image":$expected, "actual-image":$actual, "drift-detected":$drift}]')
         done
 
         echo "drift-report=$REPORT" >> "$GITHUB_OUTPUT"
