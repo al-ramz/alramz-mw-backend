@@ -23,7 +23,7 @@
     <repositories>
         <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/Gaurav9969351313/alramz-mw-oss/</url>
+            <url>https://maven.pkg.github.com/al-ramz/alramz-mw-backend/</url>
         </repository>
     </repositories>
 

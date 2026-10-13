@@ -1,0 +1,168 @@
+name: Deploy to AKS
+
+description: >
+  Deploys services to Azure Kubernetes Service by digest. Renders Kubernetes
+  manifests (Deployment, Service, Ingress, HPA, SecretProviderClass) and applies
+  them to the target AKS cluster. Uses Azure Workload Identity for auth.
+
+inputs:
+  services:
+    description: 'JSON array of objects: {service, tag, digest}'
+    required: true
+  acr-name:
+    description: ACR Login Server (e.g. alramzregistry.azurecr.io) for image pull secrets
+    required: true
+  registry-base:
+    description: 'Full registry base path for image reference (e.g. ghcr.io/owner, alramzregistry.azurecr.io). Defaults to acr-name.'
+    required: false
+    type: string
+    default: ''
+  resource-group:
+    description: Azure Resource Group containing the AKS cluster
+    required: true
+  aks-cluster-name:
+    description: AKS cluster name
+    required: true
+  aks-namespace:
+    description: Kubernetes namespace for deployment
+    required: true
+    default: default
+  service-account:
+    description: Kubernetes service account name (for workload identity)
+    required: true
+    default: workload-identity-sa
+  managed-identity-client-id:
+    description: User Assigned Managed Identity client ID for Key Vault CSI driver
+    required: true
+  keyvault:
+    description: Key Vault name for DB password secret
+    required: true
+  keyvault-tenant-id:
+    description: Azure Tenant ID for Key Vault CSI driver
+    required: true
+  host:
+    description: Ingress host for the service
+    required: true
+  environment:
+    description: Target environment name (dev, qa, preprod, prod) for logging
+    required: false
+    type: string
+    default: dev
+  spring-profile-override:
+    description: Override the springProfile from service.yaml
+    required: false
+    type: string
+    default: ''
+  azure-client-id:
+    description: Azure OIDC client id
+    required: true
+    type: string
+  azure-tenant-id:
+    description: Azure OIDC tenant id
+    required: true
+    type: string
+  azure-subscription-id:
+    description: Azure subscription id
+    required: true
+    type: string
+
+outputs:
+  deployed-services:
+    description: JSON array of {service, image, url}
+    value: ${{ steps.deploy.outputs.deployed-services }}
+  deployment-urls:
+    description: JSON map of service -> public URL
+    value: ${{ steps.deploy.outputs.deployment-urls }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install yq
+      shell: bash
+      run: |
+        wget -q https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+        chmod +x /usr/local/bin/yq
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Azure OIDC login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
+
+    - name: Set AKS credentials
+      shell: bash
+      env:
+        RG: ${{ inputs.resource-group }}
+        AKS: ${{ inputs.aks-cluster-name }}
+      run: |
+        az aks get-credentials \
+          --resource-group "$RG" \
+          --name "$AKS" \
+          --overwrite-existing
+
+    - name: Deploy services
+      id: deploy
+      shell: bash
+      env:
+        SERVICES: ${{ inputs.services }}
+        ACR: ${{ inputs.acr-name }}
+        REGISTRY_BASE: ${{ inputs.registry-base }}
+        RG: ${{ inputs.resource-group }}
+        AKS: ${{ inputs.aks-cluster-name }}
+        NAMESPACE: ${{ inputs.aks-namespace }}
+        SERVICE_ACCOUNT: ${{ inputs.service-account }}
+        MI_CLIENT_ID: ${{ inputs.managed-identity-client-id }}
+        KEYVAULT: ${{ inputs.keyvault }}
+        KEYVAULT_TENANT_ID: ${{ inputs.keyvault-tenant-id }}
+        HOST: ${{ inputs.host }}
+        ENV_NAME: ${{ inputs.environment }}
+        SPRING_PROFILE_OVERRIDE: ${{ inputs.spring-profile-override }}
+      run: |
+        set -euo pipefail
+
+        REGISTRY_BASE="${REGISTRY_BASE:-$ACR}"
+        REGISTRY_BASE="${REGISTRY_BASE,,}"
+
+        COUNT=$(echo "$SERVICES" | jq 'length')
+        DEPLOYED="[]"
+        URLS='{}'
+
+        for i in $(seq 0 $((COUNT - 1))); do
+          SVC=$(echo "$SERVICES" | jq -r ".[$i].service")
+          TAG=$(echo "$SERVICES" | jq -r ".[$i].tag")
+          DIGEST=$(echo "$SERVICES" | jq -r ".[$i].digest")
+          IMAGE="$REGISTRY_BASE/$SVC:$TAG@$DIGEST"
+
+          echo "=== Deploying $SVC (tag: $TAG, digest: $DIGEST) ==="
+
+          SCRIPT_DIR=".github/deployment/scripts"
+          bash "${SCRIPT_DIR}/render-template.sh" "$SVC" "$IMAGE"
+
+          kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+
+          kubectl apply -f k8s-manifests.yaml -n "$NAMESPACE"
+
+          kubectl rollout status deployment/"$SVC" -n "$NAMESPACE" --timeout=300s
+
+          HOST_FOR_SVC="${HOST/\{service\}/$SVC}"
+          URL="https://$HOST_FOR_SVC"
+
+          DEPLOYED=$(echo "$DEPLOYED" | jq -c --arg svc "$SVC" --arg img "$IMAGE" --arg url "$URL" '. + [{service:$svc, image:$img, url:$url}]')
+          URLS=$(echo "$URLS" | jq -c --arg svc "$SVC" --arg url "$URL" '.[$svc]=$url')
+          echo "=== Deployed $SVC ($URL) ==="
+
+          rm -f k8s-manifests.yaml
+        done
+
+        echo "deployed-services=$DEPLOYED" >> "$GITHUB_OUTPUT"
+        echo "deployment-urls=$URLS" >> "$GITHUB_OUTPUT"

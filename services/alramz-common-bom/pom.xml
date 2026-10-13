@@ -17,12 +17,6 @@
   <name>alramz-common-bom</name>
   <url>http://maven.apache.org</url>
 
-  <scm>
-    <connection>scm:git:git://github.com/Gaurav9969351313/alramz-mw-oss.git</connection>
-    <developerConnection>scm:git:ssh://github.com/Gaurav9969351313/alramz-mw-oss.git</developerConnection>
-    <url>https://github.com/Gaurav9969351313/alramz-mw-oss/tree/main/services/alramz-common-bom</url>
-  </scm>
-
   <developers>
     <developer>
       <id>gauravtalele</id>
@@ -181,22 +175,15 @@
   </dependencyManagement>
 
   <distributionManagement>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/al-ramz/alramz-mw-backend</url>
+    </repository>
     <snapshotRepository>
       <id>github</id>
-      <url>https://maven.pkg.github.com/Gaurav9969351313/alramz-mw-oss/</url>
+      <url>https://maven.pkg.github.com/al-ramz/alramz-mw-backend</url>
     </snapshotRepository>
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/Gaurav9969351313/alramz-mw-oss/</url>
-    </repository>
   </distributionManagement>
-
-  <repositories>
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/Gaurav9969351313/alramz-mw-oss/</url>
-    </repository>
-  </repositories>
 
   <build>
     <pluginManagement>

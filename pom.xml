@@ -11,6 +11,11 @@
     <name>alramz-mw-oss</name>
     <description>Al Ramz Microservices Workspace</description>
 
+    <properties>
+        <!-- aggregator only; modules publish via alramz-common-bom's distributionManagement -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <modules>
         <module>services/alramz-common-bom</module>
         <module>services/alramz-api-starter</module>

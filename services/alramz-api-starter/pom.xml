@@ -17,7 +17,6 @@
     <version>1.0-SNAPSHOT</version>
     <name>alramz-api-starter</name>
     <description>Reusable Spring Boot starter providing centralized, secure and configurable logging for Al Ramz microservices.</description>
-    <url>https://github.com/Gaurav9969351313/alramz-mw-oss</url>
 
     <developers>
         <developer>
@@ -34,9 +33,10 @@
     <repositories>
         <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/Gaurav9969351313/alramz-mw-oss/</url>
+            <url>https://maven.pkg.github.com/al-ramz/alramz-mw-backend/</url>
         </repository>
     </repositories>
+
 
     <dependencies>
         <!-- Logging infra -->

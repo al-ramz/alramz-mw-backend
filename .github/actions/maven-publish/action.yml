@@ -1,0 +1,97 @@
+name: Maven Publish to GitHub Packages
+
+description: Build and publish a Maven artifact to GitHub Packages
+
+inputs:
+  service-path:
+    description: Path to the service directory containing pom.xml
+    required: true
+    type: string
+  version:
+    description: Version to publish (e.g. 1.0.0 or 1.0-SNAPSHOT). Leave empty to use current POM version.
+    required: false
+    type: string
+    default: ''
+  java-version:
+    description: Java version to use
+    required: false
+    type: string
+    default: '21'
+  skip-tests:
+    description: Skip tests during publish
+    required: false
+    type: boolean
+    default: true
+  github-token:
+    description: GitHub token for authentication
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Cache Maven local repository
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: ${{ inputs.java-version }}
+        cache: maven
+
+    - name: Install BOM and API starter locally
+      shell: bash
+      run: |
+        cd services/alramz-common-bom
+        mvn -B -ntp install -DskipTests -N
+        cd ../alramz-api-starter
+        mvn -B -ntp install -DskipTests
+
+    - name: Set version
+      if: ${{ inputs.version != '' }}
+      shell: bash
+      run: |
+        cd ${{ inputs.service-path }}
+        mvn -B -ntp versions:set -DnewVersion=${{ inputs.version }} -DgenerateBackupPoms=false
+
+    - name: Configure Maven settings
+      shell: bash
+      run: |
+        mkdir -p $HOME/.m2
+        cat > $HOME/.m2/settings.xml <<EOF
+        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+          <servers>
+            <server>
+              <id>github</id>
+              <username>x-access-token</username>
+              <password>${{ inputs.github-token }}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
+
+    - name: Publish to GitHub Packages
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        cd ${{ inputs.service-path }}
+        mvn -B -ntp -s $HOME/.m2/settings.xml deploy \
+          -DskipTests=${{ inputs.skip-tests }} \
+          -Dgpg.skip=true \
+          -DuniqueVersion=false \
+          -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/${{ github.repository }}/

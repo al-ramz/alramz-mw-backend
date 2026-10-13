@@ -1,0 +1,128 @@
+name: Drift Detect
+
+description: >
+  Compares the image (tag + digest) actually deployed on Azure Kubernetes Service
+  against the expected tag/digest. Reports drift as a warning without blocking.
+
+inputs:
+  services:
+    description: 'JSON array of {service, tag, digest}'
+    required: true
+  acr-name:
+    description: ACR Login Server (e.g. alramzregistry.azurecr.io) for registry auth
+    required: false
+    default: ''
+  registry-base:
+    description: 'Full registry base path for image references (e.g. ghcr.io/owner, alramzregistry.azurecr.io). Defaults to acr-name.'
+    required: false
+    type: string
+    default: ''
+  resource-group:
+    description: Azure Resource Group containing the AKS cluster
+    required: true
+  aks-cluster-name:
+    description: AKS cluster name
+    required: true
+  aks-namespace:
+    description: Kubernetes namespace for the deployment
+    required: false
+    type: string
+    default: default
+  azure-client-id:
+    description: Azure OIDC client id
+    required: true
+    type: string
+  azure-tenant-id:
+    description: Azure OIDC tenant id
+    required: true
+    type: string
+  azure-subscription-id:
+    description: Azure subscription id
+    required: true
+    type: string
+
+outputs:
+  drift-report:
+    description: JSON array of {service, expected-image, actual-image, drift-detected}
+    value: ${{ steps.drift.outputs.drift-report }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Azure OIDC login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
+
+    - name: Set AKS credentials
+      shell: bash
+      env:
+        RG: ${{ inputs.resource-group }}
+        AKS: ${{ inputs.aks-cluster-name }}
+      run: |
+        az aks get-credentials \
+          --resource-group "$RG" \
+          --name "$AKS" \
+          --overwrite-existing
+
+    - name: Detect drift
+      id: drift
+      shell: bash
+      env:
+        SERVICES: ${{ inputs.services }}
+        ACR: ${{ inputs.acr-name }}
+        REGISTRY_BASE: ${{ inputs.registry-base }}
+        NAMESPACE: ${{ inputs.aks-namespace }}
+      run: |
+        set -euo pipefail
+        REGISTRY_BASE="${REGISTRY_BASE:-$ACR}"
+        REGISTRY_BASE="${REGISTRY_BASE,,}"
+        REPORT="[]"
+        COUNT=$(echo "$SERVICES" | jq 'length')
+        for i in $(seq 0 $((COUNT - 1))); do
+          SVC=$(echo "$SERVICES" | jq -r ".[$i].service")
+          TAG=$(echo "$SERVICES" | jq -r ".[$i].tag")
+          DIGEST=$(echo "$SERVICES" | jq -r ".[$i].digest")
+
+          ACTUAL=$(kubectl get deployment "$SVC" -n "$NAMESPACE" \
+            -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null || echo "")
+
+          EXPECTED="$REGISTRY_BASE/$SVC:$TAG@$DIGEST"
+          if [ -z "$DIGEST" ] || [ "$DIGEST" = "null" ]; then
+            EXPECTED="$REGISTRY_BASE/$SVC:$TAG"
+          fi
+
+          DRIFT="true"
+          if [ -n "$ACTUAL" ] && [ "$ACTUAL" != "null" ]; then
+            if [ -n "$DIGEST" ] && [ "$DIGEST" != "null" ] && echo "$ACTUAL" | grep -q "@${DIGEST}"; then
+              DRIFT="false"
+            elif echo "$ACTUAL" | grep -qE ":${TAG}(@|$)"; then
+              DRIFT="false"
+            else
+              DRIFT="true"
+            fi
+          fi
+
+          if [ "$DRIFT" = "true" ]; then
+            echo "::warning::Drift detected for $SVC: expected $EXPECTED but actual=$ACTUAL"
+          else
+            echo "No drift for $SVC: $ACTUAL"
+          fi
+
+          REPORT=$(echo "$REPORT" | jq -c \
+            --arg svc "$SVC" --arg expected "$EXPECTED" --arg actual "$ACTUAL" --argjson drift "$DRIFT" \
+            '. + [{service:$svc, expected-image:$expected, actual-image:$actual, drift-detected:$drift}]')
+        done
+
+        echo "drift-report=$REPORT" >> "$GITHUB_OUTPUT"

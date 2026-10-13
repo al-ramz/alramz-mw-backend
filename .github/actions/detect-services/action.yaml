@@ -1,0 +1,108 @@
+name: Detect Changed Services
+
+description: >
+  Detects changed services in a Maven monorepo by diffing two commits.
+  Outputs all changed modules (services, libraries) and the subset that is
+  deployable (present as a key in the service deployment catalogue).
+
+inputs:
+  base-sha:
+    description: Base commit SHA (e.g. github.event.before or PR base.sha)
+    required: true
+    type: string
+  head-sha:
+    description: Head commit SHA (e.g. github.sha or PR head.sha)
+    required: true
+    type: string
+  github-token:
+    description: GitHub token (reserved for future catalogue lookups)
+    required: false
+    type: string
+    default: ''
+
+outputs:
+  services:
+    description: JSON array of all changed service directories containing pom.xml
+    value: ${{ steps.detect.outputs.services }}
+  deploy_services:
+    description: JSON array of changed services that are deployable (keys in service-register.yml)
+    value: ${{ steps.detect.outputs.deploy_services }}
+  has_changes:
+    description: Whether any service changed
+    value: ${{ steps.detect.outputs.has_changes }}
+  has_deploy_changes:
+    description: Whether any deployable service changed
+    value: ${{ steps.detect.outputs.has_deploy_changes }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install yq
+      shell: bash
+      run: |
+        wget -q https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+        chmod +x /usr/local/bin/yq
+
+    - name: Detect changed services
+      id: detect
+      shell: bash
+      run: |
+        set -e
+        BASE="${{ inputs.base-sha }}"
+        HEAD="${{ inputs.head-sha }}"
+
+        # Fall back gracefully when base is empty (e.g. first push)
+        if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+          BASE=$(git rev-list --max-parents=0 HEAD | tail -1)
+        fi
+
+        CHANGED=$(git diff --name-only "$BASE" "$HEAD" 2>/dev/null || true)
+
+        SERVICES_JSON="[]"
+        if [ -n "$CHANGED" ]; then
+          SERVICES_JSON=$(echo "$CHANGED" \
+            | grep '^services/' \
+            | cut -d/ -f2 \
+            | sort -u \
+            | while read -r svc; do
+                [ -n "$svc" ] && [ -f "services/$svc/pom.xml" ] && echo "$svc"
+              done \
+            | jq -R . | jq -s -c .)
+          if [ -z "$SERVICES_JSON" ] || [ "$SERVICES_JSON" = "null" ]; then
+            SERVICES_JSON="[]"
+          fi
+        fi
+
+        REGISTRY=".github/service-deployment-catalogue/service-register.yml"
+        DEPLOY_JSON="[]"
+        if [ "$SERVICES_JSON" != "[]" ]; then
+          DEPLOY_JSON=$(echo "$SERVICES_JSON" | jq -r '.[]' | while read -r svc; do
+              if [ -n "$svc" ] && [ -f "$REGISTRY" ] && yq -e ".services.${svc}" "$REGISTRY" >/dev/null 2>&1; then
+                echo "$svc"
+              fi
+            done | jq -R . | jq -s -c .)
+          if [ -z "$DEPLOY_JSON" ] || [ "$DEPLOY_JSON" = "null" ]; then
+            DEPLOY_JSON="[]"
+          fi
+        fi
+
+        if [ "$SERVICES_JSON" = "[]" ] || [ -z "$SERVICES_JSON" ]; then
+          echo "has_changes=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+        fi
+
+        if [ "$DEPLOY_JSON" = "[]" ] || [ -z "$DEPLOY_JSON" ]; then
+          echo "has_deploy_changes=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "has_deploy_changes=true" >> "$GITHUB_OUTPUT"
+        fi
+
+        echo "services=$SERVICES_JSON" >> "$GITHUB_OUTPUT"
+        echo "deploy_services=$DEPLOY_JSON" >> "$GITHUB_OUTPUT"

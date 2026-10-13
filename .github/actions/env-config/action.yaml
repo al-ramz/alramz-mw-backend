@@ -1,0 +1,79 @@
+name: Resolve Environment Config
+
+description: >
+  Reads the environment configuration from .github/config/environments.json
+  and outputs resource names for the specified environment.
+
+inputs:
+  environment:
+    description: Target environment (dev, test, qa, preprod, prod)
+    required: true
+    type: string
+
+outputs:
+  resource-group:
+    description: Azure resource group name
+    value: ${{ steps.config.outputs.resource-group }}
+  aks-cluster:
+    description: AKS cluster name
+    value: ${{ steps.config.outputs.aks-cluster }}
+  aks-namespace:
+    description: AKS namespace
+    value: ${{ steps.config.outputs.aks-namespace }}
+  apim-name:
+    description: API Management instance name
+    value: ${{ steps.config.outputs.apim-name }}
+  keyvault:
+    description: Key Vault name
+    value: ${{ steps.config.outputs.keyvault }}
+  keyvault-tenant-id:
+    description: Key Vault tenant ID
+    value: ${{ steps.config.outputs.keyvault-tenant-id }}
+  managed-identity-client-id:
+    description: Managed identity client ID
+    value: ${{ steps.config.outputs.managed-identity-client-id }}
+  acr-server:
+    description: Azure Container Registry server
+    value: ${{ steps.config.outputs.acr-server }}
+  domain:
+    description: Domain suffix for the environment
+    value: ${{ steps.config.outputs.domain }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Read environment config
+      id: config
+      shell: bash
+      env:
+        ENV: ${{ inputs.environment }}
+      run: |
+        CONFIG_FILE=".github/config/environments.json"
+
+        if [ ! -f "$CONFIG_FILE" ]; then
+          echo "::error::Config file not found: $CONFIG_FILE"
+          exit 1
+        fi
+
+        RG=$(jq -r ".\"$ENV\".resourceGroup // empty" "$CONFIG_FILE")
+        AKS=$(jq -r ".\"$ENV\".aksCluster // empty" "$CONFIG_FILE")
+        NS=$(jq -r ".\"$ENV\".aksNamespace // empty" "$CONFIG_FILE")
+        APIM=$(jq -r ".\"$ENV\".apimName // empty" "$CONFIG_FILE")
+        KV=$(jq -r ".\"$ENV\".keyVault // empty" "$CONFIG_FILE")
+        KV_TENANT=$(jq -r ".\"$ENV\".keyVaultTenantId // empty" "$CONFIG_FILE")
+        MI_CLIENT=$(jq -r ".\"$ENV\".managedIdentityClientId // empty" "$CONFIG_FILE")
+        DOMAIN=$(jq -r ".\"$ENV\".domain // empty" "$CONFIG_FILE")
+        ACR=$(jq -r ".acr.server // empty" "$CONFIG_FILE")
+
+        echo "resource-group=$RG" >> "$GITHUB_OUTPUT"
+        echo "aks-cluster=$AKS" >> "$GITHUB_OUTPUT"
+        echo "aks-namespace=$NS" >> "$GITHUB_OUTPUT"
+        echo "apim-name=$APIM" >> "$GITHUB_OUTPUT"
+        echo "keyvault=$KV" >> "$GITHUB_OUTPUT"
+        echo "keyvault-tenant-id=$KV_TENANT" >> "$GITHUB_OUTPUT"
+        echo "managed-identity-client-id=$MI_CLIENT" >> "$GITHUB_OUTPUT"
+        echo "domain=$DOMAIN" >> "$GITHUB_OUTPUT"
+        echo "acr-server=$ACR" >> "$GITHUB_OUTPUT"
+
+        echo "Resolved config for environment: $ENV"

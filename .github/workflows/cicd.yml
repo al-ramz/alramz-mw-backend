@@ -1,0 +1,544 @@
+name: CICD (Dev)
+
+on:
+  push:
+    branches:
+      - dev
+      - feature/*
+    paths-ignore:
+      - 'infra/**'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 1.0.0). Leave empty for snapshots.'
+        required: false
+        type: string
+        default: ''
+      registry-target:
+        description: 'Target registry to push images'
+        required: false
+        type: choice
+        options:
+          - GITHUB_REGISTRY
+          - DOCKER_REGISTRY
+          - AZURE_REGISTRY
+        default: GITHUB_REGISTRY
+
+permissions:
+  contents: write
+  statuses: write
+  pull-requests: write
+  packages: write
+  id-token: write
+
+concurrency:
+  group: dev-${{ github.sha }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY_TARGET: ${{ github.event.inputs.registry-target || 'GITHUB_REGISTRY' }}
+
+jobs:
+
+  resolve-env:
+    runs-on: ubuntu-latest
+    outputs:
+      resource-group: ${{ steps.env-config.outputs.resource-group }}
+      aks-cluster: ${{ steps.env-config.outputs.aks-cluster }}
+      aks-namespace: ${{ steps.env-config.outputs.aks-namespace }}
+      keyvault: ${{ steps.env-config.outputs.keyvault }}
+      keyvault-tenant-id: ${{ steps.env-config.outputs.keyvault-tenant-id }}
+      acr-server: ${{ steps.env-config.outputs.acr-server }}
+      domain: ${{ steps.env-config.outputs.domain }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Resolve environment config
+        id: env-config
+        uses: ./.github/actions/env-config
+        with:
+          environment: dev
+
+  detect-services:
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.detect.outputs.services }}
+      deploy_services: ${{ steps.detect.outputs.deploy_services }}
+      has_changes: ${{ steps.detect.outputs.has_changes }}
+      has_deploy_changes: ${{ steps.detect.outputs.has_deploy_changes }}
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine publish type
+        id: type
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "is_release=true" >> "$GITHUB_OUTPUT"
+            echo "version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_release=false" >> "$GITHUB_OUTPUT"
+            echo "version=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Detect changed services
+        id: detect
+        uses: ./.github/actions/detect-services
+        with:
+          base-sha: ${{ github.event.before }}
+          head-sha: ${{ github.sha }}
+          github-token: ${{ secrets.GH_TOKEN }}
+
+      - name: Generate image tag
+        id: tag
+        shell: bash
+        run: |
+          if [ "${{ steps.type.outputs.is_release }}" == "true" ]; then
+            echo "tag=${{ steps.type.outputs.version }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.ref }}" == refs/heads/feature/* ]]; then
+            echo "tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=dev-${GITHUB_SHA:0:8}" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish-maven:
+    needs: detect-services
+    if: needs.detect-services.outputs.has_changes == 'true' || needs.detect-services.outputs.has_deploy_changes == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(needs.detect-services.outputs.services == '[]' && needs.detect-services.outputs.deploy_services != '[]' && needs.detect-services.outputs.deploy_services || (needs.detect-services.outputs.services != '[]' && needs.detect-services.outputs.services || '["__none__"]')) }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Publish to GitHub Packages
+        if: ${{ matrix.service != '__none__' }}
+        uses: ./.github/actions/maven-publish
+        with:
+          service-path: services/${{ matrix.service }}
+          version: ''
+          java-version: '21'
+          skip-tests: true
+          github-token: ${{ secrets.GH_TOKEN }}
+
+      - name: Upload JAR artifact
+        if: ${{ matrix.service != '__none__' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.service }}-jar
+          path: services/${{ matrix.service }}/target/${{ matrix.service }}-*.jar
+          retention-days: 7
+          if-no-files-found: ignore
+
+  build:
+    needs: [detect-services, publish-maven, resolve-env]
+    if: needs.detect-services.outputs.has_deploy_changes == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(needs.detect-services.outputs.deploy_services == '[]' && '["__none__"]' || needs.detect-services.outputs.deploy_services) }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download JAR artifact
+        if: ${{ matrix.service != '__none__' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.service }}-jar
+          path: ./jar-download
+
+      - name: Place JAR in target
+        if: ${{ matrix.service != '__none__' }}
+        shell: bash
+        run: |
+          SVC="${{ matrix.service }}"
+          mkdir -p "services/$SVC/target"
+          if ls jar-download/*.jar >/dev/null 2>&1; then
+            cp jar-download/*.jar "services/$SVC/target/"
+          else
+            echo "::error::No JAR artifact found for $SVC"
+            exit 1
+          fi
+
+      - name: Build and push image
+        if: ${{ matrix.service != '__none__' }}
+        id: build
+        uses: ./.github/actions/build-service
+        with:
+          service-name: ${{ matrix.service }}
+          acr-name: ${{ needs.resolve-env.outputs.acr-server }}
+          image-tag: ${{ needs.detect-services.outputs.tag }}
+          github-token: ${{ secrets.GH_TOKEN }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          registry-target: ${{ env.REGISTRY_TARGET }}
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          scan-trivy: false
+
+      - name: Write build output
+        if: ${{ matrix.service != '__none__' }}
+        shell: bash
+        run: |
+          jq -n \
+            --arg svc "${{ matrix.service }}" \
+            --arg tag "${{ needs.detect-services.outputs.tag }}" \
+            --arg img "${{ steps.build.outputs.image }}" \
+            --arg digest "${{ steps.build.outputs.image-digest }}" \
+            '{service:$svc, tag:$tag, image:$img, digest:$digest}' > build-output.json
+          cat build-output.json
+
+      - name: Upload build output
+        if: ${{ matrix.service != '__none__' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output-${{ matrix.service }}
+          path: build-output.json
+          retention-days: 7
+
+  deploy-dev:
+    needs: [detect-services, build, resolve-env]
+    if: needs.detect-services.outputs.has_deploy_changes == 'true' && (github.ref == 'refs/heads/dev' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(needs.detect-services.outputs.deploy_services == '[]' && '["__none__"]' || needs.detect-services.outputs.deploy_services) }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build output
+        if: ${{ matrix.service != '__none__' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output-${{ matrix.service }}
+          path: ./build-output
+
+      - name: Prepare services JSON
+        if: ${{ matrix.service != '__none__' }}
+        shell: bash
+        run: |
+          SVC="${{ matrix.service }}"
+          TAG=$(jq -r '.tag' build-output/build-output.json)
+          DIGEST=$(jq -r '.digest' build-output/build-output.json)
+          jq -n -c --arg svc "$SVC" --arg tag "$TAG" --arg digest "$DIGEST" \
+            '[{service:$svc, tag:$tag, digest:$digest}]' > svc.json
+          echo "svc_json=$(cat svc.json)" >> "$GITHUB_ENV"
+
+      - name: Deploy service
+        if: ${{ matrix.service != '__none__' }}
+        id: deploy
+        uses: ./.github/actions/deploy-aks
+        with:
+          services: ${{ env.svc_json }}
+          acr-name: ${{ needs.resolve-env.outputs.acr-server }}
+          registry-base: ${{ env.REGISTRY_TARGET == 'GITHUB_REGISTRY' && format('ghcr.io/{0}', github.repository_owner) || (env.REGISTRY_TARGET == 'DOCKER_REGISTRY' && secrets.DOCKERHUB_USERNAME) || needs.resolve-env.outputs.acr-server }}
+          resource-group: ${{ needs.resolve-env.outputs.resource-group }}
+          aks-cluster-name: ${{ needs.resolve-env.outputs.aks-cluster }}
+          aks-namespace: ${{ needs.resolve-env.outputs.aks-namespace }}
+          service-account: workload-identity-sa
+          managed-identity-client-id: ${{ secrets.MANAGED_IDENTITY_CLIENT_ID_DEV }}
+          keyvault: ${{ needs.resolve-env.outputs.keyvault }}
+          keyvault-tenant-id: ${{ needs.resolve-env.outputs.keyvault-tenant-id }}
+          host: ${{ format('{0}.{1}', matrix.service, needs.resolve-env.outputs.domain) }}
+          environment: dev
+          spring-profile-override: ''
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Write deploy output
+        if: ${{ matrix.service != '__none__' }}
+        shell: bash
+        run: |
+          SVC="${{ matrix.service }}"
+          URLS="${{ steps.deploy.outputs.deployment-urls }}"
+          URL=$(echo "$URLS" | jq -r --arg svc "$SVC" '.[$svc] // ""')
+          jq -n --arg svc "$SVC" --arg url "$URL" '{service:$svc, url:$url}' > deploy-output.json
+          cat deploy-output.json
+
+      - name: Upload deploy output
+        if: ${{ matrix.service != '__none__' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-output-${{ matrix.service }}
+          path: deploy-output.json
+          retention-days: 7
+
+  smoke-test:
+    needs: [deploy-dev, detect-services]
+    if: needs.detect-services.outputs.has_deploy_changes == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(needs.detect-services.outputs.deploy_services == '[]' && '["__none__"]' || needs.detect-services.outputs.deploy_services) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download deploy output
+        if: ${{ matrix.service != '__none__' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: deploy-output-${{ matrix.service }}
+          path: ./deploy-output
+          if-no-files-found: ignore
+
+      - name: Read URL
+        id: url
+        if: ${{ matrix.service != '__none__' }}
+        shell: bash
+        run: |
+          if [ -f deploy-output/deploy-output.json ]; then
+            URL=$(jq -r '.url' deploy-output/deploy-output.json)
+          else
+            URL=""
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Run smoke test
+        if: ${{ matrix.service != '__none__' }}
+        continue-on-error: true
+        uses: ./.github/actions/smoke-test
+        with:
+          service-name: ${{ matrix.service }}
+          expected-url: ${{ format('https://{0}', steps.url.outputs.url) }}
+
+  drift-detect-dev:
+    needs: [deploy-dev, build, resolve-env, detect-services]
+    if: needs.detect-services.outputs.has_deploy_changes == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install yq
+        shell: bash
+        run: |
+          wget -q https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+
+      - name: Download all build outputs
+        uses: actions/download-artifact@v4
+        with:
+          path: ./build-artifacts
+          if-no-files-found: ignore
+
+      - name: Build drift services JSON
+        id: drift-svc
+        shell: bash
+        run: |
+          JSON="[]"
+          for file in build-artifacts/*/build-output.json; do
+            [ -f "$file" ] || continue
+            JSON=$(echo "$JSON" | jq -c \
+              --arg svc "$(jq -r '.service' "$file")" \
+              --arg tag "$(jq -r '.tag' "$file")" \
+              --arg digest "$(jq -r '.digest' "$file")" \
+              '. + [{service:$svc, tag:$tag, digest:$digest}]')
+          done
+          echo "services=$JSON" >> "$GITHUB_OUTPUT"
+
+      - name: Run drift detection
+        uses: ./.github/actions/drift-detect
+        with:
+          services: ${{ steps.drift-svc.outputs.services }}
+          acr-name: ${{ needs.resolve-env.outputs.acr-server }}
+          registry-base: ${{ env.REGISTRY_TARGET == 'GITHUB_REGISTRY' && format('ghcr.io/{0}', github.repository_owner) || (env.REGISTRY_TARGET == 'DOCKER_REGISTRY' && secrets.DOCKERHUB_USERNAME) || needs.resolve-env.outputs.acr-server }}
+          resource-group: ${{ needs.resolve-env.outputs.resource-group }}
+          aks-cluster-name: ${{ needs.resolve-env.outputs.aks-cluster }}
+          aks-namespace: ${{ needs.resolve-env.outputs.aks-namespace }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+  update-catalogue:
+    needs: [detect-services, build]
+    if: needs.detect-services.outputs.has_deploy_changes == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install yq
+        shell: bash
+        run: |
+          wget -q https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+
+      - name: Download all build outputs
+        uses: actions/download-artifact@v4
+        with:
+          path: ./build-artifacts
+
+      - name: Update service register
+        shell: bash
+        run: |
+          REGISTER=".github/service-deployment-catalogue/service-register.yml"
+          TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "DEBUG: listing build-artifacts"
+          ls -la build-artifacts || true
+          find build-artifacts -maxdepth 3 -type f -name 'build-output.json' -print || true
+          FOUND=0
+          for file in build-artifacts/*/build-output.json; do
+            [ -f "$file" ] || continue
+            FOUND=1
+            echo "DEBUG: build-output file: $file"
+            cat "$file"
+            SVC=$(jq -r '.service' "$file")
+            TAG=$(jq -r '.tag' "$file")
+            DIGEST=$(jq -r '.digest' "$file")
+            IMAGE=$(jq -r '.image' "$file")
+            [ -n "$SVC" ] && [ "$SVC" != "null" ] || continue
+
+            OLD_TAG=$(yq -r ".services[\"$SVC\"].tag // \"unset\"" "$REGISTER")
+            echo "DEBUG: $SVC tag change: $OLD_TAG -> $TAG"
+            echo "DEBUG: $SVC image: $IMAGE"
+            yq -i ".services[\"$SVC\"].tag = \"$TAG\"" "$REGISTER"
+            yq -i ".services[\"$SVC\"].digest = \"$DIGEST\"" "$REGISTER"
+            yq -i ".services[\"$SVC\"].image = \"$IMAGE\"" "$REGISTER"
+
+            ENTRY=$(jq -n --arg tag "$TAG" --arg digest "$DIGEST" --arg ts "$TS" --arg env "dev" \
+              '{tag:$tag, digest:$digest, deployedAt:$ts, deployedBy:"github-actions[bot]",environment:$env}')
+            yq -i --argjson entry "$ENTRY" \
+              ".services[\"$SVC\"].history = [\$entry] + .services[\"$SVC\"].history" "$REGISTER"
+            yq -i ".services[\"$SVC\"].history = (.services[\"$SVC\"].history)[0:3]" "$REGISTER"
+          done
+          if [ "$FOUND" -eq 0 ]; then
+            echo "DEBUG: no build-output.json files found under build-artifacts/"
+          fi
+          cat "$REGISTER"
+
+      - name: Commit catalogue update
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:$GH_TOKEN@github.com/${{ github.repository }}.git"
+          git checkout "$BRANCH"
+          git pull --rebase origin "$BRANCH"
+          git status --short
+          git diff -- .github/service-deployment-catalogue/service-register.yml || true
+          git add .github/service-deployment-catalogue/service-register.yml
+          git status --short
+          git diff --staged -- .github/service-deployment-catalogue/service-register.yml || true
+          git diff --staged --quiet || git commit -m "chore(catalogue): update ${BRANCH} deployment catalogue [skip ci]"
+          git push origin HEAD:"$BRANCH"
+
+  create-promotion-prs:
+    needs: [update-catalogue, detect-services]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install yq
+        shell: bash
+        run: |
+          wget -q https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+
+      - name: Create promotion PRs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set +e
+          REGISTER=".github/service-deployment-catalogue/service-register.yml"
+          RAW_SERVICES="${{ needs.detect-services.outputs.deploy_services }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          BRANCH="${{ github.ref_name }}"
+          git checkout "$BRANCH"
+          git pull origin "$BRANCH" --ff-only
+
+          if [[ "$BRANCH" == feature/* ]]; then
+            TARGET="dev"
+          elif [[ "$BRANCH" == "dev" ]]; then
+            TARGET="qa"
+          elif [[ "$BRANCH" == "qa" ]]; then
+            TARGET="preprod"
+          elif [[ "$BRANCH" == "preprod" ]]; then
+            TARGET="prod"
+          else
+            echo "No promotion target for branch $BRANCH"
+            exit 0
+          fi
+
+          if [ -z "$RAW_SERVICES" ] || [ "$RAW_SERVICES" = "[]" ]; then
+            echo "No deployable services to promote from $BRANCH to $TARGET"
+            exit 0
+          fi
+
+          if ! echo "$RAW_SERVICES" | jq -e 'type == "array"' >/dev/null 2>&1; then
+            echo "::warning::deploy_services is not a JSON array, attempting to normalize: $RAW_SERVICES"
+            SERVICES=$(echo "$RAW_SERVICES" | jq -R . | jq -s -c .)
+          else
+            SERVICES="$RAW_SERVICES"
+          fi
+
+          for svc in $(echo "$SERVICES" | jq -r '.[]'); do
+            [ -n "$svc" ] || continue
+            TAG=$(yq -r ".services[\"$svc\"].tag" "$REGISTER")
+            DIGEST=$(yq -r ".services[\"$svc\"].digest" "$REGISTER")
+            IMAGE=$(yq -r ".services[\"$svc\"].image" "$REGISTER")
+
+            EXISTING_PR=$(gh pr list --repo "$REPO" --base "$TARGET" --head "$BRANCH" --state open --json url --jq '.[0].url' 2>/dev/null || true)
+            if [ -n "$EXISTING_PR" ]; then
+              echo "Promotion PR for ${svc} -> ${TARGET} already exists: $EXISTING_PR"
+              continue
+            fi
+
+            PR_TITLE="Promote ${svc} to ${TARGET}"
+            PR_BODY="Promotion PR for ${svc} to ${TARGET}: tag=${TAG} digest=${DIGEST} image=${IMAGE}. Generated by CI after a successful build+deploy+smoke cycle."
+
+            PR_URL=$(gh pr create --repo "$REPO" --base "$TARGET" --head "$BRANCH" \
+              --title "$PR_TITLE" \
+              --body "$PR_BODY" 2>&1) || {
+                echo "::warning::Failed to create promotion PR for ${svc} -> ${TARGET}"
+                continue
+              }
+            echo "Promotion PR for ${svc} -> ${TARGET}: $PR_URL"
+          done
+
+
