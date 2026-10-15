@@ -7,10 +7,11 @@ services:
     image: ""
     history: []
   onboarding-service:
-    tag: ""
-    digest: ""
-    image: ""
-    history: []
+    tag: "059ae189202af465e37318fc32601fc8937f28a1"
+    digest: "sha256:6f99898433420f7e61ce2bf10e84170e6a20bde45bb9ab7976c3b89abf3799fe"
+    image: "ghcr.io/al-ramz/onboarding-service:059ae189202af465e37318fc32601fc8937f28a1@sha256:6f99898433420f7e61ce2bf10e84170e6a20bde45bb9ab7976c3b89abf3799fe"
+    history:
+      - {"tag": "059ae189202af465e37318fc32601fc8937f28a1", "digest": "sha256:6f99898433420f7e61ce2bf10e84170e6a20bde45bb9ab7976c3b89abf3799fe", "deployedAt": "2026-10-15T06:31:44Z", "deployedBy": "github-actions[bot]", "environment": "dev"}
   reference-data-service:
     tag: ""
     digest: ""
