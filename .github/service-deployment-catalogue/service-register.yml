@@ -17,7 +17,8 @@ services:
     image: ""
     history: []
   utility-service:
-    tag: ""
-    digest: ""
-    image: ""
-    history: []
+    tag: "34896d03fdf6593fc5ff41758ca64752c8070e56"
+    digest: "sha256:30dc3ea406dd0aa1da1a13b920e676289255938aa0a1eb3cc1f3462107343315"
+    image: "ghcr.io/al-ramz/utility-service:34896d03fdf6593fc5ff41758ca64752c8070e56@sha256:30dc3ea406dd0aa1da1a13b920e676289255938aa0a1eb3cc1f3462107343315"
+    history:
+      - {"tag": "34896d03fdf6593fc5ff41758ca64752c8070e56", "digest": "sha256:30dc3ea406dd0aa1da1a13b920e676289255938aa0a1eb3cc1f3462107343315", "deployedAt": "2026-10-13T12:50:32Z", "deployedBy": "github-actions[bot]", "environment": "dev"}
