@@ -6,6 +6,8 @@
 #   __PROFILE__            dev | preprod | prod
 #   __SERVICE_NAME__       kebab-case service name, e.g. reward-engine-service
 #   __THREAD_PREFIX__      PascalCase short name for scheduler thread names, e.g. RewardEngine
+#   __MIDDLEWARE_DB__      dev: alramz-mw-dev-db (shared dev DB — jwt_* / api_audit_log tables live there)
+#                           preprod/prod: alramzmwdb
 #   __PORT__               dev: a free port in the 808x range not already used by another service;
 #                           preprod/prod: 8080 (Kubernetes Service fronts it — see service.yaml)
 #   __TRACING_OTLP_DEFAULT__  dev: http://172.25.21.114:4318/v1/traces   preprod/prod: (empty)
@@ -115,7 +117,7 @@ company:
   datasource:
     middleware:
       enabled: true
-      url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://localhost:5432/alramzmwdb}
+      url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://localhost:5432/__MIDDLEWARE_DB__}
       username: ${COMPANY_DATASOURCE_MIDDLEWARE_USERNAME:alramzmw}
       # __PROFILE__ == dev: plainPassword is acceptable (dev-only, logs a warning).
       # __PROFILE__ == preprod or prod: replace plainPassword with cipher-encrypted `password` +

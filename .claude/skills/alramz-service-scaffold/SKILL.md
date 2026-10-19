@@ -70,15 +70,16 @@ copy the named template from `templates/`, substitute placeholders, and write it
 | `src/main/java/com/alramz/controllers/ApplicationController.java` | `ApplicationController.java.template` |
 | `src/main/java/com/alramz/config/JacksonConfig.java` | `JacksonConfig.java.template` |
 | `src/main/resources/application.yml` | `application.yml.template` |
-| `src/main/resources/application-dev.yml` | `application-profile.yml.template` (`__PROFILE__=dev`, OTLP defaults per the template header, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=86400000`) |
-| `src/main/resources/application-preprod.yml` | `application-profile.yml.template` (`__PROFILE__=preprod`, `__PORT__=8080`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=900000`) |
-| `src/main/resources/application-prod.yml` | `application-profile.yml.template` (`__PROFILE__=prod`, `__PORT__=8080`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=900000`) |
+| `src/main/resources/application-dev.yml` | `application-profile.yml.template` (`__PROFILE__=dev`, `__MIDDLEWARE_DB__=alramz-mw-dev-db`, OTLP defaults per the template header, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=86400000`) |
+| `src/main/resources/application-preprod.yml` | `application-profile.yml.template` (`__PROFILE__=preprod`, `__PORT__=8080`, `__MIDDLEWARE_DB__=alramzmwdb`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=900000`) |
+| `src/main/resources/application-prod.yml` | `application-profile.yml.template` (`__PROFILE__=prod`, `__PORT__=8080`, `__MIDDLEWARE_DB__=alramzmwdb`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=900000`) |
 | `src/main/resources/application-docker.yml` | `application-docker.yml.template` |
 | `src/main/resources/application-test.yml` | `application-test.yml.template` |
 | `src/main/resources/db/changelog/{dev,docker,preprod,prod}/db.changelog-master.yaml` | `db.changelog-master.yaml.template` (one per profile) |
 | `src/main/resources/db/changelog/dev/sql/001-*.sql` (+ same file mirrored into `docker/`, `preprod/`, `prod/` sql folders) | `001-example-changeset.sql.template` — only if the service owns real schema on day one; otherwise skip and leave the `sql/` folders to be created by the first real feature PR |
 | `src/test/resources/application.yml` | `application-test-resources.yml.template` |
 | `src/test/resources/db/changelog/test/db.changelog-master.yaml` | `db.changelog-master.yaml.template` (`__PROFILE__=test`) |
+| `src/test/resources/db/changelog/test/sql/{001-api-audit-log,002-jwt-tables}.sql` | copy verbatim from `services/utility-service/src/test/resources/db/changelog/test/sql/` — the starter's JPA entities (`jwt_user`, `jwt_refresh_token`) fail `ddl-auto: validate` on the test H2 DB without them. **Test folder only**: the shared middleware DB already has these tables (created by onboarding-service's changesets), so don't add them to the main-profile `sql/` folders |
 | `src/test/java/com/alramz/__APP_CLASS__Tests.java` | `ApplicationTests.java.template` |
 
 Also **copy verbatim** (don't template — these are the Maven Wrapper, and must match the working
@@ -106,6 +107,23 @@ entirely. Don't repeat that for the new service: add
 ```
 
 to the root `pom.xml`'s `<modules>` block, in the same position other service modules appear.
+
+**Also add a VS Code launch entry** to the root `.vscode/launch.json` (create the file if it's
+missing; keep entries alphabetical). Don't skip this; every service has one:
+
+```json
+{
+    "type": "java",
+    "name": "__SERVICE_NAME__",
+    "request": "launch",
+    "mainClass": "com.alramz.__APP_CLASS__",
+    "projectName": "__SERVICE_NAME__",
+    "cwd": "${workspaceFolder}/services/__SERVICE_NAME__",
+    "vmArgs": "-Dspring.profiles.active=dev"
+}
+```
+
+`.vscode/` is gitignored, so this only updates the local workspace and won't show up in `git status`.
 
 ## 4. Framework integration checklist
 

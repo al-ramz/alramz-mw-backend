@@ -1,0 +1,32 @@
+@baseUrl=http://localhost:8084
+
+### Get a token first by registering + logging in below, then paste it here.
+@authToken=
+
+###
+GET {{baseUrl}}/api/v1/info
+
+###
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+    "authType": "JWT",
+    "consumer": "reporting_management_service_app",
+    "email": "reporting-management-service@alramz.ae",
+    "consumerPassword": "password123",
+    "roles": ["APP_REPORTING_MANAGEMENT_SERVICE_USER"],
+    "application": "reporting-management-service",
+    "environment": "local"
+}
+
+###
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "consumer": "reporting_management_service_app",
+    "consumerPassword": "password123"
+}
+
+###

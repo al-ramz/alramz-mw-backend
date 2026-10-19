@@ -5,3 +5,5 @@
 databaseChangeLog:
   - includeAll:
       path: db/changelog/__PROFILE__/sql
+      # A new service may have no changesets yet (sql/ absent) — without this Liquibase fails startup.
+      errorIfMissingOrEmpty: false

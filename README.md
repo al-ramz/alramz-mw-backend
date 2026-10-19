@@ -13,6 +13,19 @@ Terraform + Kubernetes IaC that deploys them to Azure, in one Maven-reactor mono
 | [`alramz-notification-service`](services/alramz-notification-service) | Email/notification delivery via MS Graph and Azure Service Bus |
 | [`reference-data-service`](services/reference-data-service) | Reference/global-config data, backed by Redis cache |
 
+## Dev Profile Services
+
+Ports from each service's `application-dev.yml` (run with `-Dspring-boot.run.profiles=dev`).
+
+| Service | Description | Port | Info endpoint |
+|---|---|---|---|
+| `onboarding-service` | Onboarding: IBAN validation and bank info lookup | 8080 | http://localhost:8080/actuator/info |
+| `reference-data-service` | Reference/global-config data, backed by Redis cache | 8081 | http://localhost:8081/actuator/info |
+| `alramz-notification-service` | Email/notification delivery via MS Graph | 8082 | http://localhost:8082/actuator/info |
+| `utility-service` | Shared utility APIs | 8083 | http://localhost:8083/actuator/info |
+| `reporting-management-service` | Reporting management | 8084 | http://localhost:8084/actuator/info |
+| `wealth-management-service` | Wealth management | 8085 | http://localhost:8085/actuator/info |
+
 ## Repository Layout
 
 ```
@@ -54,6 +67,3 @@ Full CLI reference: [`docs/COMMANDS.md`](docs/COMMANDS.md). Local Postgres/Redis
 - [`docs/COMMANDS.md`](docs/COMMANDS.md) — full CLI command reference
 - [`.claude/howtos/`](.claude/howtos/README.md) — subsystem how-tos (JWT, datasource, Liquibase, masking, secrets)
 
-
-docker exec -it 31f grafana  cli admin reset-admin-password 'Alramz@123'
-COMPOSE_PROFILES=tempo docker compose -f docker-compose.yml up -d tempo

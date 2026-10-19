@@ -23,6 +23,8 @@
         <module>services/alramz-notification-service</module>
         <module>services/reference-data-service</module>
         <module>services/utility-service</module>
+        <module>services/reporting-management-service</module>
+        <module>services/wealth-management-service</module>
     </modules>
 
     <build>
