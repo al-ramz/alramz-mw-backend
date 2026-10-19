@@ -70,9 +70,9 @@ copy the named template from `templates/`, substitute placeholders, and write it
 | `src/main/java/com/alramz/controllers/ApplicationController.java` | `ApplicationController.java.template` |
 | `src/main/java/com/alramz/config/JacksonConfig.java` | `JacksonConfig.java.template` |
 | `src/main/resources/application.yml` | `application.yml.template` |
-| `src/main/resources/application-dev.yml` | `application-profile.yml.template` (`__PROFILE__=dev`) |
-| `src/main/resources/application-preprod.yml` | `application-profile.yml.template` (`__PROFILE__=preprod`, `__PORT__=8080`) |
-| `src/main/resources/application-prod.yml` | `application-profile.yml.template` (`__PROFILE__=prod`, `__PORT__=8080`) |
+| `src/main/resources/application-dev.yml` | `application-profile.yml.template` (`__PROFILE__=dev`, OTLP defaults per the template header) |
+| `src/main/resources/application-preprod.yml` | `application-profile.yml.template` (`__PROFILE__=preprod`, `__PORT__=8080`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty) |
+| `src/main/resources/application-prod.yml` | `application-profile.yml.template` (`__PROFILE__=prod`, `__PORT__=8080`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty) |
 | `src/main/resources/application-docker.yml` | `application-docker.yml.template` |
 | `src/main/resources/application-test.yml` | `application-test.yml.template` |
 | `src/main/resources/db/changelog/{dev,docker,preprod,prod}/db.changelog-master.yaml` | `db.changelog-master.yaml.template` (one per profile) |
@@ -154,6 +154,13 @@ skipped, because `alramz-api-starter`'s auto-configurations default to "off" or 
   (`@ControllerAdvice`) as soon as the service has its first real endpoint beyond `/api/v1/info` —
   see `data-validation-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java` for
   the shape (typed exceptions, not generic `RuntimeException`).
+- **Observability (tracing/logs/metrics)**: the `management.tracing` / `opentelemetry` /
+  `observations` / `metrics` / `otlp` block lives in *every* profile file (dev, docker, test,
+  preprod, prod) and **never** in `application.yml`. Only dev carries OTLP endpoint defaults
+  (`172.25.21.114`); every other profile uses `${TRACING_OTLP_ENDPOINT:}` / `${LOGS_OTLP_ENDPOINT:}`
+  so the endpoints come only from env variables. Caveat: Spring Boot gates the OTLP exporters on the
+  endpoint property merely *existing*, so a non-dev profile started without those env vars may fail
+  to create the exporter — always set them in docker/k8s.
 - **Lombok**: use `@Getter`/`@Setter`/`@Slf4j`/builders everywhere; the `pom.xml` and
   `maven-compiler-plugin` annotation-processor wiring for it is already in the template.
 
@@ -185,6 +192,15 @@ A clean `mvn verify` does **not** mean clean lint/coverage (Checkstyle is non-bl
 default `<skip>true</skip>` in the BOM even though this template turns them back on per-module,
 JaCoCo minimums are 0.00) — read the console output if you also run
 `mvn -pl services/__SERVICE_NAME__ -am verify -Dcheckstyle.consoleOutput=true -Dpmd.consoleOutput=true -Dspotbugs.consoleOutput=true -Djacoco.skip=false`.
+
+Check the observability block landed per §4 (expect: no hits in `application.yml`; one tracing
+block in each of the 5 profile files; OTLP endpoint defaults only in dev; no `__…__` placeholder left):
+```bash
+R=services/__SERVICE_NAME__/src/main/resources
+grep -c "TRACING_SAMPLING_PROBABILITY" $R/application.yml $R/application-{dev,docker,test,preprod,prod}.yml
+grep -l "OTLP_ENDPOINT:http" $R/application*.yml   # → only application-dev.yml
+grep -rn "__[A-Z_]*__" $R                           # → nothing
+```
 
 Also smoke-check locally once it compiles:
 ```bash

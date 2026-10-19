@@ -8,6 +8,10 @@
 #   __THREAD_PREFIX__      PascalCase short name for scheduler thread names, e.g. RewardEngine
 #   __PORT__               dev: a free port in the 808x range not already used by another service;
 #                           preprod/prod: 8080 (Kubernetes Service fronts it — see service.yaml)
+#   __TRACING_OTLP_DEFAULT__  dev: http://172.25.21.114:4318/v1/traces   preprod/prod: (empty)
+#   __LOGS_OTLP_DEFAULT__     dev: http://172.25.21.114:3100/otlp/v1/logs preprod/prod: (empty)
+#                           Non-dev profiles get the endpoints only from the TRACING_OTLP_ENDPOINT /
+#                           LOGS_OTLP_ENDPOINT env variables.
 spring:
   liquibase:
     change-log: classpath:db/changelog/__PROFILE__/db.changelog-master.yaml
@@ -22,6 +26,35 @@ management:
     web:
       exposure:
         include: "*"
+  # Observability (tracing/logs/metrics) — present in EVERY profile; never in application.yml.
+  # Local collector instead of the shared dev one: http://localhost:4318/v1/traces, http://localhost:3100/otlp/v1/logs
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
+  opentelemetry:
+    resource-attributes:
+      deployment.environment: ${spring.profiles.active:default}
+    tracing:
+      export:
+        otlp:
+          endpoint: ${TRACING_OTLP_ENDPOINT:__TRACING_OTLP_DEFAULT__}
+    logging:
+      export:
+        otlp:
+          endpoint: ${LOGS_OTLP_ENDPOINT:__LOGS_OTLP_DEFAULT__}
+  observations:
+    annotations:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}   # Grafana dashboard filters on this label
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true                # buckets for the p95/p99 panels
+  otlp:
+    metrics:
+      export:
+        enabled: false   # Jaeger accepts traces only
 
 cipher:
   password: UseMostSecretKey
