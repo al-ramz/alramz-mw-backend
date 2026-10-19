@@ -83,6 +83,7 @@ company:
 
   jwt:
     enabled: true
+    access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:86400000}   # 24h (dev only)
     secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
     login-url: /api/auth/login
     register-url: /api/auth/register

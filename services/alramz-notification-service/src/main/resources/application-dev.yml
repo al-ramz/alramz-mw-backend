@@ -60,6 +60,7 @@ app:
 company:
   jwt:
     enabled: true
+    access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:86400000}   # 24h (dev only)
     permit-all-urls:
       - /api/v1/info
       - /api/v1/email/send

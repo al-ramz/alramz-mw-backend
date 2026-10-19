@@ -12,6 +12,7 @@
 #   __LOGS_OTLP_DEFAULT__     dev: http://172.25.21.114:3100/otlp/v1/logs preprod/prod: (empty)
 #                           Non-dev profiles get the endpoints only from the TRACING_OTLP_ENDPOINT /
 #                           LOGS_OTLP_ENDPOINT env variables.
+#   __JWT_ACCESS_TOKEN_EXPIRATION_MS__  dev: 86400000 (24h)   preprod/prod: 900000 (15 min, starter default)
 spring:
   liquibase:
     change-log: classpath:db/changelog/__PROFILE__/db.changelog-master.yaml
@@ -98,6 +99,7 @@ company:
 
   jwt:
     enabled: true
+    access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:__JWT_ACCESS_TOKEN_EXPIRATION_MS__}
     secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
     login-url: /api/auth/login
     register-url: /api/auth/register

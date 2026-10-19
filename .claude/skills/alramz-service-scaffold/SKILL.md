@@ -70,9 +70,9 @@ copy the named template from `templates/`, substitute placeholders, and write it
 | `src/main/java/com/alramz/controllers/ApplicationController.java` | `ApplicationController.java.template` |
 | `src/main/java/com/alramz/config/JacksonConfig.java` | `JacksonConfig.java.template` |
 | `src/main/resources/application.yml` | `application.yml.template` |
-| `src/main/resources/application-dev.yml` | `application-profile.yml.template` (`__PROFILE__=dev`, OTLP defaults per the template header) |
-| `src/main/resources/application-preprod.yml` | `application-profile.yml.template` (`__PROFILE__=preprod`, `__PORT__=8080`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty) |
-| `src/main/resources/application-prod.yml` | `application-profile.yml.template` (`__PROFILE__=prod`, `__PORT__=8080`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty) |
+| `src/main/resources/application-dev.yml` | `application-profile.yml.template` (`__PROFILE__=dev`, OTLP defaults per the template header, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=86400000`) |
+| `src/main/resources/application-preprod.yml` | `application-profile.yml.template` (`__PROFILE__=preprod`, `__PORT__=8080`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=900000`) |
+| `src/main/resources/application-prod.yml` | `application-profile.yml.template` (`__PROFILE__=prod`, `__PORT__=8080`, `__TRACING_OTLP_DEFAULT__`/`__LOGS_OTLP_DEFAULT__` = empty, `__JWT_ACCESS_TOKEN_EXPIRATION_MS__=900000`) |
 | `src/main/resources/application-docker.yml` | `application-docker.yml.template` |
 | `src/main/resources/application-test.yml` | `application-test.yml.template` |
 | `src/main/resources/db/changelog/{dev,docker,preprod,prod}/db.changelog-master.yaml` | `db.changelog-master.yaml.template` (one per profile) |
@@ -117,6 +117,9 @@ skipped, because `alramz-api-starter`'s auto-configurations default to "off" or 
   BOTH `@PermitAll` on the controller method AND its path added to `company.jwt.permit-all-urls` in
   *every* profile file — `/api/v1/info` is already wired as the example. Never write ad hoc Spring
   Security config to open an endpoint instead.
+- **JWT access-token expiry**: dev sets `company.jwt.access-token-expiration-ms` to 24h (`86400000`);
+  preprod/prod set 15 min (`900000`); docker/test omit it and inherit the starter's 15-min default.
+  All overridable via `JWT_ACCESS_TOKEN_EXPIRATION_MS`. Refresh tokens stay at the 7-day default.
 - **Startup banner**: `Application.java.template`'s `ApplicationRunner` bean logs application name,
   active profile (environment), host, and port on every startup — a repo-wide convention (see
   `reference-data-service/src/main/java/com/alramz/ReferenceDataServiceApplication.java`). Keep this
@@ -199,6 +202,7 @@ block in each of the 5 profile files; OTLP endpoint defaults only in dev; no `__
 R=services/__SERVICE_NAME__/src/main/resources
 grep -c "TRACING_SAMPLING_PROBABILITY" $R/application.yml $R/application-{dev,docker,test,preprod,prod}.yml
 grep -l "OTLP_ENDPOINT:http" $R/application*.yml   # → only application-dev.yml
+grep -l "EXPIRATION_MS:86400000" $R/application*.yml # → only application-dev.yml
 grep -rn "__[A-Z_]*__" $R                           # → nothing
 ```
 
