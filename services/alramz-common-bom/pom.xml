@@ -58,8 +58,8 @@
         <jacoco.line.coverage>0.80</jacoco.line.coverage>
         <jacoco.branch.coverage>0.70</jacoco.branch.coverage>
         <jacoco.instruction.coverage>0.75</jacoco.instruction.coverage>
-        <spotbugs.version>4.8.6.0</spotbugs.version>
-        <spotbugs.core.version>4.8.6</spotbugs.core.version>
+        <spotbugs.version>4.10.5.0</spotbugs.version>
+        <spotbugs.core.version>4.10.5</spotbugs.core.version>
         <spotbugs.skip>true</spotbugs.skip>
         <spotbugs.failOnError>false</spotbugs.failOnError>
         <spotbugs.effort>Default</spotbugs.effort>

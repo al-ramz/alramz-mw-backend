@@ -8,7 +8,7 @@
     <springProperty name="JSON_ENABLED" source="company.logging.json.enabled" defaultValue="false"/>
     <springProperty name="APPENDER_LEVEL" source="company.logging.level" defaultValue="INFO"/>
     <springProperty name="SEQ_ENABLED" source="company.logging.seq.enabled" defaultValue="false"/>
-    <springProperty name="SEQ_URL" source="company.logging.seq.url" defaultValue="http://localhost:5341"/>
+    <springProperty name="SEQ_URL" source="company.logging.seq.url" defaultValue="http://172.25.21.114:5341"/>
     <springProperty name="SEQ_API_KEY" source="company.logging.seq.api-key" defaultValue=""/>
     <springProperty name="SEQ_BATCH_SIZE" source="company.logging.seq.batch-size" defaultValue="50"/>
     <springProperty name="SEQ_FLUSH_INTERVAL_MS" source="company.logging.seq.flush-interval-ms" defaultValue="1000"/>

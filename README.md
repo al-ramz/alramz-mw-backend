@@ -53,3 +53,7 @@ Full CLI reference: [`docs/COMMANDS.md`](docs/COMMANDS.md). Local Postgres/Redis
 - [`docs/codebase/`](docs/codebase) — stack, architecture, structure, conventions, integrations, testing, known concerns
 - [`docs/COMMANDS.md`](docs/COMMANDS.md) — full CLI command reference
 - [`.claude/howtos/`](.claude/howtos/README.md) — subsystem how-tos (JWT, datasource, Liquibase, masking, secrets)
+
+
+docker exec -it 31f grafana  cli admin reset-admin-password 'Alramz@123'
+COMPOSE_PROFILES=tempo docker compose -f docker-compose.yml up -d tempo

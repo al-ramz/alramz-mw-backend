@@ -23,11 +23,11 @@ management:
     tracing:
       export:
         otlp:
-          endpoint: ${TRACING_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+          endpoint: ${TRACING_OTLP_ENDPOINT:http://172.25.21.114:4318/v1/traces} # :http://localhost:4318/v1/traces
     logging:
       export:
         otlp:
-          endpoint: ${LOGS_OTLP_ENDPOINT:http://localhost:3100/otlp/v1/logs}
+          endpoint: ${LOGS_OTLP_ENDPOINT:http://172.25.21.114:3100/otlp/v1/logs} # :http://localhost:3100/otlp/v1/logs
   observations:
     annotations:
       enabled: true
