@@ -10,11 +10,9 @@ import com.alramz.model.RelationshipManagerListResult;
 import com.alramz.service.RelationshipManagerService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
 @ConditionalOnProperty(prefix = "company.datasource.brok", name = "enabled", havingValue = "true")
 public class RelationshipManagerController implements RelationshipManagersApi {
 
@@ -25,7 +23,7 @@ public class RelationshipManagerController implements RelationshipManagersApi {
     }
 
     @Override
-    @JwtSecured(roles = "APP_REFERENCE_DATA")
+    @JwtSecured(roles = "APP_REPORTING_MANAGEMENT_SERVICE_USER")
     @Loggable
     public ResponseEntity<GenericResponse> getRelationshipManagers() {
         RelationshipManagerListResult result = relationshipManagerService.getAllRelationshipManagers();
@@ -38,7 +36,7 @@ public class RelationshipManagerController implements RelationshipManagersApi {
     }
 
     @Override
-    @JwtSecured(roles = "APP_REFERENCE_DATA")
+    @JwtSecured(roles = "APP_REPORTING_MANAGEMENT_SERVICE_USER")
     @Loggable
     public ResponseEntity<GenericResponse> getCommissionsByRelationshipManager(
             CommissionsByRelationshipManagerRequest commissionsByRelationshipManagerRequest) {

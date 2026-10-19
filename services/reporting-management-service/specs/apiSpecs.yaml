@@ -42,6 +42,117 @@ paths:
                   service: reporting-management-service
                   version: 1.0.0
 
+  /api/v1/relationship-managers:
+    get:
+      tags:
+        - RelationshipManagers
+      summary: List relationship managers
+      description: Returns all relationship managers that are not flagged disabled.
+      operationId: getRelationshipManagers
+      responses:
+        '200':
+          description: Relationship managers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  relationshipManagers:
+                    - id: 101
+                      nameEn: "John Smith"
+                      nameAr: "جون سميث"
+        '401':
+          description: Missing or invalid JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "401"
+                responseMessage: "Unauthorized"
+                response: null
+        '500':
+          description: Unable to retrieve relationship managers due to a brok datasource/query failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Unable to retrieve relationship managers"
+                response: null
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+
+  /api/v1/relationship-managers/commissions:
+    post:
+      tags:
+        - RelationshipManagers
+      summary: Commissions and trading-volume report by relationship manager
+      description: Returns commission/trading-volume totals, optionally filtered by date range and/or relationship-manager codes.
+      operationId: getCommissionsByRelationshipManager
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionsByRelationshipManagerRequest'
+            example:
+              startDate: "2024-01-01"
+              endDate: "2024-12-31"
+              relationshipManagerCodes: ["3031"]
+      responses:
+        '200':
+          description: Commissions report retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  totalTradingVolume: 187500.75
+                  totalReceivedCommission: 937.50
+                  results:
+                    - clientNumber: "C-10293"
+                      clientName: "Acme Trading LLC"
+                      tradingVolume: 125000.50
+                      receivedCommission: 625.25
+        '400':
+          description: Malformed request body or an invalid startDate/endDate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "400"
+                responseMessage: "startDate: must be blank or a valid ISO-8601 date (YYYY-MM-DD)"
+                response: null
+        '401':
+          description: Missing or invalid JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "401"
+                responseMessage: "Unauthorized"
+                response: null
+        '500':
+          description: Unable to retrieve commission report due to a brok datasource/query failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Unable to retrieve commission report"
+                response: null
+                correlationId: "550e8400-e29b-41d4-a716-446655440000"
+
   # Add every new endpoint's contract here BEFORE writing the controller — the
   # openapi-generator-maven-plugin (bound to `generate`, see pom.xml) produces interface-only
   # Spring MVC stubs (com.alramz.api) and DTOs (com.alramz.model) from this file on every build.
@@ -57,10 +168,118 @@ components:
   schemas:
     GenericResponse:
       type: object
+      required:
+        - responseCode
+        - responseMessage
+        - response
       properties:
         responseCode:
           type: string
+          example: "200"
+
         responseMessage:
           type: string
+          example: OK
+
         response:
           type: object
+
+        correlationId:
+          type: string
+          format: uuid
+          description: Correlation ID for request tracing
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+    RelationshipManager:
+      type: object
+      required:
+        - id
+        - nameEn
+        - nameAr
+      properties:
+        id:
+          type: integer
+          example: 101
+
+        nameEn:
+          type: string
+          example: "John Smith"
+
+        nameAr:
+          type: string
+          example: "جون سميث"
+
+    RelationshipManagerListResult:
+      type: object
+      required:
+        - relationshipManagers
+      properties:
+        relationshipManagers:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelationshipManager'
+
+    CommissionResult:
+      type: object
+      required:
+        - clientNumber
+        - clientName
+        - tradingVolume
+        - receivedCommission
+      properties:
+        clientNumber:
+          type: string
+          example: "C-10293"
+
+        clientName:
+          type: string
+          example: "Acme Trading LLC"
+
+        tradingVolume:
+          type: number
+          example: 125000.50
+
+        receivedCommission:
+          type: number
+          example: 625.25
+
+    RelationshipManagerCommissionsSummary:
+      type: object
+      required:
+        - totalTradingVolume
+        - totalReceivedCommission
+        - results
+      properties:
+        totalTradingVolume:
+          type: number
+          example: 187500.75
+
+        totalReceivedCommission:
+          type: number
+          example: 937.50
+
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommissionResult'
+
+    CommissionsByRelationshipManagerRequest:
+      type: object
+      properties:
+        startDate:
+          type: string
+          pattern: "^$|\\d{4}-\\d{2}-\\d{2}"
+          example: "2024-01-01"
+          description: "ISO-8601 date (YYYY-MM-DD); blank or absent defaults to 1900-01-01"
+
+        endDate:
+          type: string
+          pattern: "^$|\\d{4}-\\d{2}-\\d{2}"
+          example: "2024-12-31"
+          description: "ISO-8601 date (YYYY-MM-DD); blank or absent defaults to 2999-01-01"
+
+        relationshipManagerCodes:
+          type: array
+          items:
+            type: string
+          example: ["3031"]

@@ -25,26 +25,6 @@ import java.util.stream.Collectors;
 @Order(0)
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RelationshipManagerLookupException.class)
-    public ResponseEntity<GenericResponse> handleRelationshipManagerLookup(
-            RelationshipManagerLookupException ex, HttpServletRequest request) {
-        GenericResponse response = new GenericResponse();
-        response.setResponseCode("500");
-        response.setResponseMessage("Unable to retrieve relationship manager data");
-        response.setResponse(null);
-        response.setCorrelationId(extractCorrelationId(request));
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    }
-
-    @ExceptionHandler(InvalidDateRangeException.class)
-    public ResponseEntity<GenericResponse> handleInvalidDateRange(InvalidDateRangeException ex) {
-        GenericResponse response = new GenericResponse();
-        response.setResponseCode("400");
-        response.setResponseMessage(ex.getMessage());
-        response.setResponse(null);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<GenericResponse> handleValidation(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()

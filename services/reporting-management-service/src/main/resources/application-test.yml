@@ -103,3 +103,6 @@ company:
         minimum-idle: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MINIMUM_IDLE:2}
       sql-logging:
         enabled: false
+    # brok disabled under test — no Oracle in CI.
+    brok:
+      enabled: false

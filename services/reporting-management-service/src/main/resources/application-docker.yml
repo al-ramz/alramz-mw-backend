@@ -88,6 +88,24 @@ company:
         minimum-idle: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MINIMUM_IDLE:2}
       sql-logging:
         enabled: false
+    # brok (Oracle) — inject with @Qualifier("brokJdbcTemplate") etc.; never the unqualified bean.
+    brok:
+      enabled: ${COMPANY_DATASOURCE_BROK_ENABLED:true}
+      url: ${COMPANY_DATASOURCE_BROK_URL:jdbc:oracle:thin:@//172.25.1.218:1521/BROKDEV}
+      username: ${COMPANY_DATASOURCE_BROK_USERNAME:insight}
+      plainPassword: ${COMPANY_DATASOURCE_BROK_PLAINPASSWORD:RAMZ}
+      driverClassName: ${COMPANY_DATASOURCE_BROK_DRIVERCLASSNAME:oracle.jdbc.OracleDriver}
+      startup-validation:
+        enabled: ${COMPANY_DATASOURCE_BROK_STARTUP_VALIDATION_ENABLED:false}
+      pool:
+        maximum-pool-size: ${COMPANY_DATASOURCE_BROK_POOL_MAXIMUM_POOL_SIZE:10}
+        minimum-idle: ${COMPANY_DATASOURCE_BROK_POOL_MINIMUM_IDLE:2}
+      sql-logging:
+        enabled: false
+      oracle:
+        connectTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_CONNECT_TIMEOUT:10000}
+        readTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_READ_TIMEOUT:60000}
+        defaultRowPrefetch: ${COMPANY_DATASOURCE_BROK_ORACLE_DEFAULT_ROW_PREFETCH:100}
 
   scheduler:
     pool-size: 5

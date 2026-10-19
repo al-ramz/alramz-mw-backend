@@ -1,7 +1,7 @@
 @baseUrl=http://localhost:8084
 
 ### Get a token first by registering + logging in below, then paste it here.
-@authToken=
+@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZXBvcnRpbmdfbWFuYWdlbWVudF9zZXJ2aWNlX2FwcCIsImlhdCI6MTc5MjQwMDQyMSwiZXhwIjoxNzkyNDg2ODIxLCJyb2xlcyI6WyJBUFBfUkVQT1JUSU5HX01BTkFHRU1FTlRfU0VSVklDRV9VU0VSIl0sImFwcGxpY2F0aW9uIjoicmVwb3J0aW5nLW1hbmFnZW1lbnQtc2VydmljZSIsImVudmlyb25tZW50IjoibG9jYWwifQ.7N2SZv0e8Ac57IH61XWWD37R-6wblWwVBtCBYIK-xjQ
 
 ###
 GET {{baseUrl}}/api/v1/info
@@ -29,4 +29,29 @@ Content-Type: application/json
     "consumerPassword": "password123"
 }
 
-###
+### Get Relationship Managers
+GET {{baseUrl}}/api/v1/relationship-managers
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get Commissions By Relationship Manager
+POST {{baseUrl}}/api/v1/relationship-managers/commissions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "startDate": "2024-01-01",
+    "endDate": "2024-01-03",
+    "relationshipManagerCodes": ["5000"]
+}
+
+### Get Commissions By Relationship Manager -ve test case
+POST {{baseUrl}}/api/v1/relationship-managers/commissions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "startDate": "20240101",
+    "endDate": "2024-12-31",
+    "relationshipManagerCodes": ["5000"]
+}

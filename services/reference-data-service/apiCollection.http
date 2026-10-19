@@ -53,33 +53,6 @@ POST {{baseUrl}}/api/v1/cache/entries/global-config/reload
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
-### Get Relationship Managers
-GET {{baseUrl}}/api/v1/relationship-managers
-Content-Type: application/json
-Authorization: Bearer {{authToken}}
-
-### Get Commissions By Relationship Manager
-POST {{baseUrl}}/api/v1/relationship-managers/commissions
-Content-Type: application/json
-Authorization: Bearer {{authToken}}
-
-{
-    "startDate": "2024-01-01",
-    "endDate": "2024-01-03",
-    "relationshipManagerCodes": ["5000"]
-}
-
-### Get Commissions By Relationship Manager -ve test case
-POST {{baseUrl}}/api/v1/relationship-managers/commissions
-Content-Type: application/json
-Authorization: Bearer {{authToken}}
-
-{
-    "startDate": "20240101",
-    "endDate": "2024-12-31",
-    "relationshipManagerCodes": ["5000"]
-}
-
 ### Scheduler Management APIs (requires company.scheduler.management-endpoints.enabled=true)
 
 ### Get Scheduler Status
