@@ -1,0 +1,307 @@
+{
+  "feature_slug": "mmfintegrations",
+  "spec_path": ".claude/modules/features/mmfintegrations/spec.md",
+  "howtos_consulted": [
+    ".claude/howtos/new-endpoint-elicitation-checklist.md",
+    ".claude/howtos/openapi-contract-first-controllers.md",
+    ".claude/howtos/api-collection-http-requests.md",
+    ".claude/howtos/exception-handling.md",
+    ".claude/howtos/multi-datasource-and-jpa.md",
+    ".claude/howtos/configuration-properties.md",
+    ".claude/howtos/jwt-security-and-public-endpoints.md",
+    ".claude/howtos/request-response-and-db-audit-logging.md",
+    ".claude/howtos/testing-patterns.md"
+  ],
+  "target_services": ["wealth-management-service"],
+  "starter_and_bom_changes": {
+    "alramz-api-starter": "NONE. Verified that IntegrationDataSourceAutoConfiguration exists and is registered in AutoConfiguration.imports (line 7). It provides integrationNamedParameterJdbcTemplate and integrationTransactionManager. SqlQueriesManager (com.alramz.utils, @Component, reads sql.file) is picked up by wealth's com.alramz component scan, the same way reporting uses it. CorrelationIdFilter and CorrelationIdResponseBodyAdvice already fill correlationId. SensitiveDataMasker is unchanged per spec §5.",
+    "alramz-common-bom": "NONE. Spring Boot 4.1.0 parent. Wealth's pom already has ojdbc11, orai18n, spring-boot-starter-validation, the openapi-generator 7.23.0 plugin and spring-boot-starter-webmvc-test.",
+    "services/wealth-management-service/pom.xml": "NONE."
+  },
+  "target_files": [
+    {
+      "path": "services/wealth-management-service/specs/apiSpecs.yaml",
+      "status": "modified",
+      "change_summary": "Amend the file; the existing /api/v1/info path is left as is. (1) Extend components.schemas.GenericResponse with correlationId (string, uuid), errorCode (string, nullable) and errorMsg (string, nullable), byte-for-byte like utility-service's schema. (2) Add every Mmf* schema from spec §3.0: MmfBook, MmfAccount, MmfAccountResponse, MmfSweep, MmfSweepInListResponse, MmfSweepOutListResponse, MmfSweepConfirmationItem (sweepNo int64 minimum 1, both fields required), MmfSweepRef, MmfSweepConfirmationResult, MmfProfitDistributionItem (accountNumber pattern ^\\d{1,9}$, amount exclusiveMinimum 0, referenceId pattern ^\\d{1,15}$, sweepDate format date, all 5 required), MmfProfitDistributionResult, MmfProfitDistributionResponse, MmfCustodianCash, MmfCustodianCashListResponse, MmfMarket, MmfCustodianPosition, MmfCustodianPositionListResponse. Property names are camelCase, exactly as in the spec. (3) Add 7 bare paths, all tags [Mmf]: GET /mmf/accounts/{accountNumber} getMmfAccount; GET /mmf/sweep-ins listMmfSweepIns; GET /mmf/sweep-outs listMmfSweepOuts; POST /mmf/sweep-ins/confirmations confirmMmfSweepIns (bare array body, minItems 1, maxItems 1000, required: true); POST /mmf/profit-distributions createMmfProfitDistributions (bare array body, minItems 1, maxItems 5000, required: true); GET /mmf/custodian-cash listMmfCustodianCash (clientId: array of string with pattern, style form, explode true, required, minItems 1, maxItems 500); GET /mmf/custodian-positions listMmfCustodianPositions (optional asOfDate, format date). (4) Each operation lists every status from spec §3.1-3.7 with a filled-in GenericResponse example: 200/201/207 and each 400 code, 404/409/500/503. '401' and '403' get a description only. No /api/v1 prefix on these paths."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java",
+      "status": "new",
+      "change_summary": "This is the core of the §6.2 design. Enum constant shape: (String code, String operationId, String input, Kind kind, String defaultMessage), where Kind is MISSING, SIZE or ANY. Constants cover MMF001-006, 010-012/015/016, 020-022/025/026, 030-033/035-037, 040-047, 050-052/055/056, 060/065-067, plus INVALID_REQUEST(MMF090). Static lookups: (a) forInput(operationId, input, kind) tries an exact (op, input, kind) match, then (op, input, ANY), then INVALID_REQUEST. operationId comes from HandlerMethod.getMethod().getName(), which equals the YAML operationId. (b) internalFor(operationId) and unavailableFor(operationId) use reserved input keys '#internal' / '#unavailable' and fall back to INVALID_REQUEST... except the catch-all, which falls back to MMF090. Mapping table: getMmfAccount accountNumber/ANY→001, book/MISSING→002, book/ANY→003, #internal→005, #unavailable→006. listMmfSweepIns fromDate/ANY and toDate/ANY→011, #internal→015, #unavailable→016. listMmfSweepOuts uses the same shape with 021/025/026. confirmMmfSweepIns body/ANY→030, sweepNo/MISSING→031, source/ANY→031, sweepNo/ANY→032, #internal→035, #unavailable→036. createMmfProfitDistributions body/ANY→040, sweepDate/amount/referenceId ANY→041, accountNumber/ANY→042, source/ANY→043, #internal→045, #unavailable→046. listMmfCustodianCash clientId/MISSING→050, clientId/SIZE→052, clientId/ANY→051, #internal→055, #unavailable→056. listMmfCustodianPositions asOfDate/ANY→060, #internal→066, #unavailable→067. Codes raised only by the service (004, 010/012, 020/022, 033, 037, 044, 047, 065) have a null operationId/input. The same field name maps to different codes in different operations (accountNumber→001 vs 042, source→031 vs 043); the operation key is what makes this unambiguous."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/exception/ApplicationException.java",
+      "status": "new",
+      "change_summary": "Same shape as utility-service: RuntimeException with ErrorCode → 400."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/exception/MmfNotFoundException.java",
+      "status": "new",
+      "change_summary": "(ErrorCode, msg) → 404. No HttpStatus field (the handler decides status, per exception-handling.md)."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/exception/MmfConflictException.java",
+      "status": "new",
+      "change_summary": "(ErrorCode, msg) → 409. Used for MMF033 and the MMF044 all-duplicates aggregate."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendException.java",
+      "status": "new",
+      "change_summary": "(ErrorCode, msg, cause) → 500. Used for MMF037 (partial commit), MMF045 (no profit item created), MMF065 (config fault), and to wrap SqlQueriesManager IOException in the repository with a null code. When the code is null, the handler uses internalFor(operation)."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendUnavailableException.java",
+      "status": "new",
+      "change_summary": "(ErrorCode, msg, cause) → 503. Used for the MMF046 aggregate (book unreachable, nothing created)."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+      "status": "new",
+      "change_summary": "@RestControllerAdvice(basePackages = \"com.alramz.controllers\") @Order(0), the only advice in the service, with utility's buildResponse(status, ErrorCode, msg) helper (correlationId from MDCUtil.getCorrelationIdAsUuid()). Each framework/data handler method takes a HandlerMethod argument and derives op = handlerMethod.getMethod().getName(). Handlers: (1) ApplicationException→400, MmfNotFoundException→404, MmfConflictException→409, MmfBackendException→500 (code or internalFor(op)), MmfBackendUnavailableException→503. (2) DataAccessException, CannotCreateTransactionException → 503 unavailableFor(op) when the exception or its cause chain is a DataAccessResourceFailureException (which covers CannotGetJdbcConnectionException) or TransientDataAccessResourceException; otherwise 500 internalFor(op) with errorMsg fixed to 'Internal Server Error' or 'MMF data source unavailable'. The raw message is only logged. (3) MissingServletRequestParameterException → forInput(op, ex.getParameterName(), MISSING). (4) MethodArgumentTypeMismatchException → forInput(op, ex.getName(), ANY). (5) MethodArgumentNotValidException → first FieldError: input = last path segment; kind = MISSING if fe.getCode() is 'NotNull', SIZE if 'Size', else ANY. (6) HandlerMethodValidationException → first ParameterValidationResult. If it is ParameterErrors (a bean element of a List body), apply rule (5) to its first FieldError and prefix 'Item <containerIndex+1>: '. Otherwise input = the parameter name, or 'body' if the parameter has @RequestBody; kind comes from the last code of the first MessageSourceResolvable (Size→SIZE, NotNull→MISSING, else ANY). (7) HttpMessageNotReadableException → walk the cause chain for the Jackson databind exception that carries getPath(). Jackson 3 under Boot 4 is tools.jackson.databind.DatabindException; Jackson 2 is com.fasterxml.jackson.databind.JsonMappingException. Use whichever MmfApiDispatchTest proves MVC actually uses (see technical_gaps). The last path reference with a property name is the input (kind ANY) and the index reference gives 'Item n: '. With no path or no cause (missing or empty body) → forInput(op, 'body', MISSING). (8) AccessDeniedException → 403, errorCode null, 'Access denied'. (9) Exception catch-all → 500 internalFor(op) (MMF090 if op is unresolvable), always 'Internal Server Error'. errorMsg for input errors = optional 'Item n: ' + the code's defaultMessage, matching the spec §3 example texts."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/config/MmfProperties.java",
+      "status": "new",
+      "change_summary": "@Getter @Setter @ConfigurationProperties(prefix = MmfProperties.PREFIX), PREFIX = \"mmf\", nested `public static class Custodian { private List<String> clientIds = new ArrayList<>(); }` and `private Custodian custodian = new Custodian();`. Verified that no existing 'mmf' prefix exists in any wealth yml or starter properties class."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/config/MmfConfiguration.java",
+      "status": "new",
+      "change_summary": "@Configuration @EnableConfigurationProperties(MmfProperties.class), the binding point per configuration-properties.md: a dedicated @Configuration next to the consumer, not @Component and not @ConfigurationPropertiesScan. It is deliberately unconditional so binding works in every profile."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/controllers/MmfController.java",
+      "status": "new",
+      "change_summary": "@RestController @RequestMapping(\"/api/v1\") @RequiredArgsConstructor, plus @ConditionalOnProperty(prefix = \"company.datasource\", name = {\"brok.enabled\", \"integration.enabled\"}, havingValue = \"true\"). Implements com.alramz.api.MmfApi. Each of the 7 @Override methods carries @JwtSecured(roles = \"APP_WEALTH_MANAGEMENT_SERVICE_USER\") and @Loggable, delegates to MmfService and wraps the payload in GenericResponse (responseCode/responseMessage/response; errorCode/errorMsg null; correlationId via MDCUtil.getCorrelationIdAsUuid()). Responses: 200 for reads and confirm; for profit distributions, 207 (HttpStatus.MULTI_STATUS, responseCode '207', 'Multi-Status') if any result is FAILED, otherwise 201 'Created'. No business logic or try/catch; exceptions go to GlobalExceptionHandler."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/service/MmfService.java",
+      "status": "new",
+      "change_summary": "Interface with the exact 6 signatures from spec §3.8. listSweeps covers both sweep-ins ('W') and sweep-outs ('O')."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java",
+      "status": "new",
+      "change_summary": "@Service plus the same @ConditionalOnProperty as the controller. The constructor takes MmfRepository, MmfProperties, @Qualifier(\"brokTransactionManager\") PlatformTransactionManager and @Qualifier(\"integrationTransactionManager\") PlatformTransactionManager, and builds Map<MmfBook, TransactionTemplate>. No bare @Transactional anywhere, because the @Primary TM is middleware Postgres. Logic: getAccount → Optional.orElseThrow MmfNotFoundException(MMF004, 'Account <n> not found in book <b>'). listSweeps validates both-or-neither (MMF010/020), from<=to and ChronoUnit.DAYS.between(from,to)+1 <= 93 (MMF012/022). It calls findSweeps for CAPITAL then MMF with toDateExclusive = toDate.plusDays(1), or nulls for today, then merges and sorts by (date, sweepNo). confirmSweepIns: count check 1..1000 (MMF030) as a guard independent of codegen; de-dupe by (source, sweepNo) with LinkedHashSet; split by book. A single non-empty book uses one template. With both books, CAPITAL is the OUTER template and MMF the INNER (fixed order, so concurrent requests lock in the same order). Inside inner.execute: lockSweepTypes(MMF), classify, and if CAPITAL or MMF has any missing/non-W/I number, throw MmfConflictException(MMF033, 'Sweeps unknown or not pending: <BOOK n>, ...') so both roll back. Otherwise confirmSweepIns(MMF, W-numbers) and confirmSweepIns(CAPITAL, W-numbers). Both UPDATEs run before the inner commit, so only the outer commit can fail after the inner one. A boolean innerCommitted is set after inner.execute returns. If outer.execute throws while innerCommitted, log.error('MMF037 partial confirmation: committed book=MMF sweepNos=[...] ...') and throw MmfBackendException(MMF037, 'Confirmation partially applied; retry the request'). Anything else propagates and the handler maps it to 035/036. Returns counts plus alreadyConfirmed (type I). createProfitDistributions: count 1..5000 (MMF040); amount precision check for every item before any write (precision-scale <= 22 integer digits and scale <= 3 after stripTrailingZeros, else ApplicationException(MMF041 'Item n: amount must be > 0 with at most 3 decimals')). Then items run sequentially in request order with Set<MmfBook> unreachable: if the book is unreachable → FAILED/MMF047 without an attempt. Otherwise nextSweepNo then insertProfitDistribution. DuplicateKeyException whose most-specific-cause message contains 'UX_SWEEP_PROFIT_REF' (case-insensitive) → FAILED/MMF044. A resource-failure exception (same predicate as the handler, kept in one static helper on ErrorCode or the handler) → mark the book unreachable, record firstFailureUnavailable if nothing has been created yet, FAILED/MMF047. Any other DataAccessException → FAILED/MMF047. Raw messages are logged at WARN/ERROR and never returned. Aggregate: all CREATED → return; all MMF044 → MmfConflictException(MMF044, 'referenceId already booked: <BOOK ref>, ...'); all FAILED with the first failure unavailable → MmfBackendUnavailableException(MMF046); all FAILED otherwise → MmfBackendException(MMF045); mixed → return (the controller then sends 207). listCustodianCash: LinkedHashSet de-dupe → repository (CAPITAL only). listCustodianPositions: asOfDate after LocalDate.now(ZoneId.of(\"Asia/Dubai\")) → ApplicationException(MMF060, 'asOfDate must be an ISO-8601 date not in the future'). An empty or null mmf.custodian.client-ids → MmfBackendException(MMF065, 'Custodian client list is not configured') before any repository call. Otherwise findCustodianPositions(clientIds, asOfDate) with a possibly-null asOfDate. A java.time.Clock is injected (default Clock.system(Asia/Dubai)) so the future-date check is testable."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/repository/MmfRepository.java",
+      "status": "new",
+      "change_summary": "Interface with the exact 8 signatures from spec §3.8."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/java/com/alramz/repository/MmfRepositoryImpl.java",
+      "status": "new",
+      "change_summary": "@Repository @Slf4j plus the same @ConditionalOnProperty. The constructor takes @Qualifier(\"brokNamedParameterJdbcTemplate\") and @Qualifier(\"integrationNamedParameterJdbcTemplate\") NamedParameterJdbcTemplate and SqlQueriesManager, and builds an EnumMap<MmfBook, NamedParameterJdbcTemplate>; the custodian methods always use CAPITAL (brok). SQL comes from sqlQueriesManager.getSQLQueryFromConfig(key); IOException → MmfBackendException(null, ..., e). DataAccessException is NOT caught here; it propagates to the service (per-item handling for profit) or the handler (per-operation 500/503). This is the deliberate difference from reporting's catch-all wrapping, see technical_gaps. Binds use MapSqlParameterSource only: accountNumber as String; :type; :fromDate / :toDateExclusive as java.sql.Date; :sweepNos as List<Long>; profit :sweepNo Long, :sweepDate Date, :accountNumber Long.valueOf, :amount BigDecimal, :referenceId Long.valueOf, :srcType 'C'/'M'; :clientIds List<String>; :asOfDate registered with explicit Types.DATE so a null bind is typed for NVL. Row mapping is by column name: CL_MAIN_CLIENT_ID→clientId etc. (findAccount takes the first row and WARNs on >1); SWEEP_DATE via rs.getDate(...).toLocalDate(); CASH_BALANCE / QUANTITY / CLOSE_PRICE via getBigDecimal; MARKET is mapped with MmfMarket.fromValue when non-null, else null (unknown values are already null from the SQL CASE); PRICE_DATE via getDate. lockSweepTypes returns a Map<Long,String> from 'SELECT ... FOR UPDATE'."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/resources/sql/sql-queries.xml",
+      "status": "new",
+      "change_summary": "java.util.Properties XML (same DOCTYPE as reporting's file). 9 entries: mmf.account.find, mmf.sweep.find.range, mmf.sweep.find.today, mmf.sweep.lock, mmf.sweep.confirm (contains 'AND SWEEP_TYPE = 'W''), mmf.sweep.seq.next (INSIGHT.SWEEP_FACILITY_SEQ.NEXTVAL FROM DUAL), mmf.profit.insert (the column list from spec §3.5, SWEEP_TYPE 'P', SRC_TYPE :srcType, SEGMENT_ID 0, UPD_TIME SYSDATE, JV_NO/USR_CODE omitted so they stay NULL, no MAX(SWEEP_NO)), mmf.custodian.cash, mmf.custodian.positions. mmf.custodian.positions is a UNION ALL of F_PORT and DERV_F_PORT with inferred joins F.CLIENT_ID = C.CL_CLIENT_ID, F.COMP_ID = SC.SC_COMP_ID, C.CL_MAIN_CLIENT_ID = M.CL_MAIN_CLIENT_ID, ORDER BY CLIENT_ID, ISIN. It also selects PR_PRICE_DATE AS PRICE_DATE so priceDate is the effective date the DB actually used; this is an addition to the spec's alias list. Each SQL block carries a comment marking the join as inferred and to be verified (F-09). Sweep SQL is qualified as INSIGHT.SWEEP_FACILITY. All comparison operators are XML-escaped (&lt; &gt;=), as in reporting. Every value is a :named bind, with no concatenation or ${}."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/resources/application.yml",
+      "status": "modified",
+      "change_summary": "Add a top-level `sql:` `file: classpath:sql/sql-queries.xml` (reporting precedent). Add `spring.jackson.deserialization.accept-float-as-int: false` so sweepNo 1.5 is rejected (→ MMF032) instead of being silently truncated to 1 and confirming the wrong sweep (spec E15). This is an addition to spec §5; see technical_gaps."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/resources/application-dev.yml",
+      "status": "modified",
+      "change_summary": "Under company.datasource, after brok, add an `integration:` block that mirrors brok. Values: enabled ${COMPANY_DATASOURCE_INTEGRATION_ENABLED:false} (dev defaults to false, see technical_gaps), url ${COMPANY_DATASOURCE_INTEGRATION_URL:}, username ${COMPANY_DATASOURCE_INTEGRATION_USERNAME:}, plainPassword ${COMPANY_DATASOURCE_INTEGRATION_PLAINPASSWORD:}, driverClassName ${..._DRIVERCLASSNAME:oracle.jdbc.OracleDriver}, startup-validation.enabled ${..._STARTUP_VALIDATION_ENABLED:false}, pool max/min ${..._POOL_MAXIMUM_POOL_SIZE:10}/${..._POOL_MINIMUM_IDLE:2}, sql-logging.enabled false, oracle.connectTimeout/readTimeout/defaultRowPrefetch ${..._ORACLE_*:10000/60000/100}. No hard-coded host. Add top-level `mmf: custodian: client-ids: ${MMF_CUSTODIAN_CLIENT_IDS:}`. permit-all-urls is unchanged."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/resources/application-docker.yml",
+      "status": "modified",
+      "change_summary": "Same integration block and mmf.custodian.client-ids as dev, using plainPassword and enabled default false (the docker profile already uses plainPassword for brok). permit-all-urls is unchanged."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/resources/application-preprod.yml",
+      "status": "modified",
+      "change_summary": "Add an integration block mirroring preprod's brok block: enabled ${COMPANY_DATASOURCE_INTEGRATION_ENABLED:true}, url/username with no default, password ${COMPANY_DATASOURCE_INTEGRATION_PASSWORD} + passwordVector ${COMPANY_DATASOURCE_INTEGRATION_PASSWORD_VECTOR} (no plainPassword), driver/startup-validation/pool/sql-logging/oracle the same as brok with INTEGRATION env names. Add mmf.custodian.client-ids ${MMF_CUSTODIAN_CLIENT_IDS:}. permit-all-urls is unchanged."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/resources/application-prod.yml",
+      "status": "modified",
+      "change_summary": "Identical to the preprod change (encrypted password + passwordVector, enabled default true, no literal password). permit-all-urls is unchanged."
+    },
+    {
+      "path": "services/wealth-management-service/src/main/resources/application-test.yml",
+      "status": "modified",
+      "change_summary": "Under company.datasource, add `integration: enabled: false` next to the existing `brok: enabled: false`. With both disabled, MmfController, MmfServiceImpl and MmfRepositoryImpl are not created and the context smoke test still loads."
+    },
+    {
+      "path": "services/wealth-management-service/apiCollection.http",
+      "status": "modified",
+      "change_summary": "@authToken (an empty placeholder) and the register/login blocks for APP_WEALTH_MANAGEMENT_SERVICE_USER already exist, so they are reused and not redefined. After the login block, add 7 '### <Name>' blocks in spec order, each with Authorization: Bearer {{authToken}}: Get MMF account (GET {{baseUrl}}/api/v1/mmf/accounts/2939418?book=CAPITAL), List sweep-ins (?fromDate=2025-04-01&toDate=2025-04-30), List sweep-outs, Confirm sweep-ins (POST, bare array), Push profit distributions (POST, bare array), Custodian cash (?clientId=2001214&clientId=2001215), Custodian positions (?asOfDate=2025-04-20). Each has a '-ve test case' block right after it: book=FOO, only fromDate, [], amount with 4 decimals, clientId=12ab, and a future asOfDate. Use synthetic numbers only and do not commit a token."
+    }
+  ],
+  "test_files": [
+    {
+      "path": "services/wealth-management-service/src/test/java/com/alramz/exception/ErrorCodeTest.java",
+      "status": "new",
+      "covers": "WRITTEN FIRST. Tests the full forInput table: every (operationId, input, kind) row, including the ambiguous fields (accountNumber → MMF001 in getMmfAccount vs MMF042 in createMmfProfitDistributions; source → MMF031 vs MMF043; sweepNo MISSING→031 vs ANY→032; clientId MISSING/SIZE/ANY → 050/052/051; book MISSING/ANY → 002/003). Also internalFor/unavailableFor for all 7 operations (005/006, 015/016, 025/026, 035/036, 045/046, 055/056, 066/067), the unknown op/field → MMF090 fallback, and that codes are unique."
+    },
+    {
+      "path": "services/wealth-management-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java",
+      "status": "new",
+      "covers": "Plain `new GlobalExceptionHandler()` in utility's test style, with HandlerMethod built from MmfApi's method by name. Covers: the 5 typed exceptions → 400/404/409/500/503 with their own code; DataAccessResourceFailureException, CannotGetJdbcConnectionException, TransientDataAccessResourceException and CannotCreateTransactionException(cause CannotGetJdbcConnectionException) → 503 per op (MMF006, 016, 026, 036, 056, 067); BadSqlGrammarException → 500 per op with errorMsg exactly 'Internal Server Error' and no ORA text (E5/E11/E19/E36/E41); MmfBackendException with a null code → internalFor(op); MissingServletRequestParameterException(book) → MMF002; MethodArgumentTypeMismatchException(book) → MMF003, fromDate → 011/021, asOfDate → 060; MethodArgumentNotValidException field mapping per op; AccessDeniedException → 403, errorCode null, no role text (acceptance: a valid JWT without the role gets 403, not 500, which is the repo precedent from utility's handler test); catch-all → 500 with the op code and no leaked message; correlationId echoes MDC; responseCode equals the status and responseMessage equals the reason phrase."
+    },
+    {
+      "path": "services/wealth-management-service/src/test/java/com/alramz/controllers/MmfApiDispatchTest.java",
+      "status": "new",
+      "covers": "This is the de-risking test for the weakest part of the spec (§6.2) and is written in step 4, before the service impl. It is @SpringBootTest(properties = \"spring.profiles.active=test\"), the same as the smoke test. It is NOT @WebMvcTest. It builds MockMvcBuilders.standaloneSetup(new MmfController(mockService)) with setControllerAdvice(new GlobalExceptionHandler()), uses the message converters taken from the context's RequestMappingHandlerAdapter (so it exercises the real Jackson major and the spring.jackson settings), and adds the context's CorrelationIdFilter. It exercises real Spring 7 binding and method validation for E1-E3, E8, E13-E15 (including 1001 items, sweepNo 0, 1.5, \"abc\", missing source, source X), E22-E25 (including a 10-digit accountNumber, a bad sweepDate, 4-decimal amount, source=X), E32-E34 (no clientId, 12ab, 501 ids → 052; 500 ids accepted), E38 (2026-13-01) and E45 (malformed JSON → op's body code, otherwise MMF090). Every case asserts the HTTP status, responseCode and errorCode, and that the service mock was never invoked. It also asserts: LocalDate serializes as \"yyyy-MM-dd\" (the spec §9 Jackson verify item); cashBalance is a JSON number; the wire property names are camelCase; an X-Correlation-ID request header is echoed as correlationId; profit all-CREATED → 201 and mixed → 207. testing-patterns.md allows MockMvc here explicitly because this is serialization and dispatch behaviour that a direct call cannot exercise."
+    },
+    {
+      "path": "services/wealth-management-service/src/test/java/com/alramz/controllers/MmfControllerTest.java",
+      "status": "new",
+      "covers": "Mockito, with the controller constructed directly. Each of the 7 methods delegates to the service and wraps the result in GenericResponse (response.account, sweepIns, sweepOuts, confirmation counts, results, custodianCash, custodianPositions). Profit: all CREATED → 201/'Created'; any FAILED → 207/'Multi-Status'. Empty lists → 200 with [] (E10/E35/E40)."
+    },
+    {
+      "path": "services/wealth-management-service/src/test/java/com/alramz/service/impl/MmfServiceImplTest.java",
+      "status": "new",
+      "covers": "Mockito: MmfRepository mock, a real MmfProperties, mocked PlatformTransactionManagers (getTransaction returns a SimpleTransactionStatus) and a fixed Clock. Account: found; not found → MMF004. Sweeps: only fromDate → 010/020; from>to and a 94-day range → 012/022; 93 days accepted; no dates → repository called with nulls; range → toDateExclusive = toDate+1; both books merged, tagged and sorted by (date, sweepNo); empty → []. Confirm: [] and 1001 → MMF030; any missing or O/P in either book → MMF033, confirmSweepIns never called for either book, both TMs rollback() and never commit(); W counted per book; I listed in alreadyConfirmed; all-I → 200 with counts 0 (E17); a duplicate (source, sweepNo) is counted once (E18); the outer TM's commit throws after the inner commit → MMF037 and an ERROR log is captured (E21); lock throws CannotGetJdbcConnectionException → propagates (the handler maps it to 036). Profit: [] → 040; a 4-decimal amount → MMF041 with no repository write; all inserted → results in request order with sweepNos; DuplicateKeyException('ORA-00001: unique constraint (INSIGHT.UX_SWEEP_PROFIT_REF) violated') + success → FAILED/MMF044 + CREATED; another DuplicateKeyException (the PK) → MMF047; another DataAccessException + success → MMF047; all MMF044 → MmfConflictException(MMF044) whose message lists the refs; all non-connectivity failures → MMF045; unreachable on the first item → MMF046 and insert never attempted again for that book (verify times(1)); unreachable mid-batch after a success → remaining items FAILED/MMF047 with no attempt (E31); no raw DB text in any result. Custodian cash: ids de-duplicated before the repository call. Positions: future date → MMF060; empty client-ids → MMF065 with no repository interaction; configured ids passed through; null asOfDate passed as null."
+    },
+    {
+      "path": "services/wealth-management-service/src/test/java/com/alramz/repository/MmfRepositoryImplTest.java",
+      "status": "new",
+      "covers": "reporting's RelationshipManagerRepositoryImplTest style, with two mocked templates and a mocked SqlQueriesManager. Checks: the CAPITAL book uses only the brok template and MMF uses only the integration template; custodian cash and positions use only brok; MapSqlParameterSource captures (accountNumber String, sweepNos List<Long>, clientIds List<String>, asOfDate null typed as Types.DATE, accountNumber/referenceId as Long, srcType C/M); RowMapper captures map by column name (market null for null, BigDecimal quantity, closePrice and cashBalance, LocalDate priceDate); findAccount takes the first of several rows; IOException → MmfBackendException. A SQL-file test loads the real classpath sql/sql-queries.xml with Properties.loadFromXML and asserts: all 9 keys are present; mmf.sweep.confirm contains \"SWEEP_TYPE = 'W'\"; mmf.profit.insert contains SWEEP_FACILITY_SEQ (via the seq key), 'P', SEGMENT_ID, SYSDATE and no MAX(SWEEP_NO); mmf.sweep.lock contains FOR UPDATE; mmf.custodian.positions contains NVL(:asOfDate and :clientIds; no entry contains '||' or '${'."
+    },
+    {
+      "path": "services/wealth-management-service/src/test/java/com/alramz/config/MmfPropertiesTest.java",
+      "status": "new",
+      "covers": "Uses Binder with a MapConfigurationPropertySource: 'mmf.custodian.client-ids=2001214,2001215' binds to a 2-element list, and an empty value binds to an empty list (acceptance: MmfProperties binds mmf.custodian.client-ids)."
+    },
+    {
+      "path": "services/wealth-management-service/src/test/resources/application.yml",
+      "status": "modified",
+      "change_summary_or_covers": "Add `spring.jackson.deserialization.accept-float-as-int: false`. This file shadows main application.yml on the test classpath (same resource name), so without this MmfApiDispatchTest would not see the setting. sql.file is not needed here because the MMF beans are off in tests."
+    },
+    {
+      "path": "services/wealth-management-service/src/test/java/com/alramz/WealthManagementServiceApplicationTests.java",
+      "status": "unchanged",
+      "covers": "Existing contextLoads must stay green with brok and integration disabled (acceptance: mvn test passes under the test profile)."
+    }
+  ],
+  "liquibase_changeset": {
+    "applicable": false,
+    "next_changeset_file": null,
+    "profile_folders": [],
+    "note": "Per spec §4 there is no db/changelog change. The Oracle INSIGHT DDL (sequence, UX_SWEEP_PROFIT_REF and grants) is a DBA prerequisite in both RMZ and MMF and is not part of this repo."
+  },
+  "config_changes": {
+    "permit_all_urls": [],
+    "new_properties": [
+      "sql.file: classpath:sql/sql-queries.xml (application.yml)",
+      "spring.jackson.deserialization.accept-float-as-int: false (application.yml + src/test/resources/application.yml)",
+      "company.datasource.integration.* (application-{dev,docker,preprod,prod}.yml). Env vars: COMPANY_DATASOURCE_INTEGRATION_{ENABLED,URL,USERNAME,PLAINPASSWORD (dev/docker only),PASSWORD,PASSWORD_VECTOR (preprod/prod),DRIVERCLASSNAME,STARTUP_VALIDATION_ENABLED,POOL_MAXIMUM_POOL_SIZE,POOL_MINIMUM_IDLE,ORACLE_CONNECT_TIMEOUT,ORACLE_READ_TIMEOUT,ORACLE_DEFAULT_ROW_PREFETCH}",
+      "company.datasource.integration.enabled: false (application-test.yml)",
+      "mmf.custodian.client-ids: ${MMF_CUSTODIAN_CLIENT_IDS:} (application-{dev,docker,preprod,prod}.yml)"
+    ],
+    "masking_keys_to_add": []
+  },
+  "deployment_prerequisites": [
+    "ENV/SECRETS (out of edit scope: k8s/, infra/, .github/SECRETS.md; none of these paths exist in this checkout, and no repo file currently names the COMPANY_DATASOURCE_BROK_* vars outside services/). Supply the COMPANY_DATASOURCE_INTEGRATION_* set (URL, USERNAME, PASSWORD + PASSWORD_VECTOR encrypted with that environment's cipher.password, optional pool/timeout overrides) and MMF_CUSTODIAN_CLIENT_IDS (the comma-separated MMFATHENA_CUSTODIAN_POSITIONS list) to the wealth deployment in each environment, the same way the BROK vars are supplied. ORDERING: these must be in place BEFORE this build is deployed to preprod/prod, or COMPANY_DATASOURCE_INTEGRATION_ENABLED=false must be set. Without either, startup of the whole service fails (see technical_gaps).",
+    "DBA DDL (spec §4 / design doc Appendix C.3), in BOTH Oracle DBs (RMZ/Capital and MMF), before go-live: CREATE SEQUENCE INSIGHT.SWEEP_FACILITY_SEQ START WITH MAX(SWEEP_NO)+1 NOCACHE; CREATE UNIQUE INDEX UX_SWEEP_PROFIT_REF (exact name) ON INSIGHT.SWEEP_FACILITY (CASE WHEN SWEEP_TYPE='P' THEN REF_ID END); grants for the brok and integration users (SELECT on the sequence; SELECT/INSERT/UPDATE on SWEEP_FACILITY; brok also gets SELECT on CB_CLIENT, CB_MAIN_CLIENT, F_PORT, DERV_F_PORT, CB_SEC_COMP and EXECUTE on F_Get_Balance_As_Of and GET_CL_NAME_MAIN_CLIENT). Optional: an (SWEEP_TYPE, SWEEP_DATE) index.",
+    "Register Athena's JWT consumer with role APP_WEALTH_MANAGEMENT_SERVICE_USER in each environment (/api/auth/register).",
+    "API Gateway: re-point MMFIntegration to the 7 new /api/v1/mmf/... paths on wealth-management-service, including both custodian paths, in the same window as the Athena cut-over (Q1, no legacy shim).",
+    "Coordination (Appendix E #10): other SWEEP_FACILITY writers move from MAX+1 to INSIGHT.SWEEP_FACILITY_SEQ; until then a PK collision surfaces as item-level MMF047."
+  ],
+  "execution_steps": [
+    "Step 1 (contract): Edit services/wealth-management-service/specs/apiSpecs.yaml (GenericResponse fields, Mmf* schemas, 7 bare paths with full status/example lists). Run `mvn -pl services/wealth-management-service -am clean test-compile` and open target/generated-sources/openapi/src/main/java/com/alramz/api/MmfApi.java. Write down the exact signatures, and whether the generator emitted (a) @Size(min,max) on the two List request bodies, (b) List<@Valid Item> element cascading, (c) @Pattern on path/query params and List<@Pattern String> for clientId, (d) @DecimalMin(inclusive=false) on amount, and (e) the MmfBook/MmfMarket enum fromValue. These facts decide what the framework rejects versus what the service must check (step 4 decision point).",
+    "Step 2 (error taxonomy, test-first): Write ErrorCodeTest, then ErrorCode (operation-keyed forInput / internalFor / unavailableFor), ApplicationException, MmfNotFoundException, MmfConflictException, MmfBackendException and MmfBackendUnavailableException. Run -Dtest=ErrorCodeTest.",
+    "Step 3 (handler, test-first): Write GlobalExceptionHandlerTest, then GlobalExceptionHandler with HandlerMethod-based operation resolution, DataAccess/CannotCreateTransaction → 503/500 classification, the framework-input mappers, AccessDenied → 403 and the catch-all. Run -Dtest=GlobalExceptionHandlerTest.",
+    "Step 4 (binding de-risk, the spec's 'weakest part'): Write MmfService (interface) and MmfController, then MmfApiDispatchTest with a mocked MmfService. Add spring.jackson.deserialization.accept-float-as-int: false to main application.yml and src/test/resources/application.yml. Run -Dtest=MmfApiDispatchTest. First, confirm which Jackson major the context's converters use and import the matching databind exception type in the HttpMessageNotReadable mapper. DECISION POINT: if any framework-level rejection does not fire under Spring 7 (for example list-element @Valid in a List body, or @Size on a List body or query param), do not weaken the test. Add the equivalent explicit check to MmfServiceImpl's entry validation instead, throwing ApplicationException with the same code (the spec §9 fallback), and keep the dispatch test asserting the code (with the service mock now stubbed to the real validation). Proceed only when every E1-E3/E8/E13-E15/E22-E25/E32-E34/E38/E45 case is green.",
+    "Step 5 (config): Add MmfProperties, MmfConfiguration and MmfPropertiesTest. Edit application.yml (sql.file), application-dev.yml and application-docker.yml (integration block with enabled default false, plus mmf.custodian.client-ids), application-preprod.yml and application-prod.yml (integration block with encrypted password + passwordVector and enabled default true, plus mmf.custodian.client-ids), and application-test.yml (integration.enabled false). Grep every wealth application-*.yml to confirm permit-all-urls still holds only /api/v1/info and no plainPassword appears under integration in preprod/prod.",
+    "Step 6 (persistence): Add src/main/resources/sql/sql-queries.xml (9 keys, XML-escaped, inferred-join comments), then MmfRepository, MmfRepositoryImplTest and MmfRepositoryImpl (EnumMap of the two qualified templates, binds only, by-name mapping, typed null asOfDate). Run -Dtest=MmfRepositoryImplTest.",
+    "Step 7 (business logic): Write MmfServiceImplTest, then MmfServiceImpl: per-book TransactionTemplate from the qualified TMs; CAPITAL-outer/MMF-inner lock → validate → update → commit with MMF037 detection; profit per-item loop with the UX_SWEEP_PROFIT_REF match, per-book unreachable short-circuit and aggregate status; Clock-based asOfDate check; MMF065 config guard. Run -Dtest=MmfServiceImplTest.",
+    "Step 8 (controller): Write MmfControllerTest (direct construction) covering envelopes and 201/207. Run it.",
+    "Step 9 (manual collection): Add the 7 request blocks plus the -ve pairs to services/wealth-management-service/apiCollection.http after the login block, reusing the existing @authToken.",
+    "Step 10 (verify): `mvn -pl services/wealth-management-service -am clean test-compile`, then `mvn -pl services/wealth-management-service -am clean test`. This includes the unchanged WealthManagementServiceApplicationTests with brok and integration off. Fix any PMD/SpotBugs findings, which are enabled in wealth's pom (skip=false), using the starter's // NOPMD precedent only where justified. Confirm git shows no change under infra/, .github/, k8s/ or db/changelog/."
+  ],
+  "technical_gaps": [
+    {
+      "area": "other",
+      "description": "Startup coupling (the biggest deployment risk). In preprod/prod, integration.enabled defaults to true and url has no default (spec §5, mirroring brok). The starter's AbstractDataSourceAutoConfiguration calls new HikariDataSource(config) with Hikari's default initializationFailTimeout, and validateConfig throws on a blank url. So if the INTEGRATION env vars are missing, or the MMF Oracle DB is unreachable when the pod boots, the WHOLE wealth-management-service fails to start, not just the MMF endpoints. The same is already true for brok today.",
+      "recommendation_or_open_question": "Deploy the INTEGRATION env vars before (or together with) this build, or set COMPANY_DATASOURCE_INTEGRATION_ENABLED=false until cut-over (this also switches off all 7 MMF endpoints, because the beans require both datasources). A starter-level fix (making initializationFailTimeout configurable) is out of scope and was not planned."
+    },
+    {
+      "area": "compatibility",
+      "description": "Profit-distribution duplicate detection depends on the DBA creating the unique index with the exact name UX_SWEEP_PROFIT_REF (spec §4, Self-Critique #3). Under any other name, ORA-00001 on the REF_ID index is classified as MMF047, so a replayed batch returns 207/500 instead of 409 MMF044. Idempotency still holds (no double insert), but the replay signal Athena relies on is lost. If the index is missing entirely, replays insert DUPLICATE P rows, because there is no application pre-check (decision Q3).",
+      "recommendation_or_open_question": "Make the exact index name, and its existence in BOTH DBs, a go-live checklist item signed off by the DBA. Optionally add a post-deploy smoke step that replays one known referenceId in preprod and expects 409 MMF044."
+    },
+    {
+      "area": "other",
+      "description": "VERIFY BEFORE GO-LIVE: the custodian-positions join predicates (F.CLIENT_ID = C.CL_CLIENT_ID, F.COMP_ID = SC.SC_COMP_ID, C.CL_MAIN_CLIENT_ID = M.CL_MAIN_CLIENT_ID), the account join (m.CL_MAIN_CLIENT_ID = c.CL_MAIN_CLIENT_ID), USR_CODE = 3, market codes 5/8/6, and column types (CL_CLIENT_ID, the F_Get_Balance_As_Of return type, QTY/PR_C_PRICE) are inferred from the design doc's Appendix C.1. The MMFIntegrations.zip IS export is not in this repo. Unit tests mock the template and cannot catch a wrong join.",
+      "recommendation_or_open_question": "Before cut-over, port the exact predicates from the IS adapters (getCustodianPositions / getMMFClientData node.ndf) and run each of the 9 SQL keys against preprod RMZ and MMF, diffing row counts and column values against the legacy IS responses for the same inputs. The SQL comments in sql-queries.xml mark these as inferred."
+    },
+    {
+      "area": "test-coverage",
+      "description": "The weakest part of the spec (§6.2) is how Spring 7 / Boot 4.1 surfaces bean-validation failures for a bare List<@Valid Item> request body, a List<@Pattern String> repeated query param and @Pattern path params (HandlerMethodValidationException vs MethodArgumentNotValidException, and whether element cascading happens at all). This depends on what openapi-generator 7.23.0 emits. No precedent exists in this repo (grep found no maxItems/MockMvc/HandlerMethodValidationException usage outside notification's spec).",
+      "recommendation_or_open_question": "The plan resolves this test-first. ErrorCode is keyed by operationId plus input plus kind, not by field alone, and MmfApiDispatchTest (step 4) exercises real dispatch before any business logic is written. The fallback is explicit service-level checks that throw ApplicationException with the same code, applied per failing case at the step 4 decision point."
+    },
+    {
+      "area": "compatibility",
+      "description": "Jackson major version. Boot 4.1 MVC most likely serializes with Jackson 3 (tools.jackson), while the starter and wealth's JacksonConfig use a Jackson 2 ObjectMapper with no JavaTimeModule. If MVC used that bean, LocalDate fields would fail to serialize. Separately, the HttpMessageNotReadable path-extraction code must import the exception type of whichever major is actually in use. Jackson's default ACCEPT_FLOAT_AS_INT would also turn sweepNo 1.5 into 1 and confirm the wrong sweep (spec E15 requires MMF032).",
+      "recommendation_or_open_question": "MmfApiDispatchTest uses the context's real converters and asserts \"yyyy-MM-dd\" dates and 1.5 → 400 MMF032. spring.jackson.deserialization.accept-float-as-int=false was added (an addition to spec §5, scoped to this service). If the property does not take effect on the active mapper, fall back to a JsonMapperBuilderCustomizer bean. JacksonConfig itself is left unchanged."
+    },
+    {
+      "area": "other",
+      "description": "Deviation from spec §5: dev and docker default COMPANY_DATASOURCE_INTEGRATION_ENABLED to false, not true. The MMF host is unknown to the repo (spec §5), and enabled=true with a blank url throws at startup, which would break every developer's local and docker run of the service.",
+      "recommendation_or_open_question": "Developers set the INTEGRATION env vars plus ENABLED=true to exercise MMF locally. preprod and prod keep the spec's default of true. This is cheap to revert if the team prefers fail-fast in dev."
+    },
+    {
+      "area": "other",
+      "description": "Deviation in where errors are translated, compared with spec §6.3's 'Exception' column. Generic DataAccessExceptions (E5, E6, E11, E12, E19, E20, E36, E37, E41, E42) are not wrapped into MmfBackend*Exception per method. GlobalExceptionHandler classifies them once, using the operationId resolved from HandlerMethod. The HTTP status and MMF code are identical to the spec. It also adds CannotCreateTransactionException (a TransactionException, not a DataAccessException, thrown when TransactionTemplate cannot get a connection) to the 503 path. Without that, E20 'book unreachable before first commit' would surface as 500 MMF035 instead of 503 MMF036.",
+      "recommendation_or_open_question": "None. Covered by GlobalExceptionHandlerTest. MmfBackend*Exception remain for the service-decided cases (037, 045, 046, 065)."
+    },
+    {
+      "area": "other",
+      "description": "Spec addition: mmf.custodian.positions also selects PR_PRICE_DATE AS PRICE_DATE. The spec says priceDate is 'the effective date that was used', and computing it in Java (Asia/Dubai today-1) can disagree with the DB's TRUNC(SYSDATE)-1 near midnight or if the DB time zone differs. The :asOfDate null bind is registered as Types.DATE so Oracle's NVL gets a typed null.",
+      "recommendation_or_open_question": "None. Verified by MmfRepositoryImplTest."
+    },
+    {
+      "area": "concurrency",
+      "description": "Confirm locking. SELECT ... FOR UPDATE has no WAIT clause (the spec SQL is kept verbatim), so a request blocked by another session's lock waits until brok/integration oracle.readTimeout (60 s). It then fails with a recoverable/socket error mapped to 500 MMF035. Lock order across books is fixed (CAPITAL outer, MMF inner), but within one book Oracle's lock order for an IN list is not guaranteed, so overlapping concurrent confirmations could hit ORA-00060 (deadlock). That maps to 500 MMF035, and a retry is safe because the operation is idempotent. RecoverableDataAccessException and QueryTimeoutException map to 500, not 503, per spec §3.0's strict classification.",
+      "recommendation_or_open_question": "Optionally change mmf.sweep.lock to 'FOR UPDATE WAIT 10' after confirming with the Athena team; this was not done, to avoid diverging from the spec. Athena is single-caller and sequential today, so the practical risk is low."
+    },
+    {
+      "area": "sizing",
+      "description": "Spec Self-Critique #10. A 5000-item profit batch means about 10,000 sequential Oracle round-trips on a single connection (one NEXTVAL plus one INSERT per item, autocommit). At 2-5 ms each that is roughly 20-50 s. That can exceed API Gateway or Athena client timeouts, although each item is committed independently, so a client timeout followed by a retry yields MMF044 for the items already done (provided UX_SWEEP_PROFIT_REF exists). The new integration pool adds up to 10 connections per pod (×5 replicas = 50) against the MMF DB. Request and response payload DB-audit logging (database-logging include-*-payload: true in every profile) will persist 5000-item bodies to api_audit_log. service.yaml (0.5 CPU / 1Gi / -Xmx768m / 1-5 replicas) is otherwise adequate; payloads are a few hundred KB.",
+      "recommendation_or_open_question": "service.yaml is left unchanged. Ask the Athena team for the real batch size and frequency, and the gateway timeout. The upgrade path is pre-fetching N sequence values plus batchUpdate (spec §9). Tell the DBA about the 50-connection ceiling."
+    },
+    {
+      "area": "other",
+      "description": "Ordering of validation and authorization. @JwtSecured is an AOP @Before advice, so it runs after Spring MVC argument binding and validation. A caller with a valid JWT but without APP_WEALTH_MANAGEMENT_SERVICE_USER gets 400 MMF### for malformed input before getting 403. Unauthenticated callers still get 401 from the filter chain first.",
+      "recommendation_or_open_question": "Accept: this matches every other @JwtSecured endpoint in the repo, and only validation messages, not data, leak. Flag for 04_security."
+    },
+    {
+      "area": "other",
+      "description": "Carried from spec Self-Critique (non-blocking): #1 brok is assumed to point at the RMZ Capital INSIGHT schema; #2 the 409 is returned only when every item is a duplicate, with no replay of the original result; #4 amount must be > 0 (Appendix E #9 unresolved) and JV_NO/USR_CODE stay NULL; #6 duplicates are de-duplicated silently and the first account row wins; #7 the asOfDate default is calendar yesterday, not a business day; #8 USR_CODE=3 and the market CASE stay as SQL constants; #9 account and client numbers and balances are unmasked in logs and the DB audit, and custodian-cash exposes any client's balance to the Athena role (accepted, Q2=B); F-12 UPD_TIME is assumed to be a DATE; Appendix E #6 is the meaning of W/I/O/P.",
+      "recommendation_or_open_question": "All are planned as the spec states. #9 goes to 04_security (no SensitiveDataMasker change, which would be a starter-wide change and out of scope)."
+    },
+    {
+      "area": "other",
+      "description": "Howto near-misses avoided. (a) No @WebMvcTest: MmfApiDispatchTest is a standalone MockMvc test inside the existing @SpringBootTest style, justified under testing-patterns.md §1/§5 for dispatch and serialization. (b) No second, narrower advice and no copy of OnboardingExceptionHandler's dead @Order(1) pattern: there is a single @Order(0) GlobalExceptionHandler with operation keying inside it. (c) No assumed shared Liquibase folder (not applicable). (d) The controller implements the generated MmfApi rather than hand-written mappings. (e) apiCollection.http reuses the already-defined @authToken. Pre-existing, out of scope and left untouched: wealth's spec declares /api/v1/info with the prefix, and ApplicationController does not implement the generated InfoApi (the documented 'shadowed interface' pitfall).",
+      "recommendation_or_open_question": "None."
+    },
+    {
+      "area": "test-coverage",
+      "description": "The PMD and SpotBugs plugins are active in wealth's pom (skip=false). The catch-all handler, the generic DataAccessException catch in the profit loop and the reflective HandlerMethod use may trigger rules (AvoidCatchingGenericException, LawOfDemeter).",
+      "recommendation_or_open_question": "03_implement resolves findings during step 10, adding a NOPMD with a reason only where the pattern is intentional (starter precedent)."
+    }
+  ],
+  "plan_critique": {
+    "acceptance_criteria_coverage": "full. Every §8 checkbox maps to a target file and a test. Contract → apiSpecs.yaml plus step 1 test-compile. Security/config → MmfController annotations, the yml edits and GlobalExceptionHandlerTest (403). 'MmfProperties binds' → MmfPropertiesTest. 'All 9 keys / no concatenation / UPDATE guard / NEXTVAL insert' → the SQL-file assertions in MmfRepositoryImplTest. 'Only qualified templates / explicit TMs' → the MmfRepositoryImpl and MmfServiceImpl constructors plus their tests. Behaviour (Account, Sweep-ins/outs, Confirm, Profit, Custodian cash, Custodian positions) → split between MmfApiDispatchTest (framework-raised 400s), GlobalExceptionHandlerTest (500/503 per op) and MmfServiceImplTest (business 400/404/409/500/503/201/207). Envelope and correlationId → MmfApiDispatchTest and GlobalExceptionHandlerTest. Housekeeping → apiCollection.http (7 blocks) and step 10's git check. One caveat: 'a valid JWT without the role gets 403' is proven at the handler level (utility precedent), not end-to-end through JwtSecuredAspect, because the MMF beans are off in the test profile.",
+    "blast_radius_concerns": [
+      "application.yml gets spring.jackson.deserialization.accept-float-as-int=false, which applies to every endpoint in wealth. Today only /api/v1/info and the starter's /api/auth/* exist, and none of them send fractional values into integer fields, so the impact is negligible.",
+      "Adding the integration datasource makes the MMF Oracle DB a startup dependency of the whole wealth service in preprod/prod (Hikari fail-fast; see technical_gaps #1).",
+      "The GenericResponse schema gains 3 nullable fields. This is additive, and the only existing consumer is the unused InfoApi, so it is backward compatible.",
+      "The new GlobalExceptionHandler covers every controller under com.alramz.controllers, including ApplicationController (/api/v1/info). Its errors would now get a GenericResponse body with MMF090 instead of the starter's generic map. This is negligible because info has no failure modes.",
+      "The DB-audit payload logging volume increases for 5000-item batches (existing database-logging settings)."
+    ],
+    "confidence": "medium",
+    "notes": "Weakest part: how Spring 7 / openapi-generator 7.23.0 actually raise validation failures for the list bodies, repeated clientId and path @Pattern, plus which Jackson major MVC serializes with. The plan does not guess. It front-loads a real-dispatch test (step 4) with an explicit fallback to service-level checks, but the exact split between framework-raised and service-raised validation is only known after step 1's codegen inspection. Second weakest: the inferred custodian-positions and account joins, which unit tests cannot validate and which must be checked against the IS export or preprod data before go-live. Everything else (datasource wiring, transaction choreography, error taxonomy, config) is grounded in verified starter and sibling-service code.",
+    "checked": "Spec preconditions (exists; confidence medium, not low; decisions log consistent; existing service). Elicitation checklist (every status has an example; secured; MMF codes). No operationId or schema collision in wealth's apiSpecs.yaml. apiCollection.http already has @authToken plus register/login. No existing exception package (new). Test layout (only the smoke test; Mockito-first). No 'mmf' config prefix collision. permit-all-urls unchanged in all 5 profiles. brok present in dev/docker/preprod/prod and disabled in test. The integration autoconfig is registered. SqlQueriesManager is reachable by component scan. src/test/resources/application.yml shadows main application.yml. Liquibase not applicable. Scheduler not applicable. Masking unchanged per spec. Starter and bom need no change.",
+    "user_decisions": []
+  }
+}
