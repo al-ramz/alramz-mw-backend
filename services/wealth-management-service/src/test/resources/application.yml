@@ -14,6 +14,29 @@ spring:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.H2Dialect
+  # Reject 1.5 for an integer field (sweepNo) instead of truncating it to 1 (spec E15). Mirrors main application.yml,
+  # which this file shadows on the test classpath.
+  jackson:
+    deserialization:
+      accept-float-as-int: false
 
 cipher:
   password: 1234567890123456
+
+# @SpringBootTest boots without a profile, so this file (not application-test.yml) is what tests load.
+# The middleware datasource must be on for DatasourceConfiguration and the audit-log changelog.
+# brok stays off (defaults), so the MMF beans are not created.
+company:
+  datasource:
+    middleware:
+      enabled: true
+      url: jdbc:h2:mem:testdb
+      driverClassName: org.h2.Driver
+      username: sa
+      password:
+      plainPassword: sa
+      startup-validation:
+        enabled: false
+      pool:
+        maximum-pool-size: 5
+        minimum-idle: 1

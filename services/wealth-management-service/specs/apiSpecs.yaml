@@ -42,6 +42,419 @@ paths:
                   service: wealth-management-service
                   version: 1.0.0
 
+  # --- MMF / Athena integration (spec mmfintegrations §3). Bare paths: MmfController adds /api/v1. ---
+  /mmf/accounts/{accountNumber}:
+    get:
+      tags: [Mmf]
+      summary: Get an MMF client account from the selected book
+      operationId: getMmfAccount
+      parameters:
+        - name: accountNumber
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{1,9}$'
+        - name: book
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/MmfBook'
+      responses:
+        '200':
+          description: Account found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "200"
+                responseMessage: OK
+                errorCode: null
+                errorMsg: null
+                correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+                response:
+                  account:
+                    clientId: "1100206936164"
+                    clientNameEn: 1100206936164-INDIVIDUAL
+                    clientNameAr: 1100206936164-INDIVIDUAL
+                    accountNumber: "2939418"
+                    accountName: 1100206936164-NORMAL-AED
+                    baseCurrency: AED
+        '400':
+          description: MMF001 accountNumber not 1-9 digits, MMF002 book missing, MMF003 book not CAPITAL/MMF
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              examples:
+                MMF001: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF001, errorMsg: accountNumber must be 1-9 digits, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF002: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF002, errorMsg: book is required, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF003: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF003, errorMsg: book must be CAPITAL or MMF, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+        '401': { description: 'JWT missing, invalid or expired' }
+        '403': { description: JWT lacks APP_WEALTH_MANAGEMENT_SERVICE_USER }
+        '404':
+          description: MMF004 no account in the selected book
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "404", responseMessage: Not Found, errorCode: MMF004, errorMsg: Account 2939418 not found in book CAPITAL, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '500':
+          description: MMF005 database error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "500", responseMessage: Internal Server Error, errorCode: MMF005, errorMsg: Internal Server Error, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '503':
+          description: MMF006 selected book unreachable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "503", responseMessage: Service Unavailable, errorCode: MMF006, errorMsg: MMF data source unavailable, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+
+  /mmf/sweep-ins:
+    get:
+      tags: [Mmf]
+      summary: List sweep-ins (type W) from both books
+      operationId: listMmfSweepIns
+      parameters:
+        - { name: fromDate, in: query, required: false, schema: { type: string, format: date } }
+        - { name: toDate, in: query, required: false, schema: { type: string, format: date } }
+      responses:
+        '200':
+          description: Sweep-ins (possibly empty)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "200"
+                responseMessage: OK
+                errorCode: null
+                errorMsg: null
+                correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+                response:
+                  sweepIns:
+                    - { sweepNo: 52, date: "2019-12-30", accountNumber: "2944237", amount: 3838.02, source: CAPITAL }
+        '400':
+          description: MMF010 only one date, MMF011 invalid date, MMF012 range invalid or over 93 days
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              examples:
+                MMF010: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF010, errorMsg: "Provide both fromDate and toDate, or neither", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF011: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF011, errorMsg: fromDate must be an ISO-8601 date (yyyy-MM-dd), correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF012: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF012, errorMsg: Date range must not exceed 93 days and fromDate must not be after toDate, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+        '401': { description: 'JWT missing, invalid or expired' }
+        '403': { description: JWT lacks APP_WEALTH_MANAGEMENT_SERVICE_USER }
+        '500':
+          description: MMF015 database error in either book
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "500", responseMessage: Internal Server Error, errorCode: MMF015, errorMsg: Internal Server Error, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '503':
+          description: MMF016 either book unreachable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "503", responseMessage: Service Unavailable, errorCode: MMF016, errorMsg: MMF data source unavailable, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+
+  /mmf/sweep-outs:
+    get:
+      tags: [Mmf]
+      summary: List sweep-outs (type O) from both books
+      operationId: listMmfSweepOuts
+      parameters:
+        - { name: fromDate, in: query, required: false, schema: { type: string, format: date } }
+        - { name: toDate, in: query, required: false, schema: { type: string, format: date } }
+      responses:
+        '200':
+          description: Sweep-outs (possibly empty)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "200"
+                responseMessage: OK
+                errorCode: null
+                errorMsg: null
+                correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+                response:
+                  sweepOuts:
+                    - { sweepNo: 24294, date: "2020-05-27", accountNumber: "2944758", amount: 50000, source: CAPITAL }
+        '400':
+          description: MMF020 only one date, MMF021 invalid date, MMF022 range invalid or over 93 days
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              examples:
+                MMF020: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF020, errorMsg: "Provide both fromDate and toDate, or neither", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF021: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF021, errorMsg: fromDate must be an ISO-8601 date (yyyy-MM-dd), correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF022: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF022, errorMsg: Date range must not exceed 93 days and fromDate must not be after toDate, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+        '401': { description: 'JWT missing, invalid or expired' }
+        '403': { description: JWT lacks APP_WEALTH_MANAGEMENT_SERVICE_USER }
+        '500':
+          description: MMF025 database error in either book
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "500", responseMessage: Internal Server Error, errorCode: MMF025, errorMsg: Internal Server Error, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '503':
+          description: MMF026 either book unreachable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "503", responseMessage: Service Unavailable, errorCode: MMF026, errorMsg: MMF data source unavailable, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+
+  /mmf/sweep-ins/confirmations:
+    post:
+      tags: [Mmf]
+      summary: Confirm pending sweep-ins (W to I) in both books, all-or-nothing
+      operationId: confirmMmfSweepIns
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              maxItems: 1000
+              items: { $ref: '#/components/schemas/MmfSweepConfirmationItem' }
+            example:
+              - { sweepNo: 2170411, source: CAPITAL }
+              - { sweepNo: 2170412, source: CAPITAL }
+              - { sweepNo: 2345, source: MMF }
+      responses:
+        '200':
+          description: Confirmed; counts plus sweeps that were already confirmed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "200"
+                responseMessage: OK
+                errorCode: null
+                errorMsg: null
+                correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+                response:
+                  confirmedCapital: 2
+                  confirmedMmf: 0
+                  alreadyConfirmed:
+                    - { sweepNo: 2345, book: MMF }
+        '400':
+          description: MMF030 empty/missing/over 1000 items, MMF031 missing field or bad source, MMF032 sweepNo not a positive integer
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              examples:
+                MMF030: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF030, errorMsg: Request must contain 1-1000 items, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF031: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF031, errorMsg: "Item 2: source must be CAPITAL or MMF", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF032: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF032, errorMsg: "Item 1: sweepNo must be a positive integer", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+        '401': { description: 'JWT missing, invalid or expired' }
+        '403': { description: JWT lacks APP_WEALTH_MANAGEMENT_SERVICE_USER }
+        '409':
+          description: MMF033 one or more sweeps unknown or not pending; nothing changed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "409", responseMessage: Conflict, errorCode: MMF033, errorMsg: "Sweeps unknown or not pending: CAPITAL 2170412", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '500':
+          description: MMF035 database error (nothing committed)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              examples:
+                MMF035: { value: { responseCode: "500", responseMessage: Internal Server Error, errorCode: MMF035, errorMsg: Internal Server Error, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+        '503':
+          description: MMF036 a required book is unreachable before any commit
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "503", responseMessage: Service Unavailable, errorCode: MMF036, errorMsg: MMF data source unavailable, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+
+  /mmf/profit-distributions:
+    post:
+      tags: [Mmf]
+      summary: Book profit distributions (type P), idempotent on referenceId
+      operationId: createMmfProfitDistributions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              maxItems: 5000
+              items: { $ref: '#/components/schemas/MmfProfitDistributionItem' }
+            example:
+              - { sweepDate: "2025-04-20", accountNumber: "1005", amount: 2500.75, referenceId: "987654321", source: CAPITAL }
+              - { sweepDate: "2025-04-20", accountNumber: "1006", amount: 3700.5, referenceId: "123456789", source: CAPITAL }
+      responses:
+        '201':
+          description: Every item created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "201"
+                responseMessage: Created
+                errorCode: null
+                errorMsg: null
+                correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+                response:
+                  results:
+                    - { referenceId: "987654321", accountNumber: "1005", book: CAPITAL, status: CREATED, sweepNo: 2170513, errorCode: null }
+                    - { referenceId: "123456789", accountNumber: "1006", book: CAPITAL, status: CREATED, sweepNo: 2170514, errorCode: null }
+        '207':
+          description: Mixed outcome; failed items carry MMF044 or MMF047
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "207"
+                responseMessage: Multi-Status
+                errorCode: null
+                errorMsg: null
+                correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+                response:
+                  results:
+                    - { referenceId: "987654321", accountNumber: "1005", book: CAPITAL, status: FAILED, sweepNo: null, errorCode: MMF047 }
+                    - { referenceId: "123456789", accountNumber: "1006", book: CAPITAL, status: CREATED, sweepNo: 2170514, errorCode: null }
+        '400':
+          description: MMF040 empty/missing/over 5000 items, MMF041 bad sweepDate/amount/referenceId, MMF042 bad accountNumber, MMF043 bad source
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              examples:
+                MMF040: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF040, errorMsg: Request must contain 1-5000 items, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF041: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF041, errorMsg: "Item 1: amount must be > 0 with at most 3 decimals", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF042: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF042, errorMsg: "Item 2: accountNumber must be 1-9 digits", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF043: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF043, errorMsg: "Item 3: source must be CAPITAL or MMF", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+        '401': { description: 'JWT missing, invalid or expired' }
+        '403': { description: JWT lacks APP_WEALTH_MANAGEMENT_SERVICE_USER }
+        '409':
+          description: MMF044 every referenceId is already booked
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "409", responseMessage: Conflict, errorCode: MMF044, errorMsg: "referenceId already booked: CAPITAL 987654321, CAPITAL 123456789", correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '500':
+          description: MMF045 no item could be created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "500", responseMessage: Internal Server Error, errorCode: MMF045, errorMsg: Internal Server Error, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '503':
+          description: MMF046 target book unreachable and no item created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "503", responseMessage: Service Unavailable, errorCode: MMF046, errorMsg: MMF data source unavailable, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+
+  /mmf/custodian-cash:
+    get:
+      tags: [Mmf]
+      summary: Custodian cash balances as of SYSDATE (CAPITAL book)
+      operationId: listMmfCustodianCash
+      parameters:
+        - name: clientId
+          in: query
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: array
+            minItems: 1
+            maxItems: 500
+            items:
+              type: string
+              pattern: '^\d{1,9}$'
+      responses:
+        '200':
+          description: Cash balances (possibly empty)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "200"
+                responseMessage: OK
+                errorCode: null
+                errorMsg: null
+                correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+                response:
+                  custodianCash:
+                    - { clientMainId: "1100106001214", clientId: "2001214", clientName: 1100106001214-NORMAL-AED, cashBalance: 0 }
+        '400':
+          description: MMF050 no clientId, MMF051 clientId not 1-9 digits, MMF052 more than 500 clientId values
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              examples:
+                MMF050: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF050, errorMsg: At least one clientId is required, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF051: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF051, errorMsg: clientId must be 1-9 digits, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF052: { value: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF052, errorMsg: At most 500 clientId values are allowed, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+        '401': { description: 'JWT missing, invalid or expired' }
+        '403': { description: JWT lacks APP_WEALTH_MANAGEMENT_SERVICE_USER }
+        '500':
+          description: MMF055 database or function error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "500", responseMessage: Internal Server Error, errorCode: MMF055, errorMsg: Internal Server Error, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '503':
+          description: MMF056 CAPITAL book unreachable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "503", responseMessage: Service Unavailable, errorCode: MMF056, errorMsg: MMF data source unavailable, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+
+  /mmf/custodian-positions:
+    get:
+      tags: [Mmf]
+      summary: Custodian positions for the configured client list (CAPITAL book)
+      operationId: listMmfCustodianPositions
+      parameters:
+        - name: asOfDate
+          in: query
+          required: false
+          description: Price date; defaults to calendar yesterday
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Positions (possibly empty)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example:
+                responseCode: "200"
+                responseMessage: OK
+                errorCode: null
+                errorMsg: null
+                correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+                response:
+                  custodianPositions:
+                    - { clientId: "2001214", isin: AEE000301011, symbol: EMAAR, quantity: 15000, closePrice: 9.85, currency: AED, market: DFM, priceDate: "2026-10-18" }
+        '400':
+          description: MMF060 asOfDate invalid or in the future
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "400", responseMessage: Bad Request, errorCode: MMF060, errorMsg: asOfDate must be an ISO-8601 date not in the future, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+        '401': { description: 'JWT missing, invalid or expired' }
+        '403': { description: JWT lacks APP_WEALTH_MANAGEMENT_SERVICE_USER }
+        '500':
+          description: MMF065 client list not configured, MMF066 database error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              examples:
+                MMF065: { value: { responseCode: "500", responseMessage: Internal Server Error, errorCode: MMF065, errorMsg: Custodian client list is not configured, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+                MMF066: { value: { responseCode: "500", responseMessage: Internal Server Error, errorCode: MMF066, errorMsg: Internal Server Error, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 } }
+        '503':
+          description: MMF067 CAPITAL book unreachable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GenericResponse' }
+              example: { responseCode: "503", responseMessage: Service Unavailable, errorCode: MMF067, errorMsg: MMF data source unavailable, correlationId: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33 }
+
   # Add every new endpoint's contract here BEFORE writing the controller — the
   # openapi-generator-maven-plugin (bound to `generate`, see pom.xml) produces interface-only
   # Spring MVC stubs (com.alramz.api) and DTOs (com.alramz.model) from this file on every build.
@@ -64,3 +477,144 @@ components:
           type: string
         response:
           type: object
+        correlationId:
+          type: string
+          format: uuid
+        errorCode:
+          type: string
+          nullable: true
+        errorMsg:
+          type: string
+          nullable: true
+
+    MmfBook:
+      type: string
+      enum: [CAPITAL, MMF]
+
+    MmfAccount:
+      type: object
+      properties:
+        clientId: { type: string }
+        clientNameEn: { type: string }
+        clientNameAr: { type: string }
+        accountNumber: { type: string }
+        accountName: { type: string }
+        baseCurrency: { type: string }
+
+    MmfAccountResponse:
+      type: object
+      properties:
+        account: { $ref: '#/components/schemas/MmfAccount' }
+
+    MmfSweep:
+      type: object
+      required: [sweepNo, date, accountNumber, amount, source]
+      properties:
+        sweepNo: { type: integer, format: int64 }
+        date: { type: string, format: date }
+        accountNumber: { type: string }
+        amount: { type: number }
+        source: { $ref: '#/components/schemas/MmfBook' }
+
+    MmfSweepInListResponse:
+      type: object
+      properties:
+        sweepIns:
+          type: array
+          items: { $ref: '#/components/schemas/MmfSweep' }
+
+    MmfSweepOutListResponse:
+      type: object
+      properties:
+        sweepOuts:
+          type: array
+          items: { $ref: '#/components/schemas/MmfSweep' }
+
+    MmfSweepConfirmationItem:
+      type: object
+      required: [sweepNo, source]
+      properties:
+        sweepNo: { type: integer, format: int64, minimum: 1 }
+        source: { $ref: '#/components/schemas/MmfBook' }
+
+    MmfSweepRef:
+      type: object
+      properties:
+        sweepNo: { type: integer, format: int64 }
+        book: { $ref: '#/components/schemas/MmfBook' }
+
+    MmfSweepConfirmationResult:
+      type: object
+      properties:
+        confirmedCapital: { type: integer }
+        confirmedMmf: { type: integer }
+        alreadyConfirmed:
+          type: array
+          items: { $ref: '#/components/schemas/MmfSweepRef' }
+
+    MmfProfitDistributionItem:
+      type: object
+      required: [sweepDate, accountNumber, amount, referenceId, source]
+      properties:
+        sweepDate: { type: string, format: date }
+        accountNumber: { type: string, pattern: '^\d{1,9}$' }
+        amount: { type: number, minimum: 0, exclusiveMinimum: true }
+        referenceId: { type: string, pattern: '^\d{1,15}$' }
+        source: { $ref: '#/components/schemas/MmfBook' }
+
+    MmfProfitDistributionResult:
+      type: object
+      properties:
+        referenceId: { type: string }
+        accountNumber: { type: string }
+        book: { $ref: '#/components/schemas/MmfBook' }
+        status: { type: string, enum: [CREATED, FAILED] }
+        sweepNo: { type: integer, format: int64, nullable: true }
+        errorCode: { type: string, nullable: true }
+
+    MmfProfitDistributionResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items: { $ref: '#/components/schemas/MmfProfitDistributionResult' }
+
+    MmfCustodianCash:
+      type: object
+      properties:
+        clientMainId: { type: string }
+        clientId: { type: string }
+        clientName: { type: string }
+        cashBalance: { type: number }
+
+    MmfCustodianCashListResponse:
+      type: object
+      properties:
+        custodianCash:
+          type: array
+          items: { $ref: '#/components/schemas/MmfCustodianCash' }
+
+    MmfMarket:
+      type: string
+      enum: [DFM, DIFX, ADX]
+
+    MmfCustodianPosition:
+      type: object
+      properties:
+        clientId: { type: string }
+        isin: { type: string }
+        symbol: { type: string }
+        quantity: { type: number }
+        closePrice: { type: number }
+        currency: { type: string }
+        market:
+          description: DFM, DIFX or ADX; null for an unmapped market code
+          $ref: '#/components/schemas/MmfMarket'
+        priceDate: { type: string, format: date }
+
+    MmfCustodianPositionListResponse:
+      type: object
+      properties:
+        custodianPositions:
+          type: array
+          items: { $ref: '#/components/schemas/MmfCustodianPosition' }

@@ -15,7 +15,11 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 /**
  * Direct-SQL access to the {@code brok} Oracle {@code INSIGHT} schema for relationship
@@ -30,10 +34,7 @@ import java.util.List;
 public class RelationshipManagerRepositoryImpl implements RelationshipManagerRepository {
 
     private static final String ISLAMIC_OFFICE_CODE = "3031";
-    private static final String ISLAMIC_MODE_NONE = "NONE";
-    private static final String ISLAMIC_MODE_ONLY = "ONLY";
-    private static final String ISLAMIC_MODE_MIXED = "MIXED";
-    private static final String NO_CODE_FILTER_PLACEHOLDER = "__NO_FILTER__";
+    private static final String DYNAMIC_WHERE_CLAUSE_PLACEHOLDER = "{dynamicWhereClause}";
 
     private final NamedParameterJdbcTemplate brokNamedParameterJdbcTemplate;
     private final SqlQueriesManager sqlQueriesManager;
@@ -69,17 +70,15 @@ public class RelationshipManagerRepositoryImpl implements RelationshipManagerRep
     public List<CommissionResult> findCommissionsByRelationshipManager(
             LocalDate startDate, LocalDate endDate, List<String> relationshipManagerCodes) {
         try {
-            String sql = sqlQueriesManager.getSQLQueryFromConfig("relationship.manager.commissions.find");
-
-            boolean hasCodes = relationshipManagerCodes != null && !relationshipManagerCodes.isEmpty();
-
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("startDate", Date.valueOf(startDate));
             params.addValue("endDate", Date.valueOf(endDate));
-            params.addValue("filterByCode", hasCodes ? "Y" : "N");
-            params.addValue("relationshipManagerCodes",
-                    hasCodes ? relationshipManagerCodes : List.of(NO_CODE_FILTER_PLACEHOLDER));
-            params.addValue("islamicMode", islamicMode(hasCodes ? relationshipManagerCodes : null));
+
+            String dynamicWhereClause = buildRelationshipManagerClause(relationshipManagerCodes, params);
+            String sql = sqlQueriesManager.getSQLQueryFromConfig("relationship.manager.commissions.find")
+                    .replace(DYNAMIC_WHERE_CLAUSE_PLACEHOLDER, dynamicWhereClause);
+
+            log.info("Executing relationship.manager.commissions.find: {}", inlineParams(sql, params));
 
             return brokNamedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
                 CommissionResult result = new CommissionResult();
@@ -99,17 +98,57 @@ public class RelationshipManagerRepositoryImpl implements RelationshipManagerRep
     }
 
     /**
-     * Derives the Islamic-office predicate mode from the requested RM codes, per Q2's
-     * deliberately-preserved AND defect (spec.md Section 3b/7): {@code NONE} when RM
-     * {@value #ISLAMIC_OFFICE_CODE} isn't requested (no Islamic filter applied),
-     * {@code ONLY} when it's the sole requested code (the Islamic predicate resolves
-     * correctly), {@code MIXED} when it's requested alongside any other code (the SQL's
-     * AND join then yields zero rows, not a union).
+     * Renders {@code sql} with each {@code :name} replaced by its bound value as a SQL
+     * literal, for logging only — the query itself still executes with bind parameters.
      */
-    private String islamicMode(List<String> codes) {
-        if (codes == null || !codes.contains(ISLAMIC_OFFICE_CODE)) {
-            return ISLAMIC_MODE_NONE;
+    private static String inlineParams(String sql, MapSqlParameterSource params) {
+        String rendered = sql;
+        for (String name : params.getParameterNames()) {
+            rendered = rendered.replaceAll(":" + name + "\\b",
+                    Matcher.quoteReplacement(toSqlLiteral(params.getValue(name))));
         }
-        return codes.size() == 1 ? ISLAMIC_MODE_ONLY : ISLAMIC_MODE_MIXED;
+        return rendered;
+    }
+
+    private static String toSqlLiteral(Object value) {
+        if (value == null) {
+            return "NULL";
+        }
+        if (value instanceof Collection<?> values) {
+            return values.stream().map(RelationshipManagerRepositoryImpl::toSqlLiteral)
+                    .collect(Collectors.joining(", "));
+        }
+        if (value instanceof Date date) {
+            return "DATE '" + date + "'";
+        }
+        if (value instanceof Number) {
+            return value.toString();
+        }
+        return "'" + value.toString().replace("'", "''") + "'";
+    }
+
+    /**
+     * Builds the RM predicate substituted for {@value #DYNAMIC_WHERE_CLAUSE_PLACEHOLDER}.
+     * RM {@value #ISLAMIC_OFFICE_CODE} is special: when requested it only matches Islamic
+     * securities ({@code SC_ISLAMIC = 'Y'}); all other requested codes match plainly. No
+     * codes means no RM filter. Codes stay bind parameters — only fixed SQL is concatenated.
+     */
+    private static String buildRelationshipManagerClause(List<String> codes, MapSqlParameterSource params) {
+        if (codes == null || codes.isEmpty()) {
+            return "1 = 1";
+        }
+        List<String> predicates = new ArrayList<>();
+        if (codes.contains(ISLAMIC_OFFICE_CODE)) {
+            params.addValue("islamicOfficeCode", ISLAMIC_OFFICE_CODE);
+            predicates.add("(CL_RELATION_MANG = :islamicOfficeCode AND csc.SC_ISLAMIC = 'Y')");
+        }
+        List<String> otherCodes = codes.stream().filter(code -> !ISLAMIC_OFFICE_CODE.equals(code)).toList();
+        if (!otherCodes.isEmpty()) {
+            params.addValue("relationshipManagerCodes", otherCodes);
+            predicates.add("CL_RELATION_MANG IN (:relationshipManagerCodes)");
+        }
+        return "(" + String.join(" OR ", predicates) + ")";
     }
 }
+
+

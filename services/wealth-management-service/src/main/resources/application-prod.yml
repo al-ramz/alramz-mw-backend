@@ -26,7 +26,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,info,prometheus   # never "*": heapdump/env/configprops leak decrypted DB passwords + cipher key
   # Observability (tracing/logs/metrics) — present in EVERY profile; never in application.yml.
   # Local collector instead of the shared dev one: http://localhost:4318/v1/traces, http://localhost:3100/otlp/v1/logs
   tracing:
@@ -58,7 +58,7 @@ management:
         enabled: false   # Jaeger accepts traces only
 
 cipher:
-  password: UseMostSecretKey
+  password: ${CIPHER_MASTER_KEY}   # 16/24/32-byte AES key from Key Vault/CI secret; no default (fail fast)
 
 company:
   scheduler:
@@ -100,7 +100,7 @@ company:
   jwt:
     enabled: true
     access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:900000}
-    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+    secret: ${JWT_SECRET}   # no default: a missing secret must fail startup, never fall back to a public key
     login-url: /api/auth/login
     register-url: /api/auth/register
     refresh-url: /api/auth/refresh
@@ -148,3 +148,8 @@ company:
         connectTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_CONNECT_TIMEOUT:10000}
         readTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_READ_TIMEOUT:60000}
         defaultRowPrefetch: ${COMPANY_DATASOURCE_BROK_ORACLE_DEFAULT_ROW_PREFETCH:100}
+
+# MMF / Athena: CL_CLIENT_IDs for custodian positions (comma-separated). Empty -> custodian-positions returns 500 MMF065.
+mmf:
+  custodian:
+    client-ids: ${MMF_CUSTODIAN_CLIENT_IDS:}

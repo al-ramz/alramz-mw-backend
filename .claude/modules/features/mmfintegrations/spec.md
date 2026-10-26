@@ -48,7 +48,8 @@ datasources (see §2).
   `GenericResponse` envelope.
 - All SQL uses bind parameters only. This includes every `IN` list: there is no string-built SQL.
 - Sweep confirmation is state-guarded and locked per book.
-- Profit distribution is idempotent on `referenceId` and gets `SWEEP_NO` from a DB sequence.
+- Profit distribution is idempotent on `referenceId`. `SWEEP_NO` is `MAX+1` (legacy numbering), and a PK
+  collision is retried once.
 - Custodian positions map columns by name, and its client list comes from configuration.
 
 **Out of scope (explicit)**
@@ -411,8 +412,8 @@ raised as `ApplicationException(MMF041)`.
 **Logic** (decisions Q3 and Q4):
 1. **No pipeline dump.** F-03 is removed.
 2. Process items in request order. Each item is its own short unit on its book's template:
-   1. Allocate `SWEEP_NO` with `SELECT INSIGHT.SWEEP_FACILITY_SEQ.NEXTVAL FROM DUAL` (SQL key
-      `mmf.sweep.seq.next`).
+   1. Allocate `SWEEP_NO` with `SELECT NVL(MAX(SWEEP_NO), 0) + 1 FROM INSIGHT.SWEEP_FACILITY` (SQL key
+      `mmf.sweep.next`). There is no DB sequence (Q3 revised).
    2. Insert the row with SQL key `mmf.profit.insert`:
 
       | Column | Value |
@@ -433,11 +434,13 @@ raised as `ApplicationException(MMF041)`.
    index `UX_SWEEP_PROFIT_REF`, the item is `FAILED` with `errorCode MMF044`.
    - The DB index is the idempotency guard; there is no application pre-check.
    - A `referenceId` repeated within the same request is caught the same way.
-   - The sequence value burned on the failed insert is acceptable.
-4. Any other insert failure makes the item `FAILED` with `errorCode MMF047`. This includes ORA-00001 on
-   the `SWEEP_NO` PK, which happens when a legacy writer still uses `MAX+1`. The raw DB message is
-   logged and never returned.
-5. If a book becomes unreachable (a resource-failure exception), the remaining items for that book
+   - It is never retried.
+4. Any other `DuplicateKeyException` is a `SWEEP_NO` PK collision: a concurrent writer read the same
+   `MAX`. The item is retried **once**: re-read `MAX+1` and insert again. If the retry succeeds the item
+   is `CREATED` with the new `sweepNo`; if it fails, step 3 or 5 applies to that failure.
+5. Any other insert failure, including a second PK collision, makes the item `FAILED` with `errorCode
+   MMF047`. The raw DB message is logged and never returned.
+6. If a book becomes unreachable (a resource-failure exception), the remaining items for that book
    are marked `FAILED` / `MMF047` **without being attempted**. This avoids 5000 connect-timeouts in a
    row.
 6. Aggregate status:
@@ -677,19 +680,17 @@ when any item is `FAILED`, and `HttpStatus.CREATED` otherwise.
 - All Oracle access goes through `NamedParameterJdbcTemplate`, with SQL in
   `src/main/resources/sql/sql-queries.xml` (a new file).
 - The file defines 9 keys: `mmf.account.find`, `mmf.sweep.find.range`, `mmf.sweep.find.today`,
-  `mmf.sweep.lock`, `mmf.sweep.confirm`, `mmf.sweep.seq.next`, `mmf.profit.insert`,
+  `mmf.sweep.lock`, `mmf.sweep.confirm`, `mmf.sweep.next`, `mmf.profit.insert`,
   `mmf.custodian.cash`, `mmf.custodian.positions`.
 - Both books use schema `INSIGHT`, so the same SQL serves both.
 
-**Release prerequisite (DBA, outside this repo; decision Q3).** Apply in **both** Oracle databases
-(RMZ/Capital and MMF) **before** go-live (design doc Appendix C.3):
-1. `CREATE SEQUENCE INSIGHT.SWEEP_FACILITY_SEQ START WITH <current MAX(SWEEP_NO)+1> NOCACHE;` (one per
-   database).
-2. `CREATE UNIQUE INDEX UX_SWEEP_PROFIT_REF ON INSIGHT.SWEEP_FACILITY (CASE WHEN SWEEP_TYPE = 'P' THEN REF_ID END);`
+**Release prerequisite (DBA, outside this repo; decision Q3).** Apply once in the `brok` Oracle
+database (schema `INSIGHT`) **before** go-live. No sequence is needed (Q3 revised):
+1. `CREATE UNIQUE INDEX UX_SWEEP_PROFIT_REF ON INSIGHT.SWEEP_FACILITY (CASE WHEN SWEEP_TYPE = 'P' THEN REF_ID END);`
    Use this **exact index name**. The service relies on it to tell a duplicate `referenceId`
    (MMF044) apart from other duplicate-key errors.
-3. If the `brok`/`integration` connection users are not the schema owner, grant them:
-   - `SELECT` on the sequence;
+   Check first that existing `P` rows have no duplicate `REF_ID`, or the index creation fails.
+2. If the `brok` connection user is not the schema owner, grant it:
    - `SELECT, INSERT, UPDATE` on `INSIGHT.SWEEP_FACILITY`.
 
    The `brok` user additionally needs:
@@ -701,8 +702,8 @@ The range query uses plain `SWEEP_DATE` bounds, so a plain `(SWEEP_TYPE, SWEEP_D
 it better than the `TRUNC` function index.
 
 **Coordination note** (Appendix E #10). Other back-office writers to `SWEEP_FACILITY` (the `W`/`O`
-creators) should also move from `MAX(SWEEP_NO)+1` to `INSIGHT.SWEEP_FACILITY_SEQ`. Until they do, a PK
-collision is possible. It surfaces as item-level MMF047.
+creators) also use `MAX(SWEEP_NO)+1`, so a PK collision is possible. The service retries a collided
+item once; a second collision surfaces as item-level MMF047, and the caller retries it.
 
 ---
 
@@ -846,7 +847,7 @@ It must cover:
 | E25 | profit | bad or missing `source` | MethodArgumentNotValid / NotReadable | 400 MMF043 |
 | E26 | profit | every `referenceId` already booked (replay) | `MmfConflictException` | 409 MMF044 |
 | E27 | profit | some items duplicate, others new | – | 207; the duplicates are FAILED/MMF044 |
-| E28 | profit | some item inserts fail (other DB error, PK collision) | – | 207; those items are FAILED/MMF047 |
+| E28 | profit | some item inserts fail (other DB error, PK collision on retry too) | – | 207; those items are FAILED/MMF047 |
 | E29 | profit | every item fails on a non-connectivity DB error | `MmfBackendException` | 500 MMF045 |
 | E30 | profit | book unreachable and nothing created | `MmfBackendUnavailableException` | 503 MMF046 |
 | E31 | profit | book unreachable mid-batch, after some items were created | – | 207; the rest of that book is FAILED/MMF047 and not attempted |
@@ -903,11 +904,12 @@ items remain unresolved.
     DBs;
   - B: app-side locking of `MAX+1`;
   - C: keep `MAX+1` without idempotency.
-- **Chosen: A.**
-  - The DBA applies the DDL in both Oracle DBs as a release prerequisite outside this repo.
-  - The service uses `NEXTVAL`.
-  - ORA-00001 on the REF_ID index maps to MMF044 (409).
-  - Other back-office writers should move to the sequence (Appendix E #10).
+- **Chosen: A** originally. **Revised 2026-10-26: C plus the REF_ID index and a single retry.**
+  - The user decided not to use a sequence. `SWEEP_NO` is `NVL(MAX(SWEEP_NO), 0) + 1`, as in legacy.
+  - There is only one database (`brok`, schema `INSIGHT`). The DBA creates only the REF_ID index there.
+  - ORA-00001 on the REF_ID index maps to MMF044 (409) and is never retried.
+  - ORA-00001 on any other key (the `SWEEP_NO` PK) is retried once with a fresh `MAX+1`, then MMF047.
+  - Accepted risk: concurrent writers can still collide twice; that item fails and the caller retries.
 - → §3.5, §4.
 
 **Q4 — Partial profit-distribution outcome.**
@@ -1028,7 +1030,8 @@ items remain unresolved.
 - [ ] Every item is a duplicate → 409 MMF044.
 - [ ] Every item fails on a non-connectivity error → 500 MMF045.
 - [ ] Book unreachable on the first item → 503 MMF046, and no further insert is attempted for that book.
-- [ ] The insert SQL uses `INSIGHT.SWEEP_FACILITY_SEQ.NEXTVAL`, `SWEEP_TYPE 'P'`, `SRC_TYPE 'C'/'M'`, `SEGMENT_ID 0` and `UPD_TIME = SYSDATE`, and contains no `MAX(SWEEP_NO)`.
+- [ ] `SWEEP_NO` comes from `NVL(MAX(SWEEP_NO), 0) + 1`; the insert SQL uses `SWEEP_TYPE 'P'`, `SRC_TYPE 'C'/'M'`, `SEGMENT_ID 0` and `UPD_TIME = SYSDATE`.
+- [ ] A `SWEEP_NO` PK collision is retried once with a fresh `MAX+1`; a REF_ID duplicate is not retried.
 
 *Custodian cash*
 - [ ] No `clientId` → 400 MMF050.
@@ -1098,7 +1101,7 @@ the Appendix C.1 column lists.
    role, which the user accepted (Q2). `04_security` should review both.
 10. **Sizing.** `service.yaml` is unchanged. A 5000-item batch means about 10,000 sequential Oracle
     round-trips on a 10-connection pool. `02_plan` should confirm batch frequency. The upgrade path
-    is a `batchUpdate` with pre-fetched sequence values.
+    is a `batchUpdate`, which would need a DB sequence (or a block of `SWEEP_NO`s reserved under a lock).
 
 **Verify items before go-live** (these do not block the build)
 - **F-09:** confirm the live column set and order of legacy `getCustodianPositions`. Port the exact

@@ -19,9 +19,11 @@
         ON cc.CL_MAIN_CLIENT_ID = cmc.CL_MAIN_CLIENT_ID
     LEFT JOIN CB_SEC_COMP csc
         ON ih.COMP_ID = csc.SC_COMP_ID
-    WHERE ih.TOTAL_COMM &lt;&gt; 0.0
-      AND ih.INV_DATE &gt;= :startDate
-      AND ih.INV_DATE &lt; :endDate + 1
+    WHERE {dynamicWhereClause}
+    AND ih.TOTAL_COMM &lt;&gt; 0.0
+    AND ih.INV_DATE &gt;= :startDate
+    AND ih.INV_DATE &lt; :endDate + 1
+
     GROUP BY
         cmc.CL_MAIN_CLIENT_ID,
         cmc.CLE_CLIENT_NAME
@@ -29,3 +31,15 @@
         cmc.CLE_CLIENT_NAME
     </entry>   
 </properties>
+
+<!--
+3031 is a Special Case
+
+TestCase 1: Input = 3030, 3031, 3061
+    (CL_RELATION_MANG = 3031 AND CB_SEC_COMP.SC_ISLAMIC = 'Y') OR CL_RELATION_MANG IN (:relationshipManagerCodes except 3031)
+
+TestCase 2: Input 3062,3065,2026
+    CL_RELATION_MANG IN (:relationshipManagerCodes)
+
+select CL_RELATION_MANG from CB_CLIENT where CL_RELATION_MANG != 0 order by CL_RELATION_MANG desc;
+-->

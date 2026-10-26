@@ -34,6 +34,7 @@ class RelationshipManagerRepositoryImplTest {
 
     private static final String FIND_ACTIVE_KEY = "relationship.manager.find.active";
     private static final String FIND_COMMISSIONS_KEY = "relationship.manager.commissions.find";
+    private static final String COMMISSIONS_SQL = "SELECT X WHERE {dynamicWhereClause} AND Y";
 
     @Mock
     private NamedParameterJdbcTemplate brokNamedParameterJdbcTemplate;
@@ -106,7 +107,7 @@ class RelationshipManagerRepositoryImplTest {
 
     @Test
     void findCommissionsByRelationshipManager_shouldLoadQueryAndBindDateAndCodeParams() throws IOException {
-        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn("SQL");
+        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn(COMMISSIONS_SQL);
 
         CommissionResult cr = new CommissionResult();
         cr.setClientNumber("C-10293");
@@ -114,67 +115,78 @@ class RelationshipManagerRepositoryImplTest {
         cr.setTradingVolume(new BigDecimal("125000.50"));
         cr.setReceivedCommission(new BigDecimal("625.25"));
 
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<MapSqlParameterSource> paramsCaptor = ArgumentCaptor.forClass(MapSqlParameterSource.class);
-        when(brokNamedParameterJdbcTemplate.query(eq("SQL"), paramsCaptor.capture(), any(RowMapper.class)))
+        when(brokNamedParameterJdbcTemplate.query(sqlCaptor.capture(), paramsCaptor.capture(), any(RowMapper.class)))
                 .thenReturn(List.of(cr));
 
         List<CommissionResult> results = repository.findCommissionsByRelationshipManager(
-                LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), List.of("5000"));
+                LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), List.of("3062", "3065"));
 
         assertThat(results).containsExactly(cr);
+        assertThat(sqlCaptor.getValue())
+                .isEqualTo("SELECT X WHERE (CL_RELATION_MANG IN (:relationshipManagerCodes)) AND Y");
         MapSqlParameterSource params = paramsCaptor.getValue();
-        assertThat(params.getValue("filterByCode")).isEqualTo("Y");
-        assertThat(params.getValue("relationshipManagerCodes")).isEqualTo(List.of("5000"));
-        assertThat(params.getValue("islamicMode")).isEqualTo("NONE");
+        assertThat(params.getValue("relationshipManagerCodes")).isEqualTo(List.of("3062", "3065"));
+        assertThat(params.hasValue("islamicOfficeCode")).isFalse();
     }
 
     @Test
-    void findCommissionsByRelationshipManager_shouldUseIslamicModeOnly_forSoleCode3031() throws IOException {
-        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn("SQL");
+    void findCommissionsByRelationshipManager_shouldRestrictCode3031ToIslamic_forSoleCode3031() throws IOException {
+        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn(COMMISSIONS_SQL);
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<MapSqlParameterSource> paramsCaptor = ArgumentCaptor.forClass(MapSqlParameterSource.class);
-        when(brokNamedParameterJdbcTemplate.query(anyString(), paramsCaptor.capture(), any(RowMapper.class)))
+        when(brokNamedParameterJdbcTemplate.query(sqlCaptor.capture(), paramsCaptor.capture(), any(RowMapper.class)))
                 .thenReturn(List.of());
 
         repository.findCommissionsByRelationshipManager(LocalDate.now(), LocalDate.now(), List.of("3031"));
 
-        assertThat(paramsCaptor.getValue().getValue("islamicMode")).isEqualTo("ONLY");
+        assertThat(sqlCaptor.getValue()).isEqualTo(
+                "SELECT X WHERE ((CL_RELATION_MANG = :islamicOfficeCode AND csc.SC_ISLAMIC = 'Y')) AND Y");
+        assertThat(paramsCaptor.getValue().getValue("islamicOfficeCode")).isEqualTo("3031");
+        assertThat(paramsCaptor.getValue().hasValue("relationshipManagerCodes")).isFalse();
     }
 
     @Test
-    void findCommissionsByRelationshipManager_shouldUseIslamicModeMixed_forCode3031PlusOtherCode() throws IOException {
-        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn("SQL");
+    void findCommissionsByRelationshipManager_shouldOrIslamic3031WithOtherCodes_forCode3031PlusOtherCodes()
+            throws IOException {
+        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn(COMMISSIONS_SQL);
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<MapSqlParameterSource> paramsCaptor = ArgumentCaptor.forClass(MapSqlParameterSource.class);
-        when(brokNamedParameterJdbcTemplate.query(anyString(), paramsCaptor.capture(), any(RowMapper.class)))
+        when(brokNamedParameterJdbcTemplate.query(sqlCaptor.capture(), paramsCaptor.capture(), any(RowMapper.class)))
                 .thenReturn(List.of());
 
-        repository.findCommissionsByRelationshipManager(LocalDate.now(), LocalDate.now(), List.of("3031", "5000"));
+        repository.findCommissionsByRelationshipManager(
+                LocalDate.now(), LocalDate.now(), List.of("3030", "3031", "3061"));
 
-        assertThat(paramsCaptor.getValue().getValue("islamicMode")).isEqualTo("MIXED");
+        assertThat(sqlCaptor.getValue()).isEqualTo("SELECT X WHERE ((CL_RELATION_MANG = :islamicOfficeCode"
+                + " AND csc.SC_ISLAMIC = 'Y') OR CL_RELATION_MANG IN (:relationshipManagerCodes)) AND Y");
+        assertThat(paramsCaptor.getValue().getValue("islamicOfficeCode")).isEqualTo("3031");
+        assertThat(paramsCaptor.getValue().getValue("relationshipManagerCodes")).isEqualTo(List.of("3030", "3061"));
     }
 
     @Test
     void findCommissionsByRelationshipManager_shouldNotFilterByCode_whenCodesEmpty() throws IOException {
-        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn("SQL");
-        ArgumentCaptor<MapSqlParameterSource> paramsCaptor = ArgumentCaptor.forClass(MapSqlParameterSource.class);
-        when(brokNamedParameterJdbcTemplate.query(anyString(), paramsCaptor.capture(), any(RowMapper.class)))
-                .thenReturn(List.of());
+        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn(COMMISSIONS_SQL);
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        when(brokNamedParameterJdbcTemplate.query(sqlCaptor.capture(), any(MapSqlParameterSource.class),
+                any(RowMapper.class))).thenReturn(List.of());
 
         repository.findCommissionsByRelationshipManager(LocalDate.now(), LocalDate.now(), List.of());
 
-        assertThat(paramsCaptor.getValue().getValue("filterByCode")).isEqualTo("N");
-        assertThat(paramsCaptor.getValue().getValue("islamicMode")).isEqualTo("NONE");
+        assertThat(sqlCaptor.getValue()).isEqualTo("SELECT X WHERE 1 = 1 AND Y");
     }
 
     @Test
     void findCommissionsByRelationshipManager_shouldNotFilterByCode_whenCodesNull() throws IOException {
-        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn("SQL");
-        ArgumentCaptor<MapSqlParameterSource> paramsCaptor = ArgumentCaptor.forClass(MapSqlParameterSource.class);
-        when(brokNamedParameterJdbcTemplate.query(anyString(), paramsCaptor.capture(), any(RowMapper.class)))
-                .thenReturn(List.of());
+        when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenReturn(COMMISSIONS_SQL);
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        when(brokNamedParameterJdbcTemplate.query(sqlCaptor.capture(), any(MapSqlParameterSource.class),
+                any(RowMapper.class))).thenReturn(List.of());
 
         repository.findCommissionsByRelationshipManager(LocalDate.now(), LocalDate.now(), null);
 
-        assertThat(paramsCaptor.getValue().getValue("filterByCode")).isEqualTo("N");
+        assertThat(sqlCaptor.getValue()).isEqualTo("SELECT X WHERE 1 = 1 AND Y");
     }
 
     @Test

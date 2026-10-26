@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<!--
+  MMF / Athena integration (MmfRepositoryImpl). Every caller-supplied or configured value is a :named bind,
+  including every IN (:list), which NamedParameterJdbcTemplate expands. Nothing is concatenated into SQL.
+  Both books (CAPITAL, MMF) are read from schema INSIGHT on brok, so the same SQL serves both.
+-->
+<properties>
+    <!-- INFERRED JOIN (F-09): m.CL_MAIN_CLIENT_ID = c.CL_MAIN_CLIENT_ID; verify against the IS getMMFClientData adapter before go-live. -->
+    <entry key="mmf.account.find">
+        SELECT c.CL_MAIN_CLIENT_ID AS CLIENT_ID,
+               m.CLE_CLIENT_NAME   AS CLIENT_NAME_EN,
+               m.CLA_CLIENT_NAME   AS CLIENT_NAME_AR,
+               c.CL_CLIENT_ID      AS ACCOUNT_NUMBER,
+               c.CLE_CLIENT_NAME   AS ACCOUNT_NAME,
+               c.CUR_CODE          AS BASE_CURRENCY
+        FROM INSIGHT.CB_CLIENT c
+        JOIN INSIGHT.CB_MAIN_CLIENT m ON m.CL_MAIN_CLIENT_ID = c.CL_MAIN_CLIENT_ID
+        WHERE c.CL_CLIENT_ID = :accountNumber
+    </entry>
+
+    <entry key="mmf.sweep.find.range">
+        SELECT SWEEP_NO, SWEEP_DATE, CLIENT_ID, AMT
+        FROM INSIGHT.SWEEP_FACILITY
+        WHERE SWEEP_TYPE = :type
+          AND SWEEP_DATE &gt;= :fromDate
+          AND SWEEP_DATE &lt; :toDateExclusive
+        ORDER BY SWEEP_DATE, SWEEP_NO
+    </entry>
+
+    <entry key="mmf.sweep.find.today">
+        SELECT SWEEP_NO, SWEEP_DATE, CLIENT_ID, AMT
+        FROM INSIGHT.SWEEP_FACILITY
+        WHERE SWEEP_TYPE = :type
+          AND SWEEP_DATE &gt;= TRUNC(SYSDATE)
+          AND SWEEP_DATE &lt; TRUNC(SYSDATE) + 1
+        ORDER BY SWEEP_DATE, SWEEP_NO
+    </entry>
+
+    <entry key="mmf.sweep.lock">
+        SELECT SWEEP_NO, SWEEP_TYPE
+        FROM INSIGHT.SWEEP_FACILITY
+        WHERE SWEEP_NO IN (:sweepNos)
+        FOR UPDATE
+    </entry>
+
+    <!-- SWEEP_TYPE = 'W' is the state guard: only pending sweep-ins are confirmed. -->
+    <entry key="mmf.sweep.confirm">
+        UPDATE INSIGHT.SWEEP_FACILITY
+        SET SWEEP_TYPE = 'I'
+        WHERE SWEEP_NO IN (:sweepNos)
+          AND SWEEP_TYPE = 'W'
+    </entry>
+
+    <!-- Legacy MAX+1 numbering (no sequence). Concurrent writers can collide on PK_SWEEP_FACILITY; that item fails as MMF047. -->
+    <entry key="mmf.sweep.next">
+        SELECT NVL(MAX(SWEEP_NO), 0) + 1 FROM INSIGHT.SWEEP_FACILITY
+    </entry>
+
+    <!-- Idempotency guard is the DBA-created unique index UX_SWEEP_PROFIT_REF on REF_ID for type P rows. JV_NO / USR_CODE stay NULL. -->
+    <entry key="mmf.profit.insert">
+        INSERT INTO INSIGHT.SWEEP_FACILITY
+            (SWEEP_NO, SWEEP_DATE, SWEEP_TYPE, CLIENT_ID, AMT, REF_ID, SRC_TYPE, SEGMENT_ID, UPD_TIME)
+        VALUES
+            (:sweepNo, :sweepDate, 'P', :accountNumber, :amount, :referenceId, :srcType, 0, SYSDATE)
+    </entry>
+
+    <!-- CAPITAL (brok) only. The 'N','Y' flags are kept verbatim from legacy. Unknown ids are silently omitted. -->
+    <entry key="mmf.custodian.cash">
+        SELECT CL_MAIN_CLIENT_ID,
+               CL_CLIENT_ID,
+               GET_CL_NAME_MAIN_CLIENT(CL_CLIENT_ID) CLIENT_NAME,
+               INSIGHT.F_Get_Balance_As_Of(CL_MAIN_CLIENT_ID, CL_CLIENT_ID, SYSDATE, 'N', 'Y') CASH_BALANCE
+        FROM INSIGHT.CB_CLIENT
+        WHERE CL_CLIENT_ID IN (:clientIds)
+        ORDER BY CL_CLIENT_ID
+    </entry>
+
+    <!--
+      CAPITAL (brok) only. INFERRED JOINS (F-09): F.CLIENT_ID = C.CL_CLIENT_ID, F.COMP_ID = SC.SC_COMP_ID,
+      C.CL_MAIN_CLIENT_ID = M.CL_MAIN_CLIENT_ID, and USR_CODE = 3 / market codes 5, 8, 6 (F-16) are taken from
+      design doc Appendix C.1; port the exact predicates from the IS getCustodianPositions adapter and verify
+      against preprod before go-live. PRICE_DATE is the effective date the DB used (NVL default = yesterday).
+    -->
+    <entry key="mmf.custodian.positions">
+        SELECT CLIENT_ID, ISIN, SYMBOL, QUANTITY, CLOSE_PRICE, CURRENCY, MARKET, PRICE_DATE
+        FROM (
+            SELECT C.CL_CLIENT_ID AS CLIENT_ID,
+                   SC.SC_ISIN_CODE AS ISIN,
+                   SC.TICKER_ID AS SYMBOL,
+                   F.QTY AS QUANTITY,
+                   F.PR_C_PRICE AS CLOSE_PRICE,
+                   C.CUR_CODE AS CURRENCY,
+                   CASE SC.SC_MRK_CODE WHEN 5 THEN 'DFM' WHEN 8 THEN 'DIFX' WHEN 6 THEN 'ADX' END AS MARKET,
+                   F.PR_PRICE_DATE AS PRICE_DATE
+            FROM INSIGHT.F_PORT F
+            JOIN INSIGHT.CB_CLIENT C ON F.CLIENT_ID = C.CL_CLIENT_ID
+            JOIN INSIGHT.CB_MAIN_CLIENT M ON C.CL_MAIN_CLIENT_ID = M.CL_MAIN_CLIENT_ID
+            JOIN INSIGHT.CB_SEC_COMP SC ON F.COMP_ID = SC.SC_COMP_ID
+            WHERE C.CL_CLIENT_ID IN (:clientIds)
+              AND F.PR_PRICE_DATE = NVL(:asOfDate, TRUNC(SYSDATE) - 1)
+              AND F.USR_CODE = 3
+              AND F.QTY &lt;&gt; 0
+            UNION ALL
+            SELECT C.CL_CLIENT_ID AS CLIENT_ID,
+                   SC.SC_ISIN_CODE AS ISIN,
+                   SC.TICKER_ID AS SYMBOL,
+                   F.QTY AS QUANTITY,
+                   F.PR_C_PRICE AS CLOSE_PRICE,
+                   C.CUR_CODE AS CURRENCY,
+                   CASE SC.SC_MRK_CODE WHEN 5 THEN 'DFM' WHEN 8 THEN 'DIFX' WHEN 6 THEN 'ADX' END AS MARKET,
+                   F.PR_PRICE_DATE AS PRICE_DATE
+            FROM INSIGHT.DERV_F_PORT F
+            JOIN INSIGHT.CB_CLIENT C ON F.CLIENT_ID = C.CL_CLIENT_ID
+            JOIN INSIGHT.CB_MAIN_CLIENT M ON C.CL_MAIN_CLIENT_ID = M.CL_MAIN_CLIENT_ID
+            JOIN INSIGHT.CB_SEC_COMP SC ON F.COMP_ID = SC.SC_COMP_ID
+            WHERE C.CL_CLIENT_ID IN (:clientIds)
+              AND F.PR_PRICE_DATE = NVL(:asOfDate, TRUNC(SYSDATE) - 1)
+              AND F.USR_CODE = 3
+              AND F.QTY &lt;&gt; 0
+        ) PORTFOLIO
+        ORDER BY CLIENT_ID, ISIN
+    </entry>
+</properties>

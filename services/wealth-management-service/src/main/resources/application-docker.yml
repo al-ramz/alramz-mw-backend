@@ -11,7 +11,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,info,prometheus   # never "*": heapdump/env/configprops leak decrypted DB passwords + cipher key
   tracing:
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
@@ -125,3 +125,8 @@ company:
 
 cipher:
   password: ${CIPHER_PASSWORD:UseMostSecretKey}
+
+# MMF / Athena: CL_CLIENT_IDs for custodian positions (comma-separated). Empty -> custodian-positions returns 500 MMF065.
+mmf:
+  custodian:
+    client-ids: ${MMF_CUSTODIAN_CLIENT_IDS:}

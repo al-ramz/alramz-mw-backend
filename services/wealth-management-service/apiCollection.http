@@ -1,7 +1,8 @@
 @baseUrl=http://localhost:8085
 
+
 ### Get a token first by registering + logging in below, then paste it here.
-@authToken=
+@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3ZWFsdGhfbWFuYWdlbWVudF9zZXJ2aWNlX2FwcCIsImlhdCI6MTc5Mjk5MTM1NiwiZXhwIjoxNzkzMDc3NzU2LCJyb2xlcyI6WyJBUFBfV0VBTFRIX01BTkFHRU1FTlRfU0VSVklDRV9VU0VSIl0sImFwcGxpY2F0aW9uIjoid2VhbHRoLW1hbmFnZW1lbnQtc2VydmljZSIsImVudmlyb25tZW50IjoibG9jYWwifQ.7QQy0RqlvRbjQM8ClBhMBC4q8Cb5bqQ2NfIJmqMHG5c
 
 ###
 GET {{baseUrl}}/api/v1/info
@@ -29,4 +30,84 @@ Content-Type: application/json
     "consumerPassword": "password123"
 }
 
-###
+### Done: Get MMF account
+GET {{baseUrl}}/api/v1/mmf/accounts/2939418?book=CAPITAL
+Authorization: Bearer {{authToken}}
+
+### Done:  Get MMF account -ve test case (book not CAPITAL/MMF -> 400 MMF003)
+GET {{baseUrl}}/api/v1/mmf/accounts/2939418?book=FOO
+Authorization: Bearer {{authToken}}
+
+### Done: List sweep-ins
+GET {{baseUrl}}/api/v1/mmf/sweep-ins?fromDate=2020-01-02&toDate=2020-01-07
+Authorization: Bearer {{authToken}}
+
+### Done: List sweep-ins -ve test case (only fromDate -> 400 MMF010)
+GET {{baseUrl}}/api/v1/mmf/sweep-ins?fromDate=2025-04-01
+Authorization: Bearer {{authToken}}
+
+### Done: List sweep-outs
+GET {{baseUrl}}/api/v1/mmf/sweep-outs?fromDate=2020-01-02&toDate=2020-01-07
+Authorization: Bearer {{authToken}}
+
+### Done: List sweep-outs -ve test case (only fromDate -> 400 MMF020)
+GET {{baseUrl}}/api/v1/mmf/sweep-outs?fromDate=2025-04-01
+Authorization: Bearer {{authToken}}
+
+### Done: Custodian cash
+GET {{baseUrl}}/api/v1/mmf/custodian-cash?clientId=2001214&clientId=2001215
+Authorization: Bearer {{authToken}}
+
+### Done: Custodian cash -ve test case (clientId not 1-9 digits -> 400 MMF051)
+GET {{baseUrl}}/api/v1/mmf/custodian-cash?clientId=12ab
+Authorization: Bearer {{authToken}}
+
+
+
+### Done: Custodian positions
+GET {{baseUrl}}/api/v1/mmf/custodian-positions?asOfDate=2026-02-04
+Authorization: Bearer {{authToken}}
+
+### Done: Custodian positions -ve test case (future asOfDate -> 400 MMF060)
+GET {{baseUrl}}/api/v1/mmf/custodian-positions?asOfDate=2099-01-01
+Authorization: Bearer {{authToken}}
+
+
+### Done: Confirm sweep-ins
+POST {{baseUrl}}/api/v1/mmf/sweep-ins/confirmations
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+[
+    {"sweepNo": 29, "source": "CAPITAL"},
+    {"sweepNo": 35, "source": "CAPITAL"},
+    {"sweepNo": 52, "source": "CAPITAL"}
+]
+
+### Done: Confirm sweep-ins -ve test case (empty array -> 400 MMF030)
+POST {{baseUrl}}/api/v1/mmf/sweep-ins/confirmations
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+[]
+
+### Done: Push profit distributions
+POST {{baseUrl}}/api/v1/mmf/profit-distributions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+[
+    {"sweepDate": "2025-04-20", "accountNumber": "1005", "amount": 2500.75, "referenceId": "900000001", "source": "CAPITAL"},
+    {"sweepDate": "2025-04-20", "accountNumber": "1006", "amount": 3700.5, "referenceId": "900000002", "source": "MMF"}
+]
+
+### Push profit distributions -ve test case (amount with 4 decimals -> 400 MMF041)
+POST {{baseUrl}}/api/v1/mmf/profit-distributions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+[
+    {"sweepDate": "2025-04-20", "accountNumber": "1005", "amount": 2500.7512, "referenceId": "900000003", "source": "CAPITAL"}
+]
+
+

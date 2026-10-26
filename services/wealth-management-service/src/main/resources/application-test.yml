@@ -7,7 +7,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,info,prometheus   # never "*": heapdump/env/configprops leak decrypted DB passwords + cipher key
   tracing:
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
@@ -103,6 +103,6 @@ company:
         minimum-idle: ${COMPANY_DATASOURCE_MIDDLEWARE_POOL_MINIMUM_IDLE:2}
       sql-logging:
         enabled: false
-    # brok disabled under test — no Oracle in CI.
+    # brok disabled under test — no Oracle in CI, so the MMF controller/service/repository are not created.
     brok:
       enabled: false
