@@ -587,6 +587,308 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "wealth-management-service",
+      "item": [
+        {
+          "name": "01_GetMMFAccount",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({\n          url: pm.environment.get(\"baseurl\")+ \":\" + pm.environment.get(\"wealth-managemnt-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_wealth_management_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n              console.log(\"Access token set:\", jsonData.accessToken);\n          }\n      });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{wealth-managemnt-service-port}}/api/v1/mmf/accounts/2939418?book=CAPITAL",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{wealth-managemnt-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "mmf",
+                "accounts",
+                "2939418"
+              ],
+              "query": [
+                {
+                  "key": "book",
+                  "value": "CAPITAL"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02_GetListOfSweepIns",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{wealth-managemnt-service-port}}/api/v1/mmf/sweep-ins?fromDate=2020-01-02&toDate=2020-01-07",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{wealth-managemnt-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "mmf",
+                "sweep-ins"
+              ],
+              "query": [
+                {
+                  "key": "fromDate",
+                  "value": "2020-01-02"
+                },
+                {
+                  "key": "toDate",
+                  "value": "2020-01-07"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03_GetListOfSweepOuts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{wealth-managemnt-service-port}}/api/v1/mmf/sweep-outs?fromDate=2020-01-02&toDate=2020-01-07",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{wealth-managemnt-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "mmf",
+                "sweep-outs"
+              ],
+              "query": [
+                {
+                  "key": "fromDate",
+                  "value": "2020-01-02"
+                },
+                {
+                  "key": "toDate",
+                  "value": "2020-01-07"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04_GetCustodianCashByClientId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{wealth-managemnt-service-port}}/api/v1/mmf/custodian-cash?clientId=2001214&clientId=2001215",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{wealth-managemnt-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "mmf",
+                "custodian-cash"
+              ],
+              "query": [
+                {
+                  "key": "clientId",
+                  "value": "2001214"
+                },
+                {
+                  "key": "clientId",
+                  "value": "2001215"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05_GetCustodianPositions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseurl}}:{{wealth-managemnt-service-port}}/api/v1/mmf/custodian-positions?asOfDate=2026-02-04",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{wealth-managemnt-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "mmf",
+                "custodian-positions"
+              ],
+              "query": [
+                {
+                  "key": "asOfDate",
+                  "value": "2026-02-04"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "06_SweepInsConfirmations",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\"sweepNo\": 29, \"source\": \"CAPITAL\"},\n    {\"sweepNo\": 35, \"source\": \"CAPITAL\"},\n    {\"sweepNo\": 52, \"source\": \"CAPITAL\"}\n]\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}:{{wealth-managemnt-service-port}}/api/v1/mmf/sweep-ins/confirmations",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{wealth-managemnt-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "mmf",
+                "sweep-ins",
+                "confirmations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "07_PushProfitDistribution",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{v_access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"sweepDate\": \"2025-04-20\",\n        \"accountNumber\": \"1005\",\n        \"amount\": 2500.75,\n        \"referenceId\": \"900000001\",\n        \"source\": \"CAPITAL\"\n    },\n    {\n        \"sweepDate\": \"2025-04-20\",\n        \"accountNumber\": \"1006\",\n        \"amount\": 3700.5,\n        \"referenceId\": \"900000002\",\n        \"source\": \"MMF\"\n    }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}:{{wealth-managemnt-service-port}}/api/v1/mmf/profit-distributions",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{wealth-managemnt-service-port}}",
+              "path": [
+                "api",
+                "v1",
+                "mmf",
+                "profit-distributions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "00_login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"consumer\": \"wealth_management_service_app\",\n    \"consumerPassword\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseurl}}:{{wealth-managemnt-service-port}}/api/auth/login",
+              "host": [
+                "{{baseurl}}"
+              ],
+              "port": "{{wealth-managemnt-service-port}}",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
