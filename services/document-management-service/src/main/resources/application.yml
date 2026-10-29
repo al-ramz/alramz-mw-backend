@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: document-management-service
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+server:
+  host: localhost

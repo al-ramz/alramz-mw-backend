@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/prod/sql
+      # A new service may have no changesets yet (sql/ absent) — without this Liquibase fails startup.
+      errorIfMissingOrEmpty: false

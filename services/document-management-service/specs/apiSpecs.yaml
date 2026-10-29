@@ -1,0 +1,66 @@
+openapi: 3.0.3
+
+info:
+  title: Document Management API
+  version: 1.0.0
+  description: API for document management.
+
+servers:
+  - url: http://localhost:8086
+    description: Local Development
+  - url: https://api-dev.alramz.com/document-management
+    description: Development Environment
+  - url: https://api-test.alramz.com/document-management
+    description: Test Environment
+  - url: https://api-preprod.alramz.com/document-management
+    description: Pre-Production Environment
+  - url: https://api.alramz.com/document-management
+    description: Production Environment
+
+security:
+  - BearerAuth: []
+
+paths:
+  /api/v1/info:
+    get:
+      tags:
+        - Info
+      summary: Service info
+      description: Returns basic service information.
+      operationId: getInfo
+      responses:
+        '200':
+          description: Info retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  service: document-management-service
+                  version: 1.0.0
+
+  # Add every new endpoint's contract here BEFORE writing the controller — the
+  # openapi-generator-maven-plugin (bound to `generate`, see pom.xml) produces interface-only
+  # Spring MVC stubs (com.alramz.api) and DTOs (com.alramz.model) from this file on every build.
+  # A hand-written @RestController implements the generated interface; it is not written from
+  # scratch against this YAML by hand.
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    GenericResponse:
+      type: object
+      properties:
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        response:
+          type: object
