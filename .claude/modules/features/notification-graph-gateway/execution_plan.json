@@ -1,0 +1,247 @@
+{
+  "feature_slug": "notification-graph-gateway",
+  "spec_path": ".claude/modules/features/notification-graph-gateway/spec.md",
+  "howtos_consulted": [
+    ".claude/howtos/new-endpoint-elicitation-checklist.md",
+    ".claude/howtos/openapi-contract-first-controllers.md",
+    ".claude/howtos/api-collection-http-requests.md",
+    ".claude/howtos/configuration-properties.md",
+    ".claude/howtos/jwt-security-and-public-endpoints.md",
+    ".claude/howtos/exception-handling.md",
+    ".claude/howtos/request-response-and-db-audit-logging.md",
+    ".claude/howtos/testing-patterns.md"
+  ],
+  "target_services": ["alramz-notification-service"],
+  "target_files": [
+    {
+      "path": "services/alramz-notification-service/specs/openapi.yaml",
+      "status": "modified",
+      "change_summary": "Amend POST /api/v1/email/send in place (keep the full /api/v1 path, operationId sendEmail and tag Email, as this file already does; EmailController has no class-level @RequestMapping). (1) EmailRequest: to/cc/bcc are plain strings described as comma-separated lists, with NO format: email; from is a plain string; subject maxLength 255; body maxLength 10000; attachments maxItems 10. (2) EmailAttachment: fileName (required), contentType (optional), content (format: byte, required). Add x-field-extra-annotation '@com.fasterxml.jackson.annotation.JsonAlias({\"filename\",\"name\"})' on fileName and '@com.fasterxml.jackson.annotation.JsonAlias({\"contenttype\"})' on contentType. (3) Remove the EmailSendResponse and ErrorResponse schemas. Add GenericResponse {responseCode, responseMessage, errorCode nullable, errorMsg nullable, response: object} and EmailSendResult {correlationId: string}. (4) Responses: 200, one 400 example per code MGE-V-001..006, 401 with a description only, 403 with two examples (role failure with errorCode null; MGE-V-007), 413 MGE-V-008, 429 with a `Retry-After` response header, 500 and 502. Use the bodies from spec 3.4. No 503. (5) Update the request examples to use fileName/contentType and a comma list in `to`. Keep the maxLength/maxItems values in the contract. They document the defaults of the app.email.* limits, and the service enforces them (see technical_gaps 'validation single path')."
+    },
+    {
+      "path": "services/alramz-notification-service/pom.xml",
+      "status": "modified",
+      "change_summary": "In the openapi-generator-maven-plugin <configuration>: set <modelsToGenerate>GenericResponse,EmailSendResult,EmailRequest,EmailAttachment</modelsToGenerate>, and add <useBeanValidation>false</useBeanValidation> inside <configOptions>. That removes @Valid from the generated ApiApi parameter and the @NotNull/@Size constraints from the generated models, so EmailServiceImpl is the only place validation runs, for both HTTP and in-process calls. Do NOT fix the <tags><useTags> nesting (spec out-of-scope; ApiApi stays). No dependency changes."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/model/EmailRequest.java",
+      "status": "deleted",
+      "change_summary": "Delete the hand-copied model. It is now generated from openapi.yaml into target/generated-sources (same FQCN com.alramz.model.EmailRequest)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/model/EmailAttachment.java",
+      "status": "deleted",
+      "change_summary": "Delete the hand-copied model. It is now generated (fields fileName/contentType/content, with @JsonAlias from x-field-extra-annotation)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/controllers/EmailController.java",
+      "status": "modified",
+      "change_summary": "sendEmail now returns ResponseEntity<GenericResponse>. Add @JwtSecured(roles = \"APP_NOTIFICATION\") (com.alramz.jwt.annotation.JwtSecured). The body calls emailService.sendEmail(request), which is now void, then returns 200 with GenericResponse{responseCode \"200\", responseMessage \"OK\", errorCode null, errorMsg null, response = new EmailSendResult().correlationId(cid)}, where cid = MDCUtil.getCorrelationId() or UUID.randomUUID().toString() when null. Do NOT add @Loggable: with company.logging.aspect.enabled it logs method args, and the generated EmailRequest.toString() includes body, subject and addresses."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/service/EmailService.java",
+      "status": "modified",
+      "change_summary": "Change the signature to `void sendEmail(EmailRequest request)` (generated com.alramz.model.EmailRequest). Javadoc the in-process contract: returns normally when Graph accepts the message. Throws EmailValidationException (getCode() MGE-V-0xx) or EmailServiceException (getCode() MGE-B-00x, getRetryAfter() nullable). Throws EmailConfigurationException when no Graph client is configured."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java",
+      "status": "modified",
+      "change_summary": "Rewrite the body. Keep the constructor shape (EmailProperties, ObjectProvider<GraphServiceClient<?>>, Tracer) and the graph.send_mail span. VALIDATION, hand-coded and in the spec 3.5 order, throws EmailValidationException(code, message) with the exact 3.5 texts: V-001 missing (collect to, from, subject, body when null or blank; also `to` with no tokens after split(',')+trim+drop-empty); V-002 regex ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$ per token (collect to, cc, bcc, from); V-003 subject > maxSubjectLength, then body > maxBodyLength; V-004 count > maxAttachments; V-005 first bad item, 1-based (fileName null or blank; content null or empty); V-008 sum of content.length > maxTotalAttachmentSizeBytes; V-007 from not in allowedSenders (equalsIgnoreCase; an empty list rejects everything). Then: graphClient = provider.getIfAvailable(); if null, throw the existing EmailConfigurationException (unchanged class). BUILD Message: ItemBody HTML if body.strip().startsWith(\"<\"), else TEXT; to/cc/bcc Recipient lists, with cc/bcc set only when non-empty; FileAttachment{name=fileName, contentType, contentBytes=content}; UserSendMailParameterSet.withSaveToSentItems(true). SEND: on a GraphServiceException with getResponseCode()==401, retry the post once; a second 401 throws MGE-B-001. A 429 throws MGE-B-002 with retryAfter parsed from the exception's response headers if the SDK exposes them (see technical_gaps 'retry-after'), otherwise null. Any other GraphServiceException throws MGE-B-003. Any other Exception (ClientException, token or IO failure) throws MGE-B-004. LOGGING happens here, not in the handler, so in-process calls are logged too. Write one line per outcome with: correlationId (MDC or new UUID), invoker (JwtContext#getCurrentApplication(), or \"unknown\"; inject JwtContext via ObjectProvider so in-process and non-web use stays safe), from, recipient counts, attachment count, total bytes, body type, Graph status, Graph error.code and the MGE code. NEVER pass a GraphServiceException as the logger throwable, to span.error(), or as the cause of EmailServiceException. Its getMessage() embeds the request URL and a truncated request body (see technical_gaps 'graph exception message leak'). Tag the span messaging.status=failure plus the MGE code instead. MGE-B-004 may log the stack trace, because that cause is never a GraphServiceException. Remove the response-building code and the EmailSendResponse import."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/exception/EmailServiceException.java",
+      "status": "modified",
+      "change_summary": "Replace the `int statusCode` field and constructors with `(String code, String message, Throwable cause, String retryAfter)` plus a `(String code, String message)` convenience constructor. Getters: getCode() and getRetryAfter(). It carries no HTTP status. The handler maps the code to a status (exception-handling.md: 'Don't put HTTP status logic inside the exception class'). Only caller today: EmailServiceImpl (grep-verified)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+      "status": "modified",
+      "change_summary": "Rewrite. Keep @RestControllerAdvice(basePackages = \"com.alramz.controllers\") and add @Order(0) (wealth precedent; the starter's LoggingExceptionHandler is LOWEST_PRECEDENCE). Every response is a GenericResponse built by one private helper: responseCode = String.valueOf(status.value()), responseMessage = reason phrase, errorCode, errorMsg, response = EmailSendResult(correlationId from MDCUtil.getCorrelationId(), or a new UUID). Handlers: EmailValidationException maps MGE-V-007 to 403, MGE-V-008 to 413, everything else to 400, with errorCode/errorMsg = getCode()/getMessage(). EmailServiceException maps MGE-B-002 to 429, MGE-B-004 to 500 and others to 502; errorCode/errorMsg are null; add a Retry-After header when getRetryAfter() != null; no logging (the service already logged). HttpMessageNotReadableException walks the cause chain for tools.jackson.core.JacksonException (Spring Boot 4 / Jackson 3, as in wealth handleNotReadable). If the path is attachments[n].content, return MGE-V-005 'Invalid attachment at position <n+1>: content is not valid Base64'; otherwise MGE-V-006 'Malformed JSON request'. AccessDeniedException returns 403 with errorCode and errorMsg null. Exception returns 500 and logs 'MGE-B-004 Unhandled email gateway error' with the stack. This also covers EmailConfigurationException (500, per spec E19), so it needs no dedicated method. Drop the MethodArgumentNotValidException and ConstraintViolationException handlers: with useBeanValidation=false the endpoint cannot raise them, and the catch-all would still give 500 if one ever appeared."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/config/GraphConfig.java",
+      "status": "modified",
+      "change_summary": "Delete lines 47-50 (credential.getToken(...).block() and LOG.info(\"Access Token: {}\")) and the now-unused imports com.azure.core.credential.AccessToken and com.azure.core.credential.TokenRequestContext. Nothing else changes: keep the default GraphServiceClient.builder() middleware, including RetryHandler."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/config/EmailProperties.java",
+      "status": "modified",
+      "change_summary": "Keep the record. Replace `long maxAttachmentSizeBytes` with `long maxTotalAttachmentSizeBytes` and add `List<String> allowedSenders` (normalise null to List.of() in a compact constructor). Keep maxSubjectLength, maxBodyLength and maxAttachments (see plan_critique on config-key deletion). The record style is kept rather than converted to the Lombok+PREFIX convention, to keep the diff minimal. Binding stays on AlramzNotificationServiceApplication's @EnableConfigurationProperties."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/config/RequestSizeLimitConfig.java",
+      "status": "new",
+      "change_summary": "The request-size cap the user chose in Q5. A @Configuration implementing WebMvcConfigurer. addInterceptors registers one lambda HandlerInterceptor on path \"/api/v1/email/send\". preHandle throws EmailValidationException(\"MGE-V-008\", \"Attachments size limit exceeded\") when request.getContentLengthLong() > maxTotalAttachmentSizeBytes * 4 / 3 + 262_144 (4,262,144 at the default). The limit is derived, not a new key. preHandle runs before @RequestBody is read, after Spring Security (so unauthenticated callers get 401, not 413), and its exception is rendered by GlobalExceptionHandler, so no JSON is written by hand. Add the comment `// ponytail: chunked requests (no Content-Length) bypass this; the decoded-total check after binding still applies. Bound the input stream if chunked abuse appears.` This replaces the spec's OncePerRequestFilter (see plan_critique)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application.yml",
+      "status": "modified",
+      "change_summary": "Under app.email: replace `max-attachment-size-bytes: 10485760` with `max-total-attachment-size-bytes: 3000000` and add `allowed-senders: ${APP_EMAIL_ALLOWED_SENDERS:notification@alramz.ae}`. Keep max-subject-length/max-body-length/max-attachments. Remove `- /api/v1/email/send` from company.jwt.permit-all-urls (line 30)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-dev.yml",
+      "status": "modified",
+      "change_summary": "Same app.email edit as application.yml (allowed-senders default notification@alramz.ae). Remove `- /api/v1/email/send` (line 66). Keep /api/v1/info and /actuator/prometheus."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-docker.yml",
+      "status": "modified",
+      "change_summary": "Same app.email edit (default notification@alramz.ae). Remove `- /api/v1/email/send` (line 32)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-test.yml",
+      "status": "modified",
+      "change_summary": "Same app.email edit (default notification@alramz.ae). Remove `- /api/v1/email/send` (line 32)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-preprod.yml",
+      "status": "modified",
+      "change_summary": "Same app.email edit (default notification@alramz.ae). Remove `- /api/v1/email/send` (line 32)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-prod.yml",
+      "status": "modified",
+      "change_summary": "Same app.email edit, but allowed-senders defaults to `${APP_EMAIL_ALLOWED_SENDERS:cm@alramz.ae}`. Remove `- /api/v1/email/send` (line 32)."
+    },
+    {
+      "path": "services/alramz-notification-service/apiCollection.http",
+      "status": "modified",
+      "change_summary": "Add `@authToken=<paste a JWT carrying role APP_NOTIFICATION>` under @baseUrl. This also fixes the pre-existing undefined {{authToken}} used by the Scheduler block (api-collection howto pitfall 3). Rewrite the two send blocks with `Authorization: Bearer {{authToken}}`, synthetic recipients (replacing the real gtalele@alramz.ae address, pitfall 2), from notification@alramz.ae (allow-listed), a comma list in `to` plus cc, and an attachment using fileName/contentType. Add one `### Send Email -ve test case` block (invalid address in `to`, which expects 400 MGE-V-002) right after. No register/login blocks: this service has no JWT user tables, and adding that flow is out of scope."
+    }
+  ],
+  "test_files": [
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/service/impl/EmailServiceImplTest.java",
+      "status": "new",
+      "covers": "Mockito-first, direct construction: real EmailProperties(255, 10000, 10, 3_000_000, List.of(\"notification@alramz.ae\")), Tracer.NOOP, ObjectProvider mock returning a deep-stubbed GraphServiceClient, and an ArgumentCaptor on users(from).sendMail(UserSendMailParameterSet). Covers: 2 to + 1 cc + 1 bcc recipients; blank cc gives null ccRecipients; TEXT for 'Hello' and HTML for '  <p>Hi</p>'; saveToSentItems true; FileAttachment name/contentType/contentBytes; E4 V-001 (including to=' , ' and the field-list text); E5 V-002; E6 V-003 (256-char subject called in-process: this proves validation runs outside HTTP); E7 V-004; E8 V-005 (missing fileName or content, 1-based position); E10 V-008 at 3,000,001 bytes; E12 V-007 (case-insensitive match passes, unknown sender fails, empty list fails); E13 401 then success makes exactly 2 posts; E14 401 twice gives MGE-B-001; E15/E16 429 gives MGE-B-002 with retryAfter \"30\" or null; E17 400/500 gives MGE-B-003; E18 ClientException/RuntimeException gives MGE-B-004; E19 no client gives EmailConfigurationException. Plus one logback ListAppender assertion that no captured line contains the body, the subject, an attachment byte string or a recipient address."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java",
+      "status": "new",
+      "covers": "Built with `new GlobalExceptionHandler()`, with an MDC correlation id set. Checks status, responseCode, responseMessage, errorCode, errorMsg and response.correlationId for: V-001..V-006 (400), V-007 (403), V-008 (413), AccessDeniedException (403, errorCode and errorMsg null; E2), MGE-B-001/003 (502), MGE-B-002 with and without Retry-After (429, header present or absent; E15/E16), MGE-B-004 and generic Exception (500), EmailConfigurationException (500; E19). Also checks HttpMessageNotReadableException wrapping a real Jackson 3 exception: from invalid Base64 at attachments[1].content (V-005, position 2) and from malformed JSON (V-006; E3)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/controllers/EmailControllerTest.java",
+      "status": "new",
+      "covers": "Direct construction with a mocked EmailService. Success returns 200 with the envelope {\"200\",\"OK\",null,null,{correlationId}}, where correlationId equals the MDC correlation id (that is, the X-Correlation-ID the starter filter put in MDC). Also checks the UUID fallback when MDC is empty, and that sendEmail carries @JwtSecured(roles = \"APP_NOTIFICATION\") (reflection)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/model/EmailRequestBindingTest.java",
+      "status": "new",
+      "covers": "E9: with the Jackson 3 JsonMapper (the one Spring MVC uses on Boot 4), attachment JSON using filename/contenttype and JSON using name both bind to fileName/contentType on the generated EmailAttachment. This proves x-field-extra-annotation (or the fallback mix-in) took effect. Invalid Base64 in content throws a JacksonException whose path ends at attachments[n].content."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/config/RequestSizeLimitConfigTest.java",
+      "status": "new",
+      "covers": "E11: the interceptor, built directly with a real EmailProperties and MockHttpServletRequest. Content-Length 4,262,145 throws EmailValidationException MGE-V-008. 4,262,144 and a missing Content-Length (-1) pass."
+    }
+  ],
+  "liquibase_changeset": {
+    "applicable": false,
+    "next_changeset_file": null,
+    "profile_folders": []
+  },
+  "config_changes": {
+    "permit_all_urls": [
+      "REMOVE `- /api/v1/email/send` from company.jwt.permit-all-urls in application.yml, application-dev.yml, application-docker.yml, application-test.yml, application-preprod.yml, application-prod.yml (nothing added)"
+    ],
+    "new_properties": [
+      "app.email.allowed-senders (List<String>): ${APP_EMAIL_ALLOWED_SENDERS:notification@alramz.ae} in base/dev/docker/test/preprod; ${APP_EMAIL_ALLOWED_SENDERS:cm@alramz.ae} in prod",
+      "app.email.max-total-attachment-size-bytes: 3000000 in all 6 files, replacing (deleting) app.email.max-attachment-size-bytes",
+      "app.email.max-subject-length / max-body-length / max-attachments: KEPT unchanged (spec proposed deleting them; see plan_critique)"
+    ],
+    "masking_keys_to_add": []
+  },
+  "execution_steps": [
+    "Step 0 (verify before coding, read-only): run `unzip -p ~/.m2/repository/com/microsoft/graph/microsoft-graph-core/2.0.4/microsoft-graph-core-2.0.4-sources.jar com/microsoft/graph/http/GraphServiceException.java` and the same for com/microsoft/graph/httpcore/RetryHandler.java, middlewareoption/RetryOptions.java and httpcore/HttpClients.java. Confirm the technical_gaps 'sdk-retry' and 'retry-after' findings. If GraphServiceException has no public accessor for the response headers, implement E16 behaviour only (retryAfter always null) and drop the Retry-After assertion from E15. Do not add a custom OkHttp interceptor.",
+    "Step 1: Edit specs/openapi.yaml (contract first) and pom.xml (modelsToGenerate + useBeanValidation=false). Delete src/main/java/com/alramz/model/EmailRequest.java and EmailAttachment.java. Run `mvn -pl services/alramz-notification-service -am generate-sources`. Then grep target/generated-sources/openapi/**/model/EmailAttachment.java for `JsonAlias`. If it is absent, register a Jackson 3 mix-in via a JsonMapperBuilderCustomizer bean inside RequestSizeLimitConfig (renamed to WebConfig) rather than adding a new file. Confirm ApiApi#sendEmail returns ResponseEntity<GenericResponse> and has no @Valid.",
+    "Step 2: GraphConfig: delete the token fetch/log lines 47-50 and the two unused imports.",
+    "Step 3: EmailProperties reshape. Edit all 6 application*.yml (app.email keys + permit-all removal).",
+    "Step 4: EmailServiceException (code + retryAfter, no status). EmailService signature becomes void. Leave EmailValidationException and EmailConfigurationException unchanged.",
+    "Step 5: Rewrite EmailServiceImpl (validation order, Graph message, 401 single retry, 429/other/unexpected mapping, safe logging, span tags).",
+    "Step 6: Rewrite GlobalExceptionHandler (@Order(0), GenericResponse envelope, code-to-status mapping, Retry-After header, Jackson 3 cause walk, AccessDeniedException, catch-all). Update EmailController (GenericResponse, @JwtSecured).",
+    "Step 7: Add RequestSizeLimitConfig (interceptor).",
+    "Step 8: Update apiCollection.http.",
+    "Step 9: Add the 5 test classes (Mockito-first, direct construction, AssertJ; no @WebMvcTest/MockMvc).",
+    "Step 10: Verify: `mvn -pl services/alramz-notification-service -am clean test-compile`, then `mvn -pl services/alramz-notification-service -am test`. Then grep: `Access Token` and `getToken(` in src/main return nothing; `/api/v1/email/send` appears in no application*.yml; `max-attachment-size-bytes` appears nowhere."
+  ],
+  "technical_gaps": [
+    {
+      "area": "other",
+      "description": "sdk-retry (caller check 1): what microsoft-graph-core 2.0.4's RetryHandler does by default. VERIFICATION LIMIT: the sources jar is present (~/.m2/repository/com/microsoft/graph/microsoft-graph-core/2.0.4/microsoft-graph-core-2.0.4-sources.jar). Grep against its uncompressed central directory confirmed it contains com/microsoft/graph/httpcore/RetryHandler.java, httpcore/middlewareoption/RetryOptions.java, httpcore/HttpClients.java, http/CoreHttpProvider.java and http/GraphServiceException.java. The entry BODIES are deflate-compressed, and this stage has no unzip/bash tool, so their source could not be read. The following comes from the upstream msgraph-sdk-java-core 2.0.x source and is unverified against the local jar. GraphServiceClient.builder().authenticationProvider(p).buildClient() uses HttpClients.createDefault(p), which installs AuthenticationHandler, RetryHandler (default RetryOptions), RedirectHandler and TelemetryHandler. RetryOptions defaults: maxRetries 3, delay 3 s (hard caps MAX_RETRIES 10, MAX_DELAY 180 s). It retries ONLY 429, 503 and 504, and only when the request body is buffered (known Content-Length, which is true for the sendMail JSON POST). The wait honours a Retry-After header parsed as integer seconds; without one it uses exponential backoff with jitter. Each wait is capped at 180 s and is a Thread.sleep on the calling (Tomcat) thread. After exhaustion, the final 429/503/504 response reaches CoreHttpProvider, which throws GraphServiceException (GraphFatalServiceException for 5xx) with getResponseCode() set. Consequences: (a) a throttled request can hold a request thread for up to about 3 x 180 s in the worst case; (b) 503/504 retries of a non-idempotent sendMail POST can deliver a duplicate email if Graph had in fact accepted the first attempt; (c) an HTTP-date Retry-After would fail parseLong and surface as an unexpected error (MGE-B-004/500).",
+      "recommendation_or_open_question": "03_implement Step 0 must confirm this with unzip before writing the E15-E17 tests. Keep the defaults per the user's Q4=A. If (a) or (b) matters operationally, a custom RetryOptions (fewer retries, no 503/504) is a follow-up, not this feature."
+    },
+    {
+      "area": "other",
+      "description": "retry-after (caller check 2): whether Retry-After can be read from the GraphServiceException thrown after retries run out. UNVERIFIED for the same reason (compressed jar). Upstream 2.0.x GraphServiceException.createFromResponse copies every response header into a private List<String> responseHeaders, formatted 'Name : value'. Whether 2.0.4 exposes it through a public getter (getResponseHeaders()) could not be confirmed. getResponseCode() == 429 is reliably available either way, so the 429 status mapping itself is not at risk.",
+      "recommendation_or_open_question": "If a getter exists, parse the first entry whose name (before ' : ') equalsIgnoreCase 'Retry-After' and pass the value through as MGE-B-002's retryAfter (E15). If none exists, return 429 without the header (E16 behaviour for every 429) and amend the E15 acceptance criterion. Do NOT add an OkHttp interceptor or a reflection hack to recover it (scope)."
+    },
+    {
+      "area": "other",
+      "description": "graph exception message leak: upstream GraphServiceException.getMessage() (non-verbose) includes the HTTP method, the request URL (/users/{from}/sendMail) and the first ~50 characters of the request body, which typically include the subject and recipients. The current EmailServiceImpl.logEmailError passes `gse` as the logger throwable, and span.error(ex) exports the same text to OTLP traces. The spec's 'handler logs internalCode and the cause' would repeat this. This is unverified against the 2.0.4 source but is the safe assumption.",
+      "recommendation_or_open_question": "Already built into the plan. Log only the status, GraphError.code/message and the MGE code. Never pass a GraphServiceException to the logger, to span.error(), or as an EmailServiceException cause. The handler does not log EmailServiceException."
+    },
+    {
+      "area": "compatibility",
+      "description": "The BOM parent is 4.1.0 (Spring Boot 4), and the wealth handler imports tools.jackson.core.JacksonException. So Spring MVC binds JSON with Jackson 3, and the pom's pinned com.fasterxml jackson-databind 2.17.1 plays no part in request binding. @JsonAlias stays in com.fasterxml.jackson.annotation, which Jackson 3 still honours.",
+      "recommendation_or_open_question": "The handler's cause walk and EmailRequestBindingTest must use Jackson 3 types (tools.jackson.*). The spec did not mention this."
+    },
+    {
+      "area": "other",
+      "description": "It is unverified (the generator jar is compressed too) whether openapi-generator 7.23.0's spring templates emit x-field-extra-annotation on model fields.",
+      "recommendation_or_open_question": "Check the generated EmailAttachment after Step 1. The fallback is a Jackson 3 mix-in via a JsonMapperBuilderCustomizer bean, placed in the existing new config class (no extra file)."
+    },
+    {
+      "area": "other",
+      "description": "Validation single path (divergence from the spec). The spec keeps the generated Bean Validation (MVC @Valid), calls jakarta Validator again in the service, and maps violations through a shared mapper. That design is internally inconsistent. MVC rejects bean violations (V-001 null, V-003, V-004, V-005) before the service's custom checks run (V-002 regex, blank, V-008, V-007), and MethodArgumentNotValidException reports a Set of violations. So the same request can get V-003 over HTTP but V-002 in-process, which breaks spec 3.6's 'same code either way' and its 3.5 ordering. Setting useBeanValidation=false makes EmailServiceImpl the only validator for both paths. It is deterministic, needs no Validator injection, no violation mapper, and no MethodArgumentNotValid/ConstraintViolation handlers. It is also how the current EmailServiceImpl already works.",
+      "recommendation_or_open_question": "Adopted. Contract maxLength/maxItems stay as documentation of the defaults. If the user insists on the spec's design, the fix for the ordering problem is for the handler to re-run the service validator on MethodArgumentNotValidException.getBindingResult().getTarget()."
+    },
+    {
+      "area": "compatibility",
+      "description": "In-process contract change versus spec 3.6. The exceptions expose getCode() (and getRetryAfter()) but NOT getStatus(), per exception-handling.md's pitfall 'Don't put HTTP status logic inside the exception class'. EmailValidationException is reused unchanged (it already has (code, message)). EmailConfigurationException stays as a distinct typed exception for misconfiguration.",
+      "recommendation_or_open_question": "Features 2 and 4 map on exception type plus code. That is enough for EML009/EML010 mapping. Record this in feature 2's spec."
+    },
+    {
+      "area": "test-coverage",
+      "description": "The spec asks for MockMvc/WebMvc tests, including 'without a JWT gets 401 and never reaches EmailService'. testing-patterns.md forbids @WebMvcTest/MockMvc by default. A @SpringBootTest would also need the AZURE_* placeholders (GraphProperties is always bound) and any other starter prerequisites, and no context test exists in this service today. So the 401 path is not exercised by a test. Coverage instead comes from: the reflection check of @JwtSecured, the AccessDeniedException-to-403 handler test, and the grep in Step 10 proving the path left permit-all-urls. The 401 itself is the starter's unchanged anyRequest().authenticated() behaviour.",
+      "recommendation_or_open_question": "Accept for this feature. Add a context smoke test (properties AZURE_*=x, app.email.service-provider=NONE) only if the user wants filter-chain coverage."
+    },
+    {
+      "area": "other",
+      "description": "Carried from the spec Self-Critique (non-blocking): (2) the single 401 retry probably reuses azure-identity's cached token, so it only helps with transient 401s; (3) MGE-B-001 maps to 502, not 401; (4) Graph 400 (e.g. a recipient the regex accepted) maps to 502; (6) allowed-sender defaults come from apiCollection/Part 4 and feature 2 must add template FROM_EMAIL values; (7) unauthenticated requests get the starter's Spring Security body, not this envelope; (8) a role-failure 403 has errorCode and errorMsg null; (10) no service.yaml sizing change.",
+      "recommendation_or_open_question": "None needs action in this plan. Each one is reflected in the target_files decisions."
+    },
+    {
+      "area": "compatibility",
+      "description": "This is a breaking HTTP change (accepted, Q2=A). The envelope changes, `name` becomes `fileName` (the alias is kept), and a JWT with ROLE_APP_NOTIFICATION is now required. Operational follow-up: the token issuer must grant APP_NOTIFICATION to calling applications before deploy. Ordering nuance: a malformed body is rejected with 400 (V-006) during argument binding, before the @JwtSecured aspect runs, so a valid-JWT caller without the role and sending bad JSON gets 400, not 403. Unauthenticated callers still get 401 first.",
+      "recommendation_or_open_question": "Announce the change to consumers. The ordering nuance is acceptable."
+    },
+    {
+      "area": "other",
+      "description": "Near-misses from the howtos, avoided: (1) @Loggable on the controller (openapi howto checklist) would log EmailRequest.toString(), which includes the body and addresses, whenever the aspect is enabled, so it is not added; (2) the bare-path rule does not apply, because this service's spec already uses /api/v1/... with no class-level @RequestMapping (local precedent kept); (3) apiCollection.http referenced {{authToken}} without defining it, which is fixed here; (4) SpotBugs will flag EI_EXPOSE_REP on the generated byte[] getter, but the BOM sets spotbugs.failOnError=false and spotbugs.skip=true, so it does not fail the build.",
+      "recommendation_or_open_question": "None."
+    },
+    {
+      "area": "other",
+      "description": "The chunked-transfer gap in the request-size cap is a known ceiling, marked with a ponytail: comment.",
+      "recommendation_or_open_question": "Bound the input stream only if abuse is observed."
+    }
+  ],
+  "plan_critique": {
+    "acceptance_criteria_coverage": "partial. Every behavioural criterion (envelope, multi-recipient, TEXT/HTML, saveToSentItems, E3-E8, E10-E12, aliases, 401 retry, 429 + Retry-After, 502/500 mapping, in-process V-003/V-007, log hygiene, apiCollection, the token-log removal, permit-all removal, @JwtSecured, allowed-senders and max-total config) has a target file and a test. Five criteria are deliberately AMENDED and need user sign-off: (1) 'none define max-subject-length, max-body-length or max-attachments' is replaced by 'these 3 keys are kept; only max-attachment-size-bytes is removed'; (2) 'EmailConfigurationException is deleted' is replaced by 'kept, mapped to 500 by the catch-all'; (3) 'MockMvc/WebMvc tests' are replaced by direct-construction tests, and the 'no JWT gets 401' test is not written (see technical_gaps); (4) E15's Retry-After header is conditional on the SDK exposing response headers; (5) spec 3.6's getStatus() becomes getCode(). The E11 request-size cap is covered, by an interceptor rather than a filter.",
+    "blast_radius_concerns": [
+      "openapi.yaml: removing EmailSendResponse/ErrorResponse and renaming name to fileName breaks every existing HTTP caller (accepted, Q2=A). No other schema references them (grep-verified).",
+      "GlobalExceptionHandler's basePackages also covers ApplicationController (/api/v1/info). Its unexpected errors now come back as a GenericResponse 500 instead of EmailSendResponse. That is harmless.",
+      "Removing /api/v1/email/send from permit-all in all 6 profiles means every environment needs callers holding APP_NOTIFICATION tokens at deploy time.",
+      "The EmailService signature change (to void) has no callers besides EmailController today (grep-verified). Features 2 and 4 will build on the new signature."
+    ],
+    "scope_expansion_critique": {
+      "delete_config_keys": "Rejected in part. Deleting max-attachment-size-bytes is a direct consequence of the user's Q5=A: it is replaced by max-total-attachment-size-bytes, and the per-file cap was the rejected option C. It is therefore in scope. Deleting max-subject-length, max-body-length and max-attachments was the spec's own idea. Its 'one source of truth' argument only holds if generated Bean Validation enforces the limits, and that design breaks the spec's own deterministic ordering and HTTP/in-process parity (technical_gaps 'validation single path'). Keeping the keys means no yml churn for them, the existing EmailProperties fields stay, and the service keeps enforcing them as it does today. The remaining risk is that the contract's documented maxLength drifts if someone overrides a key. That is low and cosmetic.",
+      "delete_EmailConfigurationException": "Rejected. It was not requested, and it gives a smaller diff only on paper (the throw site changes, a file is deleted, and the in-process contract changes). A missing Graph client is a distinct failure mode: misconfiguration, not a Graph failure. exception-handling.md asks for one typed exception per distinct failure mode. The rewritten handler's catch-all already returns 500 and logs MGE-B-004 for it, which satisfies spec E19 with zero new code. The class is left untouched.",
+      "content_length_filter_vs_spring_settings": "A cap is needed: the user chose 'servlet cap' in Q5=A, and the 512m heap would otherwise buffer an arbitrarily large JSON body before the decoded-total check. The spec is right that Spring's settings do not cover it. server.tomcat.max-http-form-post-size applies only to application/x-www-form-urlencoded parameter parsing. spring.servlet.multipart.max-file-size/max-request-size apply only to multipart/form-data. server.tomcat.max-swallow-size only limits how many bytes Tomcat discards after an aborted upload; it never rejects an accepted body. Spring Boot exposes no Tomcat property that caps a JSON request body. The spec's OncePerRequestFilter is still heavier than needed: it would hand-serialise a second copy of the envelope (ObjectMapper and correlation logic), and its order relative to the security chain needs care (a 413 could precede the 401 for unauthenticated callers). A HandlerInterceptor scoped to /api/v1/email/send runs before @RequestBody is read, runs after security, and throws EmailValidationException(MGE-V-008), which the one GlobalExceptionHandler renders. It is the same derived limit with less code and a single envelope source."
+    },
+    "confidence": "medium",
+    "notes": "The weakest part is the 429 path. Whether GraphServiceException 2.0.4 exposes Retry-After, and the exact RetryHandler defaults, could not be read: the sources jar is in ~/.m2, but its entries are compressed and this stage has no unzip. The findings rest on upstream 2.0.x source knowledge and must be confirmed in 03_implement Step 0. The fallbacks (E16 behaviour, no header) are cheap and keep scope tight. The second risk is process, not technical. This plan deliberately diverges from five spec acceptance criteria (config-key and EmailConfigurationException deletions, validation via generated Bean Validation, MockMvc tests, getStatus()) in favour of a smaller design that also fixes an ordering inconsistency in the spec. None is costly to reverse, and nothing is implemented yet, but the user should confirm the amended criteria before 03_implement, since they are strict about scope.",
+    "user_decisions": []
+  }
+}

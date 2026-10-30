@@ -1,6 +1,8 @@
 @baseUrl=http://localhost:8080
 
-@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYXRhX3ZhbGlkYXRpb25fYXBwIiwiaWF0IjoxNzkxNTM0MDg2LCJleHAiOjE3OTE1MzQ5ODYsInJvbGVzIjpbIkFQUF9EQVRBX1ZBTElEQVRJT04iXSwiYXBwbGljYXRpb24iOiJkYXRhLXZhbGlkYXRpb24tc2VydmljZSIsImVudmlyb25tZW50IjoibG9jYWwifQ.k80f6C_jWXEL7S0zOFT1BNtzq_oBOpR9s5pkTvUZOjA
+@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYXRhX3ZhbGlkYXRpb25fYXBwIiwiaWF0IjoxNzkzMTczOTQ1LCJleHAiOjE3OTMyNjAzNDUsInJvbGVzIjpbIkFQUF9EQVRBX1ZBTElEQVRJT04iXSwiYXBwbGljYXRpb24iOiJkYXRhLXZhbGlkYXRpb24tc2VydmljZSIsImVudmlyb25tZW50IjoibG9jYWwifQ.5ga4PybxhTB6RfsSo-Tu4EtwMt-ZAJifJSmJfecvZ58
+
+### Info 
 GET {{baseUrl}}/api/v1/info
 
 
@@ -262,6 +264,128 @@ Authorization: Bearer {{authToken}}
     "kyc_match": "false",
     "kyc_match_details": {
         "backgroundCheck": null
+    }
+}
+
+###
+
+### Register DFM investor
+POST {{baseUrl}}/api/v1/dfm/investors
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+securitykey: 342b8f1816e9409fa2d8922b390f5796
+X-Correlation-Id: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
+
+{
+    "requestId": "2397142a-e3a0-4342-b4a5-8c052b3c9d06",
+    "firstName": "Rim",
+    "lastName": "Tawfik",
+    "fullNameAr": "Rim AS",
+    "securitykey": "1f4e864b3d164e2ab2d38d8d7d37abdc",
+    "fullNameEn": "Rim Tawfik",
+    "dateOfBirth": "2000-06-12",
+    "gender": "F",
+    "nationality": "EG",
+    "mobile": "+971502540238",
+    "email": "rtawfik@alramz.ae",
+    "address": {
+        "country": "AE",
+        "city": "Dubai",
+        "line": "Mudon Arabella 1",
+        "poBox": "9700",
+        "phone": "+97143055543"
+    },
+    "dividendPayment": {
+        "method": "BANK",
+        "aedIban": "AE080330000010795845774"
+    },
+    "portfolioOptions": [
+        "CASH"
+    ],
+    "crs": {
+        "resident": true,
+        "countries": [
+            {
+                "country": "CN",
+                "hasTin": false,
+                "noTinReason": "A",
+                "whyNoTinIssued": "Country does not issue TIN"
+            }
+        ]
+    },
+    "fatca": {
+        "usPerson": false
+    },
+    "emiratesId": {
+        "eidNumber": "784-2000-5932409-3",
+        "expiryDate": "2029-02-11",
+        "frontImage": "/9j/4AAQSkZJRgABAQEAYABgAAD/4QBmRXhpZgAATU0AKgAAAAgABgESAAMAAAABAAEAAAMBAAUAAAABAAAAVgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIAAcAHwMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP1x1/8AZu+JWhfGDVtc8EeIPDvh/SvEfja31nVozuN1c6UlhYxvArNC6I7XMWoOYwCjfbTLvWTIqp4R/Z/+MyfD/V7fX/F2n3nia+vvDV7FeR67dvaxjT76J7tFhNuoi862gVm2ZWaW4kRkjRA8hRS8gW5mxfBX9pTwro+nrbfEbSfElxFq2lXV8dTuESZrOG5v3v4oPJsYUMk8D2EaiX5AY5DmPCs1f9gvSfjt4mi8K+I/H3jKz1Lw6uiSw6lbYTz9Q1Rru8aSWPbHgWyxPaRLko6vZyYUJITIUU79Qsf/2Q==",
+        "backImage": "/9j/4AAQSkZJRgABAQEAYABgAAD/4QBmRXhpZgAATU0AKgAAAAgABgESAAMAAAABAAEAAAMBAAUAAAABAAAAVgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIAAcAHwMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP1x1/8AZu+JWhfGDVtc8EeIPDvh/SvEfja31nVozuN1c6UlhYxvArNC6I7XMWoOYwCjfbTLvWTIqp4R/Z/+MyfD/V7fX/F2n3nia+vvDV7FeR67dvaxjT76J7tFhNuoi862gVm2ZWaW4kRkjRA8hRS8gW5mxfBX9pTwro+nrbfEbSfElxFq2lXV8dTuESZrOG5v3v4oPJsYUMk8D2EaiX5AY5DmPCs1f9gvSfjt4mi8K+I/H3jKz1Lw6uiSw6lbYTz9Q1Rru8aSWPbHgWyxPaRLko6vZyYUJITIUU79Qsf/2Q=="
+    },
+    "passport": {
+        "passportNumber": "VH4118188",
+        "expiryDate": "2029-09-19",
+        "imageType": "jpg",
+        "image": "/9j/4AAQSkZJRgABAQEAYABgAAD/4QBmRXhpZgAATU0AKgAAAAgABgESAAMAAAABAAEAAAMBAAUAAAABAAAAVgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIAAcAHwMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP1x1/8AZu+JWhfGDVtc8EeIPDvh/SvEfja31nVozuN1c6UlhYxvArNC6I7XMWoOYwCjfbTLvWTIqp4R/Z/+MyfD/V7fX/F2n3nia+vvDV7FeR67dvaxjT76J7tFhNuoi862gVm2ZWaW4kRkjRA8hRS8gW5mxfBX9pTwro+nrbfEbSfElxFq2lXV8dTuESZrOG5v3v4oPJsYUMk8D2EaiX5AY5DmPCs1f9gvSfjt4mi8K+I/H3jKz1Lw6uiSw6lbYTz9Q1Rru8aSWPbHgWyxPaRLko6vZyYUJITIUU79Qsf/2Q=="
+    },
+    "signature": {
+        "imageType": "jpg",
+        "image": "/9j/4AAQSkZJRgABAQEAYABgAAD/4QBmRXhpZgAATU0AKgAAAAgABgESAAMAAAABAAEAAAMBAAUAAAABAAAAVgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIAAcAHwMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP1x1/8AZu+JWhfGDVtc8EeIPDvh/SvEfja31nVozuN1c6UlhYxvArNC6I7XMWoOYwCjfbTLvWTIqp4R/Z/+MyfD/V7fX/F2n3nia+vvDV7FeR67dvaxjT76J7tFhNuoi862gVm2ZWaW4kRkjRA8hRS8gW5mxfBX9pTwro+nrbfEbSfElxFq2lXV8dTuESZrOG5v3v4oPJsYUMk8D2EaiX5AY5DmPCs1f9gvSfjt4mi8K+I/H3jKz1Lw6uiSw6lbYTz9Q1Rru8aSWPbHgWyxPaRLko6vZyYUJITIUU79Qsf/2Q=="
+    }
+}
+
+###
+
+### Register DFM investor -ve test case (no address.country -> 400 DFN001)
+POST {{baseUrl}}/api/v1/dfm/investors
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "requestId": "3f2b8c1e-7d4a-4f6b-9c2e-1a0b9d8e7f60",
+    "firstName": "Test",
+    "lastName": "User",
+    "fullNameEn": "Test User",
+    "fullNameAr": "مستخدم تجريبي",
+    "dateOfBirth": "1990-01-15",
+    "gender": "M",
+    "nationality": "AE",
+    "mobile": "+971500000000",
+    "email": "test.user@example.com",
+    "address": {
+        "city": "Dubai",
+        "line": "Example Street 1",
+        "poBox": "00000"
+    },
+    "dividendPayment": {
+        "method": "BANK",
+        "aedIban": "AE000000000000000000000"
+    },
+    "portfolioOptions": [
+        "CASH"
+    ],
+    "crs": {
+        "resident": true,
+        "countries": [
+            {
+                "country": "AE",
+                "hasTin": false,
+                "noTinReason": "B"
+            }
+        ]
+    },
+    "fatca": {
+        "usPerson": false
+    },
+    "emiratesId": {
+        "eidNumber": "784-0000-0000000-0",
+        "expiryDate": "2030-01-01",
+        "frontImage": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+        "backImage": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+    },
+    "signature": {
+        "imageType": "png",
+        "image": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
     }
 }
 

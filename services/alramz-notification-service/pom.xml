@@ -47,9 +47,28 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-liquibase</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc11</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.database.nls</groupId>
+            <artifactId>orai18n</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -192,14 +211,13 @@
                                 <removeUnusedImports>true</removeUnusedImports>
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <useJakartaEe>true</useJakartaEe>
-                                <tags>
-                                    <useTags>true</useTags>
-                                </tags>
+                                <useTags>true</useTags>
                                 <performBeanValidation>true</performBeanValidation>
                                 <openApiNullable>false</openApiNullable>
                                 <useResponseEntity>true</useResponseEntity>
+                                <useBeanValidation>false</useBeanValidation>
                             </configOptions>
-                            <modelsToGenerate>EmailSendResponse,ErrorResponse</modelsToGenerate>
+                            <modelsToGenerate>GenericResponse,EmailSendResult,EmailRequest,EmailAttachment,TemplatedEmailRequest,TemplateAttachment,SmsSendRequest,SmsSendResult,SmsRecipientResult,SmsReportResult,OtpSendRequest,OtpSendResult,OtpChannelResult,OtpValidateRequest,OtpValidateResult,OtpConfigurationList,OtpConfiguration</modelsToGenerate>
                         </configuration>
                     </execution>
                 </executions>

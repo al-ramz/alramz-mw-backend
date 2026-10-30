@@ -1,13 +1,19 @@
 package com.alramz.service.impl;
 
 import com.alramz.config.EmailProperties;
+import com.alramz.config.GraphConfig;
 import com.alramz.exception.EmailConfigurationException;
 import com.alramz.exception.EmailServiceException;
 import com.alramz.exception.EmailValidationException;
+import com.alramz.jwt.context.JwtContext;
+import com.alramz.logging.util.MDCUtil;
 import com.alramz.model.EmailAttachment;
 import com.alramz.model.EmailRequest;
-import com.alramz.model.EmailSendResponse;
 import com.alramz.service.EmailService;
+import com.microsoft.graph.http.GraphError;
+import com.microsoft.graph.http.GraphErrorResponse;
+import com.microsoft.graph.http.GraphServiceException;
+import com.microsoft.graph.models.Attachment;
 import com.microsoft.graph.models.BodyType;
 import com.microsoft.graph.models.EmailAddress;
 import com.microsoft.graph.models.FileAttachment;
@@ -17,197 +23,322 @@ import com.microsoft.graph.models.Recipient;
 import com.microsoft.graph.models.UserSendMailParameterSet;
 import com.microsoft.graph.requests.AttachmentCollectionPage;
 import com.microsoft.graph.requests.GraphServiceClient;
+import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
+/**
+ * Email gateway over Microsoft Graph. All validation runs here so HTTP and in-process callers get the same codes.
+ * Logs never carry the body, subject, attachment content, recipient addresses or tokens.
+ */
+@Slf4j
 @Service
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.MethodArgumentCouldBeFinal"})
 public class EmailServiceImpl implements EmailService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmailServiceImpl.class);
-    private static final String PROVIDER = "MICROSOFT_GRAPH";
+    private static final Pattern EMAIL = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    private static final String RETRY_AFTER = "retry-after";
+    private static final String STATUS_TAG = "messaging.status";
 
     private final EmailProperties emailProperties;
-    private final org.springframework.beans.factory.ObjectProvider<GraphServiceClient<?>> graphClientProvider;
+    private final ObjectProvider<GraphServiceClient<?>> graphClientProvider;
     private final Tracer tracer;
+    private final ObjectProvider<JwtContext> jwtContextProvider;
 
     public EmailServiceImpl(
             final EmailProperties emailProperties,
-            @Qualifier("graphServiceClient") final org.springframework.beans.factory.ObjectProvider<GraphServiceClient<?>> graphClientProvider,
-            final Tracer tracer
+            @Qualifier("graphServiceClient") final ObjectProvider<GraphServiceClient<?>> graphClientProvider,
+            final Tracer tracer,
+            final ObjectProvider<JwtContext> jwtContextProvider
     ) {
         this.emailProperties = emailProperties;
         this.graphClientProvider = graphClientProvider;
         this.tracer = tracer;
+        this.jwtContextProvider = jwtContextProvider;
+    }
+
+    /** Facts about one send that are safe to log. */
+    private record SendContext(String correlationId, String invoker, String from, int to, int cc, int bcc,
+                               int attachments, long attachmentBytes, BodyType bodyType) {
     }
 
     @Override
-    public EmailSendResponse sendEmail(final EmailRequest request) {
-        validateRequest(request);
+    public void sendEmail(final EmailRequest request) {
+        final String correlationId = correlationId();
+        final String invoker = invoker();
+        final Message message;
+        final SendContext ctx;
+        try {
+            final String from = strip(request.getFrom());
+            final List<String> to = split(request.getTo());
+            final List<String> cc = split(request.getCc());
+            final List<String> bcc = split(request.getBcc());
+            final List<EmailAttachment> attachments = request.getAttachments() == null
+                    ? List.of() : request.getAttachments();
 
-        final UUID correlationId = UUID.randomUUID();
-        final UUID traceId = UUID.randomUUID();
+            final long totalBytes = validate(request, from, to, cc, bcc, attachments);
+
+            message = buildMessage(request, to, cc, bcc, attachments);
+            ctx = new SendContext(correlationId, invoker, from, to.size(), cc.size(), bcc.size(),
+                    attachments.size(), totalBytes, message.body.contentType); // NOPMD LawOfDemeter
+        } catch (EmailValidationException ex) {
+            log.warn("Email rejected code={} correlationId={} invoker={}", ex.getCode(), correlationId, invoker);
+            throw ex;
+        }
 
         final GraphServiceClient<?> graphClient = graphClientProvider.getIfAvailable(); // NOPMD LawOfDemeter
         if (graphClient == null) {
             throw new EmailConfigurationException("Preferred email service provider not configured");
         }
-
-        return sendEmailWithGraphClient(request, correlationId, traceId, graphClient);
+        send(graphClient, message, ctx);
     }
 
-    private EmailSendResponse sendEmailWithGraphClient(final EmailRequest request, final UUID correlationId,
-                                                        final UUID traceId, final GraphServiceClient<?> graphClient) {
-        io.micrometer.tracing.Span span = tracer.nextSpan()
+    private void send(final GraphServiceClient<?> graphClient, final Message message, final SendContext ctx) {
+        final UserSendMailParameterSet params = UserSendMailParameterSet.newBuilder()
+                .withMessage(message)
+                .withSaveToSentItems(true)
+                .build();
+        final Span span = tracer.nextSpan()
                 .name("graph.send_mail")
                 .tag("messaging.system", "microsoft-graph")
                 .start();
         try {
-            final Message message = buildGraphMessage(request);
-            graphClient.users(request.getFrom()) // NOPMD LawOfDemeter
-                    .sendMail(UserSendMailParameterSet.newBuilder()
-                            .withMessage(message)
-                            .withSaveToSentItems(false)
-                            .build())
-                    .buildRequest()
-                    .post();
-
-            final EmailSendResponse response = new EmailSendResponse();
-            response.setCorrelationID(correlationId);
-            response.setStatus("SUCCESS");
-            response.setResponseCode("200");
-            response.setResponseMessage("OK");
-            response.setProvider(PROVIDER);
-            response.setSentTo(request.getTo());
-            response.setSentAt(java.time.OffsetDateTime.now());
-            response.setTraceId(traceId);
-            span.tag("messaging.status", "success");
-            return response;
-
-        } catch (Exception ex) { // NOPMD AvoidCatchingGenericException
-            span.tag("messaging.status", "failure");
-            span.error(ex);
-            logEmailError(ex);
-            throw new EmailServiceException(503, "Service Unavailable", ex);
+            postWithAuthRetry(graphClient, ctx.from(), params);
+            span.tag(STATUS_TAG, "success");
+            logOutcome(ctx, "SUCCESS", null, 202, null);
+        } catch (GraphServiceException gse) {
+            // Never pass gse to the logger, the span or as a cause: its message embeds the request URL and body.
+            final EmailServiceException mapped = mapGraphFailure(gse, ctx);
+            span.tag(STATUS_TAG, "failure");
+            span.tag("mge.code", mapped.getCode());
+            throw mapped;
+        } catch (RuntimeException ex) { // NOPMD AvoidCatchingGenericException
+            span.tag(STATUS_TAG, "failure");
+            span.tag("mge.code", "MGE-B-004");
+            log.error("MGE-B-004 Unhandled email gateway error correlationId={} invoker={} from={}",
+                    ctx.correlationId(), ctx.invoker(), ctx.from(), ex);
+            throw new EmailServiceException("MGE-B-004", "Unhandled email gateway error", ex, null);
         } finally {
             span.end();
         }
     }
 
-    private void validateRequest(EmailRequest request) {
-        validateRequiredFields(request);
-        validateEmailFormats(request);
-        validateFieldLengths(request);
-        validateAttachments(request);
-    }
-
-    private void validateRequiredFields(final EmailRequest request) {
-        if (ObjectUtils.isEmpty(request.getTo())) {
-            throw new EmailValidationException("400", "Missing or invalid required field: to");
-        }
-        if (ObjectUtils.isEmpty(request.getSubject())) {
-            throw new EmailValidationException("400", "Missing or invalid required field: subject");
-        }
-        if (ObjectUtils.isEmpty(request.getFrom())) {
-            throw new EmailValidationException("400", "Missing or invalid required field: from");
-        }
-        if (ObjectUtils.isEmpty(request.getBody())) {
-            throw new EmailValidationException("400", "Missing or invalid required field: body");
-        }
-    }
-
-    private void validateEmailFormats(final EmailRequest request) {
-        if (!isValidEmail(request.getTo())) {
-            throw new EmailValidationException("400", "Invalid Email Format");
-        }
-        if (!isValidEmail(request.getFrom())) {
-            throw new EmailValidationException("400", "Invalid Email Format");
-        }
-    }
-
-    private void validateFieldLengths(final EmailRequest request) {
-        if (request.getSubject() != null && request.getSubject().length() > emailProperties.maxSubjectLength()) {
-            throw new EmailValidationException("400", "Invalid Subject Length");
-        }
-        if (request.getBody() != null && request.getBody().length() > emailProperties.maxBodyLength()) {
-            throw new EmailValidationException("400", "Invalid Body Length");
-        }
-    }
-
-    private void validateAttachments(final EmailRequest request) {
-        final List<EmailAttachment> attachments = request.getAttachments();
-        if (!attachments.isEmpty()) {
-            if (attachments.size() > emailProperties.maxAttachments()) {
-                throw new EmailValidationException("400", "Invalid Attachment Count");
+    /** One retry on Graph 401: the auth provider asks the credential for a token again. */
+    private void postWithAuthRetry(final GraphServiceClient<?> graphClient, final String from,
+                                   final UserSendMailParameterSet params) {
+        try {
+            post(graphClient, from, params);
+        } catch (GraphServiceException first) {
+            if (first.getResponseCode() != 401) {
+                throw first;
             }
-            for (final EmailAttachment attachment : attachments) {
-                final long sizeBytes = attachment.getContent().length;
-                if (sizeBytes > emailProperties.maxAttachmentSizeBytes()) {
-                    throw new EmailValidationException("400", "Invalid Attachment Size");
-                }
+            log.warn("Graph returned 401, retrying once correlationId={}", correlationId());
+            post(graphClient, from, params);
+        }
+    }
+
+    private void post(final GraphServiceClient<?> graphClient, final String from, final UserSendMailParameterSet params) {
+        graphClient.users(from).sendMail(params).buildRequest().post(); // NOPMD LawOfDemeter
+    }
+
+    private EmailServiceException mapGraphFailure(final GraphServiceException gse, final SendContext ctx) {
+        final int status = gse.getResponseCode();
+        // getServiceError() throws NPE when the SDK has no parsed error body, so read getError() first.
+        final GraphErrorResponse errorResponse = gse.getError();
+        final GraphError serviceError = errorResponse != null ? errorResponse.error : null;
+        final String graphCode = serviceError != null ? serviceError.code : null;
+        if (status == 401) {
+            logOutcome(ctx, "FAILURE", "MGE-B-001", status, graphCode);
+            return new EmailServiceException("MGE-B-001", "Graph rejected token as unauthorized");
+        }
+        if (status == 429) {
+            final String retryAfter = retryAfter(gse.getResponseHeaders());
+            logOutcome(ctx, "THROTTLED", "MGE-B-002", status, graphCode);
+            log.warn("MGE-B-002 Graph throttled; Retry-After={} correlationId={}", retryAfter, ctx.correlationId());
+            return new EmailServiceException("MGE-B-002", "Graph throttled; Retry-After=" + retryAfter, null, retryAfter);
+        }
+        logOutcome(ctx, "FAILURE", "MGE-B-003", status, graphCode);
+        return new EmailServiceException("MGE-B-003", "Graph send failed " + status + " " + graphCode);
+    }
+
+    /** Numeric seconds from the "Name : value" response header list, or null if absent or not numeric. */
+    static String retryAfter(final List<String> responseHeaders) {
+        if (responseHeaders == null) {
+            return null;
+        }
+        for (final String header : responseHeaders) {
+            final int sep = header == null ? -1 : header.indexOf(':');
+            if (sep > 0 && RETRY_AFTER.equalsIgnoreCase(header.substring(0, sep).trim())) {
+                final Long seconds = GraphConfig.parseRetryAfterSeconds(header.substring(sep + 1));
+                return seconds == null ? null : String.valueOf(seconds);
             }
         }
+        return null;
     }
 
-    private Message buildGraphMessage(final EmailRequest request) {
+    private void logOutcome(final SendContext ctx, final String outcome, final String code,
+                            final int graphStatus, final String graphCode) {
+        final String format = "Email send outcome={} code={} correlationId={} invoker={} from={} to={} cc={} bcc={}"
+                + " attachments={} attachmentBytes={} bodyType={} graphStatus={} graphError={}";
+        final Object[] args = {outcome, code, ctx.correlationId(), ctx.invoker(), ctx.from(), ctx.to(), ctx.cc(),
+                ctx.bcc(), ctx.attachments(), ctx.attachmentBytes(), ctx.bodyType(), graphStatus, graphCode};
+        if (code == null) {
+            log.info(format, args);
+        } else {
+            log.error(format, args);
+        }
+    }
+
+    // ---------------------------------------------------------------- validation (spec 3.5 order)
+
+    private long validate(final EmailRequest request, final String from, final List<String> to, final List<String> cc,
+                          final List<String> bcc, final List<EmailAttachment> attachments) {
+        final List<String> missing = new ArrayList<>();
+        if (to.isEmpty()) {
+            missing.add("to");
+        }
+        if (from.isEmpty()) {
+            missing.add("from");
+        }
+        if (isBlank(request.getSubject())) {
+            missing.add("subject");
+        }
+        if (isBlank(request.getBody())) {
+            missing.add("body");
+        }
+        if (!missing.isEmpty()) {
+            throw new EmailValidationException("MGE-V-001", "Request failed due to missing: " + String.join(", ", missing));
+        }
+
+        final List<String> invalid = new ArrayList<>();
+        addIfInvalid(invalid, "to", to);
+        addIfInvalid(invalid, "cc", cc);
+        addIfInvalid(invalid, "bcc", bcc);
+        addIfInvalid(invalid, "from", List.of(from));
+        if (!invalid.isEmpty()) {
+            throw new EmailValidationException("MGE-V-002", "Invalid email address in: " + String.join(", ", invalid));
+        }
+
+        if (request.getSubject().length() > emailProperties.maxSubjectLength()) {
+            throw new EmailValidationException("MGE-V-003", "Field length exceeded: subject");
+        }
+        if (request.getBody().length() > emailProperties.maxBodyLength()) {
+            throw new EmailValidationException("MGE-V-003", "Field length exceeded: body");
+        }
+
+        if (attachments.size() > emailProperties.maxAttachments()) {
+            throw new EmailValidationException("MGE-V-004", "Number of attachments exceeds " + emailProperties.maxAttachments());
+        }
+        long total = 0;
+        for (int i = 0; i < attachments.size(); i++) {
+            final EmailAttachment attachment = attachments.get(i);
+            final String prefix = "Invalid attachment at position " + (i + 1) + ": ";
+            if (attachment == null || isBlank(attachment.getFileName())) {
+                throw new EmailValidationException("MGE-V-005", prefix + "fileName is required");
+            }
+            if (attachment.getContent() == null || attachment.getContent().length == 0) {
+                throw new EmailValidationException("MGE-V-005", prefix + "content is required");
+            }
+            total += attachment.getContent().length;
+        }
+        if (total > emailProperties.maxTotalAttachmentSizeBytes()) {
+            throw new EmailValidationException("MGE-V-008", "Attachments size limit exceeded");
+        }
+
+        // An empty allow-list rejects every sender (fail closed).
+        if (emailProperties.allowedSenders().stream().noneMatch(s -> s.strip().equalsIgnoreCase(from))) {
+            throw new EmailValidationException("MGE-V-007", "Sender mailbox is not permitted");
+        }
+        return total;
+    }
+
+    private static void addIfInvalid(final List<String> invalid, final String field, final List<String> addresses) {
+        if (addresses.stream().anyMatch(a -> !EMAIL.matcher(a).matches())) {
+            invalid.add(field);
+        }
+    }
+
+    // ---------------------------------------------------------------- Graph message
+
+    private Message buildMessage(final EmailRequest request, final List<String> to, final List<String> cc,
+                                 final List<String> bcc, final List<EmailAttachment> attachments) {
         final Message message = new Message();
         message.subject = request.getSubject();
 
         final ItemBody body = new ItemBody();
-        body.contentType = BodyType.HTML; // NOPMD LawOfDemeter
+        body.contentType = request.getBody().strip().startsWith("<") ? BodyType.HTML : BodyType.TEXT; // NOPMD LawOfDemeter
         body.content = request.getBody();
         message.body = body; // NOPMD LawOfDemeter
 
-        final Recipient toRecipient = new Recipient();
-        final EmailAddress toAddress = new EmailAddress();
-        toAddress.address = request.getTo();
-        toRecipient.emailAddress = toAddress; // NOPMD LawOfDemeter
-        message.toRecipients = List.of(toRecipient); // NOPMD LawOfDemeter
+        message.toRecipients = recipients(to); // NOPMD LawOfDemeter
+        if (!cc.isEmpty()) {
+            message.ccRecipients = recipients(cc); // NOPMD LawOfDemeter
+        }
+        if (!bcc.isEmpty()) {
+            message.bccRecipients = recipients(bcc); // NOPMD LawOfDemeter
+        }
 
-        final List<EmailAttachment> attachments = request.getAttachments();
         if (!attachments.isEmpty()) {
-            final List<com.microsoft.graph.models.Attachment> graphAttachments = new ArrayList<>();
+            final List<Attachment> graphAttachments = new ArrayList<>();
             for (final EmailAttachment attachment : attachments) {
                 final FileAttachment fileAttachment = new FileAttachment();
-                fileAttachment.name = attachment.getName();
+                fileAttachment.oDataType = "#microsoft.graph.fileAttachment";
+                fileAttachment.name = attachment.getFileName();
+                fileAttachment.contentType = attachment.getContentType();
                 fileAttachment.contentBytes = attachment.getContent(); // NOPMD LawOfDemeter
-                fileAttachment.size = attachment.getContent().length;
                 graphAttachments.add(fileAttachment);
             }
             message.attachments = new AttachmentCollectionPage(graphAttachments, null); // NOPMD LawOfDemeter
         }
-
         return message;
     }
 
-    private boolean isValidEmail(final String email) {
-        if (email == null || email.isBlank()) {
-            return false;
+    private static List<Recipient> recipients(final List<String> addresses) {
+        final List<Recipient> recipients = new ArrayList<>();
+        for (final String address : addresses) {
+            final EmailAddress emailAddress = new EmailAddress();
+            emailAddress.address = address;
+            final Recipient recipient = new Recipient();
+            recipient.emailAddress = emailAddress; // NOPMD LawOfDemeter
+            recipients.add(recipient);
         }
-        final String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-        return email.matches(regex);
+        return recipients;
     }
 
-    private void logEmailError(final Exception ex) {
-        if (ex instanceof com.microsoft.graph.http.GraphServiceException gse) {
-            final com.microsoft.graph.http.GraphError serviceError = gse.getServiceError();
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Graph Error {} - Code: {}, Message: {}", gse.getResponseCode(),
-                    serviceError != null ? serviceError.code : "N/A",
-                    serviceError != null ? serviceError.message : "N/A", gse);
-            }
-        } else {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Email send failed", ex);
-            }
+    // ---------------------------------------------------------------- helpers
+
+    private static List<String> split(final String list) {
+        if (list == null) {
+            return List.of();
         }
+        return Arrays.stream(list.split(",")).map(String::strip).filter(s -> !s.isEmpty()).toList();
+    }
+
+    private static String strip(final String value) {
+        return value == null ? "" : value.strip();
+    }
+
+    private static boolean isBlank(final String value) {
+        return value == null || value.isBlank();
+    }
+
+    private static String correlationId() {
+        final String id = MDCUtil.getCorrelationId();
+        return id != null ? id : UUID.randomUUID().toString();
+    }
+
+    private String invoker() {
+        final JwtContext jwtContext = jwtContextProvider.getIfAvailable(); // NOPMD LawOfDemeter
+        final String application = jwtContext != null ? jwtContext.getCurrentApplication() : null;
+        return application != null ? application : "unknown";
     }
 }

@@ -4,11 +4,8 @@ server:
   host: localhost
 
 spring:
-  datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:notificationsdb}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASSNAME:org.h2.Driver}
-    username: ${SPRING_DATASOURCE_USERNAME:sa}
-    password: ${SPRING_DATASOURCE_PASSWORD:}
+  liquibase:
+    change-log: classpath:db/changelog/docker/db.changelog-master.yaml
 
 app:
   email:
@@ -16,7 +13,8 @@ app:
     max-subject-length: 255
     max-body-length: 10000
     max-attachments: 10
-    max-attachment-size-bytes: 10485760
+    max-total-attachment-size-bytes: 3000000
+    allowed-senders: ${APP_EMAIL_ALLOWED_SENDERS:notification@alramz.ae}
 
   graph:
     tenant-id: ${AZURE_TENANT_ID}
@@ -24,16 +22,56 @@ app:
     client-secret: ${AZURE_CLIENT_SECRET}
     graph-scopes: https://graph.microsoft.com/.default
 
+  otp:
+    fixed-test-otp-enabled: ${OTP_FIXED_TEST_OTP_ENABLED:true}
+
+# The starter's middleware datasource requires a PWProtector bean even with plainPassword (which bypasses it).
+cipher:
+  password: ${CIPHER_MASTER_KEY:UseMostSecretKey}
+
 company:
+  # Postgres: email_configurations / email_log (Liquibase) and the starter scheduler's schedule_job.
+  datasource:
+    middleware:
+      enabled: true
+      url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://localhost:5432/alramzmwdb}
+      username: ${COMPANY_DATASOURCE_MIDDLEWARE_USERNAME:alramzmw}
+      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD}   # no committed default
+      driverClassName: org.postgresql.Driver
+      startup-validation:
+        enabled: false
+      pool:
+        maximum-pool-size: 5
+        minimum-idle: 1
+      sql-logging:
+        enabled: false
+    # Oracle INSIGHT schema (SMS_TABLE dispatch job only). Off unless COMPANY_DATASOURCE_BROK_ENABLED=true.
+    brok:
+      enabled: ${COMPANY_DATASOURCE_BROK_ENABLED:false}
+      url: ${COMPANY_DATASOURCE_BROK_URL:}
+      username: ${COMPANY_DATASOURCE_BROK_USERNAME:}
+      plainPassword: ${COMPANY_DATASOURCE_BROK_PLAINPASSWORD:}   # no committed default
+      driverClassName: oracle.jdbc.OracleDriver
+      startup-validation:
+        enabled: false
+      pool:
+        maximum-pool-size: 3
+        minimum-idle: 1
+      sql-logging:
+        enabled: false
+      oracle:
+        connectTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_CONNECT_TIMEOUT:10000}
+        readTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_READ_TIMEOUT:60000}
+        defaultRowPrefetch: ${COMPANY_DATASOURCE_BROK_ORACLE_DEFAULT_ROW_PREFETCH:100}
   jwt:
+    secret: ${JWT_SECRET}   # no default: an unset secret must fail startup, not fall back to the starter's public default key
     enabled: true
     permit-all-urls:
       - /api/v1/info
-      - /api/v1/email/send
 
   scheduler:
     management-endpoints:
-      enabled: true
+      enabled: false
 
   logging:
     seq:
@@ -41,6 +79,10 @@ company:
       url: http://seq:80
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
   tracing:
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}

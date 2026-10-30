@@ -1,0 +1,324 @@
+{
+  "feature_slug": "dfm-nin-onboarding",
+  "spec_path": ".claude/modules/features/dfm-nin-onboarding/spec.md",
+  "howtos_consulted": [
+    ".claude/howtos/new-endpoint-elicitation-checklist.md",
+    ".claude/howtos/openapi-contract-first-controllers.md",
+    ".claude/howtos/api-collection-http-requests.md",
+    ".claude/howtos/configuration-properties.md",
+    ".claude/howtos/jwt-security-and-public-endpoints.md",
+    ".claude/howtos/exception-handling.md",
+    ".claude/howtos/request-response-and-db-audit-logging.md",
+    ".claude/howtos/testing-patterns.md"
+  ],
+  "target_services": ["onboarding-service"],
+  "target_files": [
+    {
+      "path": "services/onboarding-service/specs/apiSpecs.yaml",
+      "status": "modified",
+      "change_summary": "(1) Amend components.schemas.GenericResponse additively: add `errorCode` (type string, nullable: true, example DFN001) and `errorMsg` (type string, nullable: true). Do not touch its `required` list (responseCode, responseMessage, response), so the generated required-args constructor and every existing caller still compile. (2) Add bare path `/dfm/investors` (no /api/v1 prefix) after `/dfm/onboarding`: post, tags [DFM Investors], operationId registerDfmInvestor, requestBody required, schema DfmInvestorRegistrationRequest, with the spec 3.1 example (eidNumber/passportNumber renames, synthetic values only). (3) Responses: 201/400/409/500/502/503/504 each get a GenericResponse schema and an example (spec 3.2), and 401/403 get a description only. (4) New schemas in this property order (spec 3.1): DfmInvestorRegistrationRequest, DfmAddress, DfmDividendPayment, DfmPortfolioOption (named enum CASH/MARGIN, so the array item is not an inline enum), DfmCrs, DfmCrsCountry, DfmFatca, DfmEmiratesId, DfmPassport, DfmSignature, DfmGuardian and DfmInvestorRegistration (7 nullable strings; memberReference/dfmReference maxLength 36, no format: uuid). No other path or schema changes."
+    },
+    {
+      "path": "services/onboarding-service/apiCollection.http",
+      "status": "modified",
+      "change_summary": "(1) In the existing `### Register the app (run once)` block (line 7), change `roles` to [\"APP_DATA_VALIDATION\", \"APP_DFM_ONBOARDING\"]. Leave consumer/application/environment and the committed @authToken as they are: the developer re-runs login to get a token with the new role, and no fresh token is committed. (2) After the `### DFM Onboarding` block (ends line 268) and before `### Scheduler Management APIs`, add `### Register DFM investor`: POST {{baseUrl}}/api/v1/dfm/investors with Content-Type application/json, Authorization: Bearer {{authToken}}, X-Correlation-Id, and an obviously fake body (test.user@example.com, placeholder names, EID 784-0000-0000000-0, tiny synthetic base64 such as a 1x1 PNG, base-free mobile +971500000000). Then add `### Register DFM investor -ve test case` with the same body minus `address.country`, which should return 400 DFN001."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/controllers/DfmInvestorController.java",
+      "status": "new",
+      "change_summary": "@RestController @RequestMapping(\"/api/v1\") @RequiredArgsConstructor, `implements com.alramz.api.DfmInvestorsApi` (generated from tag DFM Investors). Single method registerDfmInvestor annotated @Override @JwtSecured(roles = \"APP_DFM_ONBOARDING\") @Loggable(logArgs = false). It delegates to DfmInvestorService.register and returns ResponseEntity.status(CREATED) with a body of GenericResponse{responseCode \"201\", responseMessage \"Created\", response = registration}. correlationId is left to the starter's CorrelationIdResponseBodyAdvice, and the method has no try/catch."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/service/DfmInvestorService.java",
+      "status": "new",
+      "change_summary": "Interface with one method, `DfmInvestorRegistration register(DfmInvestorRegistrationRequest request)`. This matches the service's interface+impl convention (OnboardingService/OnboardingServiceImpl)."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/service/impl/DfmInvestorServiceImpl.java",
+      "status": "new",
+      "change_summary": "@Service, constructor-injected DfmMemberApiClient, with no @Loggable. Runs the cross-field rules after Bean Validation and throws ApplicationException(fieldPath, msg, code): R1-R8, R9b and R10 throw DFN003, R9 (address.country not in Locale.getISOCountries()) throws DFN001, and a blank address.city throws DFN002 (needed because there is no global string trimming; see technical_gaps). R8 uses LocalDate.now(ZoneId.of(\"Asia/Dubai\")). R10 decodes Base64 and checks the JPEG/PNG/PDF magic bytes against imageType. It then calls client.onboard(request) and switches on the sealed DfmOnboardingOutcome: Success maps to a DfmInvestorRegistration (and logs a WARN, without the value, when member/dfm reference is not a UUID). Rejected throws DfmRejectedException with DFN007 if duplicateInProgress, otherwise DFN006, carrying DFM's message or the spec 3.2 default text. Unavailable throws DfmUnavailableException mapped from Reason: TIMEOUT to DFN011, CIRCUIT_OPEN to DFN014, BAD_RESPONSE to DFN010."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/dfm/DfmMemberApiClient.java",
+      "status": "new",
+      "change_summary": "@Component in the new package com.alramz.dfm, deliberately outside com.alramz.client so the starter's ApiAuditAspect pointcut `execution(* com.alramz.client..*(..))` does not persist the unmasked POJO. It has no @Loggable and does not extend AbstractRestClient, so the caller's JWT is not forwarded and no error body is lost. The constructor takes @Qualifier dfmMemberApiWebClient, dfmMemberApiCircuitBreaker, dfmMemberApiRetry and dfmMemberApiTimeLimiter, plus DfmMemberApiProperties and the service's com.fasterxml ObjectMapper (JacksonConfig). onboard(request) works as follows. (a) Validate config: base-url, member-code and security-key must be non-blank and base-url must start with https://, otherwise throw DfmConfigurationException before any I/O. (b) Build DfmOnboardingPayload.from(...) and serialize it to a String with the ObjectMapper; this avoids depending on WebClient's Jackson 2 vs Jackson 3 encoder choice and lets tests assert the exact JSON. (c) Run post().uri(baseUrl + \"/memberapis/onboarding\") with header securitykey, Content-Type/Accept application/json, bodyValue(json), and exchangeToMono(resp -> classify(status, bodyAsString)), following spec 3.3's table. Success and Rejected are emitted as values. BAD_RESPONSE is emitted as a private error type so the breaker counts it. (d) Operator order: .transformDeferred(TimeLimiterOperator), then .transformDeferred(RetryOperator), then .transformDeferred(CircuitBreakerOperator). Because the breaker is outermost, one caller request counts as one breaker call, including both connect attempts. (e) .onErrorResume maps errors to Unavailable: CallNotPermittedException to CIRCUIT_OPEN; TimeoutException or a connect failure to TIMEOUT; anything else to BAD_RESPONSE. Then .block(). Expose `static boolean isConnectFailure(Throwable)`, which walks the cause chain for java.net.ConnectException or java.net.http.HttpConnectTimeoutException. These are the JDK connector's types, not the Netty ConnectTimeoutException the spec names; see technical_gaps. ExternalDfmMemberApiConfig's RetryConfig and the tests reuse it. Logging is limited to HTTP status, response_code, response_msg, request_id and duration. 401/403 log ERROR 'DFM rejected credentials'."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingPayload.java",
+      "status": "new",
+      "change_summary": "A record annotated @JsonInclude(NON_NULL), with an explicit @JsonProperty on every component (snake_case DFM names per spec 3.3; the explicit names also override JacksonConfig's global SNAKE_CASE). Components are declared small scalars first, with request_id/securitykey/request_mbrcode at the top, and the Base64 attachments last. This keeps the key inside the masked prefix when WebClientLoggingFilter truncates before masking. It has a nested record for csr.csr_countries[] and a static factory from(DfmInvestorRegistrationRequest, memberCode, securityKey) with these mappings: mobile/phone '+' to '00'; pay_method IVESTOR to iVESTOR and BANK to bank; portfolio_options lower-case and comma-joined in CASH,MARGIN order; booleans to Y/N; dates as ISO yyyy-MM-dd; imageType lower-case; adr_address untruncated. It has no toString override, and nothing logs it."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingResponse.java",
+      "status": "new",
+      "change_summary": "Record with explicit @JsonProperty: response_code (String; a numeric value is coerced by Jackson 2's default scalar coercion), response_msg, member_reference, dfm_reference, tracking_no, cash_acc, margin_acc and cust_nin. It ignores unknown properties (@JsonIgnoreProperties(ignoreUnknown = true))."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingOutcome.java",
+      "status": "new",
+      "change_summary": "sealed interface with records Success(DfmOnboardingResponse body), Rejected(String providerCode, String providerMessage, boolean duplicateInProgress), Unavailable(Reason reason, Throwable cause) and enum Reason {TIMEOUT, CIRCUIT_OPEN, BAD_RESPONSE}, exactly as spec 3.4 states."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/config/DfmMemberApiProperties.java",
+      "status": "new",
+      "change_summary": "`@ConfigurationProperties(prefix = DfmMemberApiProperties.PREFIX) public record DfmMemberApiProperties(String baseUrl, String memberCode, String securityKey, @DefaultValue(\"5\") int connectTimeoutSeconds, @DefaultValue(\"60\") int readTimeoutSeconds, @DefaultValue List<String> duplicateInProgressCodes)` with `public static final String PREFIX = \"adapter.dfm-member-api\"`. It is a record, matching ETradeProperties in this service, and the PREFIX constant follows configuration-properties.md. Startup never fails on blank values; they are checked at call time (DFN012)."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/config/ExternalDfmMemberApiConfig.java",
+      "status": "new",
+      "change_summary": "@Configuration @EnableConfigurationProperties(DfmMemberApiProperties.class) @RequiredArgsConstructor, modeled on ExternalETradeServiceConfig / ExternalFinouxServiceConfig, with resilience id `dfm-member-api`. @Bean(\"dfmMemberApiWebClient\") uses WebClient.Builder with .clientConnector(new JdkClientHttpConnector(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(connectTimeoutSeconds)).build())) and .filter(alramzWebClientLoggingFilterFunction). It sets no baseUrl on the builder, because the client builds the URI after validating config, so a blank base-url cannot break startup. JdkClientHttpConnector is used because the onboarding-service classpath has no reactor-netty, httpclient5 or jetty-reactive (see technical_gaps). Do NOT call setReadTimeout on the connector: the read timeout is the TimeLimiter only, which avoids an HttpTimeoutException/HttpConnectTimeoutException classification ambiguity. @Bean(\"dfmMemberApiCircuitBreaker\") is registry.circuitBreaker(id, COUNT_BASED with slidingWindowSize 5, minimumNumberOfCalls 5 and failureRateThreshold 100; default 60s open wait). @Bean(\"dfmMemberApiRetry\") is registry.retry(id, maxAttempts 2, retryOnException(DfmMemberApiClient::isConnectFailure)). @Bean(\"dfmMemberApiTimeLimiter\") is registry.timeLimiter(id, timeoutDuration readTimeoutSeconds)."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/exception/DfmInvestorErrorCode.java",
+      "status": "new",
+      "change_summary": "Enum with entries DFN001 (address.country), DFN002 (address.city), DFN003 (generic invalid), DFN004 (mobile), DFN005 (address.line), DFN006, DFN007, DFN010, DFN011, DFN012, DFN013 and DFN014, each with code() and an optional field path. It follows utility ErrorCode.forField with one deliberate deviation: forField matches the FULL field path, not the last segment. Otherwise crs.countries[0].country would wrongly map to DFN001 (R9b requires DFN003) and address.phone/mobile could collide. It also has a static precedence picker for multiple Bean Validation errors: DFN001, then DFN002, DFN004, DFN005, and finally DFN003."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/exception/DfmRejectedException.java",
+      "status": "new",
+      "change_summary": "extends RuntimeException; carries DfmInvestorErrorCode code (DFN006/DFN007) and message. No HTTP status in the class (exception-handling.md pitfall)."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/exception/DfmUnavailableException.java",
+      "status": "new",
+      "change_summary": "extends RuntimeException; carries DfmInvestorErrorCode code (DFN010/011/014), message and cause."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/exception/DfmConfigurationException.java",
+      "status": "new",
+      "change_summary": "extends RuntimeException(String message); DFN012. The message names the missing key, never its value."
+    },
+    {
+      "path": "services/onboarding-service/src/main/java/com/alramz/exception/DfmInvestorExceptionHandler.java",
+      "status": "new",
+      "change_summary": "@RestControllerAdvice(assignableTypes = DfmInvestorController.class) @Order(-1), which is lower than GlobalExceptionHandler's @Order(0), so it actually wins (exception-handling.md section 4 Step 4). It is NOT modeled on OnboardingExceptionHandler, whose @Order(1) is dead. It builds a single GenericResponse shape via a private helper (responseCode = status, responseMessage = reason phrase, errorCode, errorMsg, response null, correlationId = MDCUtil.getCorrelationIdAsUuid()). Handlers: MethodArgumentNotValidException, plus ConstraintViolationException and HandlerMethodValidationException, give 400 with errors sorted by field path, joined with '; ', and the code chosen by precedence. HttpMessageNotReadableException gives 400 DFN003 'Malformed or invalid JSON request'. ApplicationException gives 400 with code serviceErrorResponseCode. DfmRejectedException gives 400 for DFN006 or 409 for DFN007. DfmUnavailableException gives 502 for DFN010, 504 for DFN011 or 503 for DFN014, each with fixed spec text. DfmConfigurationException gives 500 DFN012, logged at ERROR without values. org.springframework.security.access.AccessDeniedException gives 403 with errorCode null and 'Access denied'. Exception gives 500 DFN013 'Internal Server Error', logged with the stack trace and never echoed. GlobalExceptionHandler.java is untouched."
+    },
+    {
+      "path": "services/onboarding-service/src/main/resources/application-dev.yml",
+      "status": "modified",
+      "change_summary": "(1) Under the existing top-level `adapter:` (line 46), add the `dfm-member-api` block from spec section 5 (base-url/member-code/security-key/duplicate-in-progress-codes as ${DFM_MEMBER_API_*:} with empty defaults, connect-timeout-seconds 5, read-timeout-seconds 60). (2) Under the existing `company.logging` (line 112), add `masking.sensitive-keys` with the 15 starter defaults plus securitykey, nin, eidNumber, eid_no, passportNumber, pp_no, iban, foreignAccount, dateOfBirth, cust_dob, image, attachment, proofDocument, guardianship. permit-all-urls is unchanged."
+    },
+    {
+      "path": "services/onboarding-service/src/main/resources/application-docker.yml",
+      "status": "modified",
+      "change_summary": "Same two additions as dev. Here `adapter:` is at line 125 (after company) and `company.logging` at line 44. permit-all-urls is unchanged."
+    },
+    {
+      "path": "services/onboarding-service/src/main/resources/application-test.yml",
+      "status": "modified",
+      "change_summary": "Same masking addition under company.logging (line 107). The adapter.dfm-member-api block goes under `adapter:` (line 42) with obviously fake literal values: base-url https://dfm.test, member-code TEST01, security-key test-key, timeouts 5/60, and duplicate-in-progress-codes empty. permit-all-urls is unchanged."
+    },
+    {
+      "path": "services/onboarding-service/src/main/resources/application-preprod.yml",
+      "status": "modified",
+      "change_summary": "Same two additions as dev: `adapter:` at line 46 and `company.logging` at line 107. permit-all-urls is unchanged."
+    },
+    {
+      "path": "services/onboarding-service/src/main/resources/application-prod.yml",
+      "status": "modified",
+      "change_summary": "Same two additions as dev: `adapter:` at line 46 and `company.logging` at line 107. permit-all-urls is unchanged."
+    }
+  ],
+  "test_files": [
+    {
+      "path": "services/onboarding-service/src/test/java/com/alramz/controllers/DfmInvestorControllerTest.java",
+      "status": "new",
+      "covers": "Success path: a direct Mockito construction (DataValidationControllerTest shape) returns 201, responseCode \"201\", responseMessage \"Created\" and response the same as the service result. Reflection asserts that registerDfmInvestor carries @JwtSecured(roles = \"APP_DFM_ONBOARDING\") and @Loggable(logArgs = false), and that the class has @RequestMapping(\"/api/v1\")."
+    },
+    {
+      "path": "services/onboarding-service/src/test/java/com/alramz/controllers/DfmInvestorApiDispatchTest.java",
+      "status": "new",
+      "covers": "This replaces the spec's '@WebMvcTest ... 403' criterion, following the MmfApiDispatchTest precedent in wealth-management-service: @SpringBootTest plus standalone MockMvc reusing the context's message converters, mvcValidator, conversion service and CorrelationIdFilter. The controller (with a mocked DfmInvestorService) is wrapped by an AspectJProxyFactory with the context's JwtSecuredAspect. Advice is registered as setControllerAdvice(new GlobalExceptionHandler(), new DfmInvestorExceptionHandler()) to prove @Order(-1) wins regardless of registration order. Cases: E11, an authentication with only ROLE_APP_DATA_VALIDATION, gives 403 with errorCode null and 'Access denied'; E1, malformed JSON, gives 400 DFN003; E2, separate inputs, give DFN001 (no address.country), DFN002 (city > 25), DFN004 (bad mobile) and DFN005 (line > 40); a multi-error body produces the precedence code and sorted errorMsg; E16, a non-UUID X-Correlation-Id, gives a valid UUID correlationId and no 500; a success with ROLE_APP_DFM_ONBOARDING gives 201 with non-null correlationId and errorCode/errorMsg null on the wire."
+    },
+    {
+      "path": "services/onboarding-service/src/test/java/com/alramz/service/impl/DfmInvestorServiceImplTest.java",
+      "status": "new",
+      "covers": "E3/E4 via assertThatThrownBy(...).hasFieldOrPropertyWithValue: R1 (AE without emiratesId), R2, R3 (Arab nationality without fullNameAr), R4, R5, R6 (both branches), R7, R8 (DOB 10 years ago with no guardian), R9 giving DFN001, R9b on crs.countries[].country giving DFN003 rather than DFN001, R10 (undecodable base64, wrong magic bytes, imageType mismatch), and blank city giving DFN002. Each outcome is mapped (mocked DfmMemberApiClient): Success maps all 7 fields, and a non-UUID reference passes through (E15); Rejected maps to DFN006 with DFM's message or the default text; duplicateInProgress maps to DFN007; Unavailable TIMEOUT/CIRCUIT_OPEN/BAD_RESPONSE maps to DFN011/DFN014/DFN010. The client is not called when a rule fails."
+    },
+    {
+      "path": "services/onboarding-service/src/test/java/com/alramz/dfm/DfmMemberApiClientTest.java",
+      "status": "new",
+      "covers": "This uses a stubbed ExchangeFunction (FinouxClientTest precedent) and real CircuitBreaker/Retry/TimeLimiter from `new ExternalDfmMemberApiConfig(props)` bean methods on in-memory registries, so the hard-coded config itself is exercised (readTimeoutSeconds = 1). Outbound payload, asserted on the captured request: snake_case keys, cust_mobile 00971..., portfolio_options 'cash,margin' for [MARGIN, CASH], pay_method 'bank', fatca_uscitizen 'N', untruncated adr_address, request_mbrcode/securitykey from config, the securitykey header present, no Authorization header, nulls omitted. Classification: HTTP 400 with response_msg X gives Rejected(X); 409 gives a duplicate; 2xx with a configured duplicate code gives a duplicate; 5xx gives BAD_RESPONSE with exactly 1 attempt; 401 gives BAD_RESPONSE; a non-JSON 200 gives BAD_RESPONSE; 2xx with response_code 4xx gives Rejected; 2xx with response_code 200 gives Success; numeric response_code is coerced. Mono.never() gives TIMEOUT. WebClientRequestException(ConnectException) gives exactly 2 attempts then TIMEOUT, and HttpConnectTimeoutException is retried the same way. 5 consecutive 5xx then a 6th call gives CIRCUIT_OPEN with the exchange counter unchanged. 5 consecutive 4xx keep the breaker CLOSED. Blank security-key / base-url / member-code, or an http:// base-url, throws DfmConfigurationException with zero exchanges."
+    },
+    {
+      "path": "services/onboarding-service/src/test/java/com/alramz/exception/DfmInvestorExceptionHandlerTest.java",
+      "status": "new",
+      "covers": "Plain-object handler test (GlobalExceptionHandlerTest shape) for every handler: status equals responseCode, errorCode and errorMsg per spec 3.2, response null and correlationId non-null. For 500/502/503/504, the body contains no exception class name, stack trace, cause message or DFM body (built from an exception whose message and cause contain a sentinel string). DFN006 and DFN007 echo DFM's message. Precedence and sorting are tested with a hand-built BeanPropertyBindingResult."
+    },
+    {
+      "path": "services/onboarding-service/src/test/java/com/alramz/config/DfmMaskingConfigTest.java",
+      "status": "new",
+      "covers": "Masking criteria. For each of application-{dev,docker,test,preprod,prod}.yml, load the profile (YamlPropertiesFactoryBean on the classpath resource) and assert that company.logging.masking.sensitive-keys contains the 15 defaults plus the spec section 5 additions, and that adapter.dfm-member-api.* exists with no non-placeholder secret outside the test profile. Then LogMaskingUtil.configure(true, null, thatList, null) is applied to a JSON sample, and the test asserts that securitykey, eidNumber, passportNumber, nin, aedIban, dateOfBirth and frontImage values are masked while trackingNumber/cashTradingNumber are not. @AfterEach restores LogMaskingUtil's static config, because it is JVM-global state shared with other tests."
+    }
+  ],
+  "liquibase_changeset": {
+    "applicable": false,
+    "next_changeset_file": null,
+    "profile_folders": []
+  },
+  "config_changes": {
+    "permit_all_urls": [],
+    "new_properties": [
+      "adapter.dfm-member-api.base-url = ${DFM_MEMBER_API_BASE_URL:} (test profile: https://dfm.test)",
+      "adapter.dfm-member-api.member-code = ${DFM_MEMBER_API_MEMBER_CODE:} (test profile: TEST01)",
+      "adapter.dfm-member-api.security-key = ${DFM_MEMBER_API_SECURITY_KEY:} (test profile: test-key)",
+      "adapter.dfm-member-api.connect-timeout-seconds = 5",
+      "adapter.dfm-member-api.read-timeout-seconds = 60",
+      "adapter.dfm-member-api.duplicate-in-progress-codes = ${DFM_MEMBER_API_DUPLICATE_IN_PROGRESS_CODES:} (test profile: empty)"
+    ],
+    "masking_keys_to_add": [
+      "company.logging.masking.sensitive-keys in all five onboarding-service profiles. It restates the 15 starter defaults (password, token, authorization, accessToken, refreshToken, jwt, aadhaar, pan, ssn, creditCard, cvv, apiKey, secret, session, cookie) and adds: securitykey, nin, eidNumber, eid_no, passportNumber, pp_no, iban, foreignAccount, dateOfBirth, cust_dob, image, attachment, proofDocument, guardianship",
+      "No SensitiveDataMasker (starter) change is needed. Verified: SensitiveDataMasker.maskBody (line 93-98) = LogMaskingUtil.mask(truncate(body, 5000)), and maskString/isSensitiveKey also consult LogMaskingUtil.isSensitiveKey, so this one property list governs audit bodies, log lines and WebClientLoggingFilter span tags"
+    ]
+  },
+  "execution_steps": [
+    "Step 1: Contract. Edit services/onboarding-service/specs/apiSpecs.yaml: make the GenericResponse errorCode/errorMsg nullable addition, add /dfm/investors with all 9 responses, and add the Dfm* schemas in spec 3.1 property order. Run `mvn -pl services/onboarding-service -am clean test-compile` and open target/generated-sources/openapi/.../api/DfmInvestorsApi.java to confirm the exact signature (expected `ResponseEntity<GenericResponse> registerDfmInvestor(@Valid @RequestBody DfmInvestorRegistrationRequest dfmInvestorRegistrationRequest)`). Also confirm the nested models carry @Valid and portfolioOptions became a Set/List of DfmPortfolioOption.",
+    "Step 2: Config. Add the adapter.dfm-member-api block and company.logging.masking.sensitive-keys to application-{dev,docker,test,preprod,prod}.yml, using fake literals in test only. Do not touch permit-all-urls. Create DfmMemberApiProperties (record + PREFIX).",
+    "Step 3: Exceptions. Create DfmInvestorErrorCode (full-path forField + precedence), DfmRejectedException, DfmUnavailableException and DfmConfigurationException.",
+    "Step 4: Client. Create DfmOnboardingOutcome, DfmOnboardingResponse, DfmOnboardingPayload (with component order and mapping rules) and DfmMemberApiClient (config check, String body, exchangeToMono classification, TimeLimiter then Retry then CircuitBreaker, error-to-Unavailable mapping, static isConnectFailure). Then ExternalDfmMemberApiConfig (JdkClientHttpConnector with connectTimeout; CB/Retry/TimeLimiter beans with id dfm-member-api). Before relying on JDK exception types, confirm the connector with `mvn -pl services/onboarding-service dependency:tree -Dincludes=io.projectreactor.netty,org.apache.httpcomponents.client5,org.eclipse.jetty`; it should be empty. If reactor-netty has appeared, switch to ReactorClientHttpConnector with HttpClient.option(CONNECT_TIMEOUT_MILLIS) and add io.netty ConnectTimeoutException to isConnectFailure.",
+    "Step 5: Service. Create DfmInvestorService and DfmInvestorServiceImpl (rules R1-R10, R9b, blank-city DFN002, outcome-to-exception mapping, non-UUID WARN).",
+    "Step 6: Web layer. Create DfmInvestorController (implements DfmInvestorsApi, @JwtSecured APP_DFM_ONBOARDING, @Loggable(logArgs = false), 201) and DfmInvestorExceptionHandler (@RestControllerAdvice(assignableTypes = DfmInvestorController.class) @Order(-1), including AccessDeniedException giving 403). Leave GlobalExceptionHandler.java and OnboardingController.java byte-for-byte unchanged.",
+    "Step 7: Manual collection. In apiCollection.http, add APP_DFM_ONBOARDING to the register block's roles and add `### Register DFM investor` plus `### Register DFM investor -ve test case` (no address.country) after the DFM Onboarding block. Use only synthetic data and commit no new token.",
+    "Step 8: Tests. Add DfmInvestorControllerTest, DfmInvestorApiDispatchTest, DfmInvestorServiceImplTest, DfmMemberApiClientTest, DfmInvestorExceptionHandlerTest and DfmMaskingConfigTest per test_files. Do not use @WebMvcTest.",
+    "Step 9: Verify. Run `mvn -pl services/onboarding-service -am clean test`. The existing /dfm/onboarding, /iban/validate, /veriphone/verify and /existing-data/validation tests and the OnboardingServiceApplicationTests smoke test (default profile, no DFM config, so it binds blanks without failing) must still pass. Check `git diff --stat` shows no change under db/changelog/**, GlobalExceptionHandler.java or OnboardingController.java."
+  ],
+  "technical_gaps": [
+    {
+      "area": "other",
+      "description": "RESOLVED (the caller's connect-timeout question). onboarding-service has no reactor-netty, Apache httpclient5 or jetty-reactive client on its classpath. Evidence: services/onboarding-service/target/spotbugsAuxClasspath*.tmp lists spring-webflux-7.0.8, reactor-core-3.8.6, resilience4j-reactor-2.3.0 and spring-boot-http-client-4.1.0, but no netty/httpclient5/jetty jar. The poms agree: the starter declares spring-webflux and spring-boot-webclient (not the reactor-netty starter), and no repo code references a connector. So WebClient falls back to JdkClientHttpConnector (java.net.http.HttpClient), and the spec's 'ReactorClientHttpConnector if present' branch does not apply. A connect timeout IS settable: HttpClient.newBuilder().connectTimeout(...) wrapped in new JdkClientHttpConnector(...) on the dfmMemberApiWebClient builder only. Connect failures then surface as WebClientRequestException caused by java.net.ConnectException or java.net.http.HttpConnectTimeoutException, not Netty's ConnectTimeoutException as spec 3.3 names them. HttpConnectTimeoutException extends HttpTimeoutException, so the read timeout must come from the TimeLimiter alone, with no connector read timeout.",
+      "recommendation_or_open_question": "Implemented as planned in ExternalDfmMemberApiConfig/DfmMemberApiClient.isConnectFailure. The aux-classpath file is a build artifact and could be stale, so Step 4 re-checks with dependency:tree before coding and gives the fallback if reactor-netty appears."
+    },
+    {
+      "area": "test-coverage",
+      "description": "Spec AC 'A @WebMvcTest with a token lacking that role gets 403' conflicts with testing-patterns.md section 5, which says not to reach for @WebMvcTest. The near-miss is avoided. Also, a direct controller call cannot exercise JwtSecuredAspect or advice ordering.",
+      "recommendation_or_open_question": "Replaced with DfmInvestorApiDispatchTest: @SpringBootTest plus standalone MockMvc, following the repo's own MmfApiDispatchTest precedent (wealth-management-service), with the controller proxied through the context's JwtSecuredAspect. It asserts the same observable outcome (403, errorCode null), and also proves that @Order(-1) beats GlobalExceptionHandler, which exception-handling.md section 6 requires to be tested rather than assumed."
+    },
+    {
+      "area": "other",
+      "description": "The spec's claim that 'every string is trimmed by Jackson as received' is false. JacksonConfig only sets FAIL_ON_UNKNOWN_PROPERTIES=false, SNAKE_CASE, JavaTimeModule and WRITE_DATES_AS_TIMESTAMPS off, and no repo code installs a trimming deserializer. The MVC converter may also be Jackson 3 (tools.jackson 3.1.4 is on the classpath alongside 2.21.4).",
+      "recommendation_or_open_question": "No trimming is added, which keeps scope. Strings pass as given. The spec's 'blank' wording for address.city (DFN002) is honored with an explicit isBlank check in the service. Other whitespace-only values fall through to DFM, giving DFN006. Add a global trimming module later only if DFM rejects padded input in UAT."
+    },
+    {
+      "area": "other",
+      "description": "The utility ErrorCode.forField precedent matches on the LAST path segment. Copied as-is, crs.countries[0].country would map to DFN001, but spec R9b says DFN003.",
+      "recommendation_or_open_question": "DfmInvestorErrorCode.forField matches full field paths (address.country, address.city, mobile, address.line). Covered by a dispatch test and a service test."
+    },
+    {
+      "area": "other",
+      "description": "Truncate-then-mask exposure (spec Self-Critique 'weakest part'). Both SensitiveDataMasker.maskBody (5000 chars) and WebClientLoggingFilter.maskAndTruncate (maxPayloadLength) truncate BEFORE masking. A Base64 value, or the outbound securitykey, that straddles the cut is left partially unmasked in api_audit_log or span tags. The existing /dfm/onboarding has the same issue.",
+      "recommendation_or_open_question": "Mitigated, not fixed. Inbound schema property order puts images last, and DfmOnboardingPayload component order puts request_id/securitykey/request_mbrcode first and attachments last. A real fix (mask-then-truncate in the starter, or excluding this path from payload logging) is a starter/logging-policy decision for 04_security."
+    },
+    {
+      "area": "sizing",
+      "description": "service.yaml: cpu 0.5, memory 1Gi, -Xmx768m. One request can hold about 7 MB of Base64 several times over: ContentCachingRequestWrapper, the DTO, R10 decoded copies, the serialized outbound String, and one more full copy captured by WebClientLoggingFilter.captureRequestBody, because company.logging.request.include-payload is true in every profile. Roughly 35-50 MB per in-flight request. There is no explicit request-size cap below the gateway.",
+      "recommendation_or_open_question": "Not changed in this plan; spec section 9 and this plan both flag it. Confirm the expected concurrency. At about 10 concurrent registrations the heap is at risk, so revisit -Xmx/memory or exclude /api/v1/dfm/investors from payload logging. 04_security should confirm the gateway/ingress body limit."
+    },
+    {
+      "area": "compatibility",
+      "description": "The GenericResponse amendment is additive but changes the wire output of the 3 existing GenericResponse operations (/iban/validate, /veriphone/verify, /existing-data/validation), which will now emit \"errorCode\": null and \"errorMsg\": null.",
+      "recommendation_or_open_question": "Safe for tolerant JSON consumers (spec section 3.0 accepts it). Flag it in release notes in case any consumer deserializes strictly."
+    },
+    {
+      "area": "compatibility",
+      "description": "Blast radius of the new masking list: it applies service-wide. Existing endpoints' logs and audit rows will now mask IBAN (/iban/validate), cust_dob, cust_nin and eid_no (/dfm/onboarding) and any key containing 'image', 'nin' or 'iban' as a substring (e.g. imageType, 'warning'). This is intended, but it reduces troubleshooting visibility for existing flows.",
+      "recommendation_or_open_question": "Accepted per spec section 5. Mention it to the onboarding-service owners."
+    },
+    {
+      "area": "other",
+      "description": "If company.logging.database-logging.outbound-enabled is ever set to true, LoggingAutoConfiguration composes WebClientAuditFilter into alramzWebClientLoggingFilterFunction, which dfmMemberApiWebClient uses. The full DFM payload would then be audited as an OUTBOUND row, masked but truncated first. It is currently unset (default false) in all profiles.",
+      "recommendation_or_open_question": "Note it for 04_security. Do not enable outbound auditing on this service without revisiting the truncate-then-mask issue."
+    },
+    {
+      "area": "other",
+      "description": "Howto drift: request-response-and-db-audit-logging.md says SensitiveDataMasker's hardcoded key set governs audit rows and needs a starter change, and that ApiAuditAspect's pointcut includes com.alramz.controllers. Both are stale. Verified code: maskBody delegates to LogMaskingUtil, isSensitiveKey ORs LogMaskingUtil.isSensitiveKey, and the pointcut (ApiAuditAspect.java:36) has no controllers clause.",
+      "recommendation_or_open_question": "No starter change is planned, which matches the spec. The howto should be corrected separately; that is outside this feature."
+    },
+    {
+      "area": "other",
+      "description": "jwt-security-and-public-endpoints.md section 4.d says outbound calls should extend AbstractRestClient. This is deliberately not followed: AbstractRestClient forwards the inbound caller's JWT to the downstream, which would leak our JWT to DFM, and it drops error bodies.",
+      "recommendation_or_open_question": "The new client uses WebClient plus resilience4j reactor operators directly (spec section 2). The pre-existing AbstractRestClient JWT forwarding to ETrade/IBAN/VeriPhone and ApiAuditAspect's unmasked POJO arguments are flagged for 04_security and not fixed here."
+    },
+    {
+      "area": "other",
+      "description": "configuration-properties.md prefers a Lombok class with a PREFIX constant, while the spec specifies a record. ETradeProperties, the in-service precedent, is a record.",
+      "recommendation_or_open_question": "Keep the record, which constructor binding needs for @DefaultValue, and add a `PREFIX` constant so the howto's grep convention still works."
+    },
+    {
+      "area": "test-coverage",
+      "description": "LogMaskingUtil holds JVM-global static configuration (configure() replaces the key list). A masking unit test that reconfigures it can leak into other tests in the same surefire JVM, including the @SpringBootTest contexts.",
+      "recommendation_or_open_question": "DfmMaskingConfigTest saves and restores the configuration in @AfterEach. Re-configuring with defaults is acceptable, since contexts re-apply their own on startup."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #1: DFM boolean value sets are Y/N.",
+      "recommendation_or_open_question": "Kept, with one mapping point in DfmOnboardingPayload.from. If wrong, DFM rejects with DFN006; validate in DFM UAT."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #2: pay_method values are iVESTOR/bank.",
+      "recommendation_or_open_question": "Kept, with one mapping point. If wrong, DFN006; validate in UAT."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #3: EID is sent in dashed form.",
+      "recommendation_or_open_question": "Kept. If wrong, DFN006; validate in UAT."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #4: DFM accepts the security key in both the header and the body.",
+      "recommendation_or_open_question": "Kept (legacy parity). Once DFM confirms, drop one of them, preferably the body copy, which shrinks the masking-straddle risk."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #5: DFM's 'duplicate in progress' arrives as HTTP 409 or as a code still to be configured. duplicate-in-progress-codes is empty until DFM confirms, so until then a duplicate surfaces as 400 DFN006, not 409.",
+      "recommendation_or_open_question": "Populate DFM_MEMBER_API_DUPLICATE_IN_PROGRESS_CODES per environment once DFM confirms; no code change is needed."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #6: guardian.type is free text of at most 50 characters, and the CRS/TIN length caps are invented.",
+      "recommendation_or_open_question": "Kept as YAML maxLength values. Adjusting them is a one-line, additive-relaxing contract change."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #7: the Arab League list for R3 and the age-18 threshold (Asia/Dubai date) for R8.",
+      "recommendation_or_open_question": "Kept as constants in DfmInvestorServiceImpl. Business should confirm."
+    },
+    {
+      "area": "compatibility",
+      "description": "Spec residual assumption #8: the eidNumber/passportNumber field renames deviate from the design doc §4.2, for maskability.",
+      "recommendation_or_open_question": "Kept. Callers cut over to the new contract anyway (no shim, per the mmfintegrations Q1 precedent)."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #9: 503 DFN014 for an open circuit, which is an addition to the design doc.",
+      "recommendation_or_open_question": "Kept. It is consistent with the repo's ExternalSystemException-to-503 precedent."
+    },
+    {
+      "area": "other",
+      "description": "Spec residual assumption #10: connect-timeout wiring depends on the ClientHttpConnector.",
+      "recommendation_or_open_question": "Resolved in this plan; see the first technical_gaps entry (JdkClientHttpConnector)."
+    },
+    {
+      "area": "other",
+      "description": "Pre-existing repo hygiene, not touched: the onboarding-service profile YAMLs carry non-empty fallback defaults for some credentials (e.g. ETRADE_CLIENT_SECRET, brok plainPassword), and apiCollection.http has a committed JWT.",
+      "recommendation_or_open_question": "Do not copy that pattern. The new DFM keys use empty ${...:} defaults in every non-test profile, and no new token is committed. Flag the existing defaults for 04_security."
+    },
+    {
+      "area": "concurrency",
+      "description": "The circuit breaker is a singleton shared by all request threads. Each call blocks a servlet thread for up to about 5 s connect + 0.5 s retry wait + 5 s connect, or 60 s read. Retrying a connect failure is safe because no bytes reached DFM. Read timeouts are not retried; idempotency on caller retry relies on DFM's request_id handling (E14).",
+      "recommendation_or_open_question": "Acceptable for low-volume onboarding. If concurrency grows, combine this with the sizing entry (Tomcat thread pool vs. 60 s blocking calls)."
+    }
+  ],
+  "plan_critique": {
+    "acceptance_criteria_coverage": "full. Every spec section 8 checkbox maps to a target_files entry and a test_files entry. One criterion is met by a substitute mechanism: '@WebMvcTest ... 403' is covered by DfmInvestorApiDispatchTest (standalone MockMvc + JwtSecuredAspect proxy), per testing-patterns.md and the MmfApiDispatchTest precedent. 'Untouched files' and 'existing tests still pass' are verified in Step 9.",
+    "blast_radius_concerns": [
+      "GenericResponse schema is shared by 3 existing operations: additive nullable fields, but those operations' wire output changes",
+      "company.logging.masking.sensitive-keys applies service-wide (and to the static LogMaskingUtil), changing log/audit visibility for existing endpoints",
+      "A new advice bean scoped by assignableTypes with @Order(-1): it only affects DfmInvestorController. Verified that no other advice in onboarding-service has order below 0 (GlobalExceptionHandler 0, OnboardingExceptionHandler 1, starter LoggingExceptionHandler LOWEST_PRECEDENCE)",
+      "The new beans named CircuitBreaker/Retry/TimeLimiter/WebClient are added beside existing etrade/iban/veriphone beans of the same types. Existing injection points already use @Qualifier, so no ambiguity is introduced"
+    ],
+    "confidence": "medium",
+    "notes": "The repo-side plan is solid: every modified file was read, the howto pitfalls are avoided (no @WebMvcTest, a lower @Order on the narrower advice, no shared Liquibase folder because none is needed, no AbstractRestClient, @authToken already defined in apiCollection.http, masking list verified against the real starter code), and the connect-timeout question is resolved to JdkClientHttpConnector. Confidence is not high for two reasons. First, the spec's DFM-side behaviour (value sets, duplicate code, key placement) is unverified until DFM UAT. Second, the weakest technical point is memory and PII exposure on a request that carries several MB of Base64: truncate-before-mask in both the audit and span paths, plus an extra full body copy from WebClientLoggingFilter. These are mitigated by field ordering but are not structurally fixed, and fixing them needs a starter or logging-policy decision outside this feature.",
+    "user_decisions": []
+  }
+}

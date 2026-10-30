@@ -1,0 +1,336 @@
+{
+  "feature_slug": "sms-feature",
+  "spec_path": ".claude/modules/features/sms-feature/spec.md",
+  "howtos_consulted": [
+    ".claude/howtos/new-endpoint-elicitation-checklist.md",
+    ".claude/howtos/openapi-contract-first-controllers.md",
+    ".claude/howtos/api-collection-http-requests.md",
+    ".claude/howtos/configuration-properties.md",
+    ".claude/howtos/jwt-security-and-public-endpoints.md",
+    ".claude/howtos/multi-datasource-and-jpa.md",
+    ".claude/howtos/exception-handling.md",
+    ".claude/howtos/liquibase-migrations.md",
+    ".claude/howtos/request-response-and-db-audit-logging.md",
+    ".claude/howtos/scheduler-jobs.md",
+    ".claude/howtos/testing-patterns.md"
+  ],
+  "target_services": ["alramz-notification-service"],
+  "target_files": [
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/dev/sql/004-notification-otp-tables.sql",
+      "status": "new",
+      "change_summary": "Stage A. '--liquibase formatted sql' + '--changeset gaurav:004-notification-otp-tables'. CREATE TABLE IF NOT EXISTS otp_configuration / otp_management / otp_attempts per spec section 4, with ONE change: otp_management.status CHECK is IN ('PENDING','SENT','FAILED','VALIDATED') (PENDING is needed by the pre-insert send order, see plan_critique). Only index here: idx_otp_management_lookup (service_name, mobile_email, active). The expiry index moves to 005 (it only serves the cleanup job). No partial indexes, no ON CONFLICT (cols). '--rollback DROP TABLE IF EXISTS otp_attempts; DROP TABLE IF EXISTS otp_management; DROP TABLE IF EXISTS otp_configuration;'. The constraint set (token_length INTEGER 4-10, sent_via NOT NULL + CHECK, etc.) is written as the spec says, but is a Gate-1 question (technical_gaps G1-G2); finalise before the first apply."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/docker/sql/004-notification-otp-tables.sql",
+      "status": "new",
+      "change_summary": "Stage A. Byte-identical copy of dev/sql/004-notification-otp-tables.sql."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/test/sql/004-notification-otp-tables.sql",
+      "status": "new",
+      "change_summary": "Stage A. Byte-identical copy. This src/main test folder is what AlramzNotificationServiceApplicationTests and the H2 repository tests load (there is no src/test/resources changelog in this service)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/preprod/sql/004-notification-otp-tables.sql",
+      "status": "new",
+      "change_summary": "Stage A. Byte-identical copy."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/prod/sql/004-notification-otp-tables.sql",
+      "status": "new",
+      "change_summary": "Stage A. Byte-identical copy."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/repository/OtpRepository.java",
+      "status": "new",
+      "change_summary": "Stage A. @Repository on @Qualifier(\"middlewareNamedParameterJdbcTemplate\") + SqlQueriesManager, with the same private sql(key) helper as EmailTemplateRepository. Single-statement methods only; no transaction ownership (OtpService owns the TransactionTemplates). The records OtpConfig, OtpRow and OtpCandidate are nested public records here, following the SmsTableRepository.SmsTableRow precedent: 3 fewer files than spec 3.5's com.alramz.model placement. Methods: findConfig, findAllConfigs, maxAttemptsSince, deactivateActive, insertOtp (returns long id via GeneratedKeyHolder with keyColumnNames {\"id\"}; read keyHolder.getKey(), not getKeys().get(\"id\"), because H2 upper-cases the column name), markSent(ids), markFailed(ids), upsertAttempt (two statements, see sql-queries.xml), lockActiveCandidates, markValidated, incrementValidationAttempts, resetAttempts. Stage D adds deactivateExpired."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/sql/sql-queries.xml",
+      "status": "modified",
+      "change_summary": "Stage A. Append the otp.* entries (middleware, :named binds, &lt;/&gt; escaped). Keys: otp.config.findByName, otp.config.findAll, otp.attempts.maxSince, otp.management.deactivateActive, otp.management.insert, otp.management.markSent (SET status='SENT' WHERE id IN (:ids); active is not touched, so a concurrent newer send's deactivation is never undone), otp.management.markFailed (SET status='FAILED', active='0' WHERE id IN (:ids)), otp.attempts.insertIfAbsent (INSERT ... attempts=0, last_attempt_date=:now ... ON CONFLICT DO NOTHING, target-less per D-2), otp.attempts.update (SET attempts = CASE WHEN last_attempt_date &lt; :dayStart THEN 1 ELSE attempts + 1 END, last_attempt_date = :now), otp.management.lockCandidates (... active='1' AND expiry_date_time &gt; :now ORDER BY id DESC FOR UPDATE), otp.management.markValidated, otp.management.incrementValidation, otp.attempts.reset. Update the header comment to say otp.* runs on middleware. These replace spec's otp.attempts.insert + DuplicateKeyException retry (see technical_gaps)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/config/OtpProperties.java",
+      "status": "new",
+      "change_summary": "Stage B. @ConfigurationProperties(prefix = \"app.otp\") record OtpProperties(boolean fixedTestOtpEnabled, String emailFrom). This is a record to follow the local EmailProperties/SmsProperties precedent (the howto prefers Lombok + PREFIX; both prior features recorded the same divergence). Only the two values that vary per environment are properties. sms-msg-category \"4.5\", default-max-validation-attempts 3 and max-recipients 5 are constants in OtpService, per the A-2 'fixed constants' precedent (deviation from spec section 5, logged in technical_gaps)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/AlramzNotificationServiceApplication.java",
+      "status": "modified",
+      "change_summary": "Stage B. Add OtpProperties.class to @EnableConfigurationProperties({EmailProperties.class, SmsProperties.class, OtpProperties.class}). Nothing else changes; @EnableScheduler(jobGroupName = \"notification\") already exists."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application.yml",
+      "status": "modified",
+      "change_summary": "Stage B. Under app: add 'otp:' with fixed-test-otp-enabled: ${OTP_FIXED_TEST_OTP_ENABLED:false} and email-from: ${OTP_EMAIL_FROM:notification@alramz.ae}."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-dev.yml",
+      "status": "modified",
+      "change_summary": "Stage B. Under app: add otp.fixed-test-otp-enabled: ${OTP_FIXED_TEST_OTP_ENABLED:true}. Leave the dev JWT_SECRET fallback line untouched."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-docker.yml",
+      "status": "modified",
+      "change_summary": "Stage B. Under app: add otp.fixed-test-otp-enabled: ${OTP_FIXED_TEST_OTP_ENABLED:true}."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-test.yml",
+      "status": "modified",
+      "change_summary": "Stage B. Under app: add otp.fixed-test-otp-enabled: ${OTP_FIXED_TEST_OTP_ENABLED:true}."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-preprod.yml",
+      "status": "modified",
+      "change_summary": "Stage B. Under app: add otp.fixed-test-otp-enabled: false, as a literal so env cannot flip it (decision 8)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/application-prod.yml",
+      "status": "modified",
+      "change_summary": "Stage B. Under app: add otp.fixed-test-otp-enabled: false (literal) and otp.email-from: ${OTP_EMAIL_FROM:cm@alramz.ae}, which matches prod's allowed-senders default."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/exception/OtpException.java",
+      "status": "new",
+      "change_summary": "Stage B. extends RuntimeException with (String code, String message) and getCode(). Mirrors SmsException: no HttpStatus and no cause constructor (D-5 precedent)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+      "status": "modified",
+      "change_summary": "Stage B. Add one @ExceptionHandler(OtpException.class) handleOtp: OTP001-005 and OTP007 -> BAD_REQUEST; OTP006 and OTP008 -> TOO_MANY_REQUESTS; OTP009 -> BAD_GATEWAY; default -> INTERNAL_SERVER_ERROR. Everything goes through the existing codedOrLogged. Update the GenericResponse-centric class javadoc only if needed. This stays the single @Order(0) advice; no new advice bean (the OnboardingExceptionHandler pitfall is avoided)."
+    },
+    {
+      "path": "services/alramz-notification-service/specs/openapi.yaml",
+      "status": "modified",
+      "change_summary": "Stage C (write first, before any Java). Add tag Otp and the paths /api/v1/otp/send (post, sendOtp), /api/v1/otp/validate (post, validateOtp) and /api/v1/otp/configurations (get, getOtpConfigurations). Full /api/v1 prefix, per this file's local precedent. Each path declares exactly the statuses in spec 3.1/3.2/3.3 with real examples; 401 is a description only. Add schemas OtpSendRequest (serviceName alias key, recipients alias value, language pattern ^(EN|AR)$ plain string, ipAddress maxLength 45), OtpSendResult, OtpChannelResult (channel enum SMS/EMAIL, status enum SENT/FAILED), OtpValidateRequest (hashedOtp alias hashedOTP, pattern doc only), OtpValidateResult, OtpConfigurationList and OtpConfiguration. Aliases use x-field-extra-annotation '@com.fasterxml.jackson.annotation.JsonAlias({...})' as at lines 737/832. Generalise GenericResponse.errorCode to 'MGE-V-0xx / EML00x / SMS0xx / OTP0xx' and list the OTP results in response's description. OtpConfiguration.sentVia: enum SMS/EMAIL/EMAIL|SMS only if Gate 1 keeps the sent_via CHECK; otherwise a plain string (see technical_gaps G2)."
+    },
+    {
+      "path": "services/alramz-notification-service/pom.xml",
+      "status": "modified",
+      "change_summary": "Stage C. Append OtpSendRequest,OtpSendResult,OtpChannelResult,OtpValidateRequest,OtpValidateResult,OtpConfigurationList,OtpConfiguration to <modelsToGenerate> (line 220). No other pom change."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+      "status": "modified",
+      "change_summary": "Stage C. One-word change: 'private static final Pattern EMAIL' becomes 'static final Pattern EMAIL' (package-private), so OtpService in the same package reuses the rule. OtpService already uses the package-private sha256Hex and loggable from this class."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java",
+      "status": "modified",
+      "change_summary": "Stage C. Add 'public static boolean isValidMobile(final String number) { return number != null && NUMBER.matcher(number).matches(); }' next to the existing public static mask(). No routing change: the line-76 check in sendWithOutcome stays as it is."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java",
+      "status": "new",
+      "change_summary": "Stage C. A concrete @Service with no interface and NO @Transactional. Constructor: (OtpRepository, SmsService, EmailService, OtpProperties, EmailProperties, PlatformTransactionManager [@Primary = middleware], Environment, ObjectProvider<JwtContext>), plus a package-private overload taking Clock (Dubai) and a SecureRandom-free OTP supplier hook is NOT needed; tests use fixed-test mode or assert the hash = sha256Hex of a captured digits-only value. The constructor holds the two E23 startup guards (fixed-test true under the prod profile; email-from not in allowedSenders, case-insensitive) and builds one TransactionTemplate. Constants: MAX_RECIPIENTS = 5, SMS_MSG_CATEGORY = \"4.5\", DEFAULT_MAX_VALIDATION_ATTEMPTS = 3, a static SecureRandom, and SEPARATORS [|;,/\\s]+. send(): field checks (OTP001), config (OTP002), recipient parsing (OTP003/004/005), daily limit read (OTP006), message build (OTP010), OTP + hash; then tx1 = deactivateActive + insertOtp per recipient (active='1', status='PENDING'); then deliver with no transaction open; then tx2 = markSent/markFailed + (if any delivered) insertIfAbsent+update attempts per recipient. A tx2 failure is logged at ERROR (class name only) and does NOT change the response. Outcome: 200, or OTP009 thrown after tx2. validate(): steps 1-3 OUTSIDE the transaction; TransactionTemplate.execute { lock candidates; OTP008 if any candidate is at the limit (thrown inside: no writes yet, so rollback is harmless); constant-time compare via MessageDigest.isEqual; markValidated + resetAttempts, or incrementValidationAttempts } returns VALID/INVALID; OTP007 is thrown after execute() returns, i.e. after commit. configurations(): findAllConfigs mapped to OtpConfiguration. One outcome log line per request, with no OTP, hash, rendered text, email address or unmasked mobile."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/controllers/OtpController.java",
+      "status": "new",
+      "change_summary": "Stage C. @RestController @RequiredArgsConstructor class OtpController implements com.alramz.api.OtpApi. Three @Override methods, each @JwtSecured(roles = \"APP_NOTIFICATION\"), with no @Loggable (the body carries the hash and recipients). Each delegates to OtpService and wraps the result in GenericResponse 200 \"OK\" (SmsController.ok precedent). No class-level @RequestMapping, because the spec paths carry /api/v1."
+    },
+    {
+      "path": "services/alramz-notification-service/apiCollection.http",
+      "status": "modified",
+      "change_summary": "Stage C. Insert before '### Scheduler Management APIs' (line 159) six blocks with Authorization: Bearer {{authToken}} (@authToken is already defined at line 3) and synthetic values only (user@example.com, 971500000010). The blocks: Send OTP (fixed-test mode in dev: no real send) / Send OTP -ve (language 'en', expects 400 OTP001); Validate OTP (hashedOtp = SHA-256 of 1234, i.e. 03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4) / Validate OTP -ve (wrong hash, expects 400 OTP007); Get OTP Configurations / Get OTP Configurations -ve (no token, expects 401). Leave the user's Register/Login edits untouched (D-7)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/dev/sql/005-notification-otp-cleanup-job.sql",
+      "status": "new",
+      "change_summary": "Stage D (OPTIONAL: run only if Gate 1 keeps the cleanup job; see technical_gaps G7). '--changeset gaurav:005-notification-otp-cleanup-job': CREATE INDEX IF NOT EXISTS idx_otp_management_expiry ON otp_management(active, expiry_date_time); INSERT INTO schedule_job (...) VALUES ('notification','otpCleanup','otpCleanupJobRunner','otpCleanupJobRunner','','FIXED_DELAY',NULL,3600000,NULL,'Y',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING (target-less, D-2). '--rollback DELETE FROM schedule_job WHERE job_group_name = 'notification' AND schedule_id = 'otpCleanup'; DROP INDEX IF EXISTS idx_otp_management_expiry;'"
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/docker/sql/005-notification-otp-cleanup-job.sql",
+      "status": "new",
+      "change_summary": "Stage D (optional). Byte-identical copy."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/test/sql/005-notification-otp-cleanup-job.sql",
+      "status": "new",
+      "change_summary": "Stage D (optional). Byte-identical copy."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/preprod/sql/005-notification-otp-cleanup-job.sql",
+      "status": "new",
+      "change_summary": "Stage D (optional). Byte-identical copy."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/resources/db/changelog/prod/sql/005-notification-otp-cleanup-job.sql",
+      "status": "new",
+      "change_summary": "Stage D (optional). Byte-identical copy."
+    },
+    {
+      "path": "services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/OtpCleanupJob.java",
+      "status": "new",
+      "change_summary": "Stage D (optional). @Component(\"otpCleanupJobRunner\") implements Schedulable. run() calls repository.deactivateExpired(LocalDateTime.now(dubaiClock)) and logs 'OTP cleanup deactivated={} durationMs={}'. The whole body is in try/catch(RuntimeException) and logs only the class name, so it never throws (SmsDispatchJob pattern). Stage D also adds OtpRepository.deactivateExpired and the sql-queries.xml key otp.management.deactivateExpired (UPDATE otp_management SET active='0' WHERE active='1' AND expiry_date_time &lt; :now)."
+    }
+  ],
+  "test_files": [
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/repository/OtpRepositoryTest.java",
+      "status": "new",
+      "covers": "Stage A, on H2 MODE=PostgreSQL via ScriptUtils on db/changelog/test/sql/004 (EmailTemplateRepositoryTest harness, no Spring). It proves the section 4 columns/CHECKs/PK/UNIQUE: inserts violating token_length, sent_via, status and active are rejected, and PENDING is accepted. findConfig exact/case-sensitive; findAllConfigs ordered. maxAttemptsSince ignores yesterday's row (Dubai dayStart). The upsert first-insert gives 1, the same day gives +1, and a row whose last_attempt_date is before dayStart resets to 1; insertIfAbsent twice is a no-op on the second call. insertOtp returns distinct ids. markSent leaves active untouched; markFailed sets FAILED/'0'. lockCandidates (FOR UPDATE syntax accepted by H2) excludes expired, inactive and other-recipient rows, ordered id DESC, and includes PENDING active rows. markValidated touches only the given ids. incrementValidationAttempts persists. resetAttempts is scoped to service+recipients. Stage D adds deactivateExpired (only active='1' AND expiry < now), after also running 005."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/AlramzNotificationServiceApplicationTests.java",
+      "status": "modified",
+      "covers": "No code change expected: it already loads classpath:db/changelog/test/... with includeAll, so contextLoads applies 004 (Stage A) and 005 (Stage D) on H2 and wires OtpProperties/OtpService guards with the default profile (fixed-test false, email-from in allow-list). Listed so 03_implement re-runs it at every stage; only touch it if a new required property appears."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java",
+      "status": "modified",
+      "covers": "Stage B. otpCallerErrorsCarryCodes: OTP001-005 and OTP007 give 400 with code/msg; OTP006 and OTP008 give 429 with code/msg. otpBackendErrorsHaveNoCodes: OTP009 gives 502 and OTP010 gives 500, both with a null errorCode/errorMsg. Same shape as smsCallerErrorsCarryCodes/smsBackendErrorsHaveNoCodes."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/service/OtpServiceTest.java",
+      "status": "new",
+      "covers": "Stage C. Mockito with a mocked OtpRepository/SmsService/EmailService, a real TransactionTemplate over a mocked PlatformTransactionManager (getTransaction returns SimpleTransactionStatus; verify commit/rollback), a fixed Clock with a Dubai/UTC day mismatch, and real OtpProperties/EmailProperties/MockEnvironment. Coverage: E1-E8, each with no channel call and no repository write; E9 fixed-test 1234 / 123456 with zero channel calls. Generated OTP length = token_length and stored hash = sha256Hex(otp). SMS called once with msgCategory 4.5 and expiryInSecs; email once per address with from = emailFrom, subject/body split on ^+^, %OTP% replaced. E10 partial (markSent SMS ids, markFailed email ids, upsert for every recipient). E11 all failed (OTP009 thrown after tx2 commit, no upsert). ORDER: tx1 (deactivate+insert PENDING) commits BEFORE any channel call, and no transaction is open during channel calls (InOrder on txManager.commit vs smsService/emailService). tx2 failure after delivery still returns 200 and logs ERROR. Validate: E2/E3/E14-E18; OTP007 is thrown only after commit() (verify commit, never rollback); OTP008 rolls back with no update calls; null max_validation_attempts uses 3; upper-case hash matches. Config list mapping and empty list. E23 guards: prod + flag on throws, email-from not allowed throws, dev + flag on OK. Log capture (ListAppender): no OTP, hash, address, rendered text or unmasked mobile in any line."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/controllers/OtpControllerTest.java",
+      "status": "new",
+      "covers": "Stage C. Direct construction with a mocked OtpService (no MockMvc/@WebMvcTest). Each method returns a 200 GenericResponse wrapping the service result. @JwtSecured(roles=\"APP_NOTIFICATION\") is present on all 3 methods (reflection, as in SmsControllerTest#bothOperationsRequireAppNotificationRole). Alias binding via JsonMapper: key/value/hashedOTP bind to serviceName/recipients/hashedOtp, and unknown correlationID is ignored (spec AC 'binding test')."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/config/ProfileSecurityConfigTest.java",
+      "status": "modified",
+      "covers": "Stage C. Extend the doesNotContain list with /api/v1/otp/send, /api/v1/otp/validate, /api/v1/otp/configurations and /api/v1/otp/** for all 6 yml files. The test already accepts the dev JWT_SECRET fallback, so the D-0 baseline failure should no longer appear (see technical_gaps G13)."
+    },
+    {
+      "path": "services/alramz-notification-service/src/test/java/com/alramz/scheduler/job/OtpCleanupJobTest.java",
+      "status": "new",
+      "covers": "Stage D (optional). With a mocked OtpRepository and a fixed Clock: deactivateExpired is called with Dubai now; a repository RuntimeException is swallowed and logged by class name (E22)."
+    }
+  ],
+  "liquibase_changeset": {
+    "applicable": true,
+    "next_changeset_file": "004-notification-otp-tables.sql (Stage A); 005-notification-otp-cleanup-job.sql (Stage D, only if the cleanup job is kept at Gate 1)",
+    "profile_folders": [
+      "services/alramz-notification-service/src/main/resources/db/changelog/dev/sql/",
+      "services/alramz-notification-service/src/main/resources/db/changelog/docker/sql/",
+      "services/alramz-notification-service/src/main/resources/db/changelog/test/sql/",
+      "services/alramz-notification-service/src/main/resources/db/changelog/preprod/sql/",
+      "services/alramz-notification-service/src/main/resources/db/changelog/prod/sql/"
+    ],
+    "numbering_check": "Verified independently in all 5 folders: each holds exactly 001-notification-schedule-job.sql, 002-notification-email-tables.sql and 003-notification-sms-dispatch-job.sql, with changeset ids gaurav:001-/002-/003-notification-*. No 004/005 file or id exists anywhere, and no otp table or SQL exists in the service. Each per-profile master is includeAll on its own sql folder, so no master edit is needed. 004 and 005 sort after 003 lexically and do not clash. 001-003 are not touched."
+  },
+  "config_changes": {
+    "permit_all_urls": [],
+    "new_properties": [
+      "application.yml: app.otp.fixed-test-otp-enabled = ${OTP_FIXED_TEST_OTP_ENABLED:false}",
+      "application.yml: app.otp.email-from = ${OTP_EMAIL_FROM:notification@alramz.ae}",
+      "application-dev.yml / application-docker.yml / application-test.yml: app.otp.fixed-test-otp-enabled = ${OTP_FIXED_TEST_OTP_ENABLED:true}",
+      "application-preprod.yml: app.otp.fixed-test-otp-enabled = false (literal)",
+      "application-prod.yml: app.otp.fixed-test-otp-enabled = false (literal); app.otp.email-from = ${OTP_EMAIL_FROM:cm@alramz.ae}",
+      "NOT added (constants in OtpService instead, A-2 precedent): sms-msg-category 4.5, default-max-validation-attempts 3, max-recipients 5"
+    ],
+    "masking_keys_to_add": []
+  },
+  "execution_steps": [
+    "Step 0 (baseline): from the repo root run 'mvn -pl services/alramz-notification-service -am clean test' and record the result. ProfileSecurityConfigTest now accepts the dev fallback, so expect full green; if the D-0 failure still appears, record it as baseline.",
+    "Stage A (persistence, self-contained): write 004-notification-otp-tables.sql once, copy it byte-identically into dev/docker/test/preprod/prod sql folders, and confirm 5 hits with matching md5 via find + md5. Append the otp.* keys (minus deactivateExpired) to sql-queries.xml. Write OtpRepository with its nested records. Write OtpRepositoryTest first (red), then make it green. Verify: 'mvn -pl services/alramz-notification-service -am test -Dtest=OtpRepositoryTest,AlramzNotificationServiceApplicationTests', then the full 'test'. Nothing calls the repository yet; the bean only needs the existing middleware template.",
+    "Stage B (config + error mapping, self-contained): OtpProperties record, the @EnableConfigurationProperties entry, and app.otp yml in the 6 files exactly as in config_changes. OtpException, plus the handleOtp arm and its GlobalExceptionHandlerTest cases (red, then green). Verify: '-Dtest=GlobalExceptionHandlerTest,AlramzNotificationServiceApplicationTests', then the full 'test'. The guards are not in place yet, so contextLoads only proves binding.",
+    "Stage C (contract-first endpoints): (1) edit specs/openapi.yaml and pom.xml modelsToGenerate, then run 'mvn -pl services/alramz-notification-service -am clean test-compile -Dmaven.compiler.useIncrementalCompilation=false' and confirm target/generated-sources/.../api/OtpApi.java and the 7 models exist. (2) Make the two visibility edits (TemplatedEmailService.EMAIL package-private; SmsServiceImpl.isValidMobile). (3) Write OtpServiceTest and OtpControllerTest first, then OtpService and OtpController. The send order is: validate/read/build -> tx1 insert PENDING (active) -> channel calls with no transaction -> tx2 finalize. The validate order is: checks outside the transaction -> one TransactionTemplate -> throw OTP007 after it returns. Use the two-statement upsert. (4) Extend ProfileSecurityConfigTest. (5) Add the apiCollection.http blocks. Verify: '-Dtest=OtpServiceTest,OtpControllerTest,ProfileSecurityConfigTest,AlramzNotificationServiceApplicationTests', then the full 'clean test'.",
+    "Stage D (OPTIONAL: only if Gate 1 keeps the hourly cleanup job; skip entirely otherwise, and nothing in A-C depends on it): write 005-notification-otp-cleanup-job.sql (expiry index + schedule_job row) into the 5 folders byte-identically. Add OtpRepository.deactivateExpired + the otp.management.deactivateExpired key, OtpCleanupJob, OtpCleanupJobTest, and the deactivateExpired case in OtpRepositoryTest (run the 005 script after 004; the schedule_job table comes from 001, so run 001 first in that test). Verify: '-Dtest=OtpCleanupJobTest,OtpRepositoryTest,AlramzNotificationServiceApplicationTests'; the contextLoads log shows 'scheduleId=otpCleanup ... FIXED_DELAY ... delay=3600000'. Then run the full 'clean test'.",
+    "Final: run the full 'mvn -pl services/alramz-notification-service -am clean test'. grep that 004 (and 005 if Stage D ran) appears once per profile folder. git diff shows 001-003 unchanged and no change under alramz-api-starter, infra/, k8s/ or .github/. Stage files explicitly (no 'git add .')."
+  ],
+  "technical_gaps": [
+    {
+      "area": "compatibility",
+      "description": "G1 [Gate-1 question, unapproved legacy deviation] otp_configuration.token_length changes type from VARCHAR2(200) to INTEGER with CHECK BETWEEN 4 AND 10. Legacy rows outside 4-10 (or non-numeric) fail at ops load time.",
+      "recommendation_or_open_question": "Ask: keep INTEGER CHECK 4-10 (recommended: SecureRandom digit generation needs a sane int), INTEGER with only CHECK >= 1, or legacy VARCHAR(200) parsed in code (a non-numeric value gives OTP010 at send time)? Finalise before 004 is applied anywhere; afterwards it needs a new changeset."
+    },
+    {
+      "area": "compatibility",
+      "description": "G2 [Gate-1 question, unapproved] otp_configuration.sent_via becomes NOT NULL with CHECK IN ('SMS','EMAIL','EMAIL|SMS') and is narrowed to VARCHAR(20). Legacy allowed NULL and any value up to 200 characters. The OpenAPI OtpConfiguration.sentVia enum depends on this: if the CHECK is dropped, an out-of-enum DB value would make the generated enum's fromValue throw, and GET /otp/configurations would return 500.",
+      "recommendation_or_open_question": "Ask: keep NOT NULL + CHECK (recommended), or keep the legacy nullable VARCHAR(200)? If legacy, make sentVia a plain string in openapi.yaml and have send() treat an unknown/null sent_via as OTP010. The other added constraints (PK on message_id, UNIQUE service_name, expiry_in_seconds 1-86400, max_attempts >= 1, max_validation_attempts NULL or >= 1) should go to Gate 1 in the same question."
+    },
+    {
+      "area": "compatibility",
+      "description": "G3 [Gate-1 question, unapproved] new 5-recipient cap (OTP005). Legacy had no cap. It is a code constant in this plan, not a property (A-2 precedent; one value, no environment variance).",
+      "recommendation_or_open_question": "Ask: keep the 5 cap (recommended anti-bombing guard), use a different number, or no cap? 'No cap' still leaves SmsProperties.maxRecipients=50 as the SMS ceiling (SMS004 becomes a FAILED channel, then 502)."
+    },
+    {
+      "area": "compatibility",
+      "description": "G4 [Gate-1 question, unapproved] tokens that are neither a valid email nor a valid mobile are rejected with 400 OTP003/OTP004. Legacy silently dropped them.",
+      "recommendation_or_open_question": "Ask: reject (recommended: visible, cheap to relax) or ignore like legacy? If ignore, the only change is in OtpService parsing (drop the token instead of throwing). OTP003/004 stay for the 'no recipient for the configured channel' case."
+    },
+    {
+      "area": "compatibility",
+      "description": "G5 [Gate-1 question, unapproved] a NULL otp_configuration.max_validation_attempts defaults to 3. Legacy behaviour for NULL is not documented; it may have meant unlimited.",
+      "recommendation_or_open_question": "Ask: default 3 (recommended; brute-force guard), or unlimited for NULL? This is a constant in OtpService (A-2 precedent), not the spec's app.otp.default-max-validation-attempts property."
+    },
+    {
+      "area": "other",
+      "description": "G6 Plan deviation from spec section 5: sms-msg-category, default-max-validation-attempts and max-recipients are OtpService constants, not app.otp.* properties. The spec's acceptance criterion 'app.otp.* matches the section 5 table' is amended to the two keys in config_changes.",
+      "recommendation_or_open_question": "Confirm at Gate 1 together with G3/G5. Follows the A-2 precedent the user approved for SMS constants."
+    },
+    {
+      "area": "other",
+      "description": "G7 [Gate-1 question] The hourly cleanup job does no correctness work. Validate's lock query already filters expiry_date_time > :now. Send's deactivateActive clears a recipient's prior active rows regardless of expiry. The daily reset is lazy per recipient. Nothing reads otp_management.active outside those two queries, and the job does not delete rows, so it does not bound table growth either. Its only effect is cosmetic: active='0' on expired rows for ad-hoc ops queries. Decision D1 lists 'cleanup of expired OTPs' in scope, and the lazy filter already provides that behaviour.",
+      "recommendation_or_open_question": "Recommend dropping it: skip Stage D, which removes 005 x5, OtpCleanupJob, its test, the expiry index and the deactivateExpired SQL. A-C are complete without it. If the user wants it kept, Stage D runs unchanged. Because the expiry index moved into 005, 004 does not change either way."
+    },
+    {
+      "area": "concurrency",
+      "description": "G8 Spec 3.1 step 8c upsert (UPDATE, INSERT if 0 rows, catch DuplicateKeyException, retry UPDATE) breaks on Postgres. A unique violation aborts the whole transaction ('current transaction is aborted'), so the retry UPDATE and the commit fail. H2 does not abort, so H2 tests would pass while production fails.",
+      "recommendation_or_open_question": "Replaced by two statements with no exception handling: 'INSERT ... (attempts 0, last_attempt_date :now) ON CONFLICT DO NOTHING' (target-less, H2-accepted per D-2; the only other unique key is the BIGSERIAL PK), then the CASE-based UPDATE. Postgres waits on a concurrent conflicting insert and then skips; the UPDATE row-lock serialises increments."
+    },
+    {
+      "area": "concurrency",
+      "description": "G9 E19 (two concurrent validates) and wrong-guess counting rely on Postgres READ COMMITTED FOR UPDATE semantics: the blocked session re-evaluates the WHERE clause on the committed row version. H2 cannot prove this; OtpRepositoryTest proves only the syntax and single-session semantics.",
+      "recommendation_or_open_question": "Do a manual two-session psql check on the dev Postgres before go-live (same treatment as A-4). Do not add Testcontainers for this (no precedent; scope)."
+    },
+    {
+      "area": "concurrency",
+      "description": "G10 A concurrent send (tx1 'UPDATE ... active=0' over several recipients) and validate (FOR UPDATE, id DESC) on overlapping multi-recipient sets can lock rows in different orders. Postgres detects the deadlock and aborts one statement. Send tx1 runs before any delivery, so an abort gives a 500 with nothing sent; on validate it gives a 500 with nothing written. The send-limit race (spec section 9 item 8) is also unchanged, as in legacy.",
+      "recommendation_or_open_question": "Accept: rare, self-healing, and the caller retries. Note it for 04_security/ops; no code."
+    },
+    {
+      "area": "compatibility",
+      "description": "G11 Legacy hash encoding (decision 6) is still unproven, and the plaintext OTP is SHA-256 without salt/HMAC (spec out of scope).",
+      "recommendation_or_open_question": "Ops check with the known value before go-live (decision 6 residual). No plan change."
+    },
+    {
+      "area": "test-coverage",
+      "description": "G12 Howto near-misses avoided: no @WebMvcTest/MockMvc (direct controller construction); no second advice bean (one arm in the @Order(0) handler); no shared-root changelog (5 explicit copies, test folder under src/main as this service actually wires it); no plain @Scheduled (Schedulable + schedule_job row); no starter SensitiveDataMasker change (payload logging off, no @Loggable); @authToken already defined. Deviations from the howtos that follow local precedent: properties as a record (not Lombok + PREFIX); full /api/v1 paths in openapi.yaml.",
+      "recommendation_or_open_question": "None; recorded for traceability."
+    },
+    {
+      "area": "other",
+      "description": "G13 The spec assumes the D-0 baseline failure (ProfileSecurityConfigTest[application-dev.yml]). The live test now accepts the dev '${JWT_SECRET:default...}' fallback (DEV_SECRET_WITH_FALLBACK), so the suite should be fully green.",
+      "recommendation_or_open_question": "03_implement records the Step 0 baseline and treats any failure as real unless the baseline already showed it."
+    },
+    {
+      "area": "sizing",
+      "description": "G14 service.yaml (0.5 CPU, 1Gi, 1-5 replicas) is unchanged. Per request, send now does 2 short transactions + 1 read + up to 6 synchronous channel calls (worst case about 10 s on Graph 429 retries), holding a Tomcat thread but never a DB connection during sends. The middleware pool is 5 per pod.",
+      "recommendation_or_open_question": "No change. Revisit only if OTP traffic is burst-heavy (login storms)."
+    },
+    {
+      "area": "other",
+      "description": "G15 No retention for otp_management/otp_attempts (spec out of scope); about one row per recipient per send.",
+      "recommendation_or_open_question": "A follow-up feature if ops asks. A retention DELETE could later reuse Stage D's job slot."
+    }
+  ],
+  "plan_critique": {
+    "acceptance_criteria_coverage": "full, with stated amendments. Every spec section 8 criterion maps to a target/test file above. Amended: (a) E13 no longer returns 500 after delivery, because the delivered OTP is already validatable and a finalize failure is logged; (b) app.otp.* has 2 keys, not 5 (G6); (c) otp_management.status adds PENDING; (d) the expiry index lives in 005; (e) the model records are nested in OtpRepository; (f) the attempts upsert is two statements (G8). The cleanup-job criteria are covered only if Stage D runs (G7).",
+    "blast_radius_concerns": [
+      "TemplatedEmailService.EMAIL widened to package-private: visible only inside com.alramz.service. No behaviour change, and the existing tests are unaffected.",
+      "SmsServiceImpl gains a public static isValidMobile next to the already-public mask (which SmsDispatchJob already calls statically). No routing or validation change for existing callers.",
+      "GlobalExceptionHandler gains one arm. The existing arms and codedOrLogged are untouched; GlobalExceptionHandlerTest guards this.",
+      "OtpService sends through the in-process EmailService/SmsService. An OTP EmailValidationException (for example MGE-V-007 sender not allowed) becomes a FAILED channel, never a caller 403; the E23 startup guard makes V-007 unreachable for the configured sender.",
+      "004/005 run on the SHARED middleware Postgres DB (as 001-003 do). Check there that no otp_configuration/otp_management/otp_attempts table already exists from the legacy migration; CREATE TABLE IF NOT EXISTS would silently keep a legacy shape that the code does not match."
+    ],
+    "review_points": {
+      "1_delivery_vs_persistence_order": "Chosen: insert-before-send, with the rows ACTIVE. tx1 (short) = deactivate prior active rows for (service, recipients) + insert one row per recipient with active='1', status='PENDING'. Then channel calls with no transaction or connection held. Then tx2 (short) = markSent(delivered ids; active untouched), markFailed(failed ids; FAILED, active='0'), and the attempts upsert if anything was delivered. Why ACTIVE rather than the suggested PENDING/inactive: with inactive rows, a tx2 failure after delivery still leaves the user holding an OTP that can never validate (E13 just moves). With active rows, the delivered OTP validates even if tx2 fails, and an undelivered recipient's row is a secret nobody holds, bounded by expiry and validation_attempts. A tx2 failure is therefore logged at ERROR and the response still reports the real delivery (200, or 502 if nothing was delivered). Costs, accepted: 1 extra UPDATE per send; PENDING rows left behind only when tx2 fails (visible to ops); attempts not counted in that rare case; between tx1 and delivery the OTP is validatable, which is harmless because nobody has it yet. Prior OTPs are still deactivated in tx1 even if every send then fails, the same as spec 8a. Spec AC 'deactivate in the same transaction as the insert' holds.",
+      "2_widening_visibility": "Kept the spec's two edits rather than a shared validator. OtpService already reaches TemplatedEmailService's package-private sha256Hex/loggable and SmsServiceImpl's public static mask (SmsDispatchJob does the same), so the coupling exists either way. Keeping each regex with the class that enforces it also means the OTP pre-check cannot drift from the router's SMS002 rule. A new utils validator is a 3rd copy of the email regex unless EmailServiceImpl and TemplatedEmailService (and SmsServiceImpl) are refactored to use it, and EmailServiceImpl is explicitly out of scope. So the shared class is the bigger, not cleaner, change today. Hoist both patterns into com.alramz.utils the next time EmailServiceImpl is touched.",
+      "3_unapproved_assumptions": "Listed separately as Gate-1 questions G1 (token_length type + 4-10), G2 (sent_via NOT NULL + 3-value CHECK, plus the other new constraints), G3 (5-recipient cap), G4 (rejecting unrecognised tokens), G5 (NULL max_validation_attempts -> 3). G1/G2 must be settled before 004 is applied anywhere, because a later change needs a new changeset.",
+      "4_validate_transaction": "Correct on Postgres. In READ COMMITTED, SELECT ... ORDER BY id DESC FOR UPDATE blocks a concurrent validator. When the first commits, Postgres re-checks the WHERE clause against the new row version: a validated row (active='0') drops out, giving OTP007, and an incremented validation_attempts is seen by the limit check. Locks are taken in id-DESC order, so two validates cannot deadlock. Throwing OTP007 after TransactionTemplate.execute() returns means the increment is committed. OTP008 is thrown inside before any write, so the rollback is harmless. This holds only if no outer transaction exists, so OtpService/OtpController must carry no @Transactional (none exist in the service today). H2 2.x MODE=PostgreSQL accepts single-table SELECT ... ORDER BY ... FOR UPDATE, so syntax and single-session semantics (increment persists after the 400, only matched ids are VALIDATED, the upper-case hash matches) are proven on H2. The concurrent re-check is not, so a manual Postgres check is listed (G9). Tightened: field checks, config and parse move outside the transaction, so locks are held only for lock -> compare -> update.",
+      "5_cleanup_job": "Not needed for correctness (G7). The validate expiry filter, send's per-recipient deactivation and the lazy daily reset already cover everything the job would do; it only flips a flag nothing reads. Planned as an isolated, optional Stage D (005 also carries the expiry index, so dropping D leaves 004 untouched). Recommend dropping at Gate 1; it is kept in the plan only because decision D1 names expired-OTP cleanup."
+    },
+    "confidence": "medium",
+    "notes": "The weakest parts are the behaviours no offline test can prove. First, Postgres FOR UPDATE re-check under concurrency (G9). Second, the first Liquibase run on the shared middleware DB, where a legacy-shaped otp_* table could already exist and IF NOT EXISTS would hide the mismatch. Third, five behaviour changes from legacy (G1-G5) that the user has not approved, two of which (G1/G2) shape changeset 004 and must be settled before it is applied anywhere. The send-order redesign closes the spec's E13 hole but leaves rare PENDING rows and an uncounted attempt when the finalize transaction fails, a deliberate trade for never stranding a delivered OTP.",
+    "user_decisions": []
+  }
+}

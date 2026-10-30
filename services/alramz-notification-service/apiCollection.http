@@ -1,19 +1,52 @@
 @baseUrl=http://localhost:8082
+# Filled from the Login response below (VS Code REST Client). Run Register once, then Login.
+@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJub3RpZmljYXRpb25fYXBwIiwiaWF0IjoxNzkzMzM3ODk4LCJleHAiOjE3OTM0MjQyOTgsInJvbGVzIjpbIkFQUF9OT1RJRklDQVRJT04iXSwiYXBwbGljYXRpb24iOiJhbHJhbXotbm90aWZpY2F0aW9uLXNlcnZpY2UiLCJlbnZpcm9ubWVudCI6ImxvY2FsIn0.z1leqGynkdb6Z7uIuFQKF5CbGmF3AgqYTq6kK67jyss
 
 ### Info
 GET {{baseUrl}}/api/v1/info
 
 ###
 
-### Send Email - Simple
-POST {{baseUrl}}/api/v1/email/send
+### Register (one-time; the user lives in this service's in-memory H2, so re-run after each restart)
+# @name register
+POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
+    "authType": "JWT",
+    "consumer": "notification_app",
+    "email": "notification.test@example.com",
+    "consumerPassword": "password123",
+    "roles": ["APP_NOTIFICATION"],
+    "application": "alramz-notification-service",
+    "environment": "local"
+}
+
+###
+
+### Login (sets {{authToken}} for the requests below)
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "consumer": "notification_app",
+    "consumerPassword": "password123"
+}
+
+###
+
+### Send Email - Simple
+POST {{baseUrl}}/api/v1/email/send
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
     "to": "gtalele@alramz.ae",
-    "subject": "Test Email from Spring Boot",
+    "cc": "gtalele@alramz.ae",
     "from": "notification@alramz.ae",
-    "body": "This is a Gaurav test email body."
+    "subject": "GT Test Email",
+    "body": "Dear Client, This is a Test Email."
 }
 
 ###
@@ -21,19 +54,170 @@ Content-Type: application/json
 ### Send Email - With Attachment
 POST {{baseUrl}}/api/v1/email/send
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
-    "to": "recipient@example.com",
-    "subject": "Test Email with Attachment",
-    "from": "sender@example.com",
-    "body": "<h1>Hello</h1><p>Please find the attachment.</p>",
+    "to": "gtalele@alramz.ae",
+    "from": "notification@alramz.ae",
+    "subject": "Q3 Statement Ready",
+    "body": "<p>Dear Client,</p><p>Your Q3 account statement is attached.</p>",
     "attachments": [
         {
-            "name": "document.pdf",
-            "content": "base64-encoded-pdf-data"
+            "fileName": "Q3_Statement.pdf",
+            "contentType": "application/pdf",
+            "content": "JVBERi0xLjQK"
         }
     ]
 }
+
+###
+
+### Send Email -ve test case (invalid address in to, expects 400 MGE-V-002)
+POST {{baseUrl}}/api/v1/email/send
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "to": "jane.doe@example.com,not-an-email",
+    "from": "notification@alramz.ae",
+    "subject": "Q3 Statement Ready",
+    "body": "Dear Client, your Q3 account statement is ready."
+}
+
+###
+
+### Send Templated Email (needs an email_configurations row; the template name below is an example)
+POST {{baseUrl}}/api/v1/email/template/send
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "to": "gtalele@alramz.ae;john.smith@example.com",
+    "templateName": "STATEMENT_READY",
+    "language": "EN",
+    "placeholders": ["Jane", "Q3"],
+    "attachments": [
+        {
+            "fileName": "Q3_Statement.pdf",
+            "contentType": "PDF",
+            "content": "JVBERi0xLjQK"
+        }
+    ]
+}
+
+###
+
+### Send Templated Email -ve test case (unknown templateName, expects 400 EML002)
+POST {{baseUrl}}/api/v1/email/template/send
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "to": "jane.doe@example.com",
+    "templateName": "NO_SUCH_TEMPLATE",
+    "language": "EN"
+}
+
+###
+
+### Send SMS (simulated while app.sms.live-send-enabled=false: no provider is called)
+POST {{baseUrl}}/api/v1/sms/send
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "messageBody": "Your Q3 statement is ready.",
+    "mobileNumbers": ["971500000010", "+971500000011; 971500000010"]
+}
+
+###
+
+### Send SMS -ve test case (invalid number, expects 400 SMS002)
+POST {{baseUrl}}/api/v1/sms/send
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "messageBody": "Your Q3 statement is ready.",
+    "mobileNumbers": ["971500000010", "97150000001x"]
+}
+
+###
+
+### Get SMS Report (404 SMS008 while live sending is off)
+GET {{baseUrl}}/api/v1/sms/report/88123456
+Authorization: Bearer {{authToken}}
+
+###
+
+### Get SMS Report -ve test case (messageId with a query string, expects 400 SMS007)
+GET {{baseUrl}}/api/v1/sms/report/abc&pwd=x
+Authorization: Bearer {{authToken}}
+
+###
+
+### Send OTP (needs an otp_configuration row; dev has the fixed test OTP 1234 on, so nothing is really sent)
+POST {{baseUrl}}/api/v1/otp/send
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "serviceName": "LOGIN_OTP",
+    "recipients": "user@example.com|971500000010",
+    "language": "EN",
+    "ipAddress": "10.0.0.1"
+}
+
+###
+
+### Send OTP -ve test case (lower-case language, expects 400 OTP001)
+POST {{baseUrl}}/api/v1/otp/send
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "serviceName": "LOGIN_OTP",
+    "recipients": "user@example.com|971500000010",
+    "language": "en",
+    "ipAddress": "10.0.0.1"
+}
+
+###
+
+### Validate OTP (hashedOtp is SHA-256 of the fixed test OTP 1234)
+POST {{baseUrl}}/api/v1/otp/validate
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "serviceName": "LOGIN_OTP",
+    "recipients": "user@example.com|971500000010",
+    "hashedOtp": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+}
+
+###
+
+### Validate OTP -ve test case (wrong hash, expects 400 OTP007; each wrong guess counts)
+POST {{baseUrl}}/api/v1/otp/validate
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "serviceName": "LOGIN_OTP",
+    "recipients": "user@example.com|971500000010",
+    "hashedOtp": "0000000000000000000000000000000000000000000000000000000000000000"
+}
+
+###
+
+### Get OTP Configurations
+GET {{baseUrl}}/api/v1/otp/configurations
+Authorization: Bearer {{authToken}}
+
+###
+
+### Get OTP Configurations -ve test case (no token, expects 401)
+GET {{baseUrl}}/api/v1/otp/configurations
 
 ###
 

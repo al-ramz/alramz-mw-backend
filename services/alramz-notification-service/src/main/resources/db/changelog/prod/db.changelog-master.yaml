@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/prod/sql
+      errorIfMissingOrEmpty: false

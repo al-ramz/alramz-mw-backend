@@ -26,7 +26,10 @@ paths:
       tags:
         - Email
       summary: Send email
-      description: Sends an email to a recipient with optional attachments.
+      description: >-
+        Sends an email through Microsoft Graph to one or more recipients, with optional cc/bcc and
+        attachments. Requires a JWT carrying role APP_NOTIFICATION. The same validation runs for the
+        in-process EmailService#sendEmail call.
       operationId: sendEmail
 
       requestBody:
@@ -38,96 +41,965 @@ paths:
             examples:
               simple:
                 value:
-                  to: "recipient@example.com"
-                  subject: "Test Email from Spring Boot"
-                  from: "sender@example.com"
-                  body: "<h1>Hello</h1><p>This is a test email body.</p>"
+                  to: "jane.doe@example.com,john.smith@example.com"
+                  cc: "manager@example.com"
+                  from: "notification@alramz.ae"
+                  subject: "Q3 Statement Ready"
+                  body: "Dear Client, your Q3 account statement is ready."
               withAttachment:
                 value:
-                  to: "recipient@example.com"
-                  subject: "Test Email with Attachment"
-                  from: "sender@example.com"
-                  body: "<h1>Hello</h1><p>Please find the attachment.</p>"
+                  to: "jane.doe@example.com"
+                  from: "notification@alramz.ae"
+                  subject: "Q3 Statement Ready"
+                  body: "<p>Dear Client,</p><p>Your Q3 account statement is attached.</p>"
                   attachments:
-                    - name: "document.pdf"
-                      content: "base64-encoded-pdf-data"
+                    - fileName: "Q3_Statement.pdf"
+                      contentType: "application/pdf"
+                      content: "JVBERi0xLjQK"
 
       responses:
         '200':
-          description: Email sent successfully
+          description: Email accepted by Microsoft Graph
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmailSendResponse'
+                $ref: '#/components/schemas/GenericResponse'
               example:
-                correlationID: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-                status: "SUCCESS"
                 responseCode: "200"
                 responseMessage: "OK"
-                provider: "MICROSOFT_GRAPH"
-                sentTo: "recipient@example.com"
-                sentAt: "2025-01-01T12:00:00Z"
-                traceId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-
-        '401':
-          description: Unauthorized - Missing or invalid JWT bearer token
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                responseCode: "401"
-                responseMessage: "Unauthorized"
-                error: "Missing or invalid JWT bearer token"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
 
         '400':
-          description: Bad Request - Missing or invalid required field
+          description: Bad Request - invalid or malformed request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/GenericResponse'
               examples:
                 missingField:
                   value:
                     responseCode: "400"
                     responseMessage: "Bad Request"
-                    error: "Phone number is required"
-                invalidEmailFormat:
+                    errorCode: "MGE-V-001"
+                    errorMsg: "Request failed due to missing: to, subject"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                invalidEmail:
                   value:
                     responseCode: "400"
-                    responseMessage: "Invalid Email Format"
-                    error: "Email address fails RFC 5322 validation"
-                invalidSubjectLength:
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-002"
+                    errorMsg: "Invalid email address in: cc"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                fieldLength:
                   value:
                     responseCode: "400"
-                    responseMessage: "Invalid Subject Length"
-                    error: "Subject exceeds 255 characters"
-                invalidBodyLength:
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-003"
+                    errorMsg: "Field length exceeded: subject"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                attachmentCount:
                   value:
                     responseCode: "400"
-                    responseMessage: "Invalid Body Length"
-                    error: "Body exceeds 10,000 characters"
-                invalidAttachmentCount:
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-004"
+                    errorMsg: "Number of attachments exceeds 10"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                invalidAttachment:
                   value:
                     responseCode: "400"
-                    responseMessage: "Invalid Attachment Count"
-                    error: "More than 10 attachments"
-                invalidAttachmentSize:
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-005"
+                    errorMsg: "Invalid attachment at position 2: content is not valid Base64"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                malformedJson:
                   value:
                     responseCode: "400"
-                    responseMessage: "Invalid Attachment Size"
-                    error: "Attachment exceeds 10 MB"
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-006"
+                    errorMsg: "Malformed JSON request"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+
+        '401':
+          description: >-
+            Unauthorized - missing or invalid JWT bearer token. Rejected by Spring Security before the
+            controller; the body is produced by Spring Security, not the GenericResponse envelope.
+
+        '403':
+          description: Forbidden - JWT lacks role APP_NOTIFICATION, or the sender mailbox is not permitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                roleDenied:
+                  value:
+                    responseCode: "403"
+                    responseMessage: "Forbidden"
+                    errorCode: null
+                    errorMsg: null
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                senderNotAllowed:
+                  value:
+                    responseCode: "403"
+                    responseMessage: "Forbidden"
+                    errorCode: "MGE-V-007"
+                    errorMsg: "Sender mailbox is not permitted"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+
+        '413':
+          description: Payload Too Large - attachments or request body exceed the size limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "413"
+                responseMessage: "Payload Too Large"
+                errorCode: "MGE-V-008"
+                errorMsg: "Attachments size limit exceeded"
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+
+        '429':
+          description: Too Many Requests - Microsoft Graph is still throttling after the gateway's limited retries
+          headers:
+            Retry-After:
+              description: Seconds to wait before retrying, passed through from Microsoft Graph when it is numeric
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "429"
+                responseMessage: "Too Many Requests"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
 
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/GenericResponse'
               example:
                 responseCode: "500"
                 responseMessage: "Internal Server Error"
-                error: "Unhandled internal exception"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+
+        '502':
+          description: Bad Gateway - Microsoft Graph rejected the request or failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "502"
+                responseMessage: "Bad Gateway"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+
+  /api/v1/email/template/send:
+    post:
+      tags:
+        - TemplatedEmail
+      summary: Send templated email
+      description: >-
+        Renders a stored email template (email_configurations) with positional placeholders and sends it
+        through the email gateway. Enforces the template's attachment rules and daily send limit, and writes
+        one email_log audit row per successful send. Requires a JWT carrying role APP_NOTIFICATION.
+      operationId: sendTemplatedEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplatedEmailRequest'
+            example:
+              to: "jane.doe@example.com;john.smith@example.com"
+              templateName: "STATEMENT_READY"
+              language: "EN"
+              placeholders: ["Jane", "Q3"]
+              attachments:
+                - fileName: "Q3_Statement.pdf"
+                  contentType: "PDF"
+                  content: "JVBERi0xLjQK"
+      responses:
+        '200':
+          description: Email accepted by the gateway and audited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+        '400':
+          description: Bad Request - invalid request or template rule violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                missingField:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "EML001"
+                    errorMsg: "Request failed due to missing: to, language"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                invalidTemplate:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "EML002"
+                    errorMsg: "Invalid template name"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                placeholders:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "EML003"
+                    errorMsg: "Invalid number of placeholders"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                attachmentCount:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "EML004"
+                    errorMsg: "Number of attachments does not match template configurations"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                attachmentType:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "EML005"
+                    errorMsg: "Type of attachments does not match template configurations"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                attachmentFileName:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "EML006"
+                    errorMsg: "Please provide the fileName for all attachments"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                invalidAttachment:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-005"
+                    errorMsg: "Invalid attachment at position 1: content is not valid Base64"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+                malformedJson:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-006"
+                    errorMsg: "Malformed JSON request"
+                    response:
+                      correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+        '401':
+          description: >-
+            Unauthorized - missing or invalid JWT bearer token. Rejected by Spring Security before the
+            controller; the body is produced by Spring Security, not the GenericResponse envelope.
+        '403':
+          description: Forbidden - JWT lacks role APP_NOTIFICATION
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "403"
+                responseMessage: "Forbidden"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+        '413':
+          description: Payload Too Large - attachments exceed the template or request size limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "413"
+                responseMessage: "Payload Too Large"
+                errorCode: "EML007"
+                errorMsg: "Attachments size limit exceeded"
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+        '429':
+          description: Too Many Requests - the template's daily send limit is reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "429"
+                responseMessage: "Too Many Requests"
+                errorCode: "EML008"
+                errorMsg: "Maximum number of attempts exceeded"
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+        '500':
+          description: Internal Server Error - unexpected error or template misconfiguration (EML010, logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+        '502':
+          description: Bad Gateway - the email gateway failed (EML009, logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "502"
+                responseMessage: "Bad Gateway"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"
+
+  /api/v1/sms/send:
+    post:
+      tags:
+        - Sms
+      summary: Send SMS
+      description: >-
+        Sends one SMS per de-duplicated mobile number through the Etisalat/Waselney router. Returns one
+        result per number; a partial failure is still 200. While app.sms.live-send-enabled is false no
+        provider is called and every number is reported SENT with simulated=true. Requires a JWT carrying
+        role APP_NOTIFICATION.
+      operationId: sendSms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmsSendRequest'
+            example:
+              messageBody: "Your Q3 statement is ready."
+              mobileNumbers: ["971500000010", "+971500000011; 971500000012"]
+      responses:
+        '200':
+          description: At least one number was sent (per-number status in results)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                  simulated: false
+                  results:
+                    - mobileNumber: "971501234567"
+                      serviceProvider: "WASELNEY"
+                      status: "SENT"
+                      messageId: "88123456"
+                    - mobileNumber: "14155550100"
+                      serviceProvider: "ETISALAT"
+                      status: "FAILED"
+                      messageId: null
+        '400':
+          description: Bad Request - invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                missingField:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "SMS001"
+                    errorMsg: "Request failed due to missing: messageBody, mobileNumbers"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                invalidNumber:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "SMS002"
+                    errorMsg: "Invalid mobile number in: mobileNumbers[2]"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                bodyTooLong:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "SMS003"
+                    errorMsg: "Field length exceeded: messageBody"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                tooManyRecipients:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "SMS004"
+                    errorMsg: "Number of recipients exceeds 50"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                invalidField:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "SMS005"
+                    errorMsg: "Invalid field: expiryInSecs"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                malformedJson:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-006"
+                    errorMsg: "Malformed JSON request"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '401':
+          description: >-
+            Unauthorized - missing or invalid JWT bearer token. Rejected by Spring Security before the
+            controller; the body is produced by Spring Security, not the GenericResponse envelope.
+        '403':
+          description: Forbidden - JWT lacks role APP_NOTIFICATION
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "403"
+                responseMessage: "Forbidden"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '500':
+          description: Internal Server Error - unexpected error (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '502':
+          description: Bad Gateway - every number failed and at least one provider rejected the message (SMS009, logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "502"
+                responseMessage: "Bad Gateway"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '503':
+          description: Service Unavailable - every number failed because the providers were unreachable (SMS010, logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "503"
+                responseMessage: "Service Unavailable"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+
+  /api/v1/sms/report/{messageId}:
+    get:
+      tags:
+        - Sms
+      summary: Get SMS delivery report
+      description: >-
+        Returns the Waselney delivery report for a message id. Report fields are passed through as
+        name/value pairs. While app.sms.live-send-enabled is false no provider is called and the result is
+        404. Requires a JWT carrying role APP_NOTIFICATION.
+      operationId: getSmsReport
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          description: Provider message id (letters, digits and '-', at most 65 characters)
+          schema:
+            type: string
+            pattern: '^[A-Za-z0-9-]{1,65}$'
+          example: "88123456"
+      responses:
+        '200':
+          description: Delivery report found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                  messageId: "88123456"
+                  reports:
+                    - Status: "DELIVERED"
+                      DeliveryDate: "2026-10-26 10:15:02"
+        '400':
+          description: Bad Request - invalid message id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "400"
+                responseMessage: "Bad Request"
+                errorCode: "SMS007"
+                errorMsg: "Invalid message id"
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '401':
+          description: >-
+            Unauthorized - missing or invalid JWT bearer token. Rejected by Spring Security before the
+            controller; the body is produced by Spring Security, not the GenericResponse envelope.
+        '403':
+          description: Forbidden - JWT lacks role APP_NOTIFICATION
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "403"
+                responseMessage: "Forbidden"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '404':
+          description: Not Found - the provider has no record for this message id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "404"
+                responseMessage: "Not Found"
+                errorCode: "SMS008"
+                errorMsg: "No SMS record found"
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '500':
+          description: Internal Server Error - unexpected error (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '502':
+          description: Bad Gateway - the provider response was rejected or unparseable (SMS009, logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "502"
+                responseMessage: "Bad Gateway"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '503':
+          description: Service Unavailable - the provider was unreachable (SMS010, logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "503"
+                responseMessage: "Service Unavailable"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+
+  /api/v1/otp/send:
+    post:
+      tags:
+        - Otp
+      summary: Send OTP
+      description: >-
+        Generates an OTP for the otp_configuration row named by serviceName, stores its SHA-256 hash (one
+        otp_management row per recipient) and sends it by SMS and/or email per the row's sent_via. At most 5
+        recipients; max_attempts sends per recipient per Asia/Dubai day. 200 when at least one recipient was
+        delivered, with per-channel status. Requires a JWT carrying role APP_NOTIFICATION.
+      operationId: sendOtp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpSendRequest'
+            example:
+              serviceName: "LOGIN_OTP"
+              recipients: "user@example.com|971500000010"
+              language: "EN"
+              ipAddress: "10.0.0.1"
+      responses:
+        '200':
+          description: At least one recipient was delivered (per-channel status)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                  channels:
+                    - channel: "SMS"
+                      status: "SENT"
+                    - channel: "EMAIL"
+                      status: "FAILED"
+        '400':
+          description: Bad Request - invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                missingField:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "OTP001"
+                    errorMsg: "Request failed due to missing: language, ipAddress"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                unknownService:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "OTP002"
+                    errorMsg: "Invalid OTP service"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                invalidMobile:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "OTP003"
+                    errorMsg: "Invalid mobile number"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                invalidEmail:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "OTP004"
+                    errorMsg: "Invalid email"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                tooManyRecipients:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "OTP005"
+                    errorMsg: "Number of recipients exceeds 5"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                malformedJson:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "MGE-V-006"
+                    errorMsg: "Malformed JSON request"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '401':
+          description: >-
+            Unauthorized - missing or invalid JWT bearer token. Rejected by Spring Security before the
+            controller; the body is produced by Spring Security, not the GenericResponse envelope.
+        '403':
+          description: Forbidden - JWT lacks role APP_NOTIFICATION
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "403"
+                responseMessage: "Forbidden"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '429':
+          description: Too Many Requests - the daily send limit for a recipient is reached (OTP006)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "429"
+                responseMessage: "Too Many Requests"
+                errorCode: "OTP006"
+                errorMsg: "User exceeded maximum number of attempts"
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '500':
+          description: Internal Server Error - OTP template misconfiguration (OTP010) or unexpected error (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '502':
+          description: Bad Gateway - delivery failed for every recipient (OTP009, logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "502"
+                responseMessage: "Bad Gateway"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+
+  /api/v1/otp/validate:
+    post:
+      tags:
+        - Otp
+      summary: Validate OTP
+      description: >-
+        Compares the SHA-256 hex of the OTP (case-insensitive) with the active, unexpired OTPs of the given
+        recipients. A wrong guess is counted per OTP row; at max_validation_attempts (3 when not configured)
+        the result is 429. Requires a JWT carrying role APP_NOTIFICATION.
+      operationId: validateOtp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpValidateRequest'
+            example:
+              serviceName: "LOGIN_OTP"
+              recipients: "user@example.com|971500000010"
+              hashedOtp: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+      responses:
+        '200':
+          description: The OTP is valid; it is now used up
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                  valid: true
+        '400':
+          description: Bad Request - invalid request or invalid OTP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                invalidOtp:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "OTP007"
+                    errorMsg: "Invalid OTP"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                missingField:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "OTP001"
+                    errorMsg: "Request failed due to missing: hashedOtp"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                unknownService:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "OTP002"
+                    errorMsg: "Invalid OTP service"
+                    response:
+                      correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '401':
+          description: >-
+            Unauthorized - missing or invalid JWT bearer token. Rejected by Spring Security before the
+            controller; the body is produced by Spring Security, not the GenericResponse envelope.
+        '403':
+          description: Forbidden - JWT lacks role APP_NOTIFICATION
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "403"
+                responseMessage: "Forbidden"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '429':
+          description: Too Many Requests - the OTP's validation attempts are used up (OTP008)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "429"
+                responseMessage: "Too Many Requests"
+                errorCode: "OTP008"
+                errorMsg: "User exceeded maximum number of validation attempts"
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '500':
+          description: Internal Server Error - unexpected error (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+
+  /api/v1/otp/configurations:
+    get:
+      tags:
+        - Otp
+      summary: List OTP configurations
+      description: >-
+        Returns every otp_configuration row ordered by service name (legacy getMessagesLookup). Requires a
+        JWT carrying role APP_NOTIFICATION.
+      operationId: getOtpConfigurations
+      responses:
+        '200':
+          description: All configurations (an empty list when none exist)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+                  messages:
+                    - serviceName: "LOGIN_OTP"
+                      expiryInSeconds: 300
+                      tokenLength: 6
+                      maxAttempts: 5
+                      smsMessageEnglish: "Your OTP is %OTP%"
+                      smsMessageArabic: "رمز التحقق %OTP%"
+                      emailMessageEnglish: "Your OTP ^+^ <p>Your OTP is %OTP%</p>"
+                      emailMessageArabic: null
+                      sentVia: "EMAIL|SMS"
+        '401':
+          description: >-
+            Unauthorized - missing or invalid JWT bearer token. Rejected by Spring Security before the
+            controller; the body is produced by Spring Security, not the GenericResponse envelope.
+        '403':
+          description: Forbidden - JWT lacks role APP_NOTIFICATION
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "403"
+                responseMessage: "Forbidden"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        '500':
+          description: Internal Server Error - unexpected error (logged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: null
+                errorMsg: null
+                response:
+                  correlationId: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
 
 components:
   securitySchemes:
@@ -148,116 +1020,409 @@ components:
       properties:
         to:
           type: string
-          format: email
-          description: Recipient email address
-          example: "recipient@example.com"
+          description: Comma-separated list of recipient email addresses (at least one)
+          example: "jane.doe@example.com,john.smith@example.com"
+        cc:
+          type: string
+          description: Optional comma-separated list of cc addresses
+          example: "manager@example.com"
+        bcc:
+          type: string
+          description: Optional comma-separated list of bcc addresses
+          example: ""
+        from:
+          type: string
+          description: Sender mailbox; must be in app.email.allowed-senders
+          example: "notification@alramz.ae"
         subject:
           type: string
           maxLength: 255
           description: Email subject
-          example: "Test Email from Spring Boot"
-        from:
-          type: string
-          format: email
-          description: Sender email address
-          example: "sender@example.com"
+          example: "Q3 Statement Ready"
         body:
           type: string
           maxLength: 10000
-          description: Email body (HTML supported)
-          example: "<h1>Hello</h1><p>This is a test email body.</p>"
+          description: Email body. Sent as HTML when it starts with '<' (after trimming), otherwise as plain text.
+          example: "<p>Dear Client,</p><p>Your Q3 account statement is attached.</p>"
         attachments:
           type: array
           maxItems: 10
-          description: Optional email attachments
+          description: Optional attachments; total decoded size is capped by app.email.max-total-attachment-size-bytes
           items:
             $ref: '#/components/schemas/EmailAttachment'
 
     EmailAttachment:
       type: object
       required:
-        - name
+        - fileName
         - content
       properties:
-        name:
+        fileName:
           type: string
-          description: Attachment file name
-          example: "document.pdf"
+          description: Attachment file name (legacy aliases filename and name are accepted)
+          example: "Q3_Statement.pdf"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"filename", "name"})'
+        contentType:
+          type: string
+          description: Optional MIME type (legacy alias contenttype is accepted)
+          example: "application/pdf"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"contenttype"})'
         content:
           type: string
           format: byte
           description: Base64-encoded attachment content
-          example: "base64-encoded-pdf-data"
+          example: "JVBERi0xLjQK"
 
-    EmailSendResponse:
+    TemplatedEmailRequest:
       type: object
       required:
-        - correlationID
-        - status
-        - responseCode
-        - responseMessage
-        - provider
-        - sentTo
-        - sentAt
-        - traceId
+        - to
+        - templateName
+        - language
       properties:
-        correlationID:
+        to:
           type: string
-          format: uuid
-          description: Unique correlation identifier for the request
-          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          description: Recipient addresses separated by ; , / whitespace or backslash (at least one)
+          example: "jane.doe@example.com;john.smith@example.com"
+        cc:
+          type: string
+          description: Optional cc addresses, same separators
+          example: "manager@example.com"
+        bcc:
+          type: string
+          description: Optional bcc addresses, same separators
+          example: ""
+        templateName:
+          type: string
+          description: Exact, case-sensitive email_configurations.template_name
+          example: "STATEMENT_READY"
+        language:
+          type: string
+          pattern: '^(EN|AR)$'
+          description: EN or AR (exact upper case). A plain string so a bad value is reported as EML001, not a binding error.
+          example: "EN"
+        placeholders:
+          type: array
+          description: Positional values; element i replaces %i% (1-based) in the body. Required when the template has placeholders.
+          items:
+            type: string
+          example: ["Jane", "Q3"]
+        attachments:
+          type: array
+          description: Optional attachments, checked against the template's count, type and size rules
+          items:
+            $ref: '#/components/schemas/TemplateAttachment'
+
+    TemplateAttachment:
+      type: object
+      required:
+        - content
+        - contentType
+        - fileName
+      properties:
+        content:
+          type: string
+          format: byte
+          description: Base64-encoded attachment content
+          example: "JVBERi0xLjQK"
+        contentType:
+          type: string
+          description: Type code JPEG, JPG, PNG, PDF, MSWORD, MSEXCEL, CSV, TRN or TEXT (legacy alias contenttype is accepted)
+          example: "PDF"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"contenttype"})'
+        fileName:
+          type: string
+          description: Attachment file name (legacy alias filename is accepted)
+          example: "Q3_Statement.pdf"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"filename"})'
+
+    SmsSendRequest:
+      type: object
+      required:
+        - messageBody
+        - mobileNumbers
+      properties:
+        messageBody:
+          type: string
+          maxLength: 1500
+          description: SMS text (at most app.sms.max-message-length characters)
+          example: "Your Q3 statement is ready."
+        mobileNumbers:
+          type: array
+          description: >-
+            International numbers without '+' (a leading '+' is stripped). An entry may hold several numbers
+            separated by ; , / or whitespace. At most app.sms.max-recipients distinct numbers. Legacy alias
+            mobileNumber is accepted, also as a single string.
+          items:
+            type: string
+          example: ["971500000010"]
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"mobileNumber"}) @com.fasterxml.jackson.annotation.JsonFormat(with = com.fasterxml.jackson.annotation.JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)'
+        msgCategory:
+          type: string
+          description: Etisalat only; defaults to app.sms.defaults.msg-category
+          example: "4.2"
+        expiryInSecs:
+          type: integer
+          description: Etisalat only, 1..86400; defaults to app.sms.defaults.expiry-in-secs
+          example: 300
+
+    SmsSendResult:
+      type: object
+      required:
+        - correlationId
+        - simulated
+        - results
+      properties:
+        correlationId:
+          type: string
+          description: Equals the X-Correlation-ID response header
+          example: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        simulated:
+          type: boolean
+          description: True when live sending is disabled and no provider was called
+          example: false
+        results:
+          type: array
+          description: One result per de-duplicated number, in request order
+          items:
+            $ref: '#/components/schemas/SmsRecipientResult'
+
+    SmsRecipientResult:
+      type: object
+      required:
+        - mobileNumber
+        - serviceProvider
+        - status
+      properties:
+        mobileNumber:
+          type: string
+          description: Normalised number, no '+'
+          example: "971501234567"
+        serviceProvider:
+          type: string
+          enum: [ETISALAT, WASELNEY]
         status:
           type: string
-          description: Operation status
-          example: "SUCCESS"
+          enum: [SENT, FAILED]
+        messageId:
+          type: string
+          nullable: true
+          description: Provider message id; null when FAILED
+          example: "88123456"
+
+    SmsReportResult:
+      type: object
+      required:
+        - correlationId
+        - messageId
+        - reports
+      properties:
+        correlationId:
+          type: string
+          example: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        messageId:
+          type: string
+          example: "88123456"
+        reports:
+          type: array
+          description: One entry per provider Report element, field name to text (passed through)
+          items:
+            type: object
+            additionalProperties:
+              type: string
+
+    OtpSendRequest:
+      type: object
+      required:
+        - serviceName
+        - recipients
+        - language
+        - ipAddress
+      properties:
+        serviceName:
+          type: string
+          description: Exact, case-sensitive otp_configuration.service_name (legacy alias key is accepted)
+          example: "LOGIN_OTP"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"key"})'
+        recipients:
+          type: string
+          description: >-
+            Emails and/or mobile numbers separated by | ; , / or whitespace (legacy alias value is accepted).
+            Every token must be a valid email or mobile; only the channels in sent_via are used; at most 5.
+          example: "user@example.com|971500000010"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"value"})'
+        language:
+          type: string
+          pattern: '^(EN|AR)$'
+          description: EN or AR (exact upper case). A plain string so a bad value is reported as OTP001.
+          example: "EN"
+        ipAddress:
+          type: string
+          maxLength: 45
+          description: The end user's IPv4/IPv6 address, supplied by the caller
+          example: "10.0.0.1"
+
+    OtpSendResult:
+      type: object
+      required:
+        - correlationId
+        - channels
+      properties:
+        correlationId:
+          type: string
+          description: Equals the X-Correlation-ID response header
+          example: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        channels:
+          type: array
+          description: SMS first, then EMAIL; only channels that had recipients
+          items:
+            $ref: '#/components/schemas/OtpChannelResult'
+
+    OtpChannelResult:
+      type: object
+      required:
+        - channel
+        - status
+      properties:
+        channel:
+          type: string
+          enum: [SMS, EMAIL]
+        status:
+          type: string
+          description: SENT when at least one recipient on this channel was delivered
+          enum: [SENT, FAILED]
+
+    OtpValidateRequest:
+      type: object
+      required:
+        - serviceName
+        - recipients
+        - hashedOtp
+      properties:
+        serviceName:
+          type: string
+          description: Exact, case-sensitive otp_configuration.service_name (legacy alias key is accepted)
+          example: "LOGIN_OTP"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"key"})'
+        recipients:
+          type: string
+          description: The recipients the OTP was sent to, same format as for send (legacy alias value is accepted)
+          example: "user@example.com|971500000010"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"value"})'
+        hashedOtp:
+          type: string
+          pattern: '^[0-9a-fA-F]{64}$'
+          description: SHA-256 hex of the OTP, any case (legacy alias hashedOTP is accepted)
+          example: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+          x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonAlias({"hashedOTP"})'
+
+    OtpValidateResult:
+      type: object
+      required:
+        - correlationId
+        - valid
+      properties:
+        correlationId:
+          type: string
+          example: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        valid:
+          type: boolean
+          description: Always true on 200
+          example: true
+
+    OtpConfigurationList:
+      type: object
+      required:
+        - correlationId
+        - messages
+      properties:
+        correlationId:
+          type: string
+          example: "5b1d0c3e-8f2a-4b7e-9c1d-3a6f0e2b4d71"
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/OtpConfiguration'
+
+    OtpConfiguration:
+      type: object
+      required:
+        - serviceName
+        - expiryInSeconds
+        - tokenLength
+        - maxAttempts
+        - sentVia
+      properties:
+        serviceName:
+          type: string
+          example: "LOGIN_OTP"
+        expiryInSeconds:
+          type: integer
+          example: 300
+        tokenLength:
+          type: integer
+          example: 6
+        maxAttempts:
+          type: integer
+          example: 5
+        smsMessageEnglish:
+          type: string
+          nullable: true
+          example: "Your OTP is %OTP%"
+        smsMessageArabic:
+          type: string
+          nullable: true
+          example: "رمز التحقق %OTP%"
+        emailMessageEnglish:
+          type: string
+          nullable: true
+          description: Subject and body separated by ^+^
+          example: "Your OTP ^+^ <p>Your OTP is %OTP%</p>"
+        emailMessageArabic:
+          type: string
+          nullable: true
+          example: null
+        sentVia:
+          type: string
+          enum: [SMS, EMAIL, EMAIL|SMS]
+
+    GenericResponse:
+      type: object
+      required:
+        - responseCode
+        - responseMessage
+        - response
+      properties:
         responseCode:
           type: string
-          description: HTTP-style response code
+          description: HTTP status as a string
           example: "200"
         responseMessage:
           type: string
-          description: Human-readable response message
+          description: HTTP reason phrase
           example: "OK"
-        provider:
+        errorCode:
           type: string
-          description: Email service provider used
-          example: "MICROSOFT_GRAPH"
-        sentTo:
+          nullable: true
+          description: Caller-fixable error code (MGE-V-0xx / EML00x / SMS0xx / OTP0xx); null on success and on backend errors
+          example: null
+        errorMsg:
           type: string
-          format: email
-          description: Recipient email address
-          example: "recipient@example.com"
-        sentAt:
-          type: string
-          format: date-time
-          description: Timestamp when email was sent
-          example: "2025-01-01T12:00:00Z"
-        traceId:
-          type: string
-          format: uuid
-          description: Distributed tracing identifier
-          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-        error:
-          type: string
-          description: Detailed error message (present only on error)
-          example: "Phone number is required"
+          nullable: true
+          description: Caller-fixable error text; null otherwise
+          example: null
+        response:
+          type: object
+          description: >-
+            Operation result: EmailSendResult, SmsSendResult, SmsReportResult, OtpSendResult, OtpValidateResult
+            or OtpConfigurationList on success, or EmailSendResult{correlationId} on errors
 
-    ErrorResponse:
+    EmailSendResult:
       type: object
       required:
-        - responseCode
-        - responseMessage
-        - error
+        - correlationId
       properties:
-        responseCode:
+        correlationId:
           type: string
-          description: HTTP-style response code
-          example: "400"
-        responseMessage:
-          type: string
-          description: Human-readable response message
-          example: "Bad Request"
-        error:
-          type: string
-          description: Detailed error message
-          example: "Phone number is required"
+          description: Equals the X-Correlation-ID response header
+          example: "7f1c2b9e-3d4a-4c1e-9b7a-2f6d8e0a1c55"

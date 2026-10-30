@@ -44,6 +44,15 @@ cipher:
   password: UseMostSecretKey
 
 adapter:
+  dfm-member-api:
+    base-url: ${DFM_MEMBER_API_BASE_URL:}
+    onboarding-path: ${DFM_MEMBER_API_ONBOARDING_PATH:/memberapis/onboarding}
+    member-code: ${DFM_MEMBER_API_MEMBER_CODE:}
+    header-security-key: ${DFM_MEMBER_API_HEADER_SECURITY_KEY:}
+    body-security-key: ${DFM_MEMBER_API_BODY_SECURITY_KEY:}
+    connect-timeout-seconds: 5
+    read-timeout-seconds: 60
+    duplicate-in-progress-codes: ${DFM_MEMBER_API_DUPLICATE_IN_PROGRESS_CODES:}
   external-iban-service:
     base-url: https://api.iban.com/clients/api/v4/iban
     api-key: ${IBAN_API_KEY:}
@@ -105,6 +114,40 @@ company:
     thread-group-name: DataValidation-Scheduled-Tasks
     thread-name-prefix: DataValidation-TaskScheduler-Worker-
   logging:
+    masking:
+      # Starter defaults restated (setting this list replaces them) + DFM investor identifiers, IBANs and Base64 images.
+      # Substring, case-insensitive match on JSON keys: also masks e.g. imageType and *warning*; accepted.
+      sensitive-keys:
+        - password
+        - token
+        - authorization
+        - accessToken
+        - refreshToken
+        - jwt
+        - aadhaar
+        - pan
+        - ssn
+        - creditCard
+        - cvv
+        - apiKey
+        - secret
+        - session
+        - cookie
+        - securitykey
+        - nin
+        - eidNumber
+        - eid_no
+        - passportNumber
+        - pp_no
+        - iban
+        - foreignAccount
+        - dateOfBirth
+        - cust_dob
+        - image
+        - attachment
+        - proofDocument
+        - guardianship
+        - tin              # FATCA/CRS tax ids (a US FATCA TIN is an SSN/ITIN); also masks hasTin/noTinReason flags, accepted
     json:
       enabled: false
       pretty-print: false

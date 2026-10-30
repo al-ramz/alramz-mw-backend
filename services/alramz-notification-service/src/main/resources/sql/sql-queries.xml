@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<!--
+  SqlQueriesManager keys. email.* and otp.* run on middleware (Postgres), sms.* on brok (Oracle, INSIGHT schema).
+  Every value is a :named bind; nothing is concatenated into SQL.
+-->
+<properties>
+    <entry key="email.template.findByName">
+        SELECT id, template_name, number_of_placeholders, max_attempts, from_email, en_subject, ar_subject,
+               en_body, ar_body, attachments_max_size, number_of_attachments, type_of_attachments, is_bulk
+        FROM email_configurations
+        WHERE template_name = :templateName
+    </entry>
+
+    <!-- Two keys instead of (:to IS NULL OR ...): Postgres cannot type a null bind in IS NULL. -->
+    <entry key="email.log.countBulk">
+        SELECT COUNT(*) FROM email_log
+        WHERE template_id = :templateId AND invoker = :invoker
+          AND date_time &gt;= :dayStart AND date_time &lt; :dayEnd
+    </entry>
+
+    <entry key="email.log.countPerRecipient">
+        SELECT COUNT(*) FROM email_log
+        WHERE template_id = :templateId AND invoker = :invoker
+          AND date_time &gt;= :dayStart AND date_time &lt; :dayEnd
+          AND to_email = :to
+    </entry>
+
+    <entry key="email.log.insert">
+        INSERT INTO email_log (template_id, to_email, cc_email, bcc_email, email_body, language, date_time,
+                               invoker, ip_address, attachments_meta_data)
+        VALUES (:templateId, :to, :cc, :bcc, :emailBody, :language, :dateTime, :invoker, :ipAddress,
+                :attachmentsMetaData)
+    </entry>
+
+    <!--
+      SMS_TABLE claim (brok, one transaction with markInProgress). ROWNUM bounds the candidate set in an ordered
+      inline view; FOR UPDATE SKIP LOCKED applies to the outer base-table query (FETCH FIRST + FOR UPDATE is
+      ORA-02014). A pod whose candidates are all locked by another pod claims fewer rows and retries next tick.
+    -->
+    <entry key="sms.claim.select">
+        SELECT SERIAL_NO, MESSAGE_BODY, MOBILE_NO, SEND_ATTEMPTS
+        FROM INSIGHT.SMS_TABLE
+        WHERE STATUS = :pendingStatus
+          AND SERIAL_NO IN (SELECT SERIAL_NO FROM (SELECT SERIAL_NO FROM INSIGHT.SMS_TABLE
+                                                   WHERE STATUS = :pendingStatus
+                                                   ORDER BY PRIORITY, CREATION_DATE, SERIAL_NO)
+                            WHERE ROWNUM &lt;= :batchSize)
+        ORDER BY PRIORITY, CREATION_DATE, SERIAL_NO
+        FOR UPDATE SKIP LOCKED
+    </entry>
+
+    <entry key="sms.claim.markInProgress">
+        UPDATE INSIGHT.SMS_TABLE SET STATUS = :inProgressStatus
+        WHERE SERIAL_NO IN (:ids) AND STATUS = :pendingStatus
+    </entry>
+
+    <entry key="sms.markResult.incrementAttempts">
+        UPDATE INSIGHT.SMS_TABLE
+        SET STATUS = :status, MESSAGE_ID = :messageId, SEND_DATE = :sendDate, SEND_ATTEMPTS = NVL(SEND_ATTEMPTS, 0) + 1
+        WHERE SERIAL_NO = :serialNo AND STATUS = :inProgressStatus
+    </entry>
+
+    <!-- Invalid mobile number: MESSAGE_ID and SEND_ATTEMPTS stay unchanged. -->
+    <entry key="sms.markResult.keepAttempts">
+        UPDATE INSIGHT.SMS_TABLE SET STATUS = :status, SEND_DATE = :sendDate
+        WHERE SERIAL_NO = :serialNo AND STATUS = :inProgressStatus
+    </entry>
+
+    <entry key="otp.config.findByName">
+        SELECT message_id, service_name, expiry_in_seconds, token_length, sms_message_english, sms_message_arabic,
+               max_attempts, sent_via, email_message_english, email_message_arabic, max_validation_attempts
+        FROM otp_configuration
+        WHERE service_name = :serviceName
+    </entry>
+
+    <entry key="otp.config.findAll">
+        SELECT message_id, service_name, expiry_in_seconds, token_length, sms_message_english, sms_message_arabic,
+               max_attempts, sent_via, email_message_english, email_message_arabic, max_validation_attempts
+        FROM otp_configuration
+        ORDER BY service_name
+    </entry>
+
+    <!-- Per-recipient daily counter: a row last touched before dayStart counts as 0 (lazy daily reset). -->
+    <entry key="otp.attempts.maxSince">
+        SELECT COALESCE(MAX(attempts), 0) FROM otp_attempts
+        WHERE service_name = :serviceName AND mobile_email IN (:recipients) AND last_attempt_date &gt;= :dayStart
+    </entry>
+
+    <entry key="otp.management.deactivateActive">
+        UPDATE otp_management SET active = '0'
+        WHERE service_name = :serviceName AND mobile_email IN (:recipients) AND active = '1'
+    </entry>
+
+    <entry key="otp.management.insert">
+        INSERT INTO otp_management (service_name, mobile_email, otp, creation_date_time, expiry_date_time, active,
+                                    status, ip_address, validation_attempts)
+        VALUES (:serviceName, :mobileEmail, :otp, :created, :expiry, '1', 'PENDING', :ipAddress, 0)
+    </entry>
+
+    <!-- active is not touched: a newer send may already have deactivated this row. -->
+    <entry key="otp.management.markSent">
+        UPDATE otp_management SET status = 'SENT' WHERE id IN (:ids)
+    </entry>
+
+    <entry key="otp.management.markFailed">
+        UPDATE otp_management SET status = 'FAILED', active = '0' WHERE id IN (:ids)
+    </entry>
+
+    <!--
+      Upsert in two statements with no exception handling: a unique violation would abort the whole Postgres
+      transaction, so the row is created with ON CONFLICT DO NOTHING (target-less: H2 rejects a conflict target)
+      and then incremented. The UPDATE row lock serialises concurrent increments.
+    -->
+    <entry key="otp.attempts.insertIfAbsent">
+        INSERT INTO otp_attempts (service_name, mobile_email, attempts, last_attempt_date)
+        VALUES (:serviceName, :recipient, 0, :now)
+        ON CONFLICT DO NOTHING
+    </entry>
+
+    <entry key="otp.attempts.update">
+        UPDATE otp_attempts
+        SET attempts = CASE WHEN last_attempt_date &lt; :dayStart THEN 1 ELSE attempts + 1 END, last_attempt_date = :now
+        WHERE service_name = :serviceName AND mobile_email = :recipient
+    </entry>
+
+    <entry key="otp.management.lockCandidates">
+        SELECT id, mobile_email, otp, validation_attempts FROM otp_management
+        WHERE service_name = :serviceName AND mobile_email IN (:recipients)
+          AND active = '1' AND expiry_date_time &gt; :now
+        ORDER BY id DESC
+        FOR UPDATE
+    </entry>
+
+    <entry key="otp.management.markValidated">
+        UPDATE otp_management SET active = '0', status = 'VALIDATED' WHERE id IN (:ids)
+    </entry>
+
+    <entry key="otp.management.incrementValidation">
+        UPDATE otp_management SET validation_attempts = validation_attempts + 1 WHERE id IN (:ids)
+    </entry>
+
+    <entry key="otp.attempts.reset">
+        UPDATE otp_attempts SET attempts = 0 WHERE service_name = :serviceName AND mobile_email IN (:recipients)
+    </entry>
+</properties>

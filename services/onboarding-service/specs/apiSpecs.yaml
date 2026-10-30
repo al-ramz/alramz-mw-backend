@@ -288,6 +288,162 @@ paths:
          '503':
            description: External system unavailable
 
+  /dfm/investors:
+    post:
+      tags:
+        - DFM Investors
+      summary: Register a DFM investor
+      description: >-
+        Validates the investor, registers them with the DFM Member API (NIN creation / lookup and trading
+        account opening) and returns the NIN, trading numbers and references. Requires role APP_DFM_ONBOARDING.
+      operationId: registerDfmInvestor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DfmInvestorRegistrationRequest'
+            example:
+              requestId: "3f2b8c1e-7d4a-4f6b-9c2e-1a0b9d8e7f60"
+              firstName: Test
+              lastName: User
+              fullNameEn: Test User
+              fullNameAr: مستخدم تجريبي
+              dateOfBirth: "1990-01-15"
+              gender: M
+              nationality: AE
+              mobile: "+971500000000"
+              email: test.user@example.com
+              address:
+                country: AE
+                city: Dubai
+                line: Example Street 1
+                poBox: "00000"
+              dividendPayment:
+                method: BANK
+                aedIban: AE000000000000000000000
+              portfolioOptions:
+                - CASH
+              crs:
+                resident: true
+                countries:
+                  - country: AE
+                    hasTin: false
+                    noTinReason: B
+              fatca:
+                usPerson: false
+              emiratesId:
+                eidNumber: 784-0000-0000000-0
+                expiryDate: "2030-01-01"
+                frontImage: iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==
+                backImage: iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==
+              signature:
+                imageType: png
+                image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==
+      responses:
+        '201':
+          description: Investor registered (or matched) at DFM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "201"
+                responseMessage: Created
+                errorCode: null
+                errorMsg: null
+                correlationId: "6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33"
+                response:
+                  nin: EGA0000000
+                  cashTradingNumber: "9400000"
+                  marginTradingNumber: null
+                  memberReference: "9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d"
+                  dfmReference: "1b2c3d4e-5f60-4718-89ab-cdef01234567"
+                  trackingNumber: "2313258142"
+                  dfmMessage: OK
+        '400':
+          description: Invalid input (DFN001-DFN005) or DFM rejected the data (DFN006)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "400"
+                responseMessage: Bad Request
+                errorCode: DFN001
+                errorMsg: address.country must be an ISO 3166-1 alpha-2 code
+                correlationId: "6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33"
+                response: null
+        '401':
+          description: Unauthorized - Missing or invalid JWT bearer token
+        '403':
+          description: Forbidden - the token lacks role APP_DFM_ONBOARDING
+        '409':
+          description: A registration with this requestId is still in progress at DFM (DFN007)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "409"
+                responseMessage: Conflict
+                errorCode: DFN007
+                errorMsg: A registration with this requestId is still in progress at DFM; retry later with the same requestId
+                correlationId: "6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33"
+                response: null
+        '500':
+          description: DFM integration not configured (DFN012) or unexpected error (DFN013)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: Internal Server Error
+                errorCode: DFN013
+                errorMsg: Internal Server Error
+                correlationId: "6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33"
+                response: null
+        '502':
+          description: DFM returned an invalid or failed response (DFN010)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "502"
+                responseMessage: Bad Gateway
+                errorCode: DFN010
+                errorMsg: DFM returned an invalid or failed response
+                correlationId: "6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33"
+                response: null
+        '503':
+          description: DFM circuit breaker open (DFN014)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "503"
+                responseMessage: Service Unavailable
+                errorCode: DFN014
+                errorMsg: DFM is temporarily unavailable; retry later with the same requestId
+                correlationId: "6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33"
+                response: null
+        '504':
+          description: DFM did not respond in time (DFN011)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "504"
+                responseMessage: Gateway Timeout
+                errorCode: DFN011
+                errorMsg: DFM did not respond in time; retry later with the same requestId
+                correlationId: "6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33"
+                response: null
+
 components:
   securitySchemes:
     BearerAuth:
@@ -332,6 +488,15 @@ components:
           format: uuid
           description: Correlation ID for request tracing
           example: "550e8400-e29b-41d4-a716-446655440000"
+
+        errorCode:
+          type: string
+          nullable: true
+          example: DFN001
+
+        errorMsg:
+          type: string
+          nullable: true
 
     IBANValidationResponse:
       type: object
@@ -942,3 +1107,306 @@ components:
         internal_error_code:
           type: string
           description: Internal error code for failures
+
+    # ---------------------------------------------------------------- DFM investor registration
+    # Property order matters: audit bodies are truncated before masking, so image-bearing objects
+    # come last at the top level and image fields come last inside each object.
+    DfmInvestorRegistrationRequest:
+      type: object
+      required:
+        - requestId
+        - firstName
+        - lastName
+        - fullNameEn
+        - dateOfBirth
+        - gender
+        - nationality
+        - mobile
+        - email
+        - address
+        - dividendPayment
+        - portfolioOptions
+        - signature
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: DFM idempotency key (request_id). Reuse it when retrying the same registration.
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 40
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 40
+        fullNameEn:
+          type: string
+          minLength: 1
+          maxLength: 40
+        fullNameAr:
+          type: string
+          maxLength: 40
+          description: Required when nationality is an Arab League state
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [M, F]
+        nationality:
+          type: string
+          pattern: '^[A-Z]{2}$'
+          description: ISO 3166-1 alpha-2
+        familyId:
+          type: string
+          maxLength: 15
+        nin:
+          type: string
+          maxLength: 15
+          description: Known NIN of an existing investor
+        mobile:
+          type: string
+          pattern: '^\+[1-9]\d{6,14}$'
+          description: E.164, e.g. +971501234567
+        email:
+          type: string
+          format: email
+          maxLength: 80
+        address:
+          $ref: '#/components/schemas/DfmAddress'
+        dividendPayment:
+          $ref: '#/components/schemas/DfmDividendPayment'
+        portfolioOptions:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/DfmPortfolioOption'
+        crs:
+          $ref: '#/components/schemas/DfmCrs'
+        fatca:
+          $ref: '#/components/schemas/DfmFatca'
+        emiratesId:
+          $ref: '#/components/schemas/DfmEmiratesId'
+        passport:
+          $ref: '#/components/schemas/DfmPassport'
+        signature:
+          $ref: '#/components/schemas/DfmSignature'
+        guardian:
+          $ref: '#/components/schemas/DfmGuardian'
+
+    DfmAddress:
+      type: object
+      required:
+        - country
+        - city
+      properties:
+        country:
+          type: string
+          pattern: '^[A-Z]{2}$'
+          description: ISO 3166-1 alpha-2
+        city:
+          type: string
+          minLength: 1
+          maxLength: 25
+        line:
+          type: string
+          maxLength: 40
+          description: Required when poBox is absent
+        poBox:
+          type: string
+          maxLength: 10
+          description: Required when country is AE
+        zipCode:
+          type: string
+          maxLength: 10
+        phone:
+          type: string
+          pattern: '^\+[1-9]\d{6,14}$'
+
+    DfmDividendPayment:
+      type: object
+      required:
+        - method
+      properties:
+        method:
+          type: string
+          enum: [IVESTOR, BANK]
+        aedIban:
+          type: string
+          pattern: '^AE\d{21}$'
+          description: Required for BANK
+        usdIban:
+          type: string
+          pattern: '^AE\d{21}$'
+        foreignAccount:
+          type: string
+          maxLength: 34
+        foreignSwift:
+          type: string
+          pattern: '^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$'
+        correspondentIban:
+          type: string
+          maxLength: 34
+        correspondentSwift:
+          type: string
+          pattern: '^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$'
+        routeCode:
+          type: string
+          maxLength: 20
+        ivestorPrintName:
+          type: string
+          maxLength: 26
+          description: Required for IVESTOR
+
+    DfmPortfolioOption:
+      type: string
+      enum: [CASH, MARGIN]
+
+    DfmCrs:
+      type: object
+      properties:
+        resident:
+          type: boolean
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/DfmCrsCountry'
+
+    DfmCrsCountry:
+      type: object
+      required:
+        - country
+        - hasTin
+      properties:
+        country:
+          type: string
+          pattern: '^[A-Z]{2}$'
+        hasTin:
+          type: boolean
+        tin:
+          type: string
+          maxLength: 50
+        noTinReason:
+          type: string
+          maxLength: 10
+        whyNoTinIssued:
+          type: string
+          maxLength: 200
+
+    DfmFatca:
+      type: object
+      properties:
+        usPerson:
+          type: boolean
+        tin:
+          type: string
+          maxLength: 50
+
+    DfmEmiratesId:
+      type: object
+      required:
+        - eidNumber
+        - expiryDate
+        - frontImage
+        - backImage
+      properties:
+        eidNumber:
+          type: string
+          pattern: '^784-\d{4}-\d{7}-\d$'
+        expiryDate:
+          type: string
+          format: date
+        frontImage:
+          type: string
+          maxLength: 2796204
+          description: Base64 (standard alphabet, no data URI prefix) JPEG, PNG or PDF, at most 2 MiB decoded
+        backImage:
+          type: string
+          maxLength: 2796204
+          description: Base64 (standard alphabet, no data URI prefix) JPEG, PNG or PDF, at most 2 MiB decoded
+
+    DfmPassport:
+      type: object
+      required:
+        - passportNumber
+        - expiryDate
+        - imageType
+        - image
+      properties:
+        passportNumber:
+          type: string
+          minLength: 1
+          maxLength: 15
+        expiryDate:
+          type: string
+          format: date
+        imageType:
+          type: string
+          enum: [jpg, jpeg, png, pdf]
+        image:
+          type: string
+          maxLength: 2796204
+          description: Base64, must match imageType, at most 2 MiB decoded
+
+    DfmSignature:
+      type: object
+      required:
+        - imageType
+        - image
+      properties:
+        imageType:
+          type: string
+          enum: [jpg, jpeg, png, pdf]
+        image:
+          type: string
+          maxLength: 1398104
+          description: Base64, must match imageType, at most 1 MiB decoded
+
+    DfmGuardian:
+      type: object
+      required:
+        - name
+        - type
+        - proofDocument
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+        proofDocument:
+          type: string
+          maxLength: 2796204
+          description: Base64 JPEG, PNG or PDF, at most 2 MiB decoded
+
+    DfmInvestorRegistration:
+      type: object
+      properties:
+        nin:
+          type: string
+          nullable: true
+        cashTradingNumber:
+          type: string
+          nullable: true
+        marginTradingNumber:
+          type: string
+          nullable: true
+        memberReference:
+          type: string
+          nullable: true
+          maxLength: 36
+        dfmReference:
+          type: string
+          nullable: true
+          maxLength: 36
+        trackingNumber:
+          type: string
+          nullable: true
+        dfmMessage:
+          type: string
+          nullable: true

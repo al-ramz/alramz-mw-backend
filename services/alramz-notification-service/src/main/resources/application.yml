@@ -4,6 +4,10 @@ spring:
   # autoconfigure:
   #   exclude: com.alramz.jwt.config.JwtAutoConfiguration
 
+# SqlQueriesManager: email (middleware) and SMS_TABLE (brok) SQL.
+sql:
+  file: classpath:sql/sql-queries.xml
+
 server:
   port: 8082
   host: localhost
@@ -14,7 +18,8 @@ app:
     max-subject-length: 255
     max-body-length: 10000
     max-attachments: 10
-    max-attachment-size-bytes: 10485760
+    max-total-attachment-size-bytes: 3000000
+    allowed-senders: ${APP_EMAIL_ALLOWED_SENDERS:notification@alramz.ae}
 
   graph:
     tenant-id: ${AZURE_TENANT_ID}
@@ -22,17 +27,65 @@ app:
     client-secret: ${AZURE_CLIENT_SECRET}
     graph-scopes: https://graph.microsoft.com/.default
 
+  # SMS gateway (SmsProperties). Defined here only: per-environment values come from env vars / Key Vault.
+  # Every secret is an env placeholder with an empty default; live sending stays off until credentials exist.
+  sms:
+    live-send-enabled: ${SMS_LIVE_SEND_ENABLED:false}
+    preferred-provider: ${SMS_PREFERRED_PROVIDER:WASELNEY}   # ETISALAT, anything else means Waselney
+    max-recipients: 50
+    max-message-length: 1500
+    connect-timeout: 5s
+    read-timeout: 10s
+    defaults:
+      msg-category: "4.2"
+      expiry-in-secs: 300
+    etisalat:
+      base-url: ${SMS_ETISALAT_BASE_URL:}
+      username: ${SMS_ETISALAT_USERNAME:}
+      password: ${SMS_ETISALAT_PASSWORD:}
+      excluded-prefixes: ${SMS_ETISALAT_EXCLUDED_PREFIXES:}
+      excluded-country-codes: ${SMS_ETISALAT_EXCLUDED_COUNTRY_CODES:}
+    waselney:
+      send-url: ${SMS_WASELNEY_SEND_URL:}
+      report-url: ${SMS_WASELNEY_REPORT_URL:}
+      username: ${SMS_WASELNEY_USERNAME:}
+      password: ${SMS_WASELNEY_PASSWORD:}
+    veriphone:
+      base-url: ${SMS_VERIPHONE_BASE_URL:https://api.veriphone.io}
+      api-key: ${VERIPHONE_API_KEY:}
+    # INSIGHT.SMS_TABLE dispatch job. Off by default: the legacy webMethods listener may still own SMS_TABLE.
+    # Enabling it requires company.datasource.brok.enabled=true and the three statuses (no defaults on purpose).
+    dispatch:
+      enabled: ${SMS_DISPATCH_ENABLED:false}
+      batch-size: 50
+      status:
+        pending: ${SMS_STATUS_PENDING:}
+        in-progress: ${SMS_STATUS_IN_PROGRESS:}
+        invalid-mobile: ${SMS_STATUS_INVALID_MOBILE:}
+
+  # OTP (OtpProperties). email-from must be in allowed-senders; the fixed test OTP can never be on in prod.
+  otp:
+    fixed-test-otp-enabled: ${OTP_FIXED_TEST_OTP_ENABLED:false}
+    email-from: ${OTP_EMAIL_FROM:notification@alramz.ae}
+
 company:
   jwt:
+    secret: ${JWT_SECRET}   # no default: an unset secret must fail startup, not fall back to the starter's public default key
     enabled: true
     permit-all-urls:
         - /api/v1/info
-        - /api/v1/email/send
 
   scheduler:
     management-endpoints:
-      enabled: true
+      enabled: false
+    pool-size: 2
+    thread-group-name: notification-scheduled-tasks-
+    thread-name-prefix: Notification-TaskScheduler-Worker-
 
   logging:
     seq:
       enabled: false
+    # Replaces the starter's default list, so the defaults are repeated; otp/hashedOtp/recipients added for the OTP API (security M-3).
+    masking:
+      sensitive-keys: [password, token, authorization, accessToken, refreshToken, jwt, aadhaar, pan, ssn,
+                       creditCard, cvv, apiKey, secret, session, cookie, otp, hashedOtp, recipients]

@@ -1,22 +1,45 @@
 package com.alramz;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 
 import com.alramz.config.EmailProperties;
+import com.alramz.config.OtpProperties;
+import com.alramz.config.SmsProperties;
+import com.alramz.scheduler.EnableScheduler;
 
 @SpringBootApplication
-@EnableConfigurationProperties(EmailProperties.class)
-@SuppressWarnings("PMD.UseUtilityClass")
+@EnableScheduler(jobGroupName = "notification")
+@EnableConfigurationProperties({EmailProperties.class, SmsProperties.class, OtpProperties.class})
 public class AlramzNotificationServiceApplication {
 
-    private AlramzNotificationServiceApplication() {
-        // Spring Boot application class
-    }
+    private static final Logger log = LoggerFactory.getLogger(AlramzNotificationServiceApplication.class);
 
     public static void main(final String[] args) {
         SpringApplication.run(AlramzNotificationServiceApplication.class, args);
+    }
+
+    @Bean
+    ApplicationRunner runner(final Environment env) {
+        return args -> {
+            String port = env.getProperty("server.port", "8080");
+            String host = env.getProperty("server.address", "localhost");
+            String appName = env.getProperty("spring.application.name", "unknown");
+            String[] activeProfiles = env.getActiveProfiles();
+            String profile = activeProfiles.length > 0 ? String.join(", ", activeProfiles) : "default";
+            log.info("========================================");
+            log.info("Application:  {}", appName);
+            log.info("Profile:      {}", profile);
+            log.info("Host:         {}", host);
+            log.info("Port:         {}", port);
+            log.info("========================================");
+        };
     }
 
 }
