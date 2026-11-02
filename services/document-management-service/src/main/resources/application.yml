@@ -6,6 +6,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  servlet:
+    multipart:
+      # Aligned with dms.upload.max-file-size; request size leaves headroom for the JSON `request` part.
+      max-file-size: ${dms.upload.max-file-size:10MB}
+      max-request-size: 11MB
+      # Required: lets the DMS exception handler map MaxUploadSizeExceededException to 413 DMS107.
+      resolve-lazily: true
 
 server:
   host: localhost

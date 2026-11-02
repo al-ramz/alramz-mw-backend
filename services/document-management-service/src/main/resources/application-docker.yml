@@ -11,7 +11,8 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        # never '*': env/configprops/heapdump would expose the Open Bee API keys in the environment
+        include: health,info,prometheus
   tracing:
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
@@ -47,21 +48,29 @@ company:
       pretty-print: false
     correlation-id:
       response-header: true
+    # DMS: payloads, headers and the save/content paths stay out of logs and span tags (metadata values,
+    # file names and Content-Disposition can carry client identifiers).
     request:
       enabled: true
-      include-headers: true
-      include-payload: true
+      include-headers: false
+      include-payload: false
     response:
       enabled: true
-      include-payload: true
+      include-payload: false
+    excluded-paths:
+      - /actuator/**
+      - /swagger-ui/**
+      - /v3/api-docs/**
+      - /api/v1/dms/documents
+      - /api/v1/dms/documents/*/content
     aspect:
       enabled: true
     performance:
       threshold: 1000ms
     database-logging:
       enabled: true
-      include-request-payload: true
-      include-response-payload: true
+      include-request-payload: false
+      include-response-payload: false
       cleanup-cron: "0 0 2 * * *"
       retention-days: 7
       excluded-paths:
@@ -69,6 +78,7 @@ company:
         - /actuator/**
         - /swagger-ui/**
         - /v3/api-docs/**
+        - /api/v1/dms/documents/*/content
     seq:
       enabled: true
       url: http://seq:80
@@ -107,3 +117,15 @@ company:
 
 cipher:
   password: ${CIPHER_PASSWORD:UseMostSecretKey}
+
+# Open Bee (DMS). Startup fails fast unless DMS_OPENBEE_BASE_URL and every consumer key below are set.
+# Consumer keys must equal the JWT subject exactly: keep the bracket notation.
+dms:
+  openbee:
+    base-url: ${DMS_OPENBEE_BASE_URL:}
+    time-zone: Asia/Dubai
+  consumers:
+    "[onboarding-portal]":
+      api-key: ${DMS_OPENBEE_API_KEY_ONBOARDING_PORTAL:}
+    "[crm]":
+      api-key: ${DMS_OPENBEE_API_KEY_CRM:}

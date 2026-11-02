@@ -1,0 +1,562 @@
+{
+  "feature_slug": "dms-implementation",
+  "spec_path": ".claude/modules/features/dms-implementation/spec.md",
+  "howtos_consulted": [
+    ".claude/howtos/new-endpoint-elicitation-checklist.md",
+    ".claude/howtos/openapi-contract-first-controllers.md",
+    ".claude/howtos/api-collection-http-requests.md",
+    ".claude/howtos/configuration-properties.md",
+    ".claude/howtos/jwt-security-and-public-endpoints.md",
+    ".claude/howtos/exception-handling.md",
+    ".claude/howtos/request-response-and-db-audit-logging.md",
+    ".claude/howtos/testing-patterns.md"
+  ],
+  "target_services": ["document-management-service"],
+  "target_files": [
+    {
+      "path": "services/document-management-service/pom.xml",
+      "status": "modified",
+      "change_summary": "Phase 1. Add (a) com.github.ben-manes.caffeine:caffeine WITHOUT <version>; Boot manages it (spring-boot-dependencies-4.1.0.pom line 41: caffeine.version 3.2.4, inherited through alramz-common-bom -> spring-boot-starter-parent 4.1.0); (b) org.wiremock:wiremock-standalone, <scope>test</scope>, version from a NEW <wiremock.version> property declared in THIS pom. No BOM manages WireMock, and it is not in the local ~/.m2, so the first build downloads it. Pin the newest 3.x release, >= 3.13.1. The standalone artifact shades Jetty, Jackson and the servlet API, so it does not clash with Boot 4/Tomcat. (c) a maven-surefire-plugin entry (version inherited from alramz-common-bom pluginManagement, 3.5.2) with <excludedGroups>${dms.test.excludedGroups}</excludedGroups> and the property <dms.test.excludedGroups>openbee-live</dms.test.excludedGroups>. The default build therefore never runs live tests, and -Ddms.test.excludedGroups= -Dgroups=openbee-live re-enables them. Leave JPA, Liquibase, Postgres, H2 and the liquibase-maven-plugin unchanged. Only if the Step 11/18 codegen gate needs it: add <typeMappings>/<importMappings> to the existing openapi-generator configOptions. NO change to services/alramz-common-bom/pom.xml."
+    },
+    {
+      "path": "services/document-management-service/specs/apiSpecs.yaml",
+      "status": "modified",
+      "change_summary": "Amend; do not restructure. Leave the existing '/api/v1/info' path exactly as is. Its non-bare path is a scaffold quirk, and ApplicationController does not implement the generated InfoApi. Phase 1: amend components.schemas.GenericResponse to the utility-service shape: add correlationId {string, uuid}, errorCode {string, nullable}, errorMsg {string, nullable}. Add components.examples Dms109/Dms201/Dms202/Dms203/Dms299 (full envelopes, spec section 3.0). Add DmsListValue, DmsMetadataDefinition, DmsFilingCategory and DmsFilingCategoriesResponse. Add bare path '/dms/filing-categories' GET, tags [Dms], operationId listDmsFilingCategories: 200 (GenericResponse + spec 3.2 example), 401 (description only), 403 (Dms109 example), 500 Dms299, 502 Dms201/Dms202, 503 Dms203. Phase 2: add DmsMetadataValues (type object, additionalProperties: {}), DmsSaveDocumentRequest, DmsSaveDocumentResponse and '/dms/documents' POST saveDmsDocument. requestBody is multipart/form-data with required [file, request]: file {string, binary}, request $ref DmsSaveDocumentRequest, encoding request.contentType application/json. Responses: 201 + example, 400 examples DMS101/102/103/104/105/110, 401, 403, 409 DMS106, 413 DMS107, 500, 502, 503. Phase 3: add DmsSearchRequest, DmsDocumentMetadataValue, DmsFilingCategoryRef, DmsDocumentSummary, DmsSearchResponse and '/dms/documents/search' POST searchDmsDocuments (JSON; 200 + empty-result example; 400 DMS101/102/103/105/110; 401/403/500/502/503). Add '/dms/documents/{documentId}/content' GET downloadDmsDocumentContent: path param documentId {integer, int64, minimum 1}. 200 is application/octet-stream {string, binary} with a Content-Disposition header. Every error response (400 DMS101, 401, 403, 404 DMS108, 500, 502, 503) declares content application/json GenericResponse, so the generated produces = {application/octet-stream, application/json}. Every new schema name carries the Dms prefix (no collision with com.alramz.model.GenericResponse). No new operationId collides; the file has only getInfo today."
+    },
+    {
+      "path": "services/document-management-service/apiCollection.http",
+      "status": "modified",
+      "change_summary": "@baseUrl (8086) and an empty @authToken are already defined, so howto pitfall 3 does not apply. Phase 1: change the existing register/login blocks' consumer from 'document_management_service_app' to 'onboarding-portal'. The JWT subject must equal a dms.consumers key, otherwise every DMS call is 403 DMS109. Set the email to a synthetic onboarding-portal@example.com. Keep roles [APP_DOCUMENT_MANAGEMENT_SERVICE_USER], application and environment, and add a one-line comment explaining the consumer name. Add '### List DMS filing categories' (GET {{baseUrl}}/api/v1/dms/filing-categories, Authorization: Bearer {{authToken}}). Phase 2: add '### Save DMS document', a multipart request with boundary: a 'file' part (filename sample.txt, text/plain inline content; no binary fixture committed) and a 'request' part with Content-Type: application/json and the spec 3.3 example body. Add '### Save DMS document -ve test case' with the request part sent as text/plain (-> 400 DMS101). Phase 3: add '### Search DMS documents' (spec 3.4 body) plus '-ve test case' with pageSize 101 (-> DMS101). Add '### Download DMS document content' (GET .../dms/documents/88213/content, Accept: application/octet-stream, application/json) plus '-ve test case' with documentId 0. Use synthetic IDs and values only. Do not commit a token."
+    },
+    {
+      "path": "services/document-management-service/src/main/resources/application.yml",
+      "status": "modified",
+      "change_summary": "Phase 2: add spring.servlet.multipart.max-file-size: ${dms.upload.max-file-size:10MB}, max-request-size: 11MB, resolve-lazily: true (spec 5.2; resolve-lazily is required for the handler to map MaxUploadSizeExceededException to 413 DMS107). Nothing else; spring.profiles.active: dev stays."
+    },
+    {
+      "path": "services/document-management-service/src/main/resources/application-dev.yml",
+      "status": "modified",
+      "change_summary": "Phase 1: add a top-level dms: block with openbee.base-url: ${DMS_OPENBEE_BASE_URL:}, openbee.time-zone: Asia/Dubai, and consumers with bracketed keys \"[onboarding-portal]\".api-key: ${DMS_OPENBEE_API_KEY_ONBOARDING_PORTAL:} and \"[crm]\".api-key: ${DMS_OPENBEE_API_KEY_CRM:}. Phase 4: management.endpoints.web.exposure.include '*' -> health,info,prometheus. company.logging.request.include-payload false, response.include-payload false, database-logging.include-request-payload false and include-response-payload false; database-logging stays enabled: true; outbound-enabled stays unset. company.logging.request.include-headers true -> false (plan addition, see technical_gaps G2). Add company.logging.excluded-paths [/actuator/**, /swagger-ui/**, /v3/api-docs/**, /api/v1/dms/documents, /api/v1/dms/documents/*/content]; the exact save path is a plan addition, see technical_gaps G1. Append /api/v1/dms/documents/*/content to database-logging.excluded-paths, keeping the existing 4. company.jwt.permit-all-urls stays exactly [/api/v1/info]."
+    },
+    {
+      "path": "services/document-management-service/src/main/resources/application-docker.yml",
+      "status": "modified",
+      "change_summary": "Identical edits to application-dev.yml: Phase 1 dms: block (env placeholders, Asia/Dubai, bracketed consumers); Phase 4 actuator exposure health,info,prometheus, the four payload flags false, request.include-headers false, the excluded-paths lists. permit-all-urls unchanged. This file's company: block orders sub-keys differently (logging before datasource/scheduler/jwt); edit in place."
+    },
+    {
+      "path": "services/document-management-service/src/main/resources/application-test.yml",
+      "status": "modified",
+      "change_summary": "Identical edits to application-dev.yml. This is the DEPLOYED 'test' environment profile, not the automated-test config: it references the env vars, so a test-environment pod fails fast without them, which the spec intends. No automated test activates this profile (see technical_gaps G9)."
+    },
+    {
+      "path": "services/document-management-service/src/main/resources/application-preprod.yml",
+      "status": "modified",
+      "change_summary": "Identical edits to application-dev.yml (dms block; actuator narrowing; logging hardening; excluded paths). permit-all-urls unchanged."
+    },
+    {
+      "path": "services/document-management-service/src/main/resources/application-prod.yml",
+      "status": "modified",
+      "change_summary": "Identical edits to application-dev.yml (dms block; actuator narrowing; logging hardening; excluded paths). permit-all-urls unchanged. No real key or URL is committed."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/config/DmsProperties.java",
+      "status": "new",
+      "change_summary": "Phase 1. Shape: @Getter @Setter @Validated @ConfigurationProperties(prefix = DmsProperties.PREFIX), PREFIX = \"dms\". It follows the FinouxProperties/MmfProperties shape: Lombok class, not a record. Nested static classes: OpenBee {@NotBlank String baseUrl; @NotNull ZoneId timeZone; Duration connectTimeout=5s, readTimeout=15s, transferReadTimeout=120s; Retry {@Min(1) int maxAttempts=3; Duration initialBackoff=500ms}; String uploadDateFormat=\"yyyy-MM-dd\"; UploadBooleanFormat uploadBooleanFormat=ONE_ZERO; UploadListValue uploadListValue=NAME}. Map<String, @Valid Consumer> consumers = new LinkedHashMap<>(), with @Valid on the field and Consumer {@NotBlank String apiKey; toString masks the key}. Cache {categoriesTtl=15m, listsTtl=15m, forcedRefreshMinInterval=60s}. Upload {DataSize maxFileSize=10MB; Path tempDir=Path.of(System.getProperty(\"java.io.tmpdir\"))}. Search {int defaultPageSize=25, maxPageSize=100}. Nested enums: UploadBooleanFormat {ONE_ZERO, TRUE_FALSE} and UploadListValue {NAME, ID}. There is NO consumerIdHeader and NO chunkedThreshold. Fail-fast comes from Boot's @Validated binding: a blank consumer key gives a field error on consumers[crm].apiKey whose rejected value is blank, so no key is printed. Bound by @EnableConfigurationProperties on OpenBeeClientConfig."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/config/OpenBeeClientConfig.java",
+      "status": "new",
+      "change_summary": "Phase 1. Follows ExternalFinouxServiceConfig: @Configuration, @EnableConfigurationProperties(DmsProperties.class), @RequiredArgsConstructor. Beans: (1) @Bean(\"openBeeWebClient\"), built from the injected Boot-managed WebClient.Builder (prototype) with: .baseUrl(dms.openbee.base-url); .clientConnector(new JdkClientHttpConnector(HttpClient.newBuilder().connectTimeout(connectTimeout).version(HttpClient.Version.HTTP_1_1).followRedirects(NEVER).build())); .codecs(c -> c.defaultCodecs().maxInMemorySize(5 MB)); .filter(alramzWebClientLoggingFilterFunction). No default Content-Type, Accept or Authorization headers. Do NOT install JacksonConfig's SNAKE_CASE Jackson-2 ObjectMapper as a codec. The connector is set explicitly because no reactor-netty, jetty-reactive-httpclient or httpcore5-reactive is on this classpath (technical_gaps G6); Boot would pick the JDK connector anyway. No connector-level read timeout, because per-call timeouts live in OpenBeeClient. (2) @Bean(\"openBeeCircuitBreaker\"): registry.circuitBreaker(\"openbee\", config). The config is derived from the registry default; it records only OpenBeeException TIMEOUT/CONNECTION/HTTP_ERROR>=500 and ignores 4xx and BAD_RESPONSE, so one consumer's 401 cannot open the breaker. (3) @Bean(\"openBeeReadRetry\"): maxAttempts=dms.openbee.retry.max-attempts, IntervalFunction.ofExponentialBackoff(initialBackoff, 2.0), retryOnException TIMEOUT|CONNECTION|HTTP_ERROR>=500 only (never 4xx, never CIRCUIT_OPEN). (4) @Bean(\"openBeeWriteRetry\"): maxAttempts(1), the Finoux non-idempotent precedent. (5) @Bean(\"openBeeTimeLimiter\"): timeoutDuration=read-timeout, for JSON calls. Expose these as plain instance methods so the WireMock tests can build the identical chain without a Spring context."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/config/DmsCacheConfig.java",
+      "status": "new",
+      "change_summary": "Phase 1. @Configuration with: @Bean(\"dmsCategoryCache\") Cache<String, CatalogEntry> (Caffeine, maximumSize bound, NO expireAfterWrite/refreshAfterWrite; TTL is enforced by an explicit loadedAt check so stale entries survive for stale-on-failure); @Bean(\"dmsListCache\") Cache<Long, ListEntry>, same rules, keyed by idList and shared across consumers; @Bean(\"dmsClock\") Clock.systemUTC(). The Clock is qualifier-named and no Clock bean exists in the starter; it is injectable so tests use a mutable clock instead of sleeping. The CatalogEntry/ListEntry holder records may be nested in FilingCategoryCatalog."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/config/DmsHealthIndicator.java",
+      "status": "new",
+      "change_summary": "Phase 4. @Component implements org.springframework.boot.health.contributor.HealthIndicator. This is the Boot 4 package, as used by the starter's PoolHealthIndicator, not the Boot 3 actuate.health one. Always UP, with details configuredConsumers (count only) and cachedCategoryEntries (estimated cache size). It never calls Open Bee and never reports DOWN for Open Bee."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/config/DmsWebMvcConfig.java",
+      "status": "new",
+      "change_summary": "Phase 4. A @Configuration implementing WebMvcConfigurer that registers DmsRequestSummaryInterceptor for /api/v1/dms/**."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/config/DmsRequestSummaryInterceptor.java",
+      "status": "new",
+      "change_summary": "Phase 4. A HandlerInterceptor that emits EXACTLY ONE INFO line per DMS request reaching MVC (spec 5.3). preHandle puts a DmsRequestSummary (start nanos, operation = handler method name) into a request attribute. afterCompletion logs: correlationId (from MDC), consumerId, operation, filingCategoryId, documentId when known, openBeeStatus, dmsCode (null on success; read from the request attribute set by GlobalExceptionHandler.buildResponse), durationMs, and for save the extension only. It never logs file names, metadata values or keys. afterCompletion runs after the streamed download body is written, so durationMs covers streaming."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/exception/ErrorCode.java",
+      "status": "new",
+      "change_summary": "Phase 1. Enum DMS101..DMS110 and DMS201/202/203/299 with code(), status() (HttpStatus) and defaultMessage(), following the spec 6.1 table with no renumbering. DMS107's message is a template rendered with dms.upload.max-file-size. HttpStatus lives on the enum (spec 3.6); the exception class carries only the ErrorCode, consistent with exception-handling.md's 'no status in the exception class'."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/exception/DmsException.java",
+      "status": "new",
+      "change_summary": "Phase 1. A RuntimeException carrying ErrorCode plus a client-safe message (constructors (ErrorCode) and (ErrorCode, String message)). Messages name metadata ID and name, never values."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+      "status": "new",
+      "change_summary": "Phase 1, and the single advice for the service: @Slf4j @RestControllerAdvice(basePackages = \"com.alramz.controllers\") @Order(0), constructor-injected DmsProperties (for the DMS107 text). It follows wealth-management-service's GlobalExceptionHandler, NOT data-validation's dead OnboardingExceptionHandler. Mappings: DmsException -> ex.getErrorCode().status()/code. MethodArgumentNotValidException, HandlerMethodValidationException, ConstraintViolationException (the generated DmsApi is @Validated, so @Min on documentId and pageSize arrive here via the MethodValidationPostProcessor proxy), HttpMessageNotReadableException, MissingServletRequestPartException ('file part is required'/'request part is required'), HttpMediaTypeNotSupportedException ('request part must be application/json' for saveDmsDocument), MethodArgumentTypeMismatchException and MultipartException -> 400 DMS101, each with a fixed per-field message that never echoes the rejected value. MaxUploadSizeExceededException (a subclass of MultipartException, so the more specific handler wins) -> 413 DMS107. AccessDeniedException -> 403 with errorCode null and message 'Access denied' (utility/wealth precedent). Exception -> 500 DMS299 'Internal Server Error', logged at ERROR. buildResponse(status, ErrorCode, msg) fills responseCode = status value, responseMessage = reason phrase, errorCode, errorMsg, correlationId = MDCUtil.getCorrelationIdAsUuid(), response null. Phase 4: buildResponse also stores the DMS code in a request attribute for the summary line."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/controllers/DmsController.java",
+      "status": "new",
+      "change_summary": "Phase 1, with methods added in Phases 2 and 3. @RestController @RequestMapping(\"/api/v1\") @RequiredArgsConstructor; implements the generated com.alramz.api.DmsApi. Every method carries @Override, @JwtSecured(roles = \"APP_DOCUMENT_MANAGEMENT_SERVICE_USER\") and @Loggable(logArgs = false, logReturn = false), resolves ConsumerContext via ConsumerContextResolver and delegates to DocumentService; there is no business logic here. Phase 1: listDmsFilingCategories() -> 200 envelope. Phase 2: saveDmsDocument(file, request) -> ResponseEntity.status(201) envelope with responseCode '201' and responseMessage 'Created', and NO Location header. Phase 3: searchDmsDocuments(body) -> 200; downloadDmsDocumentContent(documentId) -> ResponseEntity<Resource> with Content-Type (Open Bee's, defaulting to application/octet-stream), Content-Length when known and Content-Disposition from ContentDispositionFormatter. The body is a plain `new InputStreamResource(in)` of EXACTLY that class: ResourceHttpMessageConverter skips contentLength() for that class only, and a subclass would drain the stream. Exact parameter types follow the Step 11/18 codegen gate."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/ConsumerContext.java",
+      "status": "new",
+      "change_summary": "Phase 1. record ConsumerContext(String consumerId, String apiKey) whose toString() masks apiKey (spec 3.6)."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/ConsumerContextResolver.java",
+      "status": "new",
+      "change_summary": "Phase 1. A @Component. resolve() uses UserRequestContext.get().getUserId() (the JWT subject; JwtAuthFilter sets the principal to the username String) and does an exact, case-sensitive lookup in DmsProperties.consumers. A missing entry throws DmsException(DMS109) before any Open Bee call. findByConsumerId(String) is also provided for catalog reloads."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/DocumentService.java",
+      "status": "new",
+      "change_summary": "Phase 1 interface, extended per phase, with the spec 3.6 signatures: listFilingCategories(ConsumerContext); save(ConsumerContext, MultipartFile, DmsSaveDocumentRequest); search(ConsumerContext, DmsSearchRequest); download(ConsumerContext, long) returning DmsDocumentContent."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/impl/DocumentServiceImpl.java",
+      "status": "new",
+      "change_summary": "Phase 1: map catalog -> DmsFilingCategoriesResponse (spec 3.2 / brief 6.1 mapping; none of the 'do not expose' fields). Phase 2 save, in order: empty file -> DMS101. size > dms.upload.max-file-size -> DMS107. FilingCategoryCatalog.find (refresh-once) -> DMS102. MetadataValidator.validateForSave. FileNameResolver. description defaults to the resolved name. UploadSpooler (temp file + SHA-256). OpenBeeClient.addDocument (NO retry), with the temp file deleted in finally on every path. OpenBeeException goes through OpenBeeErrorMapper.toDms(e, SAVE, overwrite). A timeout gets a WARN log with the correlation id and 'possible duplicate version in Open Bee'. The result is DmsSaveDocumentResponse{documentId, filingCategoryId}. Phase 3 search: page default 1; pageSize null -> default-page-size; pageSize outside 1..max-page-size -> DMS101. find -> DMS102. validateForSearch. SearchFilterBuilder. advancedSearch (retried). Drop items where idFolder != null or idDocument == null. Map per brief 6.3: idMetadata string/number -> long, name from the cached category; timestamps via OpenBeeTimestampConverter; totalCount = pagination.count, totalPages = pagination.nbPages. Phase 3 download: OpenBeeClient.downloadFile (status mapped before any byte). Name chain: Open Bee Content-Disposition -> getDocumentName (failure swallowed with a WARN) -> 'document-<id>'. Returns DmsDocumentContent(contentType, contentLength, contentDisposition, InputStream over DataBufferUtils.subscriberInputStream(flux, demand)). There is no @Loggable with args on this class."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/FilingCategoryCatalog.java",
+      "status": "new",
+      "change_summary": "Phase 1. A @Component using the dmsCategoryCache/dmsListCache/dmsClock beans. get(consumer): loads lazily, never at startup. A fresh entry (loadedAt + categories-ttl > now) is returned. Otherwise it reloads SYNCHRONOUSLY under a per-consumer lock (ConcurrentHashMap<String, ReentrantLock>, at most one concurrent load per consumer; NOT Caffeine refreshAfterWrite, which reloads async and loses MDC/correlation). The reload follows Open Bee pages to pagination.nbPages and fetches each distinct non-null idList once via the list cache (lists-ttl, same stale rules). If the reload fails and an entry exists, the stale entry is served with a WARN; if none exists, the error is rethrown so the mapper gives DMS203/DMS202/DMS201. find(consumer, id): on a miss, calls refreshIfAllowed(consumer) once and re-checks. refreshIfAllowed: at most one forced refresh per consumer per forced-refresh-min-interval (ConcurrentHashMap<String, Instant> with an atomic compute). Also used by MetadataValidator's unknown-metadata-ID path. Includes the internal records CatalogEntry {List<CatalogCategory>, Instant loadedAt} and ListEntry."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/CatalogCategory.java",
+      "status": "new",
+      "change_summary": "Phase 1. An immutable record (id, name, path, autoFiling, fileNamePattern, List<CatalogMetadata> metadata) with a metadata lookup by id. Built from Open Bee DTOs, accepting both wrapped and unwrapped category items (V6)."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/CatalogMetadata.java",
+      "status": "new",
+      "change_summary": "Phase 1. A record (id, name, rawType, MetadataTypeGroup group, mandatory, multiple, readOnly (= Open Bee autoincrement), parentMetadataId, listId, List<ListValue> listValues), with a nested ListValue(id, name, sublistId)."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/MetadataTypeGroup.java",
+      "status": "new",
+      "change_summary": "Phase 1. Enum TEXT, INTEGER, DECIMAL, DATE, BOOLEAN, LIST, SUBLIST, UNSUPPORTED, with a static fromOpenBeeType(String). Mapping (brief 8.1): VARCHAR/TEXT/EMAIL/ADDRESS -> TEXT; INT/INTEGER/AUTOINCREMENT -> INTEGER; DECIMAL; DATE; BOOLEAN; LIST/MULTIPLE_CHOICE -> LIST; SUBLIST; USER_GROUP/FILE -> UNSUPPORTED. An unknown name maps to TEXT with a WARN logged once per type name (a ConcurrentHashMap set)."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/MetadataValidator.java",
+      "status": "new",
+      "change_summary": "Phase 2. A @Component. validateForSave applies all 7 rules of brief 8.2: (1) the key is numeric and on the category, else DMS103; an unknown ID first triggers FilingCategoryCatalog.refreshIfAllowed once. (2) Mandatory, non-readOnly metadata must be present and non-empty (an empty array counts as absent), else DMS104. (3) readOnly sent -> DMS105. (4) Arrays only for multiple, else DMS105. (5) Type groups: text non-blank and <= 4000 chars; integer is a JSON integral or numeric string; decimal uses BigDecimal parsing of Number.toString()/the string, never Double arithmetic; date is yyyy-MM-dd; boolean is true/false. (6) LIST matches by exact case-sensitive name or by id, normalised to the list value. (7) UNSUPPORTED sent, or a mandatory UNSUPPORTED on save -> DMS110. validateForSearch applies rules 1, 4 (arrays only for TEXT/LIST/SUBLIST), 5, 6 and 7; there is no mandatory check, and readOnly may be used as a filter. Messages name the ID and name only. Returns List<ValidatedMetadata>."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/ValidatedMetadata.java",
+      "status": "new",
+      "change_summary": "Phase 2. record ValidatedMetadata(CatalogMetadata definition, List<Object> normalisedValues). Values are typed (String, BigInteger/BigDecimal, LocalDate, Boolean, ListValue) so the encoder and filter builder apply formats in one place."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/FileNameResolver.java",
+      "status": "new",
+      "change_summary": "Phase 2. A @Component or final helper implementing brief 6.2. An explicit fileName wins; if it has no extension and the original filename does, the original extension is appended. Otherwise the original filename's base name is used (client path stripped on both / and \\). Neither -> DMS101 'fileName is required'. Trim; reject blank, any / or \\, any ISO control character, or length > 255 -> DMS101. No case or other transformation."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/UploadSpooler.java",
+      "status": "new",
+      "change_summary": "Phase 2. A @Component that copies MultipartFile.getInputStream() through a DigestInputStream (SHA-256) into Files.createTempFile(dms.upload.temp-dir, UUID.randomUUID().toString(), \".upload\"). The name never contains the client file name. Returns SpooledUpload. The caller deletes the file in finally (Files.deleteIfExists); on spooling failure the temp file is deleted before rethrowing."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/SpooledUpload.java",
+      "status": "new",
+      "change_summary": "Phase 2. record SpooledUpload(Path path, long size, String sha256Hex) with lowercase hex. toString() omits nothing sensitive: the path is random."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/OpenBeeTimestampConverter.java",
+      "status": "new",
+      "change_summary": "Phase 3. Parses Open Bee local timestamps (e.g. 2026-10-28T10:15:00) as LocalDateTime, places them in dms.openbee.time-zone (Asia/Dubai) and returns OffsetDateTime, which serialises as 2026-10-28T10:15:00+04:00. Unparseable -> null, with a WARN at most once per request (E43)."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/ContentDispositionFormatter.java",
+      "status": "new",
+      "change_summary": "Phase 3. Builds 'attachment; filename=\"<ascii-safe>\"; filename*=UTF-8''<RFC 5987 percent-encoded>'. The ASCII fallback replaces non-ASCII, quotes, backslashes and control characters. This is hand-built, because Spring's ContentDisposition.filename(name, UTF_8) emits an RFC 2047 encoded-word in filename=, not an ASCII-safe fallback."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/DmsDocumentContent.java",
+      "status": "new",
+      "change_summary": "Phase 3. record DmsDocumentContent(MediaType contentType, Long contentLength, String contentDisposition, InputStream body). Kept in com.alramz.service, NOT com.alramz.model (that is the generated package)."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/service/DmsRequestSummary.java",
+      "status": "new",
+      "change_summary": "Phase 4. A mutable per-request holder stored as a request attribute, with current() via RequestContextHolder on the servlet thread. Fields: consumerId, operation, filingCategoryId, documentId, openBeeStatus, dmsCode, extension and startNanos. Written by DocumentServiceImpl/OpenBeeClient (on the servlet thread, after block() or in catch) and GlobalExceptionHandler; read by DmsRequestSummaryInterceptor."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeClient.java",
+      "status": "new",
+      "change_summary": "Phase 1 base, extended in Phases 2 and 3. A @Component in com.alramz.openbee, deliberately NOT under com.alramz.client, so ApiAuditAspect's execution(* com.alramz.client..*(..)) never serialises arguments. It does NOT extend AbstractRestClient, which would add the caller's Bearer token plus a second Authorization header. It is the ONLY class with Open Bee paths, query params, multipart field names and header names. Every method takes ConsumerContext and sets headers.set(AUTHORIZATION, \"Key \" + apiKey) (set, never add). There is no default, shared or @Value key. Injects @Qualifier openBeeWebClient/openBeeCircuitBreaker/openBeeReadRetry/openBeeWriteRetry/openBeeTimeLimiter plus DmsProperties. Error handling: a non-2xx response's body is read defensively (bounded, tolerant of empty/non-JSON) into OpenBeeErrorBody -> OpenBeeException(HTTP_ERROR, status, codes, endpoint). TimeoutException/HttpTimeoutException -> TIMEOUT; WebClientRequestException -> CONNECTION; CallNotPermittedException -> CIRCUIT_OPEN (converted inside the retry so it is never retried); decode failure -> BAD_RESPONSE. Operator order: call -> TimeLimiter (JSON) -> error mapping -> CircuitBreaker -> Retry; .block() runs on the servlet thread. Phase 1: listFilingCategories(c, page, itemsPerPage) = GET /filingCategories/ws/filingCategories?taxonomies=Core&permissions=use&itemsPerPage=50&page=n&order=name&direction=ASC (read retry); getList(c, idList) = GET /filing/ws/list/{idList}?recursive=false (read retry). Phase 2: addDocument(c, OpenBeeUpload) = POST /browse/ws/document, a multipart built via MultipartBodyBuilder via MetadataEncoder, with headers OB-CHECKSUM/OB-CHECKSUM-ALGO: sha256. It never sends path, idParentFolder, signature or textLayer. Write retry (1 attempt) and Mono.timeout(transfer-read-timeout). Id-Document is read case-insensitively; missing or non-positive -> BAD_RESPONSE. Phase 3: advancedSearch(c, OpenBeeSearchRequest) = POST /advancedSearch/ws/advanced-search (read retry). downloadFile(c, id) = GET /ws/v2/file/{id}?thumb=false via retrieve().toEntityFlux(DataBuffer.class): the status is mapped before any byte; CB plus Mono.timeout(transfer-read-timeout) apply only until headers; the body flux gets .timeout(transfer-read-timeout) between buffers; no retry once streaming starts; Content-Disposition is parsed with Spring ContentDisposition.parse. getDocumentName(c, id) = GET /ws/v2/document/{id} (read retry, tolerant JSON). It never logs bodies, file names, metadata values or keys. Phase 4: records openBeeStatus into DmsRequestSummary."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeException.java",
+      "status": "new",
+      "change_summary": "Phase 1. RuntimeException with int httpStatus (0 = no response), List<String> obCodes, String endpoint (path template only, no query) and enum Kind {HTTP_ERROR, TIMEOUT, CONNECTION, CIRCUIT_OPEN, BAD_RESPONSE}. The message never includes Open Bee's message text or a URL with values."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeOperation.java",
+      "status": "new",
+      "change_summary": "Phase 1. Enum LIST_CATEGORIES, GET_LIST, SAVE, SEARCH, DOWNLOAD, DOCUMENT_INFO, used by the mapper (404 -> DMS108 only for DOWNLOAD/DOCUMENT_INFO; 409 -> DMS106 only for SAVE with overwrite=false)."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeErrorBody.java",
+      "status": "new",
+      "change_summary": "Phase 1. record OpenBeeErrorBody(List<Item> error) with Item(code, message), @JsonIgnoreProperties(ignoreUnknown = true). Uses com.fasterxml.jackson.annotation, which works under both Boot's Jackson 3 codecs and Jackson 2."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeErrorMapper.java",
+      "status": "new",
+      "change_summary": "Phase 1. A final class with static DmsException toDms(OpenBeeException e, OpenBeeOperation op, boolean overwrite). It is the one place that implements brief 7.3: 401/BAD_CREDENTIALS -> DMS202 (ERROR log with consumerId). 403/PERMISSION_DENIED/NOT_HAVE_PERMISSION -> DMS109. 404 on DOWNLOAD/DOCUMENT_INFO -> DMS108. 400 FILING_CATEGORY_IS_NOT_FOUND -> DMS102. 400 METADATA_NOT_EXIST -> DMS103. 409 on SAVE with overwrite=false -> DMS106 (V5 assumption). 400 MISSING_CHECKSUM/INVALID_CHECKSUM_ALGO -> DMS201 with an ERROR 'our bug'. Other 4xx and BAD_RESPONSE -> DMS201. 5xx/TIMEOUT/CONNECTION/CIRCUIT_OPEN -> DMS203. Open Bee status and codes are logged at WARN/ERROR; Open Bee's message is never echoed."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeCategoryPage.java",
+      "status": "new",
+      "change_summary": "Phase 1. record OpenBeeCategoryPage(Pagination pagination, List<Item> results) with nested Pagination(count, nbPages) and Item. Item tolerates BOTH the wrapped {filingCategory:{...}} and unwrapped {id,name,metadata,rule} shapes (V6): it declares filingCategory plus the flattened fields, and resolve() returns whichever is present. @JsonIgnoreProperties(ignoreUnknown = true) throughout."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeFilingCategory.java",
+      "status": "new",
+      "change_summary": "Phase 1. record OpenBeeFilingCategory(Long id, String name, List<Metadata> metadata, Rule rule) with nested Metadata(id, name, type, mandatory, multiple, autoincrement, parentMetadata, idList) and Rule(active, grammarTree, grammarName). Unused fields (type, reapply, creationDate, idCreator, restrictions, defaultValues, addNewValue) are simply not declared, so they can never leak."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeList.java",
+      "status": "new",
+      "change_summary": "Phase 1. record OpenBeeList(Long id, String name, List<Value> values) with nested Value(id, name, idSublist); image is not declared."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeUpload.java",
+      "status": "new",
+      "change_summary": "Phase 2. record OpenBeeUpload(Path file, String fileName, String description, long filingCategoryId, List<ValidatedMetadata> metadata, boolean overwrite, String sha256Hex). toString() omits fileName and metadata values."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/MetadataEncoder.java",
+      "status": "new",
+      "change_summary": "Phase 2. A @Component per brief 8.3: a single value -> field 'metadatas[<id>]'; multiple values -> a repeated 'metadatas[<id>][]'. Text goes as received, untransformed. Integer/decimal as plain numbers with a '.' separator (BigDecimal.toPlainString). Date uses dms.openbee.upload-date-format. Boolean follows ONE_ZERO ('1'/'0') or TRUE_FALSE. LIST sends the list value NAME or ID per dms.openbee.upload-list-value. SUBLIST goes as received."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeSearchRequest.java",
+      "status": "new",
+      "change_summary": "Phase 3. record OpenBeeSearchRequest(List<Filter> filters, PaginationSpec pagination, List<Sort> sort) with nested Filter(field, idMetadata, clause), Clause(type, value, values, comparator, start, end, includeTrue, includeFalse, includeEmpty) using @JsonInclude(NON_NULL) so only the fields of each clause type are emitted, PaginationSpec(itemsPerPage, page) and Sort(field, order). JSON names exactly as in brief Appendix C.4."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeSearchResponse.java",
+      "status": "new",
+      "change_summary": "Phase 3. record OpenBeeSearchResponse(List<Item> results, Pagination pagination) with nested Item(idFolder, idDocument, name, creationDate, modificationDate, size, idFilingCategory, nameFilingCategory, extension, documentPath, List<MetadataValue> metadata) and MetadataValue(idMetadata as a String accepting a JSON string or number, value). creator, modifiedBy, idDocumentVersion, idParentFolder, folderType and isHidden are NOT declared."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/SearchFilterBuilder.java",
+      "status": "new",
+      "change_summary": "Phase 3. A @Component per brief 8.4. It always adds FILING_CATEGORY EQUALS <id> and TYPE IN [PDF,OFFICE,IMAGE,AUDIO,OTHERS], then one METADATA filter per entry: TEXT/LIST/SUBLIST -> IN values (LIST encoded per upload-list-value); INTEGER/DECIMAL -> COMPARISON '='; DATE -> DATE_RANGE with start dd/MM/yyyy and end = next day; BOOLEAN -> {includeTrue: v, includeFalse: !v, includeEmpty: false}. Pagination is {itemsPerPage: pageSize, page}; sort is [{CREATION_DATE, DESC}]."
+    },
+    {
+      "path": "services/document-management-service/src/main/java/com/alramz/openbee/OpenBeeFile.java",
+      "status": "new",
+      "change_summary": "Phase 3. record OpenBeeFile(MediaType contentType, Long contentLength, Optional<String> fileName, Flux<DataBuffer> body). The caller must consume or cancel the body, so buffers are released on close via DataBufferUtils.subscriberInputStream."
+    },
+    {
+      "path": "services/document-management-service/README.md",
+      "status": "new",
+      "change_summary": "Phase 4. Sections: purpose and the 4 endpoints. Configuration (the spec 5.2 table). Fail-fast startup and the 3 required env vars DMS_OPENBEE_BASE_URL, DMS_OPENBEE_API_KEY_ONBOARDING_PORTAL, DMS_OPENBEE_API_KEY_CRM. Identity comes from the starter JWT subject; there is no gateway header. Consumer onboarding: Open Bee service account + use/read permissions + API key + JWT user via /api/auth/register with role APP_DOCUMENT_MANAGEMENT_SERVICE_USER and a username equal to the dms.consumers key + a bracketed config entry + a Key Vault secret. No retry on save, with a duplicate-version check runbook. Stale-cache behaviour and the forced-refresh rate limit. Download Accept guidance: accept application/json as well as the file type, otherwise error envelopes are not acceptable, and Range requests are not supported. The spec 5.4 deployment prerequisites, including /api/auth/** blocking at the gateway and an ephemeral /tmp sized for concurrent 10 MB uploads. V1-V6 status (all unverified) and how to run the openbee-live tests."
+    }
+  ],
+  "test_files": [
+    {
+      "path": "services/document-management-service/src/test/resources/application.yml",
+      "status": "modified",
+      "covers": "Phase 1. Adds the dms block with OBVIOUSLY FAKE values (base-url http://localhost:65535, time-zone Asia/Dubai, \"[onboarding-portal]\".api-key test-key-onboarding, \"[crm]\".api-key test-key-crm). Every @SpringBootTest then starts without secrets (AC: contextLoads passes). This file shadows the main application.yml, and the existing @SpringBootTest activates NO profile; keep it that way (technical_gaps G9). Existing H2/liquibase test settings are unchanged."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/config/DmsPropertiesTest.java",
+      "status": "new",
+      "covers": "AC Configuration. Binder-based (MmfPropertiesTest precedent): every spec 5.2 default, bracketed keys bound verbatim ('onboarding-portal', 'crm'), enum binding, Duration/DataSize/ZoneId/Path binding. ApplicationContextRunner with @EnableConfigurationProperties(DmsProperties.class): blank crm api-key fails startup; the failure message contains 'crm' and the consumers[crm] api-key path and does NOT contain test-key-onboarding. Blank base-url fails. Missing or invalid time-zone fails. An empty consumers map is valid."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/config/DmsProfileConfigTest.java",
+      "status": "new",
+      "covers": "AC Security/Configuration for ALL 5 deployed profiles. YamlPropertySourceLoader over classpath application-{dev,docker,test,preprod,prod}.yml plus src/main/resources/application.yml (read from the module dir because the test copy shadows it). Asserts: the dms block (env placeholders, Asia/Dubai, both bracketed consumers, no literal key); company.jwt.permit-all-urls == [/api/v1/info]; exposure == health,info,prometheus; the four payload flags false; request.include-headers false; excluded-paths contain the 3 starter defaults + /api/v1/dms/documents + /api/v1/dms/documents/*/content; database-logging.excluded-paths contain the original 4 + the content path; base application.yml multipart max-file-size/max-request-size 11MB/resolve-lazily true."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/config/DmsHealthIndicatorTest.java",
+      "status": "new",
+      "covers": "Phase 4 health: always UP; details carry the configuredConsumers count and cachedCategoryEntries; no Open Bee interaction (Mockito verifyNoInteractions on OpenBeeClient)."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/config/DmsRequestSummaryInterceptorTest.java",
+      "status": "new",
+      "covers": "Spec 5.3 structured line: exactly one INFO line per request, with consumerId, operation, filingCategoryId, documentId, openBeeStatus, dmsCode (null on success, set on error), durationMs and the extension only. OutputCaptureExtension asserts that no file name or metadata value appears."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/exception/ErrorCodeTest.java",
+      "status": "new",
+      "covers": "Spec 6.1 table: each of the 14 codes has the expected HTTP status and default message; no duplicate codes."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java",
+      "status": "new",
+      "covers": "Direct instantiation (utility/wealth precedent). Every framework exception -> 400 DMS101 with a fixed message that never contains the rejected value. MissingServletRequestPartException for file/request (E11/E12). HttpMediaTypeNotSupportedException (E13). MaxUploadSizeExceededException -> 413 DMS107 rendered from the configured size. AccessDeniedException -> 403 with errorCode null. DmsException -> its status/code. A generic Exception -> 500 DMS299 'Internal Server Error'. Every body has responseCode == status, response null and a non-null correlationId."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/controllers/DmsControllerTest.java",
+      "status": "new",
+      "covers": "Mockito, direct construction (testing-patterns.md): each method resolves the consumer and delegates; list/search -> 200 envelope; save -> 201 with responseCode '201', no Location header; download -> raw Resource of exact class InputStreamResource with Content-Type/Content-Length/Content-Disposition, not wrapped in an envelope; an unknown consumer (resolver throws DMS109) never calls the service."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/controllers/DmsApiDispatchTest.java",
+      "status": "new",
+      "covers": "Real MVC dispatch with a mocked DocumentService, using wealth's MmfApiDispatchTest pattern: standalone MockMvc reusing the context's converters, mvcValidator, mvcConversionService, CorrelationIdFilter and a MethodValidationPostProcessor proxy, with setControllerAdvice(new GlobalExceptionHandler(props)). NOT @WebMvcTest. Covers: envelope shape on success and error; correlationId echoes X-Correlation-ID; E14/E15/E16/E38/E39/E44 -> DMS101 without echoing values (documentId=0 and 'abc'); a request part sent as text/plain -> 400 DMS101; a missing file/request part -> DMS101; the service-level DMS107 -> 413; download 404 with 'Accept: application/octet-stream, application/json' -> JSON 404 DMS108 envelope; an unexpected exception -> 500 DMS299."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/controllers/DmsApiEndToEndTest.java",
+      "status": "new",
+      "covers": "@SpringBootTest(webEnvironment = RANDOM_PORT), no profile, plus a programmatic WireMockServer and @DynamicPropertySource dms.openbee.base-url (retry initial-backoff 10ms). Tokens come from the starter TokenProvider.generateTokenPair(subject, roles); the client is Spring RestClient. Covers: no token -> 401; a token without the role -> 403 with errorCode null; role + subject 'unknown-consumer' -> 403 DMS109 with WireMock recording 0 requests; 'onboarding-portal' sends exactly one 'Authorization: Key test-key-onboarding' and 'crm' sends 'Key test-key-crm', never 'Bearer'; end-to-end categories/save/search/download envelopes. A file of 10 MB + ~100 KB on the real container -> 413 with errorCode DMS107; it stays under Tomcat's 2 MB max-swallow-size so the response is readable (technical_gaps G3). A 64 MB WireMock download streams unchanged without OOM, and the content path is excluded from both ContentCaching filters."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/controllers/DmsLoggingHygieneTest.java",
+      "status": "new",
+      "covers": "AC Errors/logging: RANDOM_PORT + OutputCaptureExtension with properties mirroring the deployed profiles (aspect.enabled true, include-headers false, the four payload flags false, both excluded-paths lists). A save with metadata value FIT-100234 and file passport.pdf: neither string nor test-key-onboarding appears in any application log line. WireMock uses a no-op Notifier so its own request dumps are not captured. The DMS summary line contains consumerId, filingCategoryId, dmsCode, durationMs and 'pdf'."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/service/ConsumerContextResolverTest.java",
+      "status": "new",
+      "covers": "E3: a known subject resolves to its own key; an unknown subject or a case-variant ('CRM') -> DMS109; ConsumerContext.toString masks apiKey."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/service/FilingCategoryCatalogTest.java",
+      "status": "new",
+      "covers": "Mockito OpenBeeClient + mutable Clock. Covers: lazy load; 2 pages merged; a shared idList fetched once; a second call within the TTL makes 0 calls; consumers isolated; after the TTL a failing refresh serves the stale entry with a WARN (E7); no prior entry -> rethrow -> DMS203 (E6); list stale fallback / no list (E8); list 404 -> DMS201 (E9); two unknown-category lookups within 60s -> one forced refresh; concurrent get() for one consumer -> a single load; wrapped and unwrapped items both map (V6)."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/service/MetadataValidatorTest.java",
+      "status": "new",
+      "covers": "Brief 8.2 save rules 1-7 and search rules 1/4/5/6/7 (E22-E29): unknown and non-numeric IDs (with a single refresh), mandatory incl. empty array, readOnly, arrays on non-multiple fields, every type group's valid and invalid values, LIST by name and by id (case-sensitive), unsupported types sent or mandatory, search arrays rejected for date/int/decimal/boolean. Messages contain the ID and name and never the value."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/service/FileNameResolverTest.java",
+      "status": "new",
+      "covers": "Brief 11.1 file-name rules: explicit name; missing extension appended from the original; fallback to the original filename; client path stripped (/ and \\); separators, control characters, blank and >255 rejected (E18); no name at all (E19); mixed case preserved."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/service/UploadSpoolerTest.java",
+      "status": "new",
+      "covers": "SHA-256 lowercase hex equals the digest of the bytes; the temp file is created in the configured @TempDir with a random '.upload' name not containing the client name; an I/O failure deletes the temp file (E37)."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/service/OpenBeeTimestampConverterTest.java",
+      "status": "new",
+      "covers": "2026-10-28T10:15:00 + Asia/Dubai -> 2026-10-28T10:15:00+04:00; an unparseable value -> null (E43)."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/service/ContentDispositionFormatterTest.java",
+      "status": "new",
+      "covers": "The download header carries both filename= (ASCII-safe) and filename*=UTF-8''<percent-encoded> for ASCII, Arabic/Unicode and quote-containing names."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/service/impl/DocumentServiceImplTest.java",
+      "status": "new",
+      "covers": "Mockito orchestration. List mapping incl. absent 'do not expose' fields. Save: empty file -> DMS101 (E17); oversize -> DMS107 (E21); DMS102 after refresh (E22); the description default; temp file deleted on success, validation failure and Open Bee failure (assert the temp dir is empty); timeout -> WARN 'possible duplicate version'. Search: defaults; pageSize 101 -> DMS101; folders dropped (E42); empty -> documents [] and totalCount 0 (E40); pagination mapping; metadata id/name mapping. Download name chain: header, then document info, then 'document-<id>' (E46); a document-info failure is swallowed."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/OpenBeeErrorMapperTest.java",
+      "status": "new",
+      "covers": "Every row of the brief 7.3 mapping table (AC 'Errors'), incl. 404 only for DOWNLOAD/DOCUMENT_INFO, 409 -> DMS106 only for SAVE with overwrite=false and otherwise DMS201, and CIRCUIT_OPEN/TIMEOUT/CONNECTION -> DMS203."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/MetadataEncoderTest.java",
+      "status": "new",
+      "covers": "Brief 8.3: each type group, multi-value repetition 'metadatas[<id>][]', and every config switch (upload-date-format, ONE_ZERO/TRUE_FALSE, NAME/ID); mixed-case text sent byte-for-byte unchanged."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/SearchFilterBuilderTest.java",
+      "status": "new",
+      "covers": "Brief 8.4 exact JSON per type (IN for text/list, COMPARISON '=' for integer, DATE_RANGE start 31/12/2027 end 01/01/2028 for 2027-12-31, BOOLEAN with includeEmpty false), the FILING_CATEGORY and TYPE filters always present, pagination and sort CREATION_DATE DESC."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/OpenBeeWireMockSupport.java",
+      "status": "new",
+      "covers": "Test helper (not a test). Starts and stops a programmatic WireMockServer (dynamic port, no-op notifier) and builds an OpenBeeClient through OpenBeeClientConfig's real factory methods: JDK connector, CB, read and write retries, TimeLimiter, short backoff. Holds Appendix C payloads as text blocks. A programmatic server avoids depending on the WireMock JUnit 5 extension under JUnit Jupiter 6.0.3."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/OpenBeeClientCategoriesTest.java",
+      "status": "new",
+      "covers": "Brief 11.2 categories: query params taxonomies=Core, permissions=use, itemsPerPage=50, page=1|2; a single Authorization 'Key <consumer key>' with no Bearer; a list fetched with recursive=false; 500 retried to max-attempts; 400 not retried (1 request); 401 -> HTTP_ERROR 401 and the circuit stays closed; open circuit -> CIRCUIT_OPEN; unparseable 200 -> BAD_RESPONSE; slow response -> TIMEOUT; X-Correlation-ID propagated."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/OpenBeeClientUploadTest.java",
+      "status": "new",
+      "covers": "Brief 11.2 save / Appendix C.3: exact multipart part names and values (file with filename, name, description, type, metadatas[11329], metadatas[11330], overwrite=true, repeated metadatas[<id>][]); NO path/idParentFolder/signature/textLayer parts; OB-CHECKSUM equals the SHA-256 of the bytes sent, with OB-CHECKSUM-ALGO sha256; Id-Document read case-insensitively ('id-document'); missing header -> BAD_RESPONSE (-> DMS201); 401/403; 500 -> exactly ONE recorded request (no retry)."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/OpenBeeClientSearchTest.java",
+      "status": "new",
+      "covers": "Brief 11.2 search / Appendix C.4: the request body matches the expected JSON exactly (equalToJson); response parsing incl. idMetadata as a string; 500 -> exactly 3 requests, then an error mapped to DMS203 (E41); 400 -> 1 request."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/OpenBeeClientDownloadTest.java",
+      "status": "new",
+      "covers": "Brief 11.2 download / C.5: bytes streamed unchanged; Content-Type passed through or absent; Content-Disposition filename parsed or absent; 404 -> HTTP_ERROR 404 before any body; the per-buffer timeout fires on a stalled body (E47); document-info name parsing."
+    },
+    {
+      "path": "services/document-management-service/src/test/java/com/alramz/openbee/OpenBeeLiveVerificationTest.java",
+      "status": "new",
+      "covers": "Opt-in brief 11.4 / section 13 V1-V6 checks. @Tag(\"openbee-live\") plus @EnabledIfEnvironmentVariable on DMS_LIVE_OPENBEE_BASE_URL, DMS_LIVE_OPENBEE_API_KEY and DMS_LIVE_FILING_CATEGORY_ID. Excluded by surefire by default via dms.test.excludedGroups, and never run in CI. Prints findings only and never asserts on production."
+    }
+  ],
+  "liquibase_changeset": {
+    "applicable": false,
+    "next_changeset_file": null,
+    "profile_folders": []
+  },
+  "config_changes": {
+    "permit_all_urls": [],
+    "new_properties": [
+      "dms.openbee.base-url = ${DMS_OPENBEE_BASE_URL:} in all 5 application-{dev,docker,test,preprod,prod}.yml (required, @NotBlank); fake http://localhost:65535 in src/test/resources/application.yml",
+      "dms.openbee.time-zone = Asia/Dubai in all 5 profiles and the test application.yml (required ZoneId)",
+      "dms.consumers.\"[onboarding-portal]\".api-key = ${DMS_OPENBEE_API_KEY_ONBOARDING_PORTAL:} and dms.consumers.\"[crm]\".api-key = ${DMS_OPENBEE_API_KEY_CRM:} in all 5 profiles; test-key-onboarding / test-key-crm in the test application.yml",
+      "Java defaults only, not in YAML: dms.openbee.connect-timeout=5s, read-timeout=15s, transfer-read-timeout=120s, retry.max-attempts=3, retry.initial-backoff=500ms, upload-date-format=yyyy-MM-dd, upload-boolean-format=ONE_ZERO, upload-list-value=NAME; dms.cache.categories-ttl=15m, lists-ttl=15m, forced-refresh-min-interval=60s; dms.upload.max-file-size=10MB, temp-dir=${java.io.tmpdir}; dms.search.default-page-size=25, max-page-size=100",
+      "spring.servlet.multipart.max-file-size=${dms.upload.max-file-size:10MB}, max-request-size=11MB, resolve-lazily=true in base src/main/resources/application.yml",
+      "management.endpoints.web.exposure.include: '*' -> health,info,prometheus in all 5 profiles",
+      "company.logging.request.include-payload=false, company.logging.response.include-payload=false, company.logging.database-logging.include-request-payload=false, include-response-payload=false in all 5 profiles (database-logging.enabled stays true; outbound-enabled stays unset)",
+      "company.logging.request.include-headers: true -> false in all 5 profiles (plan addition beyond spec 5.3; technical_gaps G2)",
+      "company.logging.excluded-paths = [/actuator/**, /swagger-ui/**, /v3/api-docs/**, /api/v1/dms/documents, /api/v1/dms/documents/*/content] in all 5 profiles (the exact save path is a plan addition beyond spec 5.3; technical_gaps G1)",
+      "company.logging.database-logging.excluded-paths = existing [/api/v1/info, /actuator/**, /swagger-ui/**, /v3/api-docs/**] + /api/v1/dms/documents/*/content in all 5 profiles",
+      "pom property dms.test.excludedGroups=openbee-live (surefire excludedGroups) and wiremock.version (test dependency pin)"
+    ],
+    "masking_keys_to_add": []
+  },
+  "execution_steps": [
+    "PHASE 1 - Foundation + filing categories",
+    "Step 1: pom.xml: add caffeine (no version; Boot-managed 3.2.4), test-scoped org.wiremock:wiremock-standalone with a <wiremock.version> property in this pom (newest 3.x, >= 3.13.1), and the surefire <excludedGroups>${dms.test.excludedGroups}</excludedGroups> with default openbee-live. Do NOT touch services/alramz-common-bom. Optional sanity check: `mvn -pl services/document-management-service -am dependency:tree -Dincludes=io.projectreactor.netty,org.eclipse.jetty:jetty-reactive-httpclient,org.apache.httpcomponents.core5:httpcore5-reactive` should print nothing. That confirms technical_gaps G6, but the connector is set explicitly regardless.",
+    "Step 2: specs/apiSpecs.yaml Phase-1 slice: amend GenericResponse (+correlationId uuid, errorCode/errorMsg nullable); add components.examples Dms109/Dms201/Dms202/Dms203/Dms299; add DmsListValue/DmsMetadataDefinition/DmsFilingCategory/DmsFilingCategoriesResponse; add bare '/dms/filing-categories' GET (tag Dms, operationId listDmsFilingCategories, responses 200/401/403/500/502/503 with examples). Leave '/api/v1/info' byte-for-byte unchanged. Run `mvn -pl services/document-management-service -am clean generate-sources` and open target/generated-sources/openapi/src/main/java/com/alramz/api/DmsApi.java. Expect `ResponseEntity<GenericResponse> listDmsFilingCategories()`, and GenericResponse with setCorrelationId(UUID), setErrorCode and setErrorMsg.",
+    "Step 3: config: create DmsProperties (the FULL spec 5.2 table now, so the binding test covers everything) and OpenBeeClientConfig (explicit JdkClientHttpConnector with connect-timeout and HTTP_1_1, codecs 5 MB, alramzWebClientLoggingFilterFunction, CB 'openbee' recording only timeout/connection/5xx and ignoring 4xx, openBeeReadRetry exponential 500ms x2 max 3, openBeeWriteRetry max 1, openBeeTimeLimiter read-timeout). Create DmsCacheConfig (two Caffeine caches without expiry, plus the dmsClock bean). Add the dms block to src/test/resources/application.yml (fake values) and to all 5 application-{dev,docker,test,preprod,prod}.yml (env placeholders, Asia/Dubai, bracketed consumers).",
+    "Step 4: exception package: ErrorCode (all 14 codes, with status and default message), DmsException, and GlobalExceptionHandler (@RestControllerAdvice(basePackages = \"com.alramz.controllers\") @Order(0), the full handler set from spec 6.1 incl. multipart and MaxUploadSizeExceededException, AccessDeniedException -> 403 with null code, catch-all DMS299). This is the single advice; do not model it on OnboardingExceptionHandler.",
+    "Step 5: openbee package (base): OpenBeeException, OpenBeeOperation, OpenBeeErrorBody, OpenBeeErrorMapper (the full brief 7.3 table), OpenBeeCategoryPage (wrapped and unwrapped items), OpenBeeFilingCategory, OpenBeeList, and OpenBeeClient with listFilingCategories and getList. Authorization is set (not added) to 'Key <apiKey>' from ConsumerContext only. Operator order: TimeLimiter -> map errors -> CircuitBreaker (CallNotPermitted -> CIRCUIT_OPEN) -> Retry; then .block(). The package is com.alramz.openbee, never com.alramz.client, and the client does not extend AbstractRestClient.",
+    "Step 6: service package: ConsumerContext, ConsumerContextResolver (UserRequestContext subject, exact lookup, DMS109), MetadataTypeGroup, CatalogMetadata, CatalogCategory, FilingCategoryCatalog (lazy; explicit loadedAt TTL; synchronous reload under a per-consumer ReentrantLock; stale-on-failure WARN; list cache shared per idList; forced refresh at most once per 60s per consumer), DocumentService (listFilingCategories) and DocumentServiceImpl (brief 6.1 mapping).",
+    "Step 7: controllers/DmsController implements DmsApi: listDmsFilingCategories with @Override, @JwtSecured(roles = \"APP_DOCUMENT_MANAGEMENT_SERVICE_USER\") and @Loggable(logArgs = false, logReturn = false); resolve the consumer and delegate.",
+    "Step 8: apiCollection.http: switch the register/login consumer to 'onboarding-portal' (synthetic email, comment) and add the '### List DMS filing categories' block.",
+    "Step 9: Phase-1 tests: modified src/test/resources/application.yml, DmsPropertiesTest, ErrorCodeTest, GlobalExceptionHandlerTest, ConsumerContextResolverTest, FilingCategoryCatalogTest, OpenBeeErrorMapperTest, OpenBeeWireMockSupport, OpenBeeClientCategoriesTest, DocumentServiceImplTest (list part), DmsControllerTest (list part), DmsApiDispatchTest (list + envelope/correlation part), DmsApiEndToEndTest (security + per-consumer key + categories part). Keep DocumentManagementServiceApplicationTests unchanged: plain @SpringBootTest with NO profile.",
+    "Step 10: run `mvn -pl services/document-management-service -am clean test`. It must be green before Phase 2. Report what was built and what is unverified (V6 shape).",
+    "PHASE 2 - Save",
+    "Step 11: CODEGEN GATE (multipart). Add DmsMetadataValues (additionalProperties: {}), DmsSaveDocumentRequest, DmsSaveDocumentResponse and '/dms/documents' POST saveDmsDocument (multipart; required [file, request]; request $ref with encoding contentType application/json; 201/400/401/403/409/413/500/502/503 with examples). Regenerate with `mvn -pl services/document-management-service -am clean generate-sources` and inspect DmsApi.saveDmsDocument. EXPECTED (openapi-generator 7.x spring formParams for a model-typed form property): `ResponseEntity<GenericResponse> saveDmsDocument(@RequestPart(value = \"file\", required = true) MultipartFile file, @Valid @RequestPart(value = \"request\", required = true) DmsSaveDocumentRequest request)`, consumes multipart/form-data, and DmsSaveDocumentRequest.metadata typed Map<String, Object> (or a HashMap subclass; either is consumed as a Map). FALLBACK, decided now and NOT bypassing DmsApi: if `request` is generated as a String (@RequestParam or @RequestPart), keep the generated signature. DmsController then reads the part's Content-Type through the servlet Part API (RequestContextHolder -> HttpServletRequest.getPart(\"request\").getContentType()); a non-JSON type -> DMS101. It parses with Boot's Jackson 3 JsonMapper (JacksonException -> DMS101) and validates with the jakarta Validator (violations -> DMS101). Record the outcome in the Phase-2 summary.",
+    "Step 12: base application.yml: add the spring.servlet.multipart block (max-file-size ${dms.upload.max-file-size:10MB}, max-request-size 11MB, resolve-lazily true).",
+    "Step 13: implement MetadataValidator + ValidatedMetadata (all 7 save rules; DECIMAL via BigDecimal; an unknown ID triggers one rate-limited refresh), FileNameResolver, UploadSpooler + SpooledUpload (random UUID '.upload' name in dms.upload.temp-dir, SHA-256 while spooling), MetadataEncoder, OpenBeeUpload, and OpenBeeClient.addDocument (MultipartBodyBuilder; OB-CHECKSUM headers; write retry of 1 attempt; Mono.timeout(transfer-read-timeout); case-insensitive Id-Document, else BAD_RESPONSE; never path/idParentFolder/signature/textLayer). Then DocumentService.save + DocumentServiceImpl.save (temp file deleted in finally; WARN 'possible duplicate version in Open Bee' on timeout) and DmsController.saveDmsDocument (201 envelope, no Location).",
+    "Step 14: apiCollection.http: add '### Save DMS document' (multipart with the request part as application/json and an inline text 'file') and '### Save DMS document -ve test case' (the request part as text/plain).",
+    "Step 15: Phase-2 tests: MetadataValidatorTest, FileNameResolverTest, UploadSpoolerTest, MetadataEncoderTest, OpenBeeClientUploadTest, plus save cases in DocumentServiceImplTest/DmsControllerTest/DmsApiDispatchTest/DmsApiEndToEndTest (incl. a real-container 413 with a file of 10 MB + ~100 KB). Run `mvn -pl services/document-management-service -am test`.",
+    "PHASE 3 - Search + download",
+    "Step 16: CODEGEN GATE (binary). Add DmsSearchRequest/DmsDocumentMetadataValue/DmsFilingCategoryRef/DmsDocumentSummary/DmsSearchResponse, '/dms/documents/search' POST searchDmsDocuments, and '/dms/documents/{documentId}/content' GET downloadDmsDocumentContent (200 application/octet-stream binary; every error status declares application/json GenericResponse). Regenerate and inspect. EXPECTED: `ResponseEntity<GenericResponse> searchDmsDocuments(@Valid @RequestBody DmsSearchRequest dmsSearchRequest)` and `ResponseEntity<org.springframework.core.io.Resource> downloadDmsDocumentContent(@Min(1L) @PathVariable(\"documentId\") Long documentId)` with produces = {\"application/octet-stream\", \"application/json\"}. FALLBACK: if the return type is not org.springframework.core.io.Resource (e.g. byte[] or File), add <typeMappings><typeMapping>file=org.springframework.core.io.Resource</typeMapping></typeMappings> (and binary if needed) to the openapi-generator configOptions in this service's pom.xml and regenerate. Never hand-write a non-interface download method. If produces lacks application/json, fix the YAML error responses' content.",
+    "Step 17: search: OpenBeeSearchRequest, OpenBeeSearchResponse, SearchFilterBuilder, OpenBeeClient.advancedSearch (read retry), OpenBeeTimestampConverter, MetadataValidator.validateForSearch, DocumentServiceImpl.search (page/pageSize bounds -> DMS101; folder drop; mapping; totals) and DmsController.searchDmsDocuments.",
+    "Step 18: download: OpenBeeFile, OpenBeeClient.downloadFile (retrieve().toEntityFlux(DataBuffer.class); the status is mapped before the body; CB and header timeout on the headers Mono only; Flux.timeout(transfer-read-timeout) between buffers; no retry once streaming) and OpenBeeClient.getDocumentName. Then ContentDispositionFormatter, DmsDocumentContent, DocumentServiceImpl.download (name chain: Content-Disposition -> document info, swallowed with a WARN -> 'document-<id>'; InputStream = DataBufferUtils.subscriberInputStream(flux, demand) with a bounded demand) and DmsController.downloadDmsDocumentContent (ResponseEntity<Resource> with a body of exact class InputStreamResource; headers set explicitly).",
+    "Step 19: apiCollection.http: add the search block + '-ve test case' (pageSize 101) and the download block (Accept: application/octet-stream, application/json) + '-ve test case' (documentId 0).",
+    "Step 20: Phase-3 tests: SearchFilterBuilderTest, OpenBeeTimestampConverterTest, ContentDispositionFormatterTest, OpenBeeClientSearchTest, OpenBeeClientDownloadTest, plus search/download cases in DocumentServiceImplTest/DmsControllerTest/DmsApiDispatchTest (JSON 404 DMS108 under the octet-stream+json Accept), the 64 MB streaming case in DmsApiEndToEndTest, and OpenBeeLiveVerificationTest (@Tag openbee-live, env-gated). Run `mvn -pl services/document-management-service -am test` and confirm the live test class is excluded.",
+    "PHASE 4 - Hardening + docs",
+    "Step 21: all 5 application-{dev,docker,test,preprod,prod}.yml: exposure -> health,info,prometheus; request/response include-payload false; database-logging include-request-payload/include-response-payload false; request.include-headers false (G2). Add company.logging.excluded-paths [/actuator/**, /swagger-ui/**, /v3/api-docs/**, /api/v1/dms/documents, /api/v1/dms/documents/*/content] (G1). Append /api/v1/dms/documents/*/content to database-logging.excluded-paths. permit-all-urls stays [/api/v1/info].",
+    "Step 22: structured summary line: DmsRequestSummary, DmsRequestSummaryInterceptor and DmsWebMvcConfig (registered for /api/v1/dms/**). Hook GlobalExceptionHandler.buildResponse (dmsCode attribute) and OpenBeeClient/DocumentServiceImpl (openBeeStatus, filingCategoryId, documentId, extension) on the servlet thread. Add DmsHealthIndicator (Boot 4 org.springframework.boot.health.contributor.HealthIndicator; always UP; counts only).",
+    "Step 23: write services/document-management-service/README.md (the full contents list in target_files).",
+    "Step 24: Phase-4 tests: DmsProfileConfigTest, DmsHealthIndicatorTest, DmsRequestSummaryInterceptorTest and DmsLoggingHygieneTest (OutputCapture; WireMock no-op notifier).",
+    "Step 25: final verification from the repo root: `mvn -pl services/document-management-service -am clean test-compile` then `mvn -pl services/document-management-service -am clean test`. Confirm no file under target/generated-sources was hand-edited, nothing new sits in com.alramz.client, no changeset file was added under db/changelog/*, and alramz-common-bom/alramz-api-starter are untouched. Stage files explicitly (never git add . / -A)."
+  ],
+  "technical_gaps": [
+    {
+      "area": "other",
+      "description": "G1 (found in code, NOT in spec). The starter's RequestLoggingFilter calls LoggingHelper.buildRequestLog -> toQueryParams(request) -> request.getParameterMap() in its finally block, after dispatch. On Tomcat, a multipart request's non-file parts become request parameters. The JSON 'request' part of saveDmsDocument (fileName + metadata values) would therefore be logged as 'queryParams' in the 'Incoming request' line and tagged as span attribute http.request.query, REGARDLESS of include-payload=false (LoggingHelper.java:112-123, 185, 203-205; RequestLoggingFilter.java:56-60). Key-based masking does not cover metadata values or file names. This would break the spec's 'Done' criterion and the log-capture acceptance test.",
+      "recommendation_or_open_question": "Resolved in the plan, within the service, config-only and reversible: add the exact path /api/v1/dms/documents to company.logging.excluded-paths in all 5 profiles. Both RequestLoggingFilter and ResponseLoggingFilter skip it; search (/api/v1/dms/documents/search) does not match the AntPathMatcher pattern; DB audit still writes the inbound row, without bodies. The DMS summary line replaces the lost starter log line for save. A durable fix (not reading getParameterMap for multipart in the starter) is an alramz-api-starter change and out of scope; raise it with the starter owner."
+    },
+    {
+      "area": "other",
+      "description": "G2 (found in code, NOT in spec). All 5 profiles set company.logging.request.include-headers: true. WebClientLoggingFilter.tagSpan then tags EVERY outbound request and response header on the client span (WebClientLoggingFilter.java:91-94), including Open Bee's download Content-Disposition (the file name) and OB-CHECKSUM. LogMaskingUtil.maskHeader masks only header names that contain a sensitive key. File names would reach span tags, against the spec's Done criterion.",
+      "recommendation_or_open_question": "Resolved in the plan: set company.logging.request.include-headers: false in all 5 DMS profiles (asserted by DmsProfileConfigTest). Alternative if operations want header tags back: add 'content-disposition' to company.logging.masking.sensitive-keys, which means repeating the 15 starter defaults, because setting the list replaces them. The spec said sensitive-keys stays unchanged, so the plan prefers include-headers: false."
+    },
+    {
+      "area": "compatibility",
+      "description": "G5. openapi-generator 7.23.0's exact signatures for the multipart operation (model-typed 'request' part) and the binary download cannot be verified without running the build, which this stage may not do. No service in the repo has a multipart or binary precedent (grep for 'format: binary', 'multipart/form-data', 'RequestPart' and 'ResponseEntity<Resource>' finds nothing). Config: interfaceOnly, skipDefaultInterface, useSpringBoot3, useJakartaEe, useTags, performBeanValidation, useResponseEntity, openApiNullable=false, useSnakeCase.",
+      "recommendation_or_open_question": "Steps 11 and 16 are explicit codegen gates with expected signatures and pre-decided fallbacks. Multipart: keep the generated String signature; the controller checks the part content type via the servlet Part API, parses with Jackson 3 and validates with the jakarta Validator. Binary: add a typeMappings file=org.springframework.core.io.Resource entry in this service's pom. Both keep implementing DmsApi, so no hand-written endpoint bypasses the interface."
+    },
+    {
+      "area": "compatibility",
+      "description": "G6. Connector: the DMS classpath has no reactor-netty, jetty-reactive-httpclient or httpcore5-reactive. Evidence: alramz-api-starter brings spring-webflux + spring-boot-webclient 4.1.0, whose pom depends only on spring-boot, spring-boot-http-client, spring-webflux and spring-boot-http-codec. spring-cloud-starter-circuitbreaker-reactor-resilience4j 5.0.2 brings resilience4j only. In ~/.m2, reactor-netty-http 1.3.6 is referenced only by azure-core-http-netty (the notification service's MS Graph stack), and no jetty-reactive-httpclient or httpcore5-reactive artifact exists at all. Boot's detection would therefore resolve the JDK HttpClient connector.",
+      "recommendation_or_open_question": "The plan sets new JdkClientHttpConnector(HttpClient.newBuilder().connectTimeout(5s).version(HTTP_1_1)...) explicitly on the Open Bee builder, so detection no longer matters. Read/transfer timeouts are applied per call with Reactor/Resilience4j operators (a JSON TimeLimiter, Mono.timeout for upload and download headers, Flux.timeout between download buffers), not on the connector, because JdkClientHttpConnector.setReadTimeout is connector-wide. Optional confirmation: the dependency:tree command in Step 1."
+    },
+    {
+      "area": "compatibility",
+      "description": "G7. Dependencies. Caffeine is managed by spring-boot-dependencies 4.1.0 (3.2.4), so it needs no version and no BOM change. WireMock is managed nowhere and is absent from ~/.m2; Boot 4.1 manages JUnit Jupiter 6.0.3 and Jetty 12.1.10.",
+      "recommendation_or_open_question": "Pin wiremock-standalone (shaded Jetty, no clash with Tomcat) via a property in the DMS pom only; no alramz-common-bom change, so other services are unaffected. Use a programmatic WireMockServer in OpenBeeWireMockSupport rather than the JUnit 5 WireMockExtension, to avoid any Jupiter 6 extension incompatibility. If no compatible WireMock resolves, fall back to ExchangeFunction stubs (FinouxClientTest precedent) for client tests, and state this in the implementation report (spec 5.5)."
+    },
+    {
+      "area": "test-coverage",
+      "description": "Howto near-miss: testing-patterns.md says controller tests never use MockMvc. The spec's acceptance criteria require MockMvc and real-server behaviour (Accept negotiation, 401/403 through the security chain, the container multipart limit, excluded-path buffering).",
+      "recommendation_or_open_question": "Follow the repo's actual newer precedent, wealth-management-service MmfApiDispatchTest: standalone MockMvc reusing the context's converters, validator and conversion service, with a MethodValidationPostProcessor proxy, explicitly NOT @WebMvcTest. Add @SpringBootTest(webEnvironment = RANDOM_PORT) tests for filter-chain behaviour. The direct-construction Mockito DmsControllerTest is still planned, so the howto's default is kept too."
+    },
+    {
+      "area": "test-coverage",
+      "description": "G9. Howto near-miss: testing-patterns.md recommends @SpringBootTest(properties = \"spring.profiles.active=test\"). In DMS that would load src/main/resources/application-test.yml, which references blank ${DMS_OPENBEE_*:} placeholders (startup fails fast by design) and a Postgres middleware datasource. The existing DocumentManagementServiceApplicationTests uses a plain @SpringBootTest with NO profile, and src/test/resources/application.yml shadows the main application.yml (so spring.profiles.active=dev is not applied).",
+      "recommendation_or_open_question": "All new Spring tests use @SpringBootTest without a profile, like the existing smoke test. Tests that must reflect deployed logging settings set them via @SpringBootTest(properties=...), and DmsProfileConfigTest parses the 5 profile YAMLs to prove the deployed values."
+    },
+    {
+      "area": "other",
+      "description": "Howto drift noted. request-response-and-db-audit-logging.md says ApiAuditAspect's pointcut includes com.alramz.controllers..*, but the current code (ApiAuditAspect.java:36) matches only com.alramz.client..* and named data-validation classes. jwt-security-and-public-endpoints.md says outbound calls should extend AbstractRestClient, which for Open Bee would forward the caller's JWT and send two Authorization headers (spec 2.1).",
+      "recommendation_or_open_question": "The plan follows the code. DmsController arguments are not aspect-audited; the Open Bee adapter lives in com.alramz.openbee (outside com.alramz.client) and does not extend AbstractRestClient. No action is needed beyond keeping that package boundary."
+    },
+    {
+      "area": "test-coverage",
+      "description": "G3. The real-container 413 test interacts with Tomcat's max-swallow-size (2 MB, unchanged; carried from the spec's self-critique). An upload far above 11 MB may see a connection reset instead of a readable 413 envelope.",
+      "recommendation_or_open_question": "The test uses a file just over the limit (10 MB + ~100 KB) so the excess stays under 2 MB. Document in the README that grossly oversized uploads may be reset. Raising server.tomcat.max-swallow-size is possible later but is not in the spec."
+    },
+    {
+      "area": "compatibility",
+      "description": "Upload transfer encoding (unverified, V-type). WebClient multipart over the JDK connector is sent with chunked Transfer-Encoding (no Content-Length). Whether Open Bee accepts chunked multipart uploads is unknown.",
+      "recommendation_or_open_question": "Non-blocking. Add it to the openbee-live checks and the README V-list. If Open Bee rejects chunked uploads, a follow-up can pre-compute Content-Length from the spooled file (the size is known)."
+    },
+    {
+      "area": "other",
+      "description": "Download content negotiation. The generated produces is {application/octet-stream, application/json}. A client whose Accept lists only a specific file type (e.g. application/pdf) gets 406, and a client accepting only octet-stream may not receive the JSON error envelope. ResponseEntity<InputStreamResource> also advertises Accept-Ranges, but Range requests on an InputStreamResource yield 416.",
+      "recommendation_or_open_question": "Document in the README that clients should send Accept */* or 'application/octet-stream, application/json'. The AC test uses that header. Range support is out of scope."
+    },
+    {
+      "area": "concurrency",
+      "description": "Catalog cache concurrency and freshness. Caffeine refreshAfterWrite would reload asynchronously on a ForkJoinPool, losing MDC/correlation-ID propagation to Open Bee and making the stale-on-failure tests nondeterministic. A compute()-based reload would hold a map bin lock during a remote call.",
+      "recommendation_or_open_question": "The plan uses Caffeine as plain storage (no expiry), an explicit loadedAt TTL check, a synchronous reload under a per-consumer ReentrantLock (single flight), and a ConcurrentHashMap<String, Instant> for the forced-refresh rate limit, with an injectable dmsClock for deterministic tests."
+    },
+    {
+      "area": "other",
+      "description": "Numeric metadata precision. Generated DmsMetadataValues is Map<String, Object>, so Jackson deserialises JSON decimals as Double and integers as Integer/Long/BigInteger.",
+      "recommendation_or_open_question": "MetadataValidator normalises via new BigDecimal(value.toString()) / BigInteger, never Double arithmetic, and MetadataEncoder emits BigDecimal.toPlainString(). MetadataValidatorTest and MetadataEncoderTest cover it."
+    },
+    {
+      "area": "sizing",
+      "description": "Ephemeral disk and threads. Uploads spool to dms.upload.temp-dir (default java.io.tmpdir) at up to 10 MB each, and every in-flight download holds a Tomcat thread for up to transfer-read-timeout. The heap impact is small: streaming plus a bounded subscriberInputStream demand.",
+      "recommendation_or_open_question": "service.yaml stays unchanged (0.5 CPU / 1Gi / -Xmx768m / 1-5 replicas), consistent with spec 5.6. Operations should confirm the container /tmp is writable and sized for concurrent uploads x 10 MB (README prerequisite). Note that service.yaml has ingress.external: true, which reinforces spec 5.4 item 4: the gateway must block /api/auth/register."
+    },
+    {
+      "area": "other",
+      "description": "Residual assumptions carried from the spec's Self-Critique, all non-blocking: retry backoff 500 ms x2; DMS106 only from Open Bee 409 with overwrite=false (V5), otherwise DMS201; 502 for DMS201/202 over utility's 500; no Location header on 201; the actuator narrowing changes scaffold behaviour (prometheus still needs a JWT, as today); the health indicator never reflects Open Bee; downloads excluded from api_audit_log and the response filters (audit is the summary line + Open Bee's trail); max-request-size 11 MB assumes the JSON part + framing < 1 MB; a Boot-4-compatible WireMock 3.x exists; V1-V6 unverified until Phase 5.",
+      "recommendation_or_open_question": "All are recorded in the README V-list and settled by the opt-in openbee-live tests or Phase 5. None changes target_files."
+    },
+    {
+      "area": "other",
+      "description": "Deployability (carried from the spec). With fail-fast validation, every deployed profile (dev/docker/test/preprod/prod) refuses to start until DMS_OPENBEE_BASE_URL, DMS_OPENBEE_API_KEY_ONBOARDING_PORTAL and DMS_OPENBEE_API_KEY_CRM are injected. The Key Vault -> pod wiring (.github/deployment, k8s, infra) is out of scope, and the JWT users onboarding-portal/crm must be registered per environment.",
+      "recommendation_or_open_question": "Intentional per spec 5.2/5.4. Document it prominently in the README. Local dev must export the 3 variables (any non-blank key starts the app)."
+    }
+  ],
+  "plan_critique": {
+    "acceptance_criteria_coverage": "full. Every spec section 8 checkbox maps to a target_files entry and a test_files entry. Contract/codegen: apiSpecs.yaml + DmsController + Steps 11/16 gates + DmsApiDispatchTest (JSON 404). Security: DmsApiEndToEndTest (401, role 403 with null code, DMS109 with 0 WireMock calls, per-consumer Key, no Bearer) + DmsProfileConfigTest (permit-all). Configuration: DmsPropertiesTest + DmsProfileConfigTest + contextLoads. Categories: OpenBeeClientCategoriesTest + FilingCategoryCatalogTest. Save: OpenBeeClientUploadTest, MetadataValidatorTest, MetadataEncoderTest, FileNameResolverTest, UploadSpoolerTest, DocumentServiceImplTest, real-container 413. Search: SearchFilterBuilderTest, OpenBeeClientSearchTest, OpenBeeTimestampConverterTest. Download: OpenBeeClientDownloadTest, ContentDispositionFormatterTest, 64 MB streaming. Errors/logging/docs: OpenBeeErrorMapperTest, GlobalExceptionHandlerTest, DmsLoggingHygieneTest, OpenBeeLiveVerificationTest, README, apiCollection.http. Edge cases E1-E48 are each assigned to at least one planned test (E47, post-stream failure, is tested at client level only via the per-buffer timeout; the aborted-connection behaviour itself is not asserted end-to-end).",
+    "blast_radius_concerns": [
+      "None outside services/document-management-service: no alramz-common-bom, alramz-api-starter, infra/, k8s/ or .github/ edits; Caffeine and WireMock are added in the DMS pom only.",
+      "Profile-wide logging changes (include-headers false, payloads off, the save path excluded from request/response logging) reduce DMS observability for every DMS endpoint, intentionally, to meet the no-PII criterion. The DMS summary line compensates.",
+      "Narrowing actuator exposure from '*' to health,info,prometheus removes env/configprops/heapdump etc. for this service only.",
+      "Fail-fast DmsProperties validation makes every deployed DMS environment non-startable until the 3 env vars are wired: an operational dependency outside this repo change.",
+      "The GenericResponse schema amendment adds fields; its only existing user (/api/v1/info) is a hand-written Map-returning controller, so no deployed consumer is affected."
+    ],
+    "confidence": "medium",
+    "notes": "The weakest part is the generated controller signatures: nobody has run openapi-generator 7.23.0 against a multipart operation with a JSON model part, or a binary download, in this repo, and this stage may not run the build. The plan relies on expected template behaviour, with explicit gates and fallbacks that still go through DmsApi. Second, two log leaks found in starter code are fixed by config the spec did not list: G1, the getParameterMap of the multipart JSON part, and G2, header span tags carrying Content-Disposition. Those fixes depend on the starter filters behaving as read; DmsLoggingHygieneTest is the backstop. Open Bee behaviour (V1-V6, chunked uploads) stays unverified by design. No blocking gap arose in this stage: the connector question is answered from pom/~/.m2 evidence and made moot by an explicit JdkClientHttpConnector, and dependency versions resolve without a BOM change. The upstream user decisions Q1-Q5 are recorded in spec.md section 7 and were not re-asked.",
+    "user_decisions": []
+  }
+}

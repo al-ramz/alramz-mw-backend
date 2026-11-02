@@ -16,6 +16,14 @@
     <name>document-management-service</name>
     <description>Document management service</description>
 
+    <properties>
+        <!-- WireMock is not managed by Boot or alramz-common-bom; pinned here (test scope only). -->
+        <wiremock.version>3.13.1</wiremock.version>
+        <!-- Opt-in live Open Bee tests never run by default:
+             -Ddms.test.excludedGroups= -Dgroups=openbee-live re-enables them. -->
+        <dms.test.excludedGroups>openbee-live</dms.test.excludedGroups>
+    </properties>
+
     <repositories>
         <repository>
             <id>github</id>
@@ -51,6 +59,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
+        <!-- Per-consumer filing-category / list cache (version managed by Spring Boot). -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -85,6 +98,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -211,6 +230,13 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludedGroups>${dms.test.excludedGroups}</excludedGroups>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

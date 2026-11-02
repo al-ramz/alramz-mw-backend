@@ -48,12 +48,516 @@ paths:
   # A hand-written @RestController implements the generated interface; it is not written from
   # scratch against this YAML by hand.
 
+  # ---------------------------------------------------------------- DMS (Open Bee wrapper)
+  # Bare paths: DmsController adds the /api/v1 prefix. Every operation is JWT-secured
+  # (role APP_DOCUMENT_MANAGEMENT_SERVICE_USER); the consumer is the JWT subject.
+  /dms/filing-categories:
+    get:
+      tags:
+        - Dms
+      summary: List the filing categories the consumer may save into
+      description: >-
+        Returns the Open Bee filing categories the calling consumer has the `use` permission on,
+        with their metadata definitions, list values, path and naming rules. Served from a
+        per-consumer cache (stale data is served if Open Bee is unavailable and a cached copy exists).
+      operationId: listDmsFilingCategories
+      responses:
+        '200':
+          description: Filing categories retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                errorCode: null
+                errorMsg: null
+                correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                response:
+                  filingCategories:
+                    - id: 42
+                      name: Customer Passport
+                      path: "/Clients/[CLIENT_ID]"
+                      autoFiling: true
+                      fileNamePattern: "PASSPORT_[CLIENT_ID]"
+                      metadata:
+                        - id: 11329
+                          name: CLIENT_ID
+                          type: VARCHAR
+                          mandatory: true
+                          multiple: false
+                          readOnly: false
+                          parentMetadataId: null
+                          listId: null
+                          listValues: null
+                          allowNewValue: false
+                        - id: 11330
+                          name: DOCUMENT_TYPE
+                          type: LIST
+                          mandatory: true
+                          multiple: false
+                          readOnly: false
+                          parentMetadataId: null
+                          listId: 7
+                          listValues:
+                            - id: 101
+                              name: Passport
+                              sublistId: null
+                            - id: 102
+                              name: Emirates ID
+                              sublistId: null
+                          allowNewValue: false
+                        - id: 11888
+                          name: RequestID
+                          type: LIST
+                          mandatory: true
+                          multiple: true
+                          readOnly: false
+                          parentMetadataId: null
+                          listId: 11887
+                          listValues: null
+                          allowNewValue: true
+        '401':
+          $ref: '#/components/responses/DmsUnauthenticated'
+        '403':
+          $ref: '#/components/responses/DmsForbidden'
+        '500':
+          $ref: '#/components/responses/DmsInternalError'
+        '502':
+          $ref: '#/components/responses/DmsBadGateway'
+        '503':
+          $ref: '#/components/responses/DmsUnavailable'
+
+  /dms/documents:
+    post:
+      tags:
+        - Dms
+      summary: Save a document under a filing category with metadata
+      description: >-
+        Multipart upload of plain form fields: `file` (the document), `filingCategoryId`, optional `fileName`,
+        `description` and `overwrite`, and optional `metadata` (a text field holding a JSON object of metadata
+        ID to value; no part Content-Type is required). Open Bee's category rules decide the folder path and may
+        rename the document. Never retried: on a timeout, check Open Bee for a possible duplicate version.
+      operationId: saveDmsDocument
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - filingCategoryId
+              properties:
+                file:
+                  type: string
+                  format: binary
+                filingCategoryId:
+                  type: integer
+                  format: int64
+                  minimum: 1
+                fileName:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: Name with extension. Defaults to the uploaded file's own name.
+                description:
+                  type: string
+                  maxLength: 1000
+                  description: Defaults to the resolved file name.
+                overwrite:
+                  type: boolean
+                  default: true
+                  description: true = new version if the document exists; false = DMS106 if it exists.
+                metadata:
+                  type: string
+                  description: >-
+                    JSON object of metadata ID (numeric string) to a value (string, number, boolean) or an
+                    array of values, e.g. {"11900":"FIT-100234","11901":"2026-01-15","11902":true,"11888":["1001","102"]}.
+                    Validated against the filing category's metadata definitions.
+                  example: '{"11900":"FIT-100234","11901":"2026-01-15","11902":true}'
+      responses:
+        '201':
+          description: Document saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "201"
+                responseMessage: "Created"
+                errorCode: null
+                errorMsg: null
+                correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                response:
+                  documentId: 88213
+                  filingCategoryId: 42
+        '400':
+          description: Invalid request, category, metadata or metadata type (DMS101/102/103/104/105/110)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                Dms101:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS101"
+                    errorMsg: "fileName must not contain path separators or control characters"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms102:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS102"
+                    errorMsg: "Filing category 42 is not available to this consumer"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms103:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS103"
+                    errorMsg: "Metadata 99999 is not defined on filing category 42"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms104:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS104"
+                    errorMsg: "Mandatory metadata 11329 (CLIENT_ID) is missing"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms105:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS105"
+                    errorMsg: "Invalid value for metadata 11331 (EXPIRY_DATE)"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms110:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS110"
+                    errorMsg: "Metadata 11500 (OWNER) has a type not supported by this service"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+        '401':
+          $ref: '#/components/responses/DmsUnauthenticated'
+        '403':
+          $ref: '#/components/responses/DmsForbidden'
+        '409':
+          description: A document with this name already exists and overwrite is false (DMS106)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "409"
+                responseMessage: "Conflict"
+                errorCode: "DMS106"
+                errorMsg: "A document with this name already exists and overwrite is false"
+                correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+        '413':
+          description: File larger than the configured maximum (DMS107)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "413"
+                responseMessage: "Payload Too Large"
+                errorCode: "DMS107"
+                errorMsg: "File exceeds the maximum size of 10 MB"
+                correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+        '500':
+          $ref: '#/components/responses/DmsInternalError'
+        '502':
+          $ref: '#/components/responses/DmsBadGateway'
+        '503':
+          $ref: '#/components/responses/DmsUnavailable'
+
+  /dms/documents/search:
+    post:
+      tags:
+        - Dms
+      summary: Search documents by filing category and metadata
+      description: >-
+        Exact-match search by filing category and metadata (entries combined with AND; an array means "any of"
+        for text/list/sublist metadata). Newest first, paginated. No match is 200 with an empty list.
+      operationId: searchDmsDocuments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DmsSearchRequest'
+            example:
+              filingCategoryId: 42
+              metadata:
+                "11329": "TEST-000001"
+              page: 1
+              pageSize: 25
+      responses:
+        '200':
+          description: Search results (possibly empty)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                Found:
+                  value:
+                    responseCode: "200"
+                    responseMessage: "OK"
+                    errorCode: null
+                    errorMsg: null
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                    response:
+                      documents:
+                        - documentId: 88213
+                          fileName: "PASSPORT_FIT-100234.pdf"
+                          extension: pdf
+                          sizeBytes: 248331
+                          creationDate: "2026-10-28T10:15:00+04:00"
+                          modificationDate: "2026-10-28T10:15:00+04:00"
+                          filingCategory:
+                            id: 42
+                            name: Customer Passport
+                          metadata:
+                            - id: 11329
+                              name: CLIENT_ID
+                              value: "FIT-100234"
+                              values: null
+                            - id: 11888
+                              name: RequestID
+                              value: null
+                              values: ["1001", "102"]
+                          path: "/Clients/FIT-100234/PASSPORT_FIT-100234.pdf"
+                      page: 1
+                      pageSize: 25
+                      totalCount: 1
+                      totalPages: 1
+                Empty:
+                  value:
+                    responseCode: "200"
+                    responseMessage: "OK"
+                    errorCode: null
+                    errorMsg: null
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                    response:
+                      documents: []
+                      page: 1
+                      pageSize: 25
+                      totalCount: 0
+                      totalPages: 0
+        '400':
+          description: Invalid request, category, metadata or metadata type (DMS101/102/103/105/110)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                Dms101:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS101"
+                    errorMsg: "pageSize must be between 1 and 100"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms102:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS102"
+                    errorMsg: "Filing category 42 is not available to this consumer"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms103:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS103"
+                    errorMsg: "Metadata 99999 is not defined on filing category 42"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms105:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS105"
+                    errorMsg: "Multiple values are not supported for metadata 11331 (EXPIRY_DATE)"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+                Dms110:
+                  value:
+                    responseCode: "400"
+                    responseMessage: "Bad Request"
+                    errorCode: "DMS110"
+                    errorMsg: "Metadata 11500 (OWNER) has a type not supported by this service"
+                    correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+        '401':
+          $ref: '#/components/responses/DmsUnauthenticated'
+        '403':
+          $ref: '#/components/responses/DmsForbidden'
+        '500':
+          $ref: '#/components/responses/DmsInternalError'
+        '502':
+          $ref: '#/components/responses/DmsBadGateway'
+        '503':
+          $ref: '#/components/responses/DmsUnavailable'
+
+  /dms/documents/{documentId}/content:
+    get:
+      tags:
+        - Dms
+      summary: Download a document's file
+      description: >-
+        Streams the document's file bytes (not wrapped in the envelope). Errors are JSON envelopes, so send
+        `Accept: application/octet-stream, application/json` (or `*/*`). Range requests are not supported.
+      operationId: downloadDmsDocumentContent
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: The file bytes
+          headers:
+            Content-Disposition:
+              description: "attachment; filename=\"<ascii-safe>\"; filename*=UTF-8''<percent-encoded>"
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: documentId is not a positive integer (DMS101)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "400"
+                responseMessage: "Bad Request"
+                errorCode: "DMS101"
+                errorMsg: "documentId must be a positive integer"
+                correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+        '401':
+          $ref: '#/components/responses/DmsUnauthenticated'
+        '403':
+          $ref: '#/components/responses/DmsForbidden'
+        '404':
+          description: Document not found (DMS108)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "404"
+                responseMessage: "Not Found"
+                errorCode: "DMS108"
+                errorMsg: "Document not found"
+                correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+        '500':
+          $ref: '#/components/responses/DmsInternalError'
+        '502':
+          $ref: '#/components/responses/DmsBadGateway'
+        '503':
+          $ref: '#/components/responses/DmsUnavailable'
+
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+  responses:
+    DmsUnauthenticated:
+      description: >-
+        Missing, invalid or expired bearer token. Rejected by the alramz-api-starter security chain before
+        DMS code runs, with no envelope (the starter currently answers 403 with an empty body).
+    DmsForbidden:
+      description: >-
+        Role missing (errorCode null) or the consumer is not allowed to perform this operation (DMS109)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericResponse'
+          examples:
+            Dms109:
+              $ref: '#/components/examples/Dms109'
+    DmsInternalError:
+      description: Unexpected internal error (DMS299)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericResponse'
+          examples:
+            Dms299:
+              $ref: '#/components/examples/Dms299'
+    DmsBadGateway:
+      description: Open Bee returned an unexpected response (DMS201) or rejected the service credentials (DMS202)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericResponse'
+          examples:
+            Dms201:
+              $ref: '#/components/examples/Dms201'
+            Dms202:
+              $ref: '#/components/examples/Dms202'
+    DmsUnavailable:
+      description: Open Bee unreachable, timed out, or failing (DMS203)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenericResponse'
+          examples:
+            Dms203:
+              $ref: '#/components/examples/Dms203'
+
+  examples:
+    Dms109:
+      value:
+        responseCode: "403"
+        responseMessage: "Forbidden"
+        errorCode: "DMS109"
+        errorMsg: "Consumer is not allowed to perform this operation"
+        correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+    Dms201:
+      value:
+        responseCode: "502"
+        responseMessage: "Bad Gateway"
+        errorCode: "DMS201"
+        errorMsg: "Unexpected response from the document management system"
+        correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+    Dms202:
+      value:
+        responseCode: "502"
+        responseMessage: "Bad Gateway"
+        errorCode: "DMS202"
+        errorMsg: "Document management system rejected the service credentials"
+        correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+    Dms203:
+      value:
+        responseCode: "503"
+        responseMessage: "Service Unavailable"
+        errorCode: "DMS203"
+        errorMsg: "Document management system unavailable"
+        correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+    Dms299:
+      value:
+        responseCode: "500"
+        responseMessage: "Internal Server Error"
+        errorCode: "DMS299"
+        errorMsg: "Internal Server Error"
+        correlationId: "3f2c1a9e-7b4d-4c1e-9a6f-2d8e5b7c0a11"
+
   schemas:
     GenericResponse:
       type: object
@@ -64,3 +568,235 @@ components:
           type: string
         response:
           type: object
+        correlationId:
+          type: string
+          format: uuid
+        errorCode:
+          type: string
+          nullable: true
+        errorMsg:
+          type: string
+          nullable: true
+
+    DmsListValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        sublistId:
+          type: integer
+          format: int64
+          nullable: true
+
+    DmsMetadataDefinition:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        type:
+          type: string
+          example: VARCHAR
+          description: Open Bee type name, passed through
+        mandatory:
+          type: boolean
+        multiple:
+          type: boolean
+        readOnly:
+          type: boolean
+          description: Open Bee autoincrement; the client must not send it on save
+        parentMetadataId:
+          type: integer
+          format: int64
+          nullable: true
+        listId:
+          type: integer
+          format: int64
+          nullable: true
+        listValues:
+          type: array
+          nullable: true
+          description: >-
+            The values to pick from. Null when the metadata has no list, or when allowNewValue is true.
+          items:
+            $ref: '#/components/schemas/DmsListValue'
+        allowNewValue:
+          type: boolean
+          description: >-
+            true for a LIST metadata that accepts any value (Open Bee adds new values to the list): show a
+            free-text input; its list is not returned. false otherwise.
+
+    DmsFilingCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        path:
+          type: string
+          nullable: true
+        autoFiling:
+          type: boolean
+          nullable: true
+        fileNamePattern:
+          type: string
+          nullable: true
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/DmsMetadataDefinition'
+
+    DmsFilingCategoriesResponse:
+      type: object
+      properties:
+        filingCategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/DmsFilingCategory'
+
+    DmsMetadataValues:
+      type: object
+      description: >-
+        Map of metadata ID (numeric string) to a value (string, number, boolean) or an array of values.
+        Types are validated against the filing category's metadata definitions.
+      additionalProperties: {}
+
+    DmsSaveDocumentRequest:
+      type: object
+      required:
+        - filingCategoryId
+      properties:
+        filingCategoryId:
+          type: integer
+          format: int64
+          minimum: 1
+        fileName:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Name with extension. Defaults to the uploaded file's own name.
+        description:
+          type: string
+          maxLength: 1000
+          description: Defaults to the resolved file name.
+        metadata:
+          $ref: '#/components/schemas/DmsMetadataValues'
+        overwrite:
+          type: boolean
+          default: true
+          description: true = new version if the document exists; false = DMS106 if it exists.
+
+    DmsSaveDocumentResponse:
+      type: object
+      properties:
+        documentId:
+          type: integer
+          format: int64
+        filingCategoryId:
+          type: integer
+          format: int64
+
+    DmsSearchRequest:
+      type: object
+      required:
+        - filingCategoryId
+      properties:
+        filingCategoryId:
+          type: integer
+          format: int64
+          minimum: 1
+        metadata:
+          $ref: '#/components/schemas/DmsMetadataValues'
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        pageSize:
+          type: integer
+          minimum: 1
+          description: Default dms.search.default-page-size (25); max dms.search.max-page-size (100), enforced in code.
+
+    DmsDocumentMetadataValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+          description: The value of a single-value metadata; null for a multiple metadata (see values).
+        values:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: The values of a multiple metadata; null for a single-value metadata.
+
+    DmsFilingCategoryRef:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+
+    DmsDocumentSummary:
+      type: object
+      properties:
+        documentId:
+          type: integer
+          format: int64
+        fileName:
+          type: string
+        extension:
+          type: string
+          nullable: true
+        sizeBytes:
+          type: integer
+          format: int64
+        creationDate:
+          type: string
+          format: date-time
+          nullable: true
+        modificationDate:
+          type: string
+          format: date-time
+          nullable: true
+        filingCategory:
+          $ref: '#/components/schemas/DmsFilingCategoryRef'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/DmsDocumentMetadataValue'
+        path:
+          type: string
+          nullable: true
+
+    DmsSearchResponse:
+      type: object
+      properties:
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DmsDocumentSummary'
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalCount:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer

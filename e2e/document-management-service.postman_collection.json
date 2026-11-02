@@ -1,0 +1,667 @@
+{
+  "info": {
+    "_postman_id": "6d0f2c41-9a7e-4b3d-8f15-2c7a9e4d1b63",
+    "name": "document-management-service",
+    "description": "Local testing of document-management-service (DMS) against an Open Bee TEST environment. Run 00_register once, then 02 (sets v_filing_category_id if empty), set v_metadata to the category's metadata IDs/values, then 03 -> 04 -> 05. Every secured request logs in on its own in its pre-request script.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "00_register (run once)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Consumer registered (fails harmlessly if it already exists - just use 01_login)\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"authType\": \"JWT\",\n    \"consumer\": \"{{v_dms_consumer}}\",\n    \"email\": \"{{v_dms_consumer}}@example.com\",\n    \"consumerPassword\": \"{{v_consumer_password}}\",\n    \"roles\": [\"APP_DOCUMENT_MANAGEMENT_SERVICE_USER\"],\n    \"application\": \"document-management-service\",\n    \"environment\": \"local\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/auth/register",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "auth", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "01_login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"accessToken is returned\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.accessToken).to.be.a(\"string\").and.not.empty;",
+              "    pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"consumer\": \"{{v_dms_consumer}}\",\n    \"consumerPassword\": \"{{v_consumer_password}}\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/auth/login",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "auth", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02_list_filing_categories",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.sendRequest({",
+              "    url: pm.variables.get(\"baseurl\") + \":\" + pm.variables.get(\"document-management-service-port\") + \"/api/auth/login\",",
+              "    method: \"POST\",",
+              "    header: { \"Content-Type\": \"application/json\" },",
+              "    body: {",
+              "        mode: \"raw\",",
+              "        raw: JSON.stringify({",
+              "            consumer: pm.variables.get(\"v_dms_consumer\"),",
+              "            consumerPassword: pm.variables.get(\"v_consumer_password\")",
+              "        })",
+              "    }",
+              "}, function (err, response) {",
+              "    if (err || response.code !== 200) {",
+              "        console.error(\"DMS login failed:\", err || response.code);",
+              "        return;",
+              "    }",
+              "    pm.collectionVariables.set(\"v_access_token\", response.json().accessToken);",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"HTTP status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has the GenericResponse envelope\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"responseCode\", \"200\");",
+              "    pm.expect(jsonData).to.have.property(\"responseMessage\");",
+              "    pm.expect(jsonData.correlationId).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);",
+              "});",
+              "",
+              "pm.test(\"response.filingCategories is an array\", function () {",
+              "    pm.expect(jsonData.response.filingCategories).to.be.an(\"array\");",
+              "});",
+              "",
+              "// Prints each category's metadata definitions to the Postman console (View > Show Postman Console),",
+              "// and picks the first category if v_filing_category_id is not set yet.",
+              "const categories = (jsonData.response && jsonData.response.filingCategories) || [];",
+              "categories.forEach(function (c) {",
+              "    console.log(\"category \" + c.id + \" '\" + c.name + \"' path=\" + c.path + \" fileNamePattern=\" + c.fileNamePattern);",
+              "    (c.metadata || []).forEach(function (m) {",
+              "        console.log(\"    metadata \" + m.id + \" \" + m.name + \" type=\" + m.type + \" mandatory=\" + m.mandatory",
+              "            + \" multiple=\" + m.multiple + \" readOnly=\" + m.readOnly",
+              "            + (m.listValues ? \" values=\" + m.listValues.map(function (v) { return v.name; }).join(\"|\") : \"\"));",
+              "    });",
+              "});",
+              "if (!pm.collectionVariables.get(\"v_filing_category_id\") && categories.length > 0) {",
+              "    pm.collectionVariables.set(\"v_filing_category_id\", categories[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{v_access_token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/v1/dms/filing-categories",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "v1", "dms", "filing-categories"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03_save_document",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.sendRequest({",
+              "    url: pm.variables.get(\"baseurl\") + \":\" + pm.variables.get(\"document-management-service-port\") + \"/api/auth/login\",",
+              "    method: \"POST\",",
+              "    header: { \"Content-Type\": \"application/json\" },",
+              "    body: {",
+              "        mode: \"raw\",",
+              "        raw: JSON.stringify({",
+              "            consumer: pm.variables.get(\"v_dms_consumer\"),",
+              "            consumerPassword: pm.variables.get(\"v_consumer_password\")",
+              "        })",
+              "    }",
+              "}, function (err, response) {",
+              "    if (err || response.code !== 200) {",
+              "        console.error(\"DMS login failed:\", err || response.code);",
+              "        return;",
+              "    }",
+              "    pm.collectionVariables.set(\"v_access_token\", response.json().accessToken);",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"HTTP status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"responseCode is '201' and a correlationId is returned\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"responseCode\", \"201\");",
+              "    pm.expect(jsonData.correlationId).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);",
+              "});",
+              "",
+              "pm.test(\"response.documentId is returned\", function () {",
+              "    pm.expect(jsonData.response.documentId).to.be.a(\"number\");",
+              "    pm.collectionVariables.set(\"v_document_id\", jsonData.response.documentId);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{v_access_token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": [],
+              "description": "Pick a small SYNTHETIC test file (no real client documents). Max 10 MB."
+            },
+            {
+              "key": "filingCategoryId",
+              "value": "{{v_filing_category_id}}",
+              "type": "text"
+            },
+            {
+              "key": "metadata",
+              "value": "{{v_metadata}}",
+              "type": "text",
+              "description": "JSON object of metadata ID to value or array, e.g. {\"11900\":\"TEST-001\",\"11888\":[\"1001\",\"102\"]}. No Content-Type needed."
+            },
+            {
+              "key": "overwrite",
+              "value": "true",
+              "type": "text"
+            },
+            {
+              "key": "fileName",
+              "value": "",
+              "type": "text",
+              "disabled": true,
+              "description": "Optional. When omitted, the uploaded file's own name is used."
+            },
+            {
+              "key": "description",
+              "value": "",
+              "type": "text",
+              "disabled": true,
+              "description": "Optional. Defaults to the resolved file name."
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/v1/dms/documents",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "v1", "dms", "documents"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04_search_documents",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.sendRequest({",
+              "    url: pm.variables.get(\"baseurl\") + \":\" + pm.variables.get(\"document-management-service-port\") + \"/api/auth/login\",",
+              "    method: \"POST\",",
+              "    header: { \"Content-Type\": \"application/json\" },",
+              "    body: {",
+              "        mode: \"raw\",",
+              "        raw: JSON.stringify({",
+              "            consumer: pm.variables.get(\"v_dms_consumer\"),",
+              "            consumerPassword: pm.variables.get(\"v_consumer_password\")",
+              "        })",
+              "    }",
+              "}, function (err, response) {",
+              "    if (err || response.code !== 200) {",
+              "        console.error(\"DMS login failed:\", err || response.code);",
+              "        return;",
+              "    }",
+              "    pm.collectionVariables.set(\"v_access_token\", response.json().accessToken);",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"HTTP status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"responseCode is '200'\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"responseCode\", \"200\");",
+              "});",
+              "",
+              "pm.test(\"response has documents and paging fields\", function () {",
+              "    pm.expect(jsonData.response.documents).to.be.an(\"array\");",
+              "    pm.expect(jsonData.response).to.have.property(\"page\");",
+              "    pm.expect(jsonData.response).to.have.property(\"pageSize\");",
+              "    pm.expect(jsonData.response).to.have.property(\"totalCount\");",
+              "    pm.expect(jsonData.response).to.have.property(\"totalPages\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{v_access_token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"filingCategoryId\": {{v_filing_category_id}},\n    \"metadata\": {{v_metadata}},\n    \"page\": 1,\n    \"pageSize\": 25\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/v1/dms/documents/search",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "v1", "dms", "documents", "search"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05_download_document_content",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.sendRequest({",
+              "    url: pm.variables.get(\"baseurl\") + \":\" + pm.variables.get(\"document-management-service-port\") + \"/api/auth/login\",",
+              "    method: \"POST\",",
+              "    header: { \"Content-Type\": \"application/json\" },",
+              "    body: {",
+              "        mode: \"raw\",",
+              "        raw: JSON.stringify({",
+              "            consumer: pm.variables.get(\"v_dms_consumer\"),",
+              "            consumerPassword: pm.variables.get(\"v_consumer_password\")",
+              "        })",
+              "    }",
+              "}, function (err, response) {",
+              "    if (err || response.code !== 200) {",
+              "        console.error(\"DMS login failed:\", err || response.code);",
+              "        return;",
+              "    }",
+              "    pm.collectionVariables.set(\"v_access_token\", response.json().accessToken);",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"File is returned as an attachment\", function () {",
+              "    pm.expect(pm.response.headers.get(\"Content-Disposition\")).to.include(\"attachment\");",
+              "});",
+              "",
+              "pm.test(\"Body is not empty\", function () {",
+              "    pm.expect(pm.response.responseSize).to.be.above(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{v_access_token}}", "type": "text" },
+          { "key": "Accept", "value": "*/*", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/v1/dms/documents/{{v_document_id}}/content",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "v1", "dms", "documents", "{{v_document_id}}", "content"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06_list_filing_categories_no_token_403",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// The spec says 401, but the starter's security chain currently returns 403 with an empty body (accepted known gap).",
+              "pm.test(\"Request without a token is rejected with 403\", function () {",
+              "    pm.response.to.have.status(403);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/v1/dms/filing-categories",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "v1", "dms", "filing-categories"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07_save_document_metadata_not_json_object_400",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.sendRequest({",
+              "    url: pm.variables.get(\"baseurl\") + \":\" + pm.variables.get(\"document-management-service-port\") + \"/api/auth/login\",",
+              "    method: \"POST\",",
+              "    header: { \"Content-Type\": \"application/json\" },",
+              "    body: {",
+              "        mode: \"raw\",",
+              "        raw: JSON.stringify({",
+              "            consumer: pm.variables.get(\"v_dms_consumer\"),",
+              "            consumerPassword: pm.variables.get(\"v_consumer_password\")",
+              "        })",
+              "    }",
+              "}, function (err, response) {",
+              "    if (err || response.code !== 200) {",
+              "        console.error(\"DMS login failed:\", err || response.code);",
+              "        return;",
+              "    }",
+              "    pm.collectionVariables.set(\"v_access_token\", response.json().accessToken);",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"HTTP status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"errorCode is DMS101\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"responseCode\", \"400\");",
+              "    pm.expect(jsonData).to.have.property(\"errorCode\", \"DMS101\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{v_access_token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": [],
+              "description": "Any small synthetic file."
+            },
+            {
+              "key": "filingCategoryId",
+              "value": "{{v_filing_category_id}}",
+              "type": "text"
+            },
+            {
+              "key": "metadata",
+              "value": "[\"TEST-001\"]",
+              "type": "text",
+              "description": "Deliberately a JSON array, not an object."
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/v1/dms/documents",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "v1", "dms", "documents"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08_search_documents_page_size_over_max_400",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.sendRequest({",
+              "    url: pm.variables.get(\"baseurl\") + \":\" + pm.variables.get(\"document-management-service-port\") + \"/api/auth/login\",",
+              "    method: \"POST\",",
+              "    header: { \"Content-Type\": \"application/json\" },",
+              "    body: {",
+              "        mode: \"raw\",",
+              "        raw: JSON.stringify({",
+              "            consumer: pm.variables.get(\"v_dms_consumer\"),",
+              "            consumerPassword: pm.variables.get(\"v_consumer_password\")",
+              "        })",
+              "    }",
+              "}, function (err, response) {",
+              "    if (err || response.code !== 200) {",
+              "        console.error(\"DMS login failed:\", err || response.code);",
+              "        return;",
+              "    }",
+              "    pm.collectionVariables.set(\"v_access_token\", response.json().accessToken);",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"HTTP status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"errorCode is DMS101\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"responseCode\", \"400\");",
+              "    pm.expect(jsonData).to.have.property(\"errorCode\", \"DMS101\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{v_access_token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"filingCategoryId\": {{v_filing_category_id}},\n    \"pageSize\": 101\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/v1/dms/documents/search",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "v1", "dms", "documents", "search"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09_download_document_content_invalid_id_400",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.sendRequest({",
+              "    url: pm.variables.get(\"baseurl\") + \":\" + pm.variables.get(\"document-management-service-port\") + \"/api/auth/login\",",
+              "    method: \"POST\",",
+              "    header: { \"Content-Type\": \"application/json\" },",
+              "    body: {",
+              "        mode: \"raw\",",
+              "        raw: JSON.stringify({",
+              "            consumer: pm.variables.get(\"v_dms_consumer\"),",
+              "            consumerPassword: pm.variables.get(\"v_consumer_password\")",
+              "        })",
+              "    }",
+              "}, function (err, response) {",
+              "    if (err || response.code !== 200) {",
+              "        console.error(\"DMS login failed:\", err || response.code);",
+              "        return;",
+              "    }",
+              "    pm.collectionVariables.set(\"v_access_token\", response.json().accessToken);",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"HTTP status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"errorCode is DMS101\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"responseCode\", \"400\");",
+              "    pm.expect(jsonData).to.have.property(\"errorCode\", \"DMS101\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{v_access_token}}", "type": "text" },
+          { "key": "Accept", "value": "*/*", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseurl}}:{{document-management-service-port}}/api/v1/dms/documents/0/content",
+          "host": ["{{baseurl}}"],
+          "port": "{{document-management-service-port}}",
+          "path": ["api", "v1", "dms", "documents", "0", "content"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    { "key": "baseurl", "value": "http://localhost" },
+    { "key": "document-management-service-port", "value": "8086" },
+    { "key": "v_dms_consumer", "value": "onboarding-portal" },
+    { "key": "v_consumer_password", "value": "" },
+    { "key": "v_access_token", "value": "" },
+    { "key": "v_filing_category_id", "value": "" },
+    { "key": "v_metadata", "value": "{}" },
+    { "key": "v_document_id", "value": "" }
+  ]
+}
