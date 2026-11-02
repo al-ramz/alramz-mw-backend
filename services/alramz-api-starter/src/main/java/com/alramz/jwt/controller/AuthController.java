@@ -1,5 +1,6 @@
 package com.alramz.jwt.controller;
 
+import com.alramz.jwt.config.JwtProperties;
 import com.alramz.jwt.model.TokenPair;
 import com.alramz.jwt.service.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +10,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtProperties jwtProperties;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, JwtProperties jwtProperties) {
         this.authService = authService;
+        this.jwtProperties = jwtProperties;
     }
 
     @PostMapping("/api/auth/login")
@@ -26,6 +29,9 @@ public class AuthController {
 
     @PostMapping("/api/auth/register")
     public ResponseEntity<TokenResponse> register(@RequestBody RegisterRequest request) {
+        if (!jwtProperties.isRegistrationEnabled()) {
+            return ResponseEntity.notFound().build();
+        }
         if (request.consumer() == null || request.consumer().isBlank() ||
             request.email() == null || request.email().isBlank() ||
             request.consumerPassword() == null || request.consumerPassword().isBlank() ||

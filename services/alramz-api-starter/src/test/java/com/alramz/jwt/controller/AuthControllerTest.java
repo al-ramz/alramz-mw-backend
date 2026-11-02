@@ -30,7 +30,7 @@ class AuthControllerTest {
                 new TestRefreshRepo()
         );
 
-        AuthController controller = new AuthController(authService);
+        AuthController controller = new AuthController(authService, new com.alramz.jwt.config.JwtProperties());
         var response = controller.login(new AuthController.LoginRequest("test", "pass"));
 
         assertNotNull(response);
@@ -52,8 +52,17 @@ class AuthControllerTest {
                 new TestRefreshRepo()
         );
 
-        AuthController controller = new AuthController(authService);
+        AuthController controller = new AuthController(authService, new com.alramz.jwt.config.JwtProperties());
         assertThrows(IllegalArgumentException.class, () -> controller.login(new AuthController.LoginRequest("test", "pass")));
+    }
+
+    @Test
+    void register_disabledByDefault_returns404WithoutCreatingUser() {
+        AuthController controller = new AuthController(null, new com.alramz.jwt.config.JwtProperties());
+        var response = controller.register(new AuthController.RegisterRequest(
+                "attacker", "a@test.com", "pass", List.of("ADMIN"), "APP_TEST", "dev"));
+
+        assertEquals(404, response.getStatusCode().value());
     }
 
     private static class TestUserRepo implements UserRepositoryOps {

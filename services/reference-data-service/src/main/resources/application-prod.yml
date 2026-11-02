@@ -11,7 +11,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,info,prometheus   # never "*": heapdump/env/configprops leak decrypted DB passwords + cipher key
   tracing:
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
@@ -41,7 +41,7 @@ management:
         enabled: false   # Jaeger accepts traces only
 
 cipher:
-  password: UseMostSecretKey
+  password: ${CIPHER_MASTER_KEY}   # 16/24/32-byte AES key from Key Vault/CI secret; no default (fail fast)
 
 company:
   redis:
@@ -100,7 +100,7 @@ company:
       enabled: true
   jwt:
     enabled: true
-    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+    secret: ${JWT_SECRET}   # no default: a missing secret must fail startup, never fall back to a public key
     login-url: /api/auth/login
     register-url: /api/auth/register
     refresh-url: /api/auth/refresh
@@ -113,7 +113,8 @@ company:
       enabled: true
       url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://localhost:5432/alramzmwdb}
       username: ${COMPANY_DATASOURCE_MIDDLEWARE_USERNAME:alramzmw}
-      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD:alramz!321*}
+      password: ${COMPANY_DATASOURCE_MIDDLEWARE_PASSWORD}
+      passwordVector: ${COMPANY_DATASOURCE_MIDDLEWARE_PASSWORD_VECTOR}
       driverClassName: ${COMPANY_DATASOURCE_MIDDLEWARE_DRIVERCLASSNAME:org.postgresql.Driver}
       startup-validation:
         enabled: ${COMPANY_DATASOURCE_MIDDLEWARE_STARTUP_VALIDATION_ENABLED:false}
@@ -125,8 +126,9 @@ company:
     brok:
       enabled: true
       url: jdbc:oracle:thin:@//172.25.1.218:1521/BROKDEV
-      username: insight
-      plainPassword: RAMZ
+      username: ${COMPANY_DATASOURCE_BROK_USERNAME}
+      password: ${COMPANY_DATASOURCE_BROK_PASSWORD}
+      passwordVector: ${COMPANY_DATASOURCE_BROK_PASSWORD_VECTOR}
       driverClassName: oracle.jdbc.OracleDriver
       startup-validation:
         enabled: false

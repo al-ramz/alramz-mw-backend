@@ -1,0 +1,14 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+wealth-management-service,com.alramz.controllers,MmfController,0,125,0,4,0,21,0,13,0,11
+wealth-management-service,com.alramz.controllers,ApplicationController,23,3,0,0,5,1,1,1,1,1
+wealth-management-service,com.alramz,WealthManagementServiceApplication,9,56,1,1,2,15,2,4,1,4
+wealth-management-service,com.alramz.config,JacksonConfig,0,12,0,0,0,4,0,2,0,2
+wealth-management-service,com.alramz.config,DatasourceConfiguration,0,7,0,0,0,3,0,3,0,3
+wealth-management-service,com.alramz.config,MmfProperties.Custodian,0,8,0,0,0,2,0,1,0,1
+wealth-management-service,com.alramz.config,MmfProperties,0,8,0,0,0,2,0,1,0,1
+wealth-management-service,com.alramz.config,MmfConfiguration,0,3,0,0,0,1,0,1,0,1
+wealth-management-service,com.alramz.repository,MmfRepositoryImpl,7,387,1,15,1,72,1,23,0,16
+wealth-management-service,com.alramz.service.impl,MmfServiceImpl,8,791,3,95,2,133,4,70,1,24
+wealth-management-service,org.openapitools.configuration,EnumConverterConfiguration,13,0,0,0,3,0,3,0,3,0
+wealth-management-service,org.openapitools.configuration,EnumConverterConfiguration.new Converter() {...},6,0,0,0,2,0,2,0,2,0
+wealth-management-service,org.openapitools.configuration,EnumConverterConfiguration.new Converter() {...},6,0,0,0,2,0,2,0,2,0

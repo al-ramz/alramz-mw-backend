@@ -32,6 +32,31 @@ class ApiAuditAspectTest {
         public String call(String endpoint) {
             return "ok";
         }
+
+        public String send(String path, String method, String password, String body, String unused) {
+            return "sent";
+        }
+
+        public String fetchAndCacheToken(String clientSecret) {
+            return "token";
+        }
+    }
+
+    private ApiAuditLog invoke(java.lang.reflect.Method method, Object[] args, Object result, Throwable failure)
+            throws Throwable {
+        ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
+        MethodSignature signature = mock(MethodSignature.class);
+        when(signature.getMethod()).thenReturn(method);
+        when(joinPoint.getSignature()).thenReturn(signature);
+        when(joinPoint.getArgs()).thenReturn(args);
+        if (failure != null) {
+            when(joinPoint.proceed()).thenThrow(failure);
+            org.assertj.core.api.Assertions.assertThatThrownBy(() -> aspect.auditApiCall(joinPoint)).isSameAs(failure);
+        } else {
+            when(joinPoint.proceed()).thenReturn(result);
+            assertThat(aspect.auditApiCall(joinPoint)).isEqualTo(result);
+        }
+        return recordedEntry();
     }
 
     @AfterEach
@@ -102,5 +127,57 @@ class ApiAuditAspectTest {
         assertThat(proxied(new IBANValidationServiceImpl()).validate("AE070331234567890123456")).isTrue();
 
         assertThat(recordedEntry().controllerName()).isEqualTo("IBANValidationServiceImpl.validate");
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void resolvesPathAndHttpMethodFromParametersAndMasksSensitiveArgs() throws Throwable {
+        ApiAuditLog entry = invoke(AuditedTarget.class.getMethod("send", String.class, String.class, String.class,
+                String.class, String.class), new Object[] {"/v1/items", "PUT", "pw", "{}", null}, "sent", null);
+
+        assertThat(entry.apiEndpoint()).isEqualTo("/v1/items");
+        assertThat(entry.method()).isEqualTo("PUT");
+        assertThat(entry.status()).isEqualTo("SUCCESS");
+        assertThat(entry.serviceName()).isEqualTo("test-service");
+        java.util.Map<String, Object> request = (java.util.Map<String, Object>) entry.request();
+        assertThat(request).containsEntry("path", "/v1/items").containsEntry("password", "***")
+                .doesNotContainKey("unused");
+    }
+
+    @Test
+    void tokenFetchUsesKnownEndpointAndPost() throws Throwable {
+        ApiAuditLog entry = invoke(AuditedTarget.class.getMethod("fetchAndCacheToken", String.class),
+                new Object[] {"s3cr3t"}, "token", null);
+
+        assertThat(entry.apiEndpoint()).isEqualTo("/IntegrationAPI/IntegrationWServices/GetClientToken");
+        assertThat(entry.method()).isEqualTo("POST");
+        assertThat(entry.request()).isEqualTo(java.util.Map.of("clientSecret", "***"));
+    }
+
+    @Test
+    void fallsBackToMethodNameWhenEndpointBlank() throws Throwable {
+        ApiAuditLog entry = invoke(AuditedTarget.class.getMethod("call", String.class),
+                new Object[] {" "}, "ok", null);
+
+        assertThat(entry.apiEndpoint()).isEqualTo("call");
+        assertThat(entry.method()).isEqualTo("POST");
+    }
+
+    @Test
+    void failureRecordsExceptionChainAndRethrows() throws Throwable {
+        Exception root = new IllegalArgumentException("root cause");
+        Exception failure = new IllegalStateException("upstream failed", new RuntimeException((String) null, root));
+
+        ApiAuditLog entry = invoke(AuditedTarget.class.getMethod("call", String.class),
+                new Object[] {"/upstream"}, null, failure);
+
+        assertThat(entry.status()).isEqualTo("FAILURE");
+        assertThat(entry.exceptionClass()).isEqualTo(IllegalStateException.class.getName());
+        assertThat(entry.exceptionCause())
+                .startsWith("java.lang.IllegalStateException: upstream failed\n  at ")
+                .contains("\nCaused by: java.lang.RuntimeException\n")
+                .contains("\nCaused by: java.lang.IllegalArgumentException: root cause")
+                .contains(" more");
+        assertThat(entry.response()).isNull();
     }
 }

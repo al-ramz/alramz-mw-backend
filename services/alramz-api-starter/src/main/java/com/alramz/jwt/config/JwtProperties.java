@@ -26,6 +26,9 @@ public class JwtProperties {
 
     private String registerUrl = "/api/auth/register";
 
+    /** Self-registration accepts caller-supplied roles; keep off outside controlled environments. */
+    private boolean registrationEnabled = false;
+
     private String refreshUrl = "/api/auth/refresh";
 
     private String logoutUrl = "/api/auth/logout";

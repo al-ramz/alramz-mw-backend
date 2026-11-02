@@ -85,8 +85,10 @@ public class JwtAutoConfiguration {
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(properties.getLoginUrl()).permitAll()
-                        .requestMatchers(properties.getRegisterUrl()).permitAll()
                         .requestMatchers(properties.getRefreshUrl()).permitAll();
+                    if (properties.isRegistrationEnabled()) {
+                        auth.requestMatchers(properties.getRegisterUrl()).permitAll();
+                    }
                     for (String url : properties.getPermitAllUrls()) {
                         auth.requestMatchers(url).permitAll();
                     }

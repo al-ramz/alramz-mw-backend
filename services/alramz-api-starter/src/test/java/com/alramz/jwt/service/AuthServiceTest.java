@@ -11,7 +11,14 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class AuthServiceTest {
 
@@ -95,5 +102,102 @@ class AuthServiceTest {
 
         AuthService service = new AuthService(userRepo, encoder, tokenProvider, refreshRepo);
         assertThrows(IllegalArgumentException.class, () -> service.login("testuser", "password"));
+    }
+
+    private final UserRepositoryOps users = mock(UserRepositoryOps.class);
+    private final PasswordEncoderService encoderMock = mock(PasswordEncoderService.class);
+    private final TokenProvider tokens = mock(TokenProvider.class);
+    private final RefreshTokenRepositoryOps refreshTokens = mock(RefreshTokenRepositoryOps.class);
+    private final AuthService mocked = new AuthService(users, encoderMock, tokens, refreshTokens);
+    private final TokenPair pair = new TokenPair("a2", "r2", "Bearer", 900);
+
+    private static User user(String name) {
+        return new User("1", name, name + "@x.com", "enc", List.of("USER"), true, "APP", "dev");
+    }
+
+    @Test
+    void login_unknownUser_throwsException() {
+        when(users.findByUsername("ghost")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> mocked.login("ghost", "pw"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Consumer or Consumer Password is wrong");
+    }
+
+    @Test
+    void register_success_savesEncodedUserAndReturnsTokens() {
+        when(encoderMock.encode("pw")).thenReturn("hashed");
+        when(users.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(tokens.generateTokenPair("bob", List.of("ADMIN"), "APP", "qa")).thenReturn(pair);
+
+        TokenPair result = mocked.register("bob", "bob@x.com", "pw", List.of("ADMIN"), "APP", "qa");
+
+        assertThat(result).isSameAs(pair);
+        org.mockito.ArgumentCaptor<User> saved = org.mockito.ArgumentCaptor.forClass(User.class);
+        verify(users).save(saved.capture());
+        assertThat(saved.getValue().password()).isEqualTo("hashed");
+        assertThat(saved.getValue().enabled()).isTrue();
+    }
+
+    @Test
+    void register_duplicateUsernameOrEmail_isRejected() {
+        when(users.existsByUsername("bob")).thenReturn(true);
+        assertThatThrownBy(() -> mocked.register("bob", "e", "pw", List.of(), "A", "E"))
+                .hasMessage("Username already exists");
+
+        when(users.existsByUsername("amy")).thenReturn(false);
+        when(users.existsByEmail("e")).thenReturn(true);
+        assertThatThrownBy(() -> mocked.register("amy", "e", "pw", List.of(), "A", "E"))
+                .hasMessage("Email already exists");
+        verify(users, never()).save(any());
+    }
+
+    @Test
+    void logout_revokesToken() {
+        mocked.logout("r1");
+        verify(refreshTokens).revoke("r1");
+    }
+
+    @Test
+    void refresh_validToken_rotatesAndIssuesNewPair() {
+        when(refreshTokens.findByToken("r1")).thenReturn(Optional.of(
+                new RefreshToken("id", "r1", "bob", Instant.now().plusSeconds(60), Instant.now(), false)));
+        when(users.findByUsername("bob")).thenReturn(Optional.of(user("bob")));
+        when(tokens.generateTokenPair("bob", List.of("USER"), "APP", "dev")).thenReturn(pair);
+
+        TokenPair result = mocked.refresh("r1");
+
+        assertThat(result).isSameAs(pair);
+        verify(refreshTokens).revoke("r1");
+        org.mockito.ArgumentCaptor<RefreshToken> saved = org.mockito.ArgumentCaptor.forClass(RefreshToken.class);
+        verify(refreshTokens).save(saved.capture());
+        assertThat(saved.getValue().token()).isEqualTo("r2");
+        assertThat(saved.getValue().userId()).isEqualTo("bob");
+        assertThat(saved.getValue().revoked()).isFalse();
+    }
+
+    @Test
+    void refresh_unknownRevokedOrExpiredToken_isRejected() {
+        when(refreshTokens.findByToken("missing")).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> mocked.refresh("missing")).hasMessage("Invalid refresh token");
+
+        when(refreshTokens.findByToken("revoked")).thenReturn(Optional.of(
+                new RefreshToken("id", "revoked", "bob", Instant.now().plusSeconds(60), Instant.now(), true)));
+        assertThatThrownBy(() -> mocked.refresh("revoked")).hasMessage("Refresh token expired or revoked");
+
+        when(refreshTokens.findByToken("old")).thenReturn(Optional.of(
+                new RefreshToken("id", "old", "bob", Instant.now().minusSeconds(60), Instant.now(), false)));
+        assertThatThrownBy(() -> mocked.refresh("old")).hasMessage("Refresh token expired or revoked");
+        verify(refreshTokens, never()).revoke(any());
+    }
+
+    @Test
+    void refresh_userDeleted_isRejectedAfterRevocation() {
+        when(refreshTokens.findByToken("r1")).thenReturn(Optional.of(
+                new RefreshToken("id", "r1", "gone", Instant.now().plusSeconds(60), Instant.now(), false)));
+        when(users.findByUsername("gone")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> mocked.refresh("r1")).hasMessage("User not found");
+        verify(refreshTokens).revoke("r1");
     }
 }

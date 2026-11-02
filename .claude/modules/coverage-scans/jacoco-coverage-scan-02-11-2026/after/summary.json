@@ -1,0 +1,65 @@
+[
+  {
+    "service": "alramz-api-starter",
+    "line": 0.8070580474934037,
+    "branch": 0.6570855614973262,
+    "instruction": 0.8131055000381417,
+    "lines_covered": 2447,
+    "lines_total": 3032,
+    "gate": "PASS"
+  },
+  {
+    "service": "alramz-notification-service",
+    "line": 0.983451536643026,
+    "branch": 0.945619335347432,
+    "instruction": 0.9835947618362354,
+    "lines_covered": 1248,
+    "lines_total": 1269,
+    "gate": "PASS"
+  },
+  {
+    "service": "onboarding-service",
+    "line": 0.9684684684684685,
+    "branch": 0.8091451292246521,
+    "instruction": 0.9630497476568133,
+    "lines_covered": 1075,
+    "lines_total": 1110,
+    "gate": "PASS"
+  },
+  {
+    "service": "reference-data-service",
+    "line": 0.9570093457943926,
+    "branch": 0.8095238095238095,
+    "instruction": 0.9436550710436061,
+    "lines_covered": 512,
+    "lines_total": 535,
+    "gate": "PASS"
+  },
+  {
+    "service": "reporting-management-service",
+    "line": 0.9300699300699301,
+    "branch": 0.868421052631579,
+    "instruction": 0.9294532627865961,
+    "lines_covered": 133,
+    "lines_total": 143,
+    "gate": "PASS"
+  },
+  {
+    "service": "utility-service",
+    "line": 0.986013986013986,
+    "branch": 0.7692307692307693,
+    "instruction": 0.9858356940509915,
+    "lines_covered": 141,
+    "lines_total": 143,
+    "gate": "PASS"
+  },
+  {
+    "service": "wealth-management-service",
+    "line": 0.9381818181818182,
+    "branch": 0.9583333333333334,
+    "instruction": 0.9472259810554804,
+    "lines_covered": 258,
+    "lines_total": 275,
+    "gate": "PASS"
+  }
+]

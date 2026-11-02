@@ -33,7 +33,6 @@
         <azure.storage.blob.version>12.25.0</azure.storage.blob.version>
         <azure.security.keyvault.secrets.version>4.8.0</azure.security.keyvault.secrets.version>
         <msgraph.legacy.version>3.8.0</msgraph.legacy.version>
-        <jackson.version>2.17.1</jackson.version>
     </properties>
 
     <dependencies>
@@ -123,12 +122,10 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
@@ -225,7 +222,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
                 <configuration>
                     <useSystemClassLoader>true</useSystemClassLoader>
                 </configuration>
