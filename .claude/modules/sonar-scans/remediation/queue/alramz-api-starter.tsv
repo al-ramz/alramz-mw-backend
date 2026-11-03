@@ -1,0 +1,255 @@
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditAspect.java:3	Remove this unused import 'com.alramz.logging.config.LoggingProperties'.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditAspect.java:5	Remove this unused import 'com.fasterxml.jackson.databind.ObjectMapper'.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditAspect.java:12	Remove this unused import 'org.springframework.stereotype.Component'.
+CODE_SMELL	CRITICAL	java:S3776	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditAspect.java:153	Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditLogFilter.java:21	Remove this unused import 'org.springframework.web.util.WebUtils'.
+CODE_SMELL	BLOCKER	java:S2387	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditLogFilter.java:29	"logger" is the name of a field in "GenericFilterBean".
+CODE_SMELL	MAJOR	java:S1068	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditLogFilter.java:29	Remove this unused "logger" private field.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditLogFilter.java:81	Define a constant instead of duplicating this literal "FAILURE" 3 times.
+CODE_SMELL	MAJOR	java:S6880	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditLogFilter.java:106	Replace the chain of if/else with a switch expression.
+CODE_SMELL	MAJOR	java:S6485	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditLogService.java:58	Replace this call to the constructor with the better suited static method HashMap.newHashMap(int numMappings)
+CODE_SMELL	MAJOR	java:S1068	services/alramz-api-starter/src/main/java/com/alramz/audit/SensitiveDataMasker.java:36	Remove this unused "MAX_RECURSION_DEPTH" private field.
+CODE_SMELL	MAJOR	java:S6485	services/alramz-api-starter/src/main/java/com/alramz/audit/SensitiveDataMasker.java:122	Replace this call to the constructor with the better suited static method LinkedHashMap.newLinkedHashMap(int numMappings)
+CODE_SMELL	MAJOR	java:S6880	services/alramz-api-starter/src/main/java/com/alramz/audit/SensitiveDataMasker.java:146	Replace the chain of if/else with a switch expression.
+CODE_SMELL	MAJOR	java:S6213	services/alramz-api-starter/src/main/java/com/alramz/audit/WebClientAuditFilter.java:86	Rename this method to not match a restricted identifier.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:37	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:37	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:41	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:41	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:45	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:45	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MAJOR	java:S107	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:49	Method has 8 parameters, which is greater than 7 authorized.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:49	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:49	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:100	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:100	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	MINOR	java:S119	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:104	Rename this generic name to match the regular expression '^[A-Z][0-9]?$'.
+CODE_SMELL	CRITICAL	java:S3776	services/alramz-api-starter/src/main/java/com/alramz/datasource/config/AbstractDataSourceAutoConfiguration.java:83	Refactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.
+CODE_SMELL	MAJOR	java:S1066	services/alramz-api-starter/src/main/java/com/alramz/datasource/config/AbstractDataSourceAutoConfiguration.java:102	Merge this if statement with the enclosing one.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/datasource/config/IntegrationDataSourceAutoConfiguration.java:28	Define a constant instead of duplicating this literal "integration" 5 times.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/datasource/config/MiddlewareDataSourceAutoConfiguration.java:28	Define a constant instead of duplicating this literal "middleware" 5 times.
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/main/java/com/alramz/exceptions/ApiCallFailedException.java:12	Remove these unused method parameters "uri", "method".
+CODE_SMELL	MAJOR	java:S2139	services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java:50	Either log this exception and handle it, or rethrow it with some contextual information.
+CODE_SMELL	MAJOR	java:S2139	services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java:72	Either log this exception and handle it, or rethrow it with some contextual information.
+CODE_SMELL	MAJOR	java:S6204	services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java:94	Replace this usage of 'Stream.collect(Collectors.toUnmodifiableList())' with 'Stream.toList()'.
+CODE_SMELL	MAJOR	java:S2139	services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java:122	Either log this exception and handle it, or rethrow it with some contextual information.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/jwt/annotation/JwtSecured.java:3	Remove this unused import 'org.springframework.security.access.prepost.PreAuthorize'.
+CODE_SMELL	MAJOR	java:S112	services/alramz-api-starter/src/main/java/com/alramz/jwt/config/JwtAutoConfiguration.java:81	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MINOR	java:S1130	services/alramz-api-starter/src/main/java/com/alramz/jwt/config/JwtAutoConfiguration.java:81	Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.
+VULNERABILITY	CRITICAL	java:S4502	services/alramz-api-starter/src/main/java/com/alramz/jwt/config/JwtAutoConfiguration.java:83	Make sure disabling Spring Security's CSRF protection is safe here.
+BUG	MINOR	java:S2184	services/alramz-api-starter/src/main/java/com/alramz/jwt/config/JwtProperties.java:21	Cast one of the operands of this multiplication operation to a "long".
+BUG	MINOR	java:S2184	services/alramz-api-starter/src/main/java/com/alramz/jwt/config/JwtProperties.java:23	Cast one of the operands of this multiplication operation to a "long".
+CODE_SMELL	BLOCKER	java:S2387	services/alramz-api-starter/src/main/java/com/alramz/jwt/filter/JwtAuthFilter.java:30	"logger" is the name of a field in "GenericFilterBean".
+CODE_SMELL	MAJOR	java:S1068	services/alramz-api-starter/src/main/java/com/alramz/jwt/filter/JwtAuthFilter.java:32	Remove this unused "properties" private field.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/jwt/model/TokenPair.java:3	Remove this unused import 'java.time.Instant'.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/jwt/model/User.java:3	Remove this unused import 'java.time.Instant'.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/jwt/repository/RefreshTokenRepositoryOps.java:5	Remove this unused import 'java.util.Optional'.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/jwt/repository/UserRepository.java:8	Remove this unused import 'java.time.ZoneId'.
+CODE_SMELL	INFO	java:S8688	services/alramz-api-starter/src/main/java/com/alramz/jwt/repository/UserRepository.java:75	Explicitly specify the time zone by passing a ZoneId or a Clock to the .now() method.
+BUG	MINOR	java:S2184	services/alramz-api-starter/src/main/java/com/alramz/jwt/service/AuthService.java:73	Cast one of the operands of this multiplication operation to a "long".
+BUG	MINOR	java:S2184	services/alramz-api-starter/src/main/java/com/alramz/jwt/service/AuthService.java:149	Cast one of the operands of this multiplication operation to a "long".
+CODE_SMELL	INFO	java:S2143	services/alramz-api-starter/src/main/java/com/alramz/jwt/service/TokenProvider.java:0	Use the "java.time" API for date and time.
+CODE_SMELL	CRITICAL	java:S3776	services/alramz-api-starter/src/main/java/com/alramz/logging/aspect/MethodExecutionLoggingAspect.java:31	Refactor this method to reduce its Cognitive Complexity from 38 to the 15 allowed.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingAutoConfiguration.java:26	Remove this unused import 'org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate'.
+CODE_SMELL	MAJOR	java:S106	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingAutoConfiguration.java:132	Replace this use of System.out by a logger.
+CODE_SMELL	MAJOR	java:S106	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingAutoConfiguration.java:139	Replace this use of System.out by a logger.
+CODE_SMELL	MAJOR	java:S106	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingAutoConfiguration.java:140	Replace this use of System.out by a logger.
+CODE_SMELL	MAJOR	java:S106	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingAutoConfiguration.java:141	Replace this use of System.out by a logger.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingProperties.java:46	Define a constant instead of duplicating this literal "/actuator/**" 3 times.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingProperties.java:46	Define a constant instead of duplicating this literal "/swagger-ui/**" 3 times.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingProperties.java:46	Define a constant instead of duplicating this literal "/v3/api-docs/**" 3 times.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/logging/config/SeqLoggingConfig.java:54	Use already-defined constant 'DEFAULT_LEVEL' instead of duplicating its value here.
+CODE_SMELL	MINOR	java:S1124	services/alramz-api-starter/src/main/java/com/alramz/logging/constants/LoggingConstants.java:23	Reorder the modifiers to comply with the Java Language Specification.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/CorrelationIdFilter.java:11	Remove this unused import 'lombok.extern.slf4j.Slf4j'.
+CODE_SMELL	BLOCKER	java:S2387	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/CorrelationIdFilter.java:43	"logger" is the name of a field in "GenericFilterBean".
+CODE_SMELL	MAJOR	java:S1068	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/CorrelationIdFilter.java:43	Remove this unused "logger" private field.
+CODE_SMELL	BLOCKER	java:S2387	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/RequestLoggingFilter.java:30	"logger" is the name of a field in "GenericFilterBean".
+CODE_SMELL	MAJOR	java:S6880	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/RequestLoggingFilter.java:49	Replace the chain of if/else with a switch expression.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/ResponseLoggingFilter.java:20	Remove this unused import 'org.springframework.http.HttpStatus'.
+CODE_SMELL	BLOCKER	java:S2387	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/ResponseLoggingFilter.java:33	"logger" is the name of a field in "GenericFilterBean".
+CODE_SMELL	MAJOR	java:S6880	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/ResponseLoggingFilter.java:51	Replace the chain of if/else with a switch expression.
+CODE_SMELL	MINOR	java:S6201	services/alramz-api-starter/src/main/java/com/alramz/logging/filter/ResponseLoggingFilter.java:85	Replace this instanceof check and cast with 'instanceof Long long'
+CODE_SMELL	MAJOR	java:S1066	services/alramz-api-starter/src/main/java/com/alramz/logging/interceptor/RestTemplateLoggingInterceptor.java:89	Merge this if statement with the enclosing one.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/logging/interceptor/WebClientLoggingFilter.java:14	Remove this unused import 'org.springframework.web.reactive.function.client.ExchangeFunction'.
+CODE_SMELL	CRITICAL	java:S3776	services/alramz-api-starter/src/main/java/com/alramz/logging/interceptor/WebClientLoggingFilter.java:37	Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.
+CODE_SMELL	MAJOR	java:S1066	services/alramz-api-starter/src/main/java/com/alramz/logging/interceptor/WebClientLoggingFilter.java:55	Merge this if statement with the enclosing one.
+CODE_SMELL	MAJOR	java:S1066	services/alramz-api-starter/src/main/java/com/alramz/logging/interceptor/WebClientLoggingFilter.java:77	Merge this if statement with the enclosing one.
+CODE_SMELL	MAJOR	java:S1066	services/alramz-api-starter/src/main/java/com/alramz/logging/interceptor/WebClientLoggingFilter.java:128	Merge this if statement with the enclosing one.
+CODE_SMELL	MAJOR	java:S1117	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/AlramzJsonEncoder.java:145	Rename "json" which hides the field declared at line 47.
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/AlramzJsonEncoder.java:162	Remove this unused method parameter "cause".
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:4	Remove this unused import 'ch.qos.logback.classic.Level'.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:44	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:45	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:46	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:47	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:51	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:52	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:53	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:55	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S2065	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:56	Remove the "transient" modifier from this field.
+CODE_SMELL	MINOR	java:S7158	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:166	Use "isEmpty()" to check whether a "StringBuilder" is empty or not.
+BUG	MAJOR	java:S3078	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:207	Use an "AtomicInteger" for this field; its operations are atomic.
+CODE_SMELL	MINOR	java:S135	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:223	Reduce the total number of break and continue statements in this loop to use at most one.
+BUG	MAJOR	java:S2142	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:233	Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.
+CODE_SMELL	MINOR	java:S7158	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/SeqAppender.java:333	Use "isEmpty()" to check whether a "StringBuilder" is empty or not.
+CODE_SMELL	MAJOR	java:S1181	services/alramz-api-starter/src/main/java/com/alramz/logging/otel/OpenTelemetryTraceContextExtractor.java:22	Catch Exception instead of Throwable.
+CODE_SMELL	MAJOR	java:S1181	services/alramz-api-starter/src/main/java/com/alramz/logging/otel/OpenTelemetryTraceContextExtractor.java:36	Catch Exception instead of Throwable.
+BUG	MAJOR	javabugs:S2259	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LoggingHelper.java:78	Fix this access that will throw a NullPointerException when executed.
+CODE_SMELL	MAJOR	java:S1066	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LoggingHelper.java:318	Merge this if statement with the enclosing one.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:3	Remove this unused import 'java.util.ArrayList'.
+BUG	MAJOR	java:S5998	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:30	Refactor this repetition that can lead to a stack overflow for large inputs.
+CODE_SMELL	MAJOR	java:S5843	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:30	Simplify this regular expression to reduce its complexity from 21 to the 20 allowed.
+CODE_SMELL	MAJOR	java:S5869	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:33	Remove duplicates in this character class.
+CODE_SMELL	MAJOR	java:S5869	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:33	Remove duplicates in this character class.
+CODE_SMELL	MAJOR	java:S5869	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:33	Remove duplicates in this character class.
+CODE_SMELL	MAJOR	java:S5869	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:34	Remove duplicates in this character class.
+CODE_SMELL	CRITICAL	java:S3776	services/alramz-api-starter/src/main/java/com/alramz/logging/util/MethodExecutionLoggingHelper.java:61	Refactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.
+CODE_SMELL	MINOR	java:S1126	services/alramz-api-starter/src/main/java/com/alramz/logging/util/MethodExecutionLoggingHelper.java:82	Replace this if-then-else statement by a single return statement.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/scheduler/config/SchedulerAutoConfiguration.java:7	Remove this unnecessary import: same package classes are always implicitly imported.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/scheduler/config/SchedulerAutoConfiguration.java:8	Remove this unnecessary import: same package classes are always implicitly imported.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/scheduler/config/SchedulerConfigCondition.java:12	Remove this unused import 'org.springframework.beans.factory.config.ConfigurableListableBeanFactory'.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/scheduler/config/SchedulerConfiguration.java:3	Remove this unused import 'java.util.Optional'.
+CODE_SMELL	CRITICAL	java:S1214	services/alramz-api-starter/src/main/java/com/alramz/scheduler/constants/SchedulerConstants.java:3	Move constants defined in this interfaces to another class or enum.
+CODE_SMELL	MAJOR	java:S6813	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:36	Remove this field injection and use constructor injection instead.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:51	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:70	Format specifiers should be used instead of string concatenation.
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:70	Log Injection via HTTP request body in SchedulerManagerController.restartScheduler()
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:79	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:81	Define a constant instead of duplicating this literal "ERROR: Failed to restart the scheduler" 3 times.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:99	Format specifiers should be used instead of string concatenation.
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:99	Log Injection via HTTP request body in SchedulerManagerController.restartScheduledForJobs()
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:108	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:124	Format specifiers should be used instead of string concatenation.
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:124	Log Injection via HTTP request body in SchedulerManagerController.unregisterJobs()
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:132	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S112	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:145	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MINOR	java:S1130	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:145	Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:156	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/controller/SchedulerManagerController.java:179	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S107	services/alramz-api-starter/src/main/java/com/alramz/scheduler/model/ScheduleInfoBean.java:24	Constructor has 9 parameters, which is greater than 7 authorized.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:19	Remove this unused import 'org.springframework.jdbc.core.RowMapper'.
+CODE_SMELL	MINOR	java:S9438	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:51	Make this private field "final", it is never reassigned.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:65	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:115	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S112	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:123	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:134	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:144	Format specifiers should be used instead of string concatenation.
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:144	Log Injection via HTTP request body in JobScheduleManager.reintializeSchedulerForJobs()
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:154	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:162	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:175	Format specifiers should be used instead of string concatenation.
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:175	Log Injection via HTTP request body in JobScheduleManager.unregisterJobs()
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:187	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:198	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	CRITICAL	java:S3776	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:216	Refactor this method to reduce its Cognitive Complexity from 113 to the 15 allowed.
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:227	Log Injection via HTTP request body in JobScheduleManager.schedule()
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:251	Log Injection via HTTP request body in JobScheduleManager.schedule()
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:260	Log Injection via HTTP request body in JobScheduleManager.schedule()
+CODE_SMELL	MINOR	java:S135	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:262	Reduce the total number of break and continue statements in this loop to use at most one.
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:310	Log Injection via HTTP request body in JobScheduleManager.schedule()
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:317	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S1141	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:328	Extract this nested try block into a separate method.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:354	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:361	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:367	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:383	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	MINOR	java:S1155	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:386	Use isEmpty() to check whether the collection is empty or not.
+CODE_SMELL	MINOR	java:S1155	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:386	Use isEmpty() to check whether the collection is empty or not.
+CODE_SMELL	MAJOR	java:S3457	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:391	Format specifiers should be used instead of string concatenation.
+CODE_SMELL	INFO	java:S1135	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:394	Complete the task associated to this TODO comment.
+CODE_SMELL	MAJOR	java:S125	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:394	This block of commented-out lines of code should be removed.
+VULNERABILITY	MINOR	javasecurity:S5145	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:397	Log Injection via HTTP request body in JobScheduleManager.schedule()
+BUG	MINOR	java:S3599	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:401	Use another way to initialize this instance.
+CODE_SMELL	MAJOR	java:S112	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/ISchedulerService.java:11	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MAJOR	java:S112	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/ISchedulerService.java:13	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MAJOR	java:S112	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/ISchedulerService.java:15	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MAJOR	java:S112	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/ISchedulerService.java:17	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MAJOR	java:S112	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/ISchedulerService.java:21	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MAJOR	java:S3358	services/alramz-api-starter/src/main/java/com/alramz/tracing/config/TracingAutoConfiguration.java:98	Extract this nested ternary operation into an independent statement.
+CODE_SMELL	INFO	java:S2143	services/alramz-api-starter/src/main/java/com/alramz/utils/DataValidationUtil.java:0	Use the "java.time" API for date and time.
+CODE_SMELL	MAJOR	java:S1118	services/alramz-api-starter/src/main/java/com/alramz/utils/DataValidationUtil.java:8	Add a private constructor to hide the implicit public one.
+CODE_SMELL	MAJOR	java:S1068	services/alramz-api-starter/src/main/java/com/alramz/utils/PWProtector.java:16	Remove this unused "logger" private field.
+CODE_SMELL	CRITICAL	java:S1192	services/alramz-api-starter/src/main/java/com/alramz/utils/SqlQueriesManager.java:26	Define a constant instead of duplicating this literal "sql.file" 3 times.
+CODE_SMELL	MAJOR	java:S108	services/alramz-api-starter/src/main/java/com/alramz/utils/SqlQueriesManager.java:75	Remove this block of code, fill it in, or add a comment explaining why it is empty.
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java:32	Remove this unused method parameter "endpoint".
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java:36	Remove these unused method parameters "path", "method", "password", "body", "unused".
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java:40	Remove this unused method parameter "clientSecret".
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java:97	Use assertThat(actual).hasToString(expectedString) instead.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditLogFilterTest.java:67	Use assertThat(actual).hasToString(expectedString) instead.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/audit/SensitiveDataMaskerTest.java:52	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/audit/SensitiveDataMaskerTest.java:53	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/audit/SensitiveDataMaskerTest.java:57	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/audit/SensitiveDataMaskerTest.java:58	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/test/java/com/alramz/audit/WebClientAuditFilterTest.java:25	Remove this unused import 'java.net.URI'.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/audit/WebClientAuditFilterTest.java:102	Use assertThat(actual).hasToString(expectedString) instead.
+CODE_SMELL	MAJOR	java:S5958	services/alramz-api-starter/src/test/java/com/alramz/audit/WebClientAuditFilterTest.java:118	Test further the exception raised by this assertThatThrownBy call.
+CODE_SMELL	MAJOR	java:S5958	services/alramz-api-starter/src/test/java/com/alramz/audit/WebClientAuditFilterTest.java:131	Test further the exception raised by this assertThatThrownBy call.
+CODE_SMELL	MAJOR	java:S5958	services/alramz-api-starter/src/test/java/com/alramz/audit/WebClientAuditFilterTest.java:144	Test further the exception raised by this assertThatThrownBy call.
+CODE_SMELL	MAJOR	java:S5778	services/alramz-api-starter/src/test/java/com/alramz/client/AbstractRestClientTest.java:153	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/client/AuditProbeClient.java:6	Remove this unused method parameter "endpoint".
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/controllers/AuditProbeController.java:9	Remove this unused method parameter "body".
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/datasource/config/DatasourcePropertiesTest.java:20	Use isZero() instead.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/datasource/config/DatasourcePropertiesTest.java:21	Use isZero() instead.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/datasource/config/DatasourcePropertiesTest.java:26	Use isZero() instead.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/test/java/com/alramz/datasource/IntegrationDataSourceAutoConfigurationTest.java:7	Remove this unused import 'org.springframework.context.annotation.Configuration'.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/test/java/com/alramz/datasource/MiddlewareDataSourceAutoConfigurationTest.java:3	Remove this unused import 'com.alramz.datasource.config.DatasourceProperties'.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/test/java/com/alramz/datasource/MiddlewareDataSourceAutoConfigurationTest.java:8	Remove this unused import 'org.springframework.context.annotation.Configuration'.
+CODE_SMELL	MAJOR	java:S6213	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/mapper/GlobalConfigurationSettingsRowMapperTest.java:158	Rename this variable to not match a restricted identifier.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/mapper/GlobalConfigurationSettingsRowMapperTest.java:199	Use assertThat(actual).hasSameHashCodeAs(expected) instead.
+CODE_SMELL	MAJOR	java:S6213	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/mapper/GlobalConfigurationSettingsRowMapperTest.java:211	Rename this variable to not match a restricted identifier.
+CODE_SMELL	MINOR	java:S5853	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/mapper/GlobalConfigurationSettingsRowMapperTest.java:215	Join these multiple assertions subject to one assertion chain.
+CODE_SMELL	MINOR	java:S1128	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepositoryIT.java:4	Remove this unused import 'com.alramz.globalconfigurationsettings.service.GlobalConfigurationSettingsService'.
+CODE_SMELL	MAJOR	java:S5778	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepositoryIT.java:151	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepositoryTest.java:212	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepositoryTest.java:262	Use isZero() instead.
+CODE_SMELL	MAJOR	java:S5778	services/alramz-api-starter/src/test/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepositoryTest.java:308	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/aspect/JwtSecuredAspectTest.java:28	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/aspect/JwtSecuredAspectTest.java:32	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	MAJOR	java:S9016	services/alramz-api-starter/src/test/java/com/alramz/jwt/aspect/JwtSecuredAspectTest.java:38	Extract this mock creation to a local variable.
+CODE_SMELL	MINOR	java:S1130	services/alramz-api-starter/src/test/java/com/alramz/jwt/aspect/JwtSecuredAspectTest.java:57	Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.
+CODE_SMELL	MINOR	java:S1130	services/alramz-api-starter/src/test/java/com/alramz/jwt/aspect/JwtSecuredAspectTest.java:65	Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.
+CODE_SMELL	MAJOR	java:S5778	services/alramz-api-starter/src/test/java/com/alramz/jwt/controller/AuthControllerTest.java:56	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/controller/AuthControllerTest.java:79	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/controller/AuthControllerTest.java:80	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/service/AuthServiceTest.java:43	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/service/AuthServiceTest.java:44	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/service/AuthServiceTest.java:73	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/service/AuthServiceTest.java:74	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/service/AuthServiceTest.java:99	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	CRITICAL	java:S1186	services/alramz-api-starter/src/test/java/com/alramz/jwt/service/AuthServiceTest.java:100	Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.
+CODE_SMELL	MINOR	java:S5853	services/alramz-api-starter/src/test/java/com/alramz/logging/AlramzJsonEncoderTest.java:85	Join these multiple assertions subject to one assertion chain.
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/filter/RequestLoggingFilterTest.java:61	Use a static import for "times".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/filter/ResponseLoggingFilterTest.java:103	Use a static import for "never".
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/logging/interceptor/WebClientLoggingFilterTest.java:101	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S5838	services/alramz-api-starter/src/test/java/com/alramz/logging/interceptor/WebClientLoggingFilterTest.java:102	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MAJOR	java:S2925	services/alramz-api-starter/src/test/java/com/alramz/logging/logback/SeqAppenderTest.java:82	Remove this use of "Thread.sleep()".
+CODE_SMELL	MAJOR	java:S2925	services/alramz-api-starter/src/test/java/com/alramz/logging/logback/SeqAppenderTest.java:179	Remove this use of "Thread.sleep()".
+CODE_SMELL	MAJOR	java:S2925	services/alramz-api-starter/src/test/java/com/alramz/logging/logback/SeqAppenderTest.java:181	Remove this use of "Thread.sleep()".
+CODE_SMELL	MAJOR	java:S2925	services/alramz-api-starter/src/test/java/com/alramz/logging/logback/SeqAppenderTest.java:199	Remove this use of "Thread.sleep()".
+CODE_SMELL	MAJOR	java:S2925	services/alramz-api-starter/src/test/java/com/alramz/logging/logback/SeqAppenderTest.java:229	Remove this use of "Thread.sleep()".
+CODE_SMELL	MINOR	java:S6068	services/alramz-api-starter/src/test/java/com/alramz/logging/LoggingHelperTest.java:224	Remove this and every subsequent useless "eq(...)" invocation; pass the values directly.
+CODE_SMELL	MINOR	java:S6068	services/alramz-api-starter/src/test/java/com/alramz/logging/LoggingHelperTest.java:246	Remove this and every subsequent useless "eq(...)" invocation; pass the values directly.
+CODE_SMELL	MINOR	java:S6068	services/alramz-api-starter/src/test/java/com/alramz/logging/LoggingHelperTest.java:250	Remove this and every subsequent useless "eq(...)" invocation; pass the values directly.
+CODE_SMELL	MINOR	java:S5853	services/alramz-api-starter/src/test/java/com/alramz/logging/LogMaskingUtilTest.java:24	Join these multiple assertions subject to one assertion chain.
+CODE_SMELL	MINOR	java:S5853	services/alramz-api-starter/src/test/java/com/alramz/logging/LogMaskingUtilTest.java:78	Join these multiple assertions subject to one assertion chain.
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:44	Use a static import for "mock".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:46	Use a static import for "mock".
+CODE_SMELL	MINOR	java:S5853	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:79	Join these multiple assertions subject to one assertion chain.
+CODE_SMELL	MAJOR	java:S108	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:101	Remove this block of code, fill it in, or add a comment explaining why it is empty.
+CODE_SMELL	MINOR	java:S5853	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:109	Join these multiple assertions subject to one assertion chain.
+CODE_SMELL	MAJOR	java:S9016	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:118	Extract this mock creation to a local variable.
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:119	Use a static import for "mock".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:121	Use a static import for "mock".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:134	Use a static import for "verify".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:135	Use a static import for "verify".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:136	Use a static import for "verify".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:137	Use a static import for "verify".
+CODE_SMELL	MAJOR	java:S108	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:143	Remove this block of code, fill it in, or add a comment explaining why it is empty.
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:145	Use a static import for "verify".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:146	Use a static import for "times".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:146	Use a static import for "verify".
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java:220	Remove these unused method parameters "arg1", "arg2".
+CODE_SMELL	MINOR	java:S8924	services/alramz-api-starter/src/test/java/com/alramz/scheduler/service/impl/JobScheduleManagerTest.java:242	Use a static import for "verify".
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImpl.java:10	Remove this unused method parameter "value".
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/service/impl/IBANValidationServiceImpl.java:10	Remove this unused method parameter "value".
+CODE_SMELL	MAJOR	java:S1172	services/alramz-api-starter/src/test/java/com/alramz/service/impl/PhoneValidationServiceImpl.java:10	Remove this unused method parameter "value".

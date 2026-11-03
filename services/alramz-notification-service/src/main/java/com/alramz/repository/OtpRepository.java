@@ -35,6 +35,8 @@ public class OtpRepository {
     public record OtpCandidate(long id, String mobileEmail, String otpHash, int validationAttempts) {
     }
 
+    private static final String SERVICE_NAME = "serviceName";
+
     private static final RowMapper<OtpConfig> CONFIG = (rs, rowNum) -> new OtpConfig(
             rs.getInt("message_id"),
             rs.getString("service_name"),
@@ -59,7 +61,7 @@ public class OtpRepository {
     }
 
     public Optional<OtpConfig> findConfig(final String serviceName) {
-        return jdbc.query(sql("otp.config.findByName"), new MapSqlParameterSource("serviceName", serviceName), CONFIG)
+        return jdbc.query(sql("otp.config.findByName"), new MapSqlParameterSource(SERVICE_NAME, serviceName), CONFIG)
                 .stream().findFirst();
     }
 
@@ -80,7 +82,7 @@ public class OtpRepository {
 
     public long insertOtp(final OtpRow row) {
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update(sql("otp.management.insert"), new MapSqlParameterSource("serviceName", row.serviceName())
+        jdbc.update(sql("otp.management.insert"), new MapSqlParameterSource(SERVICE_NAME, row.serviceName())
                 .addValue("mobileEmail", row.mobileEmail())
                 .addValue("otp", row.otpHash())
                 .addValue("created", row.created())
@@ -101,7 +103,7 @@ public class OtpRepository {
     /** Daily send counter +1, restarting at 1 when the row was last touched before dayStart. */
     public void upsertAttempt(final String serviceName, final String recipient, final LocalDateTime now,
                               final LocalDateTime dayStart) {
-        final MapSqlParameterSource params = new MapSqlParameterSource("serviceName", serviceName)
+        final MapSqlParameterSource params = new MapSqlParameterSource(SERVICE_NAME, serviceName)
                 .addValue("recipient", recipient)
                 .addValue("now", now)
                 .addValue("dayStart", dayStart);
@@ -130,7 +132,7 @@ public class OtpRepository {
     }
 
     private static MapSqlParameterSource recipients(final String serviceName, final Collection<String> recipients) {
-        return new MapSqlParameterSource("serviceName", serviceName).addValue("recipients", recipients);
+        return new MapSqlParameterSource(SERVICE_NAME, serviceName).addValue("recipients", recipients);
     }
 
     private String sql(final String key) {

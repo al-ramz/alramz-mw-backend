@@ -1,15 +1,12 @@
 package com.alramz.audit;
 
-import com.alramz.logging.config.LoggingProperties;
 import com.alramz.logging.util.MDCUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -155,7 +152,6 @@ public class ApiAuditAspect {
         Throwable current = e;
         int depth = 0;
         int maxDepth = 3;
-        int maxFrames = 5;
 
         while (current != null && depth < maxDepth) {
             if (depth > 0) {
@@ -166,23 +162,28 @@ public class ApiAuditAspect {
                 sb.append(": ").append(current.getMessage());
             }
 
-            StackTraceElement[] frames = current.getStackTrace();
-            if (frames != null && frames.length > 0) {
-                sb.append("\n  at ");
-                int limit = Math.min(maxFrames, frames.length);
-                for (int i = 0; i < limit; i++) {
-                    if (i > 0) sb.append("\n  at ");
-                    sb.append(frames[i]);
-                }
-                if (frames.length > maxFrames) {
-                    sb.append("\n  ... ").append(frames.length - maxFrames).append(" more");
-                }
-            }
+            appendFrames(sb, current.getStackTrace());
 
             current = current.getCause();
             depth++;
         }
 
         return sb.toString();
+    }
+
+    private static void appendFrames(StringBuilder sb, StackTraceElement[] frames) {
+        if (frames == null || frames.length == 0) {
+            return;
+        }
+        int maxFrames = 5;
+        sb.append("\n  at ");
+        int limit = Math.min(maxFrames, frames.length);
+        for (int i = 0; i < limit; i++) {
+            if (i > 0) sb.append("\n  at ");
+            sb.append(frames[i]);
+        }
+        if (frames.length > maxFrames) {
+            sb.append("\n  ... ").append(frames.length - maxFrames).append(" more");
+        }
     }
 }

@@ -3,7 +3,6 @@ package com.alramz.service.impl;
 import com.alramz.client.ETradeClient;
 import com.alramz.config.ETradeProperties;
 import com.alramz.config.ETradeTokenProvider;
-import com.alramz.config.ValidationDefinition;
 import com.alramz.config.ValidationDefinitionRegistry;
 import com.alramz.exception.ApplicationException;
 import com.alramz.exception.ExternalSystemException;
@@ -16,14 +15,12 @@ import com.alramz.model.ValidationResponse;
 import com.alramz.service.ValidationRequestMapper;
 import com.alramz.service.ValidationResponseMapper;
 import com.alramz.service.ValidationResponseMapperRegistry;
-import com.alramz.service.ValidationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
 
@@ -32,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.anyMap;
@@ -79,7 +75,7 @@ class ValidationServiceImplTest {
         definitionRegistry = new ValidationDefinitionRegistry(etradeProperties);
 
         validationService = new ValidationServiceImpl(
-                etradeTokenProvider, definitionRegistry, requestMapper, responseMapperRegistry, etradeClient, etradeProperties
+                etradeTokenProvider, definitionRegistry, requestMapper, responseMapperRegistry, etradeClient
         );
     }
 
@@ -170,6 +166,31 @@ class ValidationServiceImplTest {
         assertThatThrownBy(() -> validationService.validate(request))
                 .isInstanceOf(ApplicationException.class)
                 .hasFieldOrPropertyWithValue("field", "mobileNumber");
+    }
+
+    @Test
+    void validate_shouldRejectWhitespaceOnlyFieldWithTypeSpecificMessage() {
+        ValidationRequest request = new ValidationRequest()
+                .validationType(ValidationTypeEnum.TP_UUID_EXISTS)
+                .referenceNo("1")
+                .uuid("some-uuid")
+                .thirdParty("   ");
+
+        assertThatThrownBy(() -> validationService.validate(request))
+                .isInstanceOf(ApplicationException.class)
+                .hasMessage("thirdParty is required for TP_UUID_EXISTS validation")
+                .hasFieldOrPropertyWithValue("field", "thirdParty");
+    }
+
+    @Test
+    void validate_shouldReportNullTypeAsUnsupported() {
+        ValidationRequest request = new ValidationRequest()
+                .validationType(null)
+                .referenceNo("1");
+
+        assertThatThrownBy(() -> validationService.validate(request))
+                .isInstanceOf(ApplicationException.class)
+                .hasMessage("Unsupported validation type: null");
     }
 
     @Test

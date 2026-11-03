@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -100,6 +101,6 @@ class ResponseLoggingFilterTest {
         properties.getResponse().setEnabled(false);
         filter.doFilter(new MockHttpServletRequest("GET", "/api/x"), new MockHttpServletResponse(), (req, res) -> { });
 
-        verify(helper, org.mockito.Mockito.never()).logResponse(any(), any());
+        verify(helper, never()).logResponse(any(), any());
     }
 }

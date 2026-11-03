@@ -117,7 +117,7 @@ into `spec.md`:
     request / repo precedent / stated default, per the checklist's own three-part test. Everything
     else in this document is meant to be treated as *already resolved*, not re-asked.
 
-## 5. Handing off to `01_elicit` / `/sdlc`
+## 5. Handing off to `01_elicit` / `/alramz-sdlc`
 
 `01_elicit` does not currently look for `intake-extraction.md` on its own — it only reads what its
 own input hands it. Give it this document explicitly: either paste `intake-extraction.md`'s content

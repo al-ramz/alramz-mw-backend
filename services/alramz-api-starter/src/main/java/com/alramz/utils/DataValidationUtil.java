@@ -6,6 +6,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DataValidationUtil {
+
+    private DataValidationUtil() {
+        // static utility class
+    }
+
     public static Boolean isDateCurrentDate(Date date) {
         if (date == null) {
             return false;

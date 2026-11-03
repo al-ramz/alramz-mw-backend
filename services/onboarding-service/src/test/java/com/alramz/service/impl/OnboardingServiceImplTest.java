@@ -1,26 +1,22 @@
 package com.alramz.service.impl;
 
 import com.alramz.exception.ApplicationException;
-import com.alramz.exception.ExternalSystemException;
 import com.alramz.exception.TechnicalException;
 import com.alramz.model.OnboardingRequest;
 import com.alramz.model.OnboardingResponse;
 import com.alramz.repository.DfmOnboardingRepository;
 import com.alramz.service.DuplicateCheckService;
-import com.alramz.service.OnboardingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataAccessException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

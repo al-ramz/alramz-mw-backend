@@ -1,0 +1,12 @@
+CODE_SMELL	MAJOR	java:S1168	services/utility-service/src/main/java/com/alramz/finoux/FinouxClient.java:123	Return an empty map instead of null.
+CODE_SMELL	MAJOR	java:S6878	services/utility-service/src/main/java/com/alramz/service/impl/CommunityPostServiceImpl.java:33	Use the record pattern instead of this pattern match variable.
+CODE_SMELL	MAJOR	java:S6878	services/utility-service/src/main/java/com/alramz/service/impl/CommunityPostServiceImpl.java:34	Use the record pattern instead of this pattern match variable.
+CODE_SMELL	MAJOR	java:S6878	services/utility-service/src/main/java/com/alramz/service/impl/CommunityPostServiceImpl.java:38	Use the record pattern instead of this pattern match variable.
+CODE_SMELL	MINOR	java:S5838	services/utility-service/src/test/java/com/alramz/controllers/CommunityPostControllerTest.java:51	Use assertThat(actual).hasToString(expectedString) instead.
+CODE_SMELL	MINOR	java:S5838	services/utility-service/src/test/java/com/alramz/controllers/CommunityPostControllerTest.java:76	Use assertThat(actual).hasToString(expectedString) instead.
+CODE_SMELL	MINOR	java:S5838	services/utility-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java:145	Use assertThat(actual).hasToString(expectedString) instead.
+CODE_SMELL	MAJOR	java:S5778	services/utility-service/src/test/java/com/alramz/service/impl/CommunityPostServiceImplTest.java:56	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/utility-service/src/test/java/com/alramz/service/impl/CommunityPostServiceImplTest.java:64	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/utility-service/src/test/java/com/alramz/service/impl/CommunityPostServiceImplTest.java:94	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/utility-service/src/test/java/com/alramz/service/impl/CommunityPostServiceImplTest.java:104	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/utility-service/src/test/java/com/alramz/service/impl/CommunityPostServiceImplTest.java:114	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.

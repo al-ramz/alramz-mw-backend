@@ -1,6 +1,5 @@
 package com.alramz.jwt.annotation;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.*;
 

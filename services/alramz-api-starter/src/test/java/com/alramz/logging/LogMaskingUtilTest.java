@@ -21,10 +21,18 @@ class LogMaskingUtilTest {
     void masksSensitiveJsonValues() {
         String in = "{\"username\":\"bob\",\"password\":\"s3cr3t\",\"token\":\"abc\"}";
         String out = LogMaskingUtil.mask(in);
-        assertThat(out).contains("\"password\": \"********\"");
-        assertThat(out).contains("\"token\": \"********\"");
-        assertThat(out).contains("\"username\": \"bob\"");
-        assertThat(out).doesNotContain("s3cr3t");
+        assertThat(out)
+                .contains("\"password\": \"********\"", "\"token\": \"********\"", "\"username\": \"bob\"")
+                .doesNotContain("s3cr3t");
+    }
+
+    @Test
+    void masksSensitiveUnquotedValuesIncludingNegativeAndExponentNumbers() {
+        String out = LogMaskingUtil.mask("{\"token\":-1234,\"secret\":1.5e3,\"password\":true,\"amount\":-7}");
+        assertThat(out)
+                .contains("\"token\": \"********\"", "\"secret\": \"********\"", "\"password\": \"********\"",
+                        "\"amount\": -7")
+                .doesNotContain("1234", "1.5e3");
     }
 
     @Test
@@ -75,7 +83,6 @@ class LogMaskingUtilTest {
         LogMaskingUtil.configure(true, "[REDACTED]",
                 List.of("password"), List.of("\\b\\d{4}-\\d{4}-\\d{4}-\\d{4}\\b"));
         String out = LogMaskingUtil.mask("card 1234-5678-9012-3456 ok");
-        assertThat(out).contains("[REDACTED]");
-        assertThat(out).doesNotContain("1234-5678-9012-3456");
+        assertThat(out).contains("[REDACTED]").doesNotContain("1234-5678-9012-3456");
     }
 }

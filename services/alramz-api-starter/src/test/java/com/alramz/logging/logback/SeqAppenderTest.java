@@ -8,6 +8,7 @@ import com.alramz.logging.config.SeqLoggingConfig;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpServer;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -76,12 +78,14 @@ class SeqAppenderTest {
         return e;
     }
 
-    private static void await(BooleanSupplier condition) throws InterruptedException {
-        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
-        while (!condition.getAsBoolean() && System.nanoTime() < deadline) {
-            Thread.sleep(20);
-        }
-        assertThat(condition.getAsBoolean()).as("condition met within timeout").isTrue();
+    private static void await(BooleanSupplier condition) {
+        Awaitility.await().atMost(10, TimeUnit.SECONDS).pollInterval(Duration.ofMillis(20))
+                .until(condition::getAsBoolean);
+    }
+
+    /** Lets the background sender settle for a fixed time when there is no observable state to poll. */
+    private static void settle(long millis) {
+        Awaitility.await().pollDelay(Duration.ofMillis(millis)).until(() -> true);
     }
 
     @Test
@@ -166,7 +170,7 @@ class SeqAppenderTest {
     }
 
     @Test
-    void circuitBreakerOpensAfterFailuresAndBlocksFurtherSends() throws Exception {
+    void circuitBreakerOpensAfterFailuresAndBlocksFurtherSends() {
         statusToReturn.set(500);
         appender = enabledAppender();
         appender.setCircuitBreakerEnabled(true);
@@ -176,16 +180,17 @@ class SeqAppenderTest {
 
         appender.doAppend(event(Level.WARN, "first", null));
         await(() -> bodies.size() == 1);
-        Thread.sleep(300);
+        settle(300);
         appender.doAppend(event(Level.WARN, "second", null));
-        Thread.sleep(500);
+        Awaitility.await().during(Duration.ofMillis(500)).atMost(Duration.ofSeconds(2))
+                .until(() -> bodies.size() == 1);
 
         assertThat(bodies).hasSize(1);
         assertThat(bodies.get(0)).contains("first");
     }
 
     @Test
-    void halfOpenCircuitRecoversOnSuccess() throws Exception {
+    void halfOpenCircuitRecoversOnSuccess() {
         statusToReturn.set(503);
         appender = enabledAppender();
         appender.setCircuitBreakerEnabled(true);
@@ -196,7 +201,7 @@ class SeqAppenderTest {
         appender.doAppend(event(Level.INFO, "fails", null));
         await(() -> bodies.size() == 1);
         statusToReturn.set(200);
-        Thread.sleep(200);
+        settle(200);
         appender.doAppend(event(Level.INFO, "recovers", null));
         await(() -> bodies.size() == 2);
         appender.doAppend(event(Level.INFO, "closed-again", null));
@@ -206,7 +211,7 @@ class SeqAppenderTest {
     }
 
     @Test
-    void retriesWithBackoffOnFailureStatus() throws Exception {
+    void retriesWithBackoffOnFailureStatus() {
         statusToReturn.set(500);
         appender = enabledAppender();
         appender.setMaxRetries(1);
@@ -219,14 +224,14 @@ class SeqAppenderTest {
     }
 
     @Test
-    void unreachableEndpointIsSwallowedAndAppenderStops() throws Exception {
+    void unreachableEndpointIsSwallowedAndAppenderStops() {
         appender = enabledAppender();
         appender.setUrl("http://127.0.0.1:1");
         appender.setConnectTimeoutMs(200);
         appender.start();
 
         appender.doAppend(event(Level.INFO, "lost", null));
-        Thread.sleep(400);
+        settle(400);
         appender.stop();
 
         assertThat(appender.isStarted()).isFalse();

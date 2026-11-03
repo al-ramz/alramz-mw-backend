@@ -1,0 +1,1807 @@
+[
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+    "creationDate": "2026-11-02T09:18:56+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+            "msg": "Parameter \"method\"",
+            "textRange": {
+              "endLine": 36,
+              "endOffset": 53,
+              "startLine": 36,
+              "startOffset": 47
+            }
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+            "msg": "Parameter \"password\"",
+            "textRange": {
+              "endLine": 36,
+              "endOffset": 70,
+              "startLine": 36,
+              "startOffset": 62
+            }
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+            "msg": "Parameter \"body\"",
+            "textRange": {
+              "endLine": 36,
+              "endOffset": 83,
+              "startLine": 36,
+              "startOffset": 79
+            }
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+            "msg": "Parameter \"unused\"",
+            "textRange": {
+              "endLine": 36,
+              "endOffset": 98,
+              "startLine": 36,
+              "startOffset": 92
+            }
+          }
+        ]
+      }
+    ],
+    "hash": "d448a0681243f3c97c47201790712c5e",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyVCoF4k1D0H0ho9",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 36,
+    "message": "Remove these unused method parameters \"path\", \"method\", \"password\", \"body\", \"unused\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 36,
+      "endOffset": 38,
+      "startLine": 36,
+      "startOffset": 34
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+    "creationDate": "2026-11-02T09:18:56+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [],
+    "hash": "403a273c7b2351441ab983149f4b0657",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyVCoF4k1D0H0ho-",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 40,
+    "message": "Remove this unused method parameter \"clientSecret\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 40,
+      "endOffset": 60,
+      "startLine": 40,
+      "startOffset": 48
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/test/java/com/alramz/config/ETradeTokenProviderTest.java",
+    "creationDate": "2026-11-02T09:18:56+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "40eeb76b114ada27fae1665f66e34a95",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyY4oF4k1D0H0huK",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 45,
+    "message": "Remove this call to a deprecated method, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 45,
+      "endOffset": 62,
+      "startLine": 45,
+      "startOffset": 43
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/test/java/com/alramz/config/ETradeTokenProviderTest.java",
+    "creationDate": "2026-11-02T09:18:56+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "40eeb76b114ada27fae1665f66e34a95",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyY4oF4k1D0H0huL",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 45,
+    "message": "Remove this call to a deprecated class, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 45,
+      "endOffset": 86,
+      "startLine": 45,
+      "startOffset": 67
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "DISTINCT",
+    "cleanCodeAttributeCategory": "ADAPTABLE",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+            "msg": "Logging statement.",
+            "textRange": {
+              "endLine": 50,
+              "endOffset": 107,
+              "startLine": 50,
+              "startOffset": 12
+            }
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+            "msg": "Thrown exception.",
+            "textRange": {
+              "endLine": 51,
+              "endOffset": 19,
+              "startLine": 51,
+              "startOffset": 18
+            }
+          }
+        ]
+      }
+    ],
+    "hash": "56e529ead5536a0bb5a64bc200dcb250",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyWjoF4k1D0H0hrC",
+    "lastChangeAnalysisUuid": "bc4ff164-6722-4b6d-930c-2765af1931ed",
+    "lastChangeSource": "ANALYSIS",
+    "line": 49,
+    "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S2139",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "error-handling",
+      "logging"
+    ],
+    "textRange": {
+      "endLine": 49,
+      "endOffset": 38,
+      "startLine": 49,
+      "startOffset": 17
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "DISTINCT",
+    "cleanCodeAttributeCategory": "ADAPTABLE",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+            "msg": "Logging statement.",
+            "textRange": {
+              "endLine": 72,
+              "endOffset": 94,
+              "startLine": 72,
+              "startOffset": 12
+            }
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+            "msg": "Thrown exception.",
+            "textRange": {
+              "endLine": 73,
+              "endOffset": 19,
+              "startLine": 73,
+              "startOffset": 18
+            }
+          }
+        ]
+      }
+    ],
+    "hash": "56e529ead5536a0bb5a64bc200dcb250",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyWjoF4k1D0H0hrD",
+    "lastChangeAnalysisUuid": "bc4ff164-6722-4b6d-930c-2765af1931ed",
+    "lastChangeSource": "ANALYSIS",
+    "line": 71,
+    "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S2139",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "error-handling",
+      "logging"
+    ],
+    "textRange": {
+      "endLine": 71,
+      "endOffset": 38,
+      "startLine": 71,
+      "startOffset": 17
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "DISTINCT",
+    "cleanCodeAttributeCategory": "ADAPTABLE",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+            "msg": "Logging statement.",
+            "textRange": {
+              "endLine": 122,
+              "endOffset": 95,
+              "startLine": 122,
+              "startOffset": 12
+            }
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+            "msg": "Thrown exception.",
+            "textRange": {
+              "endLine": 123,
+              "endOffset": 19,
+              "startLine": 123,
+              "startOffset": 18
+            }
+          }
+        ]
+      }
+    ],
+    "hash": "56e529ead5536a0bb5a64bc200dcb250",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyWjoF4k1D0H0hrF",
+    "lastChangeAnalysisUuid": "bc4ff164-6722-4b6d-930c-2765af1931ed",
+    "lastChangeSource": "ANALYSIS",
+    "line": 121,
+    "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S2139",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "error-handling",
+      "logging"
+    ],
+    "textRange": {
+      "endLine": 121,
+      "endOffset": 38,
+      "startLine": 121,
+      "startOffset": 17
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CONVENTIONAL",
+    "cleanCodeAttributeCategory": "CONSISTENT",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/jwt/service/TokenProvider.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "impacts": [
+      {
+        "severity": "INFO",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyWuoF4k1D0H0hrR",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "message": "Use the \"java.time\" API for date and time.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S2143",
+    "severity": "INFO",
+    "status": "OPEN",
+    "tags": [
+      "java8",
+      "pitfall"
+    ],
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "FOCUSED",
+    "cleanCodeAttributeCategory": "ADAPTABLE",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/scheduler/model/ScheduleInfoBean.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "20min",
+    "effort": "20min",
+    "flows": [],
+    "hash": "bfad15c4b6fd095fad12f77323b8eb4f",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyV6oF4k1D0H0hqH",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 24,
+    "message": "Constructor has 9 parameters, which is greater than 7 authorized.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S107",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "brain-overload"
+    ],
+    "textRange": {
+      "endLine": 24,
+      "endOffset": 27,
+      "startLine": 24,
+      "startOffset": 11
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CONVENTIONAL",
+    "cleanCodeAttributeCategory": "CONSISTENT",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/main/java/com/alramz/utils/DataValidationUtil.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "impacts": [
+      {
+        "severity": "INFO",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyW5oF4k1D0H0hra",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "message": "Use the \"java.time\" API for date and time.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S2143",
+    "severity": "INFO",
+    "status": "OPEN",
+    "tags": [
+      "java8",
+      "pitfall"
+    ],
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [],
+    "hash": "54ed39bf764f66e35057cdfda864449a",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyVCoF4k1D0H0ho8",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 32,
+    "message": "Remove this unused method parameter \"endpoint\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 32,
+      "endOffset": 42,
+      "startLine": 32,
+      "startOffset": 34
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/client/AuditProbeClient.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [],
+    "hash": "103a4aea3820c07a48bfbfa5ddb4dc7f",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyUgoF4k1D0H0hn9",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 6,
+    "message": "Remove this unused method parameter \"endpoint\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 6,
+      "endOffset": 39,
+      "startLine": 6,
+      "startOffset": 31
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/controllers/AuditProbeController.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [],
+    "hash": "6516d0ff29f56795980b4822477621a8",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyVLoF4k1D0H0hpM",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 9,
+    "message": "Remove this unused method parameter \"body\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 9,
+      "endOffset": 36,
+      "startLine": 9,
+      "startOffset": 32
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java",
+            "msg": "Parameter \"arg2\"",
+            "textRange": {
+              "endLine": 221,
+              "endOffset": 50,
+              "startLine": 221,
+              "startOffset": 46
+            }
+          }
+        ]
+      }
+    ],
+    "hash": "11077dd9884840fd7a035ae167647b16",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyUvoF4k1D0H0hol",
+    "lastChangeAnalysisUuid": "bc4ff164-6722-4b6d-930c-2765af1931ed",
+    "lastChangeSource": "ANALYSIS",
+    "line": 221,
+    "message": "Remove these unused method parameters \"arg1\", \"arg2\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 221,
+      "endOffset": 40,
+      "startLine": 221,
+      "startOffset": 36
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImpl.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [],
+    "hash": "7b0609713040059c5cb9a9dc15a4ed7e",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyVHoF4k1D0H0hpJ",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 10,
+    "message": "Remove this unused method parameter \"value\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 10,
+      "endOffset": 49,
+      "startLine": 10,
+      "startOffset": 44
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/service/impl/IBANValidationServiceImpl.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [],
+    "hash": "48d0eb436a493a6286e71da0d33e631f",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyVJoF4k1D0H0hpL",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 10,
+    "message": "Remove this unused method parameter \"value\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 10,
+      "endOffset": 40,
+      "startLine": 10,
+      "startOffset": 35
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CLEAR",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/alramz-api-starter/src/test/java/com/alramz/service/impl/PhoneValidationServiceImpl.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "5min",
+    "effort": "5min",
+    "flows": [],
+    "hash": "48d0eb436a493a6286e71da0d33e631f",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyVIoF4k1D0H0hpK",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 10,
+    "message": "Remove this unused method parameter \"value\".",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1172",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "unused"
+    ],
+    "textRange": {
+      "endLine": 10,
+      "endOffset": 40,
+      "startLine": 10,
+      "startOffset": 35
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/config/ExternalETradeServiceConfig.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "18f6524998957ec6709b7a585d9bf8ae",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZXoF4k1D0H0hvA",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 43,
+    "message": "Remove this call to a deprecated method, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 43,
+      "endOffset": 66,
+      "startLine": 43,
+      "startOffset": 47
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/config/ExternalETradeServiceConfig.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "18f6524998957ec6709b7a585d9bf8ae",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZXoF4k1D0H0hvB",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 43,
+    "message": "Remove this call to a deprecated class, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 43,
+      "endOffset": 90,
+      "startLine": 43,
+      "startOffset": 71
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/config/ExternalIbanServiceConfig.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "54ea8df4c784945f64d073983b51581e",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZVoF4k1D0H0hu-",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 43,
+    "message": "Remove this call to a deprecated method, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 43,
+      "endOffset": 44,
+      "startLine": 43,
+      "startOffset": 25
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/config/ExternalIbanServiceConfig.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "54ea8df4c784945f64d073983b51581e",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZVoF4k1D0H0hu_",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 43,
+    "message": "Remove this call to a deprecated class, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 43,
+      "endOffset": 68,
+      "startLine": 43,
+      "startOffset": 49
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/config/ExternalVeriPhoneServiceConfig.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "54ea8df4c784945f64d073983b51581e",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZToF4k1D0H0hu8",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 43,
+    "message": "Remove this call to a deprecated method, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 43,
+      "endOffset": 44,
+      "startLine": 43,
+      "startOffset": 25
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/config/ExternalVeriPhoneServiceConfig.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "54ea8df4c784945f64d073983b51581e",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZToF4k1D0H0hu9",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 43,
+    "message": "Remove this call to a deprecated class, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 43,
+      "endOffset": 68,
+      "startLine": 43,
+      "startOffset": 49
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/config/WebClientConfig.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "7bccb276904bc3755a8eaa3af623a710",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZSoF4k1D0H0hu6",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 18,
+    "message": "Remove this call to a deprecated class, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 18,
+      "endOffset": 45,
+      "startLine": 18,
+      "startOffset": 26
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/config/WebClientConfig.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [],
+    "hash": "69e69f889071c8ceb71b613eca0bbb13",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZSoF4k1D0H0hu7",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 21,
+    "message": "Remove this call to a deprecated method, it has been marked for removal.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S5738",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "cert",
+      "cwe",
+      "obsolete"
+    ],
+    "textRange": {
+      "endLine": 21,
+      "endOffset": 84,
+      "startLine": 21,
+      "startOffset": 65
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CONVENTIONAL",
+    "cleanCodeAttributeCategory": "CONSISTENT",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "20min",
+    "effort": "20min",
+    "flows": [],
+    "hash": "b510a2aa2aa07365e898bd08084f61cd",
+    "impacts": [
+      {
+        "severity": "LOW",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZcoF4k1D0H0hvK",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 27,
+    "message": "Refactor your code to get this URI from a customizable parameter.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1075",
+    "severity": "MINOR",
+    "status": "OPEN",
+    "tags": [
+      "android",
+      "cert"
+    ],
+    "textRange": {
+      "endLine": 27,
+      "endOffset": 84,
+      "startLine": 27,
+      "startOffset": 50
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "CONVENTIONAL",
+    "cleanCodeAttributeCategory": "CONSISTENT",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "20min",
+    "effort": "20min",
+    "flows": [],
+    "hash": "b8828333a8c4056f40a8167a2d25df6f",
+    "impacts": [
+      {
+        "severity": "LOW",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyZcoF4k1D0H0hvL",
+    "lastChangeAnalysisUuid": "f4fdcb00-4121-4e44-beda-e5bb2a231f37",
+    "lastChangeSource": "ANALYSIS",
+    "line": 28,
+    "message": "Refactor your code to get this URI from a customizable parameter.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S1075",
+    "severity": "MINOR",
+    "status": "OPEN",
+    "tags": [
+      "android",
+      "cert"
+    ],
+    "textRange": {
+      "endLine": 28,
+      "endOffset": 74,
+      "startLine": 28,
+      "startOffset": 50
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  },
+  {
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "assignee": "gtalele@alramz.ae-rm7Il@microsoft",
+    "author": "gtalele@alramz.ae",
+    "cleanCodeAttribute": "DISTINCT",
+    "cleanCodeAttributeCategory": "ADAPTABLE",
+    "comments": [],
+    "component": "alramzit_alramz-mw-backend:services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java",
+    "creationDate": "2026-10-09T11:22:17+0000",
+    "debt": "15min",
+    "effort": "15min",
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java",
+            "msg": "Logging statement.",
+            "textRange": {
+              "endLine": 174,
+              "endOffset": 101,
+              "startLine": 174,
+              "startOffset": 12
+            }
+          }
+        ]
+      },
+      {
+        "locations": [
+          {
+            "component": "alramzit_alramz-mw-backend:services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java",
+            "msg": "Thrown exception.",
+            "textRange": {
+              "endLine": 175,
+              "endOffset": 19,
+              "startLine": 175,
+              "startOffset": 18
+            }
+          }
+        ]
+      }
+    ],
+    "hash": "a50e423de97896afb97123424a960664",
+    "impacts": [
+      {
+        "severity": "MEDIUM",
+        "softwareQuality": "MAINTAINABILITY"
+      }
+    ],
+    "internalTags": [],
+    "issueStatus": "OPEN",
+    "key": "AaGbpyXaoF4k1D0H0hsK",
+    "lastChangeAnalysisUuid": "686a05f3-48c2-41b5-9090-9ebe8add6975",
+    "lastChangeSource": "ANALYSIS",
+    "line": 173,
+    "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+    "organization": "alramzit",
+    "project": "alramzit_alramz-mw-backend",
+    "projectName": "alramz-mw-oss",
+    "rule": "java:S2139",
+    "severity": "MAJOR",
+    "status": "OPEN",
+    "tags": [
+      "error-handling",
+      "logging"
+    ],
+    "textRange": {
+      "endLine": 173,
+      "endOffset": 28,
+      "startLine": 173,
+      "startOffset": 17
+    },
+    "transitions": [
+      "accept",
+      "confirm",
+      "resolve",
+      "falsepositive",
+      "wontfix"
+    ],
+    "type": "CODE_SMELL",
+    "updateDate": "2026-11-02T09:43:19+0000"
+  }
+]

@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SqlQueriesManager {
 
+    private static final String SQL_FILE_PROPERTY = "sql.file";
+
     private static Properties props;
 
     private final Environment environment;
@@ -23,12 +25,12 @@ public class SqlQueriesManager {
     public String getSQLQueryFromConfig(String key) throws IOException {
         if (props == null) {
             if (log.isInfoEnabled()) {
-                log.info("Loading config from " + environment.getRequiredProperty("sql.file"));
+                log.info("Loading config from " + environment.getRequiredProperty(SQL_FILE_PROPERTY));
             }
             loadSQLQueriesFromFile();
             if (props == null) {
                 if (log.isErrorEnabled()) {
-                    log.error("Error: Loading allConfigs from " + environment.getRequiredProperty("sql.file")
+                    log.error("Error: Loading allConfigs from " + environment.getRequiredProperty(SQL_FILE_PROPERTY)
                     + " return null.");
                 }
                 return null;
@@ -38,41 +40,38 @@ public class SqlQueriesManager {
     }
 
     private synchronized void loadSQLQueriesFromFile() throws IOException {
-        try {
+        if (log.isInfoEnabled()) {
+            log.info("Initializing SQL Query Manager");
+        }
+
+        String sqlFiles = environment.getRequiredProperty(SQL_FILE_PROPERTY);
+        String[] filePaths = sqlFiles.split(",");
+
+        if (props == null) {
+            props = new Properties();
+        }
+
+        for (String sqlFile : filePaths) {
+            sqlFile = sqlFile.trim();
+            if (sqlFile.startsWith("classpath:")) {
+                sqlFile = sqlFile.substring("classpath:".length());
+            }
+
+            InputStream in = getClass().getClassLoader().getResourceAsStream(sqlFile);
+
+            if (in == null) {
+                log.warn("Warning: SQL file not found: {}", sqlFile);
+                continue;
+            }
+
+            props.loadFromXML(in);
             if (log.isInfoEnabled()) {
-                log.info("Initializing SQL Query Manager");
+                log.info("Loaded SQL config from: {}", sqlFile);
             }
+        }
 
-            String sqlFiles = environment.getRequiredProperty("sql.file");
-            String[] filePaths = sqlFiles.split(",");
-
-            if (props == null) {
-                props = new Properties();
-            }
-
-            for (String sqlFile : filePaths) {
-                sqlFile = sqlFile.trim();
-                if (sqlFile.startsWith("classpath:")) {
-                    sqlFile = sqlFile.substring("classpath:".length());
-                }
-
-                InputStream in = getClass().getClassLoader().getResourceAsStream(sqlFile);
-
-                if (in == null) {
-                    log.warn("Warning: SQL file not found: {}", sqlFile);
-                    continue;
-                }
-
-                props.loadFromXML(in);
-                if (log.isInfoEnabled()) {
-                    log.info("Loaded SQL config from: {}", sqlFile);
-                }
-            }
-
-            if (log.isInfoEnabled()) {
-                log.info("SQL Query Manager initialized with {} queries", props.size());
-            }
-        } finally {
+        if (log.isInfoEnabled()) {
+            log.info("SQL Query Manager initialized with {} queries", props.size());
         }
     }
 }

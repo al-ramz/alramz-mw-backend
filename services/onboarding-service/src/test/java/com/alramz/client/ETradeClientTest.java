@@ -1,6 +1,5 @@
 package com.alramz.client;
 
-import com.alramz.config.ETradeProperties;
 import com.alramz.config.JacksonConfig;
 import com.alramz.exception.ExternalSystemException;
 import com.alramz.model.ETradeResponse;
@@ -31,9 +30,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ETradeClientTest {
 
-    private static final ETradeProperties PROPS = new ETradeProperties(
-            "https://etrade.test", "client-id", "client-secret", null, "5s", 3000, "/token", Map.of());
-
     private final AtomicReference<ClientRequest> sentRequest = new AtomicReference<>();
 
     @BeforeEach
@@ -57,7 +53,6 @@ class ETradeClientTest {
                 CircuitBreaker.ofDefaults("etrade"),
                 Retry.of("etrade", RetryConfig.custom().maxAttempts(1).build()),
                 TimeLimiter.ofDefaults("etrade"),
-                PROPS,
                 new MockEnvironment(),
                 new JacksonConfig().objectMapper());
     }

@@ -142,7 +142,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<GenericResponse> response = handler.handleApplication(
                 new ApplicationException(ErrorCode.POST_DESC_INVALID, "too long"));
 
-        assertThat(response.getBody().getCorrelationId().toString()).isEqualTo("2afe4a42-44f7-4e12-aae7-df0e42d4d757");
+        assertThat(response.getBody().getCorrelationId()).hasToString("2afe4a42-44f7-4e12-aae7-df0e42d4d757");
     }
 
     private MethodArgumentNotValidException buildValidationException(String field, String message) {

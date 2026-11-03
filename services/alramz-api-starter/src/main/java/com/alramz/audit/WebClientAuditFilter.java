@@ -53,18 +53,18 @@ public class WebClientAuditFilter implements ExchangeFilterFunction {
                 : request;
         return next.exchange(sent)
                 .flatMap(response -> recordResponse(exchange, response))
-                .doOnError(error -> exchange.record(null, null, error.getMessage(), error.getClass().getName()))
-                .doOnCancel(() -> exchange.record(null, null, CANCELLED, null));
+                .doOnError(error -> exchange.recordOutcome(null, null, error.getMessage(), error.getClass().getName()))
+                .doOnCancel(() -> exchange.recordOutcome(null, null, CANCELLED, null));
     }
 
     private Mono<ClientResponse> recordResponse(Exchange exchange, ClientResponse response) {
         HttpStatusCode status = response.statusCode();
         if (!settings.isIncludeResponsePayload()
                 || !WebClientBodies.isTextual(response.headers().contentType().orElse(null))) {
-            exchange.record(status, null, null, null);
+            exchange.recordOutcome(status, null, null, null);
             return Mono.just(response);
         }
-        return WebClientBodies.readBody(response, body -> exchange.record(status, body, null, null));
+        return WebClientBodies.readBody(response, body -> exchange.recordOutcome(status, body, null, null));
     }
 
     /** One outgoing call; records itself exactly once, whichever of response, error or cancel arrives first. */
@@ -83,7 +83,7 @@ public class WebClientAuditFilter implements ExchangeFilterFunction {
         }
 
         /** {@code status} is null when no response arrived; then {@code cause} says why. */
-        void record(HttpStatusCode status, String responseBody, String cause, String causeClass) {
+        void recordOutcome(HttpStatusCode status, String responseBody, String cause, String causeClass) {
             if (!recorded.compareAndSet(false, true)) {
                 return;
             }

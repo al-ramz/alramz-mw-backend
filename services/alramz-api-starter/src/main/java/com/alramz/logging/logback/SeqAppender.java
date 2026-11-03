@@ -1,7 +1,6 @@
 package com.alramz.logging.logback;
 
 import com.alramz.logging.config.SeqLoggingConfig;
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
@@ -18,6 +17,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SeqAppender extends AppenderBase<ILoggingEvent> {
 
@@ -41,19 +41,19 @@ public class SeqAppender extends AppenderBase<ILoggingEvent> {
     private long circuitBreakerCooldownMs = SeqLoggingConfig.DEFAULT_COOLDOWN_MS;
 
     // Runtime state
-    private transient URI ingestUri;
-    private transient HttpClient httpClient;
-    private transient ObjectMapper objectMapper;
-    private transient java.util.concurrent.BlockingQueue<ILoggingEvent> queue;
+    private URI ingestUri;
+    private HttpClient httpClient;
+    private ObjectMapper objectMapper;
+    private java.util.concurrent.BlockingQueue<ILoggingEvent> queue;
 
     private enum CircuitState { CLOSED, OPEN, HALF_OPEN }
 
-    private transient volatile CircuitState circuitState = CircuitState.CLOSED;
-    private transient volatile int failureCount = 0;
-    private transient volatile long lastFailureTime = 0L;
+    private volatile CircuitState circuitState = CircuitState.CLOSED;
+    private final AtomicInteger failureCount = new AtomicInteger();
+    private volatile long lastFailureTime = 0L;
 
-    private transient Thread flushThread;
-    private transient volatile boolean running = false;
+    private Thread flushThread;
+    private volatile boolean running = false;
 
     @Override
     public void start() {
@@ -70,7 +70,7 @@ public class SeqAppender extends AppenderBase<ILoggingEvent> {
                 .build();
         this.running = true;
         this.circuitState = CircuitState.CLOSED;
-        this.failureCount = 0;
+        this.failureCount.set(0);
         this.lastFailureTime = 0L;
         this.flushThread = new Thread(this::flushLoop, "seq-flush-" + serviceName);
         this.flushThread.setDaemon(true);
@@ -163,7 +163,7 @@ public class SeqAppender extends AppenderBase<ILoggingEvent> {
             }
         }
 
-        if (payload.length() > 0) {
+        if (!payload.isEmpty()) {
             postWithRetry(payload.toString(), retryOnFailure);
         }
     }
@@ -195,7 +195,7 @@ public class SeqAppender extends AppenderBase<ILoggingEvent> {
         }
         if (circuitState != CircuitState.CLOSED) {
             circuitState = CircuitState.CLOSED;
-            failureCount = 0;
+            failureCount.set(0);
             lastFailureTime = 0L;
         }
     }
@@ -204,11 +204,11 @@ public class SeqAppender extends AppenderBase<ILoggingEvent> {
         if (!circuitBreakerEnabled) {
             return;
         }
-        failureCount++;
+        int failures = failureCount.incrementAndGet();
         lastFailureTime = System.currentTimeMillis();
-        if (failureCount >= circuitBreakerFailureThreshold) {
+        if (failures >= circuitBreakerFailureThreshold) {
             circuitState = CircuitState.OPEN;
-            auditLogger.warn("Seq circuit breaker opened after {} failures", failureCount);
+            auditLogger.warn("Seq circuit breaker opened after {} failures", failures);
         }
     }
 
@@ -220,7 +220,8 @@ public class SeqAppender extends AppenderBase<ILoggingEvent> {
         int attempt = 0;
         long backoff = SeqLoggingConfig.BASE_BACKOFF_MS;
 
-        while (attempt <= maxRetries) {
+        boolean keepTrying = attempt <= maxRetries;
+        while (keepTrying) {
             try {
                 HttpRequest request = buildHttpRequest(payload);
                 HttpResponse<Void> response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
@@ -230,25 +231,30 @@ public class SeqAppender extends AppenderBase<ILoggingEvent> {
                     return;
                 }
                 auditLogger.warn("Seq ingestion returned status {} on attempt {}", response.statusCode(), attempt + 1);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                auditLogger.warn("Seq ingestion interrupted on attempt {}", attempt + 1);
+                return;
             } catch (Exception e) {
                 auditLogger.warn("Seq ingestion failed on attempt {}: {}", attempt + 1, e.getMessage());
             }
 
             attempt++;
-            if (attempt > maxRetries || !retryOnFailure) {
-                break;
-            }
-
-            try {
-                Thread.sleep(backoff);
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-                break;
-            }
-
+            keepTrying = attempt <= maxRetries && retryOnFailure && sleepBackoff(backoff);
             backoff = Math.min(backoff * 2, SeqLoggingConfig.MAX_BACKOFF_MS);
         }
         recordFailure();
+    }
+
+    /** Waits before the next retry; returns {@code false} when interrupted (the interrupt flag is restored). */
+    private static boolean sleepBackoff(long backoff) {
+        try {
+            Thread.sleep(backoff);
+            return true;
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
     }
 
     private boolean isSuccessResponse(int statusCode) {
@@ -330,7 +336,7 @@ public class SeqAppender extends AppenderBase<ILoggingEvent> {
                     stackTrace.append("  at ").append(proxy.getStackTraceElement()).append('\n');
                 }
             }
-            if (stackTrace.length() > 0) {
+            if (!stackTrace.isEmpty()) {
                 stackTrace.setLength(stackTrace.length() - 1);
                 node.put("exceptionStackTrace", stackTrace.toString());
             }

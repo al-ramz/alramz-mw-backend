@@ -98,7 +98,8 @@ class WebClientLoggingFilterTest {
         assertThat(tags.get("http.request.body")).contains("\"eid\": \"784-1234\"").doesNotContain("req-secret");
         assertThat(tags.get("http.response.body")).contains("\"exists\": true").doesNotContain("resp-secret");
         assertThat(tags.get("http.request.header.authorization")).doesNotContain("abc.def.ghi");
-        assertThat(tags.get("http.request.header.content-type")).isEqualTo(MediaType.APPLICATION_JSON_VALUE);
-        assertThat(tags.get("http.response.header.content-type")).isEqualTo(MediaType.APPLICATION_JSON_VALUE);
+        assertThat(tags)
+                .containsEntry("http.request.header.content-type", MediaType.APPLICATION_JSON_VALUE)
+                .containsEntry("http.response.header.content-type", MediaType.APPLICATION_JSON_VALUE);
     }
 }

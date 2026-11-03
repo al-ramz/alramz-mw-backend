@@ -82,6 +82,7 @@ public enum ErrorCode {
     private static final String UNAVAILABLE_MSG = "MMF data source unavailable";
     private static final String DATES_INCOMPLETE_MSG = "Provide both fromDate and toDate, or neither";
     private static final String DATE_INVALID_MSG = "fromDate must be an ISO-8601 date (yyyy-MM-dd)";
+    private static final String CLIENT_ID = "clientId";
     private static final String RANGE_INVALID_MSG = "Date range must not exceed 93 days and fromDate must not be after toDate";
 
     private record Rule(ErrorCode code, String message) { }
@@ -94,11 +95,11 @@ public enum ErrorCode {
         rule(OP_ACCOUNT, "book", Kind.ANY, BOOK_INVALID, null);
         backend(OP_ACCOUNT, ACCOUNT_INTERNAL_ERROR, ACCOUNT_UNAVAILABLE);
 
-        rule(OP_SWEEP_INS, "fromDate", Kind.ANY, SWEEP_IN_DATE_INVALID, "fromDate must be an ISO-8601 date (yyyy-MM-dd)");
+        rule(OP_SWEEP_INS, "fromDate", Kind.ANY, SWEEP_IN_DATE_INVALID, DATE_INVALID_MSG);
         rule(OP_SWEEP_INS, "toDate", Kind.ANY, SWEEP_IN_DATE_INVALID, "toDate must be an ISO-8601 date (yyyy-MM-dd)");
         backend(OP_SWEEP_INS, SWEEP_IN_INTERNAL_ERROR, SWEEP_IN_UNAVAILABLE);
 
-        rule(OP_SWEEP_OUTS, "fromDate", Kind.ANY, SWEEP_OUT_DATE_INVALID, "fromDate must be an ISO-8601 date (yyyy-MM-dd)");
+        rule(OP_SWEEP_OUTS, "fromDate", Kind.ANY, SWEEP_OUT_DATE_INVALID, DATE_INVALID_MSG);
         rule(OP_SWEEP_OUTS, "toDate", Kind.ANY, SWEEP_OUT_DATE_INVALID, "toDate must be an ISO-8601 date (yyyy-MM-dd)");
         backend(OP_SWEEP_OUTS, SWEEP_OUT_INTERNAL_ERROR, SWEEP_OUT_UNAVAILABLE);
 
@@ -116,9 +117,9 @@ public enum ErrorCode {
         rule(OP_PROFIT, "source", Kind.ANY, PROFIT_SOURCE_INVALID, null);
         backend(OP_PROFIT, PROFIT_INTERNAL_ERROR, PROFIT_UNAVAILABLE);
 
-        rule(OP_CASH, "clientId", Kind.MISSING, CASH_CLIENT_ID_MISSING, null);
-        rule(OP_CASH, "clientId", Kind.SIZE, CASH_CLIENT_ID_TOO_MANY, null);
-        rule(OP_CASH, "clientId", Kind.ANY, CASH_CLIENT_ID_INVALID, null);
+        rule(OP_CASH, CLIENT_ID, Kind.MISSING, CASH_CLIENT_ID_MISSING, null);
+        rule(OP_CASH, CLIENT_ID, Kind.SIZE, CASH_CLIENT_ID_TOO_MANY, null);
+        rule(OP_CASH, CLIENT_ID, Kind.ANY, CASH_CLIENT_ID_INVALID, null);
         backend(OP_CASH, CASH_INTERNAL_ERROR, CASH_UNAVAILABLE);
 
         rule(OP_POSITIONS, "asOfDate", Kind.ANY, POSITIONS_AS_OF_DATE_INVALID, null);

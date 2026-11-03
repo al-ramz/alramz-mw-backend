@@ -1,6 +1,5 @@
 package com.alramz.scheduler.job;
 
-import com.alramz.config.CompanyRedisProperties;
 import com.alramz.service.RedisCacheService;
 import com.alramz.service.SchedulerLockService;
 import org.slf4j.Logger;
@@ -17,14 +16,11 @@ public class CacheReloadScheduledJob implements Schedulable {
 
     private static final Logger log = LoggerFactory.getLogger(CacheReloadScheduledJob.class);
     private final RedisCacheService redisCacheService;
-    private final CompanyRedisProperties companyRedisProperties;
     private final SchedulerLockService schedulerLockService;
 
     public CacheReloadScheduledJob(RedisCacheService redisCacheService,
-                                   CompanyRedisProperties companyRedisProperties,
                                    SchedulerLockService schedulerLockService) {
         this.redisCacheService = redisCacheService;
-        this.companyRedisProperties = companyRedisProperties;
         this.schedulerLockService = schedulerLockService;
     }
 

@@ -7,13 +7,10 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.security.GeneralSecurityException;
 
 public class PWProtector {
 
-    private static final Logger logger = LoggerFactory.getLogger(PWProtector.class);
     private static final String ALGORITHM = "AES/GCM/NoPadding";
     private static final int GCM_TAG_LENGTH = 128;
     private static final int GCM_IV_LENGTH = 12;

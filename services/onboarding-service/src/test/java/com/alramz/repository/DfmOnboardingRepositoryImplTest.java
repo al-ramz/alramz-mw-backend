@@ -121,7 +121,9 @@ class DfmOnboardingRepositoryImplTest {
                 new DfmOnboardingRepositoryImpl(jdbcTemplate, new JacksonConfig().objectMapper(), sqlQueriesManager);
         when(sqlQueriesManager.getSQLQueryFromConfig(anyString())).thenThrow(new IOException("missing file"));
 
-        assertThatThrownBy(() -> repository.insert(new OnboardingRequest(), "MEMBER-REF-1"))
+        OnboardingRequest input = new OnboardingRequest();
+
+        assertThatThrownBy(() -> repository.insert(input, "MEMBER-REF-1"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Failed to load onboarding insert query")
                 .hasCauseInstanceOf(IOException.class);

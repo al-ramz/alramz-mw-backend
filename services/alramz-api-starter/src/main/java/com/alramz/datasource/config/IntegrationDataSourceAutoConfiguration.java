@@ -23,10 +23,12 @@ import javax.sql.DataSource;
 @EnableConfigurationProperties(DatasourceProperties.class)
 public class IntegrationDataSourceAutoConfiguration extends AbstractDataSourceAutoConfiguration {
 
+    private static final String DB_NAME = "integration";
+
     @Bean(name = "integrationDataSource", destroyMethod = "close")
     public DataSource integrationDataSource(DatasourceProperties properties, PWProtector pwProtector, ObjectProvider<TracingQueryExecutionListener> tracingListenerProvider) {
-        HikariDataSource hikariDataSource = createHikariDataSource(properties.getIntegration(), pwProtector, "integration");
-        return wrapWithProxy(hikariDataSource, properties.getIntegration().getSqlLogging(), "integration", tracingListenerProvider); // NOPMD LawOfDemeter
+        HikariDataSource hikariDataSource = createHikariDataSource(properties.getIntegration(), pwProtector, DB_NAME);
+        return wrapWithProxy(hikariDataSource, properties.getIntegration().getSqlLogging(), DB_NAME, tracingListenerProvider); // NOPMD LawOfDemeter
     }
 
     @Bean(name = "integrationJdbcTemplate")
@@ -47,12 +49,12 @@ public class IntegrationDataSourceAutoConfiguration extends AbstractDataSourceAu
     @Bean(name = "integrationHealthIndicator")
     public PoolHealthIndicator integrationHealthIndicator(@Qualifier("integrationDataSource") DataSource dataSource) {
         HikariDataSource raw = unwrapHikariDataSource(dataSource);
-        return new PoolHealthIndicator(raw, "integration");
+        return new PoolHealthIndicator(raw, DB_NAME);
     }
 
     @Override
     protected String getDbName() {
-        return "integration";
+        return DB_NAME;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class IntegrationDataSourceAutoConfiguration extends AbstractDataSourceAu
 
     @Override
     protected String getDefaultDriverClassName(String dbName) {
-        if ("integration".equals(dbName)) {
+        if (DB_NAME.equals(dbName)) {
             return "oracle.jdbc.OracleDriver";
         }
         return null;

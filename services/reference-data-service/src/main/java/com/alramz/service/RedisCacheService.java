@@ -13,16 +13,20 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 public class RedisCacheService {
 
     private static final Logger log = LoggerFactory.getLogger(RedisCacheService.class);
+    private static final Pattern TABLE_NAME = Pattern.compile("[A-Za-z_]\\w*+(?:\\.[A-Za-z_]\\w*+)?");
     private static final String INSTANCE_ID = UUID.randomUUID().toString();
+    private static final String MAPPING_NAME = "mappingName";
 
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
@@ -59,16 +63,12 @@ public class RedisCacheService {
         return loadFromDatabaseAndRepopulate(mappingName, mapping, "READ");
     }
 
-    public List<Map<String, Object>> getEntry(String mappingName, String key) {
-        return getAllEntries(mappingName);
-    }
-
     public String flushCache(String mappingName) {
         CompanyRedisProperties.Cache.CacheMapping mapping = resolveMapping(mappingName);
         String cacheKey = mapping.getCacheKey();
 
         try {
-            Boolean deleted = redisTemplate.delete(cacheKey);
+            redisTemplate.delete(cacheKey);
             cacheAuditService.logAuditAsync(mappingName, cacheKey, "FLUSH", "API", "Cache flushed via API");
             return "Cache flushed successfully";
         } catch (Exception e) {
@@ -91,20 +91,7 @@ public class RedisCacheService {
             List<Map<String, Object>> settings = loadAllFromDatabase(mappingName);
             String json = serializeList(settings);
 
-            String stagingKey = cacheKey + ":staging:" + System.currentTimeMillis();
-
-            try {
-                Duration ttl = parseTtl(mapping.getTtl());
-                if (ttl != null && !ttl.isZero() && !ttl.isNegative()) {
-                    redisTemplate.opsForValue().set(stagingKey, json, ttl);
-                } else {
-                    redisTemplate.opsForValue().set(stagingKey, json);
-                }
-                redisTemplate.rename(stagingKey, cacheKey);
-            } catch (Exception e) {
-                redisTemplate.delete(stagingKey);
-                throw e;
-            }
+            writeViaStagingKey(cacheKey, json, mapping.getTtl());
 
             releaseLock(mappingName, "COMPLETED");
             cacheAuditService.logAuditAsync(mappingName, cacheKey, "RELOAD", "API",
@@ -125,7 +112,6 @@ public class RedisCacheService {
         boolean redisAvailable = isRedisAvailable();
         boolean exists = false;
         Long entryCount = 0L;
-        LocalDateTime lastReloaded = null;
         Long cacheSizeBytes = null;
 
         if (redisAvailable) {
@@ -169,7 +155,7 @@ public class RedisCacheService {
                 "databaseReachable", dbAvailable,
                 "redisReachable", redisAvailable,
                 "overallStatus", overallStatus,
-                "timestamp", LocalDateTime.now().toString(),
+                "timestamp", LocalDateTime.now(ZoneId.systemDefault()).toString(),
                 "details", details
         );
     }
@@ -181,18 +167,7 @@ public class RedisCacheService {
             String json = serializeList(settings);
             String cacheKey = mapping.getCacheKey();
 
-            try {
-                Duration ttl = parseTtl(mapping.getTtl());
-                if (ttl != null && !ttl.isZero() && !ttl.isNegative()) {
-                    redisTemplate.opsForValue().set(cacheKey, json, ttl);
-                } else {
-                    redisTemplate.opsForValue().set(cacheKey, json);
-                }
-                cacheAuditService.logAuditAsync(mappingName, cacheKey, "EVICTED", triggerSource,
-                        "Auto-repopulated from DB after miss");
-            } catch (Exception e) {
-                log.warn("Failed to repopulate cache for key {}: {}", cacheKey, e.getMessage());
-            }
+            repopulateCache(mappingName, cacheKey, json, mapping.getTtl(), triggerSource);
 
             return settings;
         } catch (Exception e) {
@@ -201,9 +176,46 @@ public class RedisCacheService {
         }
     }
 
+    /** Writes to a staging key, then atomically renames it over the live key; the staging key is removed on failure. */
+    private void writeViaStagingKey(String cacheKey, String json, String ttlValue) {
+        String stagingKey = cacheKey + ":staging:" + System.currentTimeMillis();
+        try {
+            writeWithTtl(stagingKey, json, ttlValue);
+            redisTemplate.rename(stagingKey, cacheKey);
+        } catch (RuntimeException e) {
+            redisTemplate.delete(stagingKey);
+            throw e;
+        }
+    }
+
+    /** Best-effort cache repopulation after a miss: a Redis failure is logged, never propagated. */
+    private void repopulateCache(String mappingName, String cacheKey, String json, String ttlValue, String triggerSource) {
+        try {
+            writeWithTtl(cacheKey, json, ttlValue);
+            cacheAuditService.logAuditAsync(mappingName, cacheKey, "EVICTED", triggerSource,
+                    "Auto-repopulated from DB after miss");
+        } catch (Exception e) {
+            log.warn("Failed to repopulate cache for key {}: {}", cacheKey, e.getMessage());
+        }
+    }
+
+    private void writeWithTtl(String key, String json, String ttlValue) {
+        Duration ttl = parseTtl(ttlValue);
+        if (ttl != null && !ttl.isZero() && !ttl.isNegative()) {
+            redisTemplate.opsForValue().set(key, json, ttl);
+        } else {
+            redisTemplate.opsForValue().set(key, json);
+        }
+    }
+
     private List<Map<String, Object>> loadAllFromDatabase(String mappingName) {
         CompanyRedisProperties.Cache.CacheMapping mapping = resolveMapping(mappingName);
         String tableName = mapping.getTable();
+        // Identifiers can't be bound as parameters; the name comes from config, and is still checked to be a plain
+        // [schema.]table identifier so a bad config value can never inject SQL.
+        if (tableName == null || !TABLE_NAME.matcher(tableName).matches()) {
+            throw new IllegalStateException("Invalid table name for cache mapping " + mappingName + ": " + tableName);
+        }
         String sql = "SELECT * FROM " + tableName;
         return middlewareNamedParameterJdbcTemplate.query(sql, (rs, rowNum) -> {
             Map<String, Object> row = new LinkedHashMap<>();
@@ -234,9 +246,9 @@ public class RedisCacheService {
                 "WHERE application_workflow_locks.expires_at < NOW() AND application_workflow_locks.status = 'IN_PROGRESS'";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("mappingName", mappingName);
+        params.addValue(MAPPING_NAME, mappingName);
         params.addValue("lockedBy", INSTANCE_ID);
-        params.addValue("expiresAt", LocalDateTime.now().plus(leaseDuration));
+        params.addValue("expiresAt", LocalDateTime.now(ZoneId.systemDefault()).plus(leaseDuration));
 
         try {
             int updated = middlewareNamedParameterJdbcTemplate.update(sql, params);
@@ -252,7 +264,7 @@ public class RedisCacheService {
                 "WHERE mapping_name = :mappingName AND locked_by = :lockedBy";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("mappingName", mappingName);
+        params.addValue(MAPPING_NAME, mappingName);
         params.addValue("lockedBy", INSTANCE_ID);
         params.addValue("status", status);
 
@@ -267,7 +279,7 @@ public class RedisCacheService {
         String sql = "DELETE FROM application_workflow_locks WHERE mapping_name = :mappingName AND expires_at < NOW()";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("mappingName", mappingName);
+        params.addValue(MAPPING_NAME, mappingName);
 
         try {
             middlewareNamedParameterJdbcTemplate.update(sql, params);

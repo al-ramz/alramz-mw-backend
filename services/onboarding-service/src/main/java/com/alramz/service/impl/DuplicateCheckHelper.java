@@ -16,6 +16,8 @@ import java.util.Map;
 @Service
 public class DuplicateCheckHelper {
 
+    private static final String REFERENCE_NO_KEY = "Reference_No";
+
     private final ETradeTokenProvider etradeTokenProvider;
     private final ETradeClient etradeClient;
     private final ObjectProvider<NinTradingNumberValidationService> ninTradingNumberValidationServiceProvider;
@@ -48,7 +50,7 @@ public class DuplicateCheckHelper {
             "/IntegrationAPI/IntegrationWServices/IfEidExists",
             "POST",
             Map.of(
-                "Reference_No", "1",
+                REFERENCE_NO_KEY, "1",
                 "eid_number", eid
             )
         );
@@ -60,7 +62,7 @@ public class DuplicateCheckHelper {
             "/IntegrationAPI/IntegrationWServices/IfEmailExists",
             "POST",
             Map.of(
-                "Reference_No", "1",
+                REFERENCE_NO_KEY, "1",
                 "emailAddress", email
             )
         );
@@ -72,7 +74,7 @@ public class DuplicateCheckHelper {
             "/IntegrationAPI/IntegrationWServices/IfPassportExists",
             "POST",
             Map.of(
-                "Reference_No", "1",
+                REFERENCE_NO_KEY, "1",
                 "pp_number", passport
             )
         );

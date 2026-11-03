@@ -1,11 +1,9 @@
 package com.alramz.datasource;
 
-import com.alramz.datasource.config.DatasourceProperties;
 import com.alramz.datasource.config.EncryptionAutoConfiguration;
 import com.alramz.datasource.config.MiddlewareDataSourceAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 

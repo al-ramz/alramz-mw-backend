@@ -17,7 +17,6 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import org.springframework.http.HttpStatus;
 
 /**
  * Logs outgoing HTTP responses (status, duration, response size and optional
@@ -30,7 +29,7 @@ import org.springframework.http.HttpStatus;
 @Order(Ordered.HIGHEST_PRECEDENCE + 10)
 public class ResponseLoggingFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResponseLoggingFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(ResponseLoggingFilter.class);
 
     private final LoggingProperties properties;
     private final LoggingHelper loggingHelper;
@@ -47,13 +46,11 @@ public class ResponseLoggingFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, cachingResponse);
         } catch (Exception e) {
-            logger.error("Exception during response processing for {} {}", request.getMethod(), request.getRequestURI(), e);
-            if (e instanceof IOException ioe) {
-                throw ioe;
-            } else if (e instanceof ServletException se) {
-                throw se;
-            } else {
-                throw new ServletException(e);
+            log.error("Exception during response processing for {} {}", request.getMethod(), request.getRequestURI(), e);
+            switch (e) {
+                case IOException ioe -> throw ioe;
+                case ServletException se -> throw se;
+                default -> throw new ServletException(e);
             }
         } finally {
             long startNanos = getStartNanos(request);
@@ -74,7 +71,7 @@ public class ResponseLoggingFilter extends OncePerRequestFilter {
                     durationMs,
                     size,
                     payload);
-            loggingHelper.logResponse(logger, responseLog);
+            loggingHelper.logResponse(log, responseLog);
             loggingHelper.tagResponseOnCurrentSpan(cachingResponse, payload);
             cachingResponse.copyBodyToResponse();
         }
@@ -82,7 +79,7 @@ public class ResponseLoggingFilter extends OncePerRequestFilter {
 
     private long getStartNanos(HttpServletRequest request) {
         Object value = request.getAttribute(LoggingConstants.START_TIME_ATTRIBUTE);
-        return value instanceof Long ? (Long) value : 0L;
+        return value instanceof Long nanos ? nanos : 0L;
     }
 
     private String truncate(String value, int maxLength) {

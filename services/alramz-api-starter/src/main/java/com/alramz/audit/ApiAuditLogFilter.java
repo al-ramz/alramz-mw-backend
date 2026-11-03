@@ -8,8 +8,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
@@ -18,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
-import org.springframework.web.util.WebUtils;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -26,8 +23,8 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ApiAuditLogFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiAuditLogFilter.class);
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
+    private static final String FAILURE = "FAILURE";
 
     private final LoggingProperties properties;
     private final ApiAuditLogService auditLogService;
@@ -78,7 +75,7 @@ public class ApiAuditLogFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(wrappedRequest, wrappedResponse);
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
-            status = "FAILURE";
+            status = FAILURE;
             exceptionClass = e.getClass().getName();
             exceptionCause = e.getMessage();
             throw e;
@@ -86,10 +83,10 @@ public class ApiAuditLogFilter extends OncePerRequestFilter {
             long durationMs = System.currentTimeMillis() - startTime;
 
             if (response.getStatus() >= 400) {
-                status = "FAILURE";
+                status = FAILURE;
             }
 
-            if (status.equals("FAILURE") && exceptionCause == null) {
+            if (FAILURE.equals(status) && exceptionCause == null) {
                 try {
                     String responseBody = new String(wrappedResponse.getContentAsByteArray(), response.getCharacterEncoding());
                     exceptionCause = extractErrorFromResponse(responseBody);
@@ -102,17 +99,13 @@ public class ApiAuditLogFilter extends OncePerRequestFilter {
             UUID correlationId = MDCUtil.getCorrelationIdAsUuid();
 
             Object handler = request.getAttribute(org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE);
-            String controllerName;
-            if (handler instanceof HandlerMethod handlerMethod) {
+            String controllerName = switch (handler) {
                 // What Spring MVC stores for every @RestController endpoint.
-                controllerName = handlerMethod.getBeanType().getSimpleName() + "." + handlerMethod.getMethod().getName();
-            } else if (handler instanceof Class<?> clazz) {
-                controllerName = clazz.getSimpleName();
-            } else if (handler instanceof String beanName) {
-                controllerName = beanName;
-            } else {
-                controllerName = "unknown";
-            }
+                case HandlerMethod handlerMethod -> handlerMethod.getBeanType().getSimpleName() + "." + handlerMethod.getMethod().getName();
+                case Class<?> clazz -> clazz.getSimpleName();
+                case String beanName -> beanName;
+                case null, default -> "unknown";
+            };
 
             String endpoint = request.getRequestURI();
             String method = request.getMethod();

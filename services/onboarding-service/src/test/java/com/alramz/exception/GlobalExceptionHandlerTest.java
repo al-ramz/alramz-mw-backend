@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 import java.util.List;
@@ -26,8 +25,8 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleValidation_shouldReturnBadRequest() {
-        MethodArgumentNotValidException ex = org.mockito.Mockito.mock(MethodArgumentNotValidException.class);
-        org.springframework.validation.BindingResult bindingResult = org.mockito.Mockito.mock(org.springframework.validation.BindingResult.class);
+        MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
+        org.springframework.validation.BindingResult bindingResult = mock(org.springframework.validation.BindingResult.class);
         org.springframework.validation.FieldError fieldError = new org.springframework.validation.FieldError("field", "field", "default message");
         
         when(ex.getBindingResult()).thenReturn(bindingResult);

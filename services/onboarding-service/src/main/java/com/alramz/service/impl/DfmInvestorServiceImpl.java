@@ -56,10 +56,10 @@ public class DfmInvestorServiceImpl implements DfmInvestorService {
     public DfmInvestorRegistration register(DfmInvestorRegistrationRequest request) {
         validate(request);
         return switch (client.onboard(request)) {
-            case DfmOnboardingOutcome.Success success -> toRegistration(success.body(), request.getRequestId());
+            case DfmOnboardingOutcome.Success(var body) -> toRegistration(body, request.getRequestId());
             case DfmOnboardingOutcome.Rejected rejected -> throw rejection(rejected);
-            case DfmOnboardingOutcome.Unavailable unavailable -> throw new DfmUnavailableException(
-                    unavailableCode(unavailable.reason()), "DFM unavailable: " + unavailable.reason(), unavailable.cause());
+            case DfmOnboardingOutcome.Unavailable(var reason, var cause) -> throw new DfmUnavailableException(
+                    unavailableCode(reason), "DFM unavailable: " + reason, cause);
         };
     }
 

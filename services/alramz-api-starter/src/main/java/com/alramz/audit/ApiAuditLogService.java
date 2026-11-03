@@ -55,7 +55,7 @@ public class ApiAuditLogService {
             String responseJson = toJson(maskedResponse);
 
             // Build parameters map with initial capacity hint
-            Map<String, Object> params = new HashMap<>(16);
+            Map<String, Object> params = HashMap.newHashMap(16);
             params.put("correlationId", entry.correlationId());
             params.put("direction", entry.direction());
             params.put("serviceName", entry.serviceName());

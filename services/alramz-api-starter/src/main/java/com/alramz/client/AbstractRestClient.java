@@ -34,19 +34,22 @@ public abstract class AbstractRestClient {
     private final Environment environment;
     private final ObjectMapper objectMapper;
 
-    protected <RQ, RS> Mono<RS> call(HttpMethod method, String uri, Class<RQ> requestType, RQ request, Class<RS> responseType) {
-        return execute(method, uri, requestType, request, responseType, null, null, false);
+    protected <T, R> Mono<R> call(HttpMethod method, String uri, Class<T> requestType, T request, Class<R> responseType) {
+        return execute(method, uri, requestType, request, responseType, new CallOptions(null, null, false));
     }
 
-    protected <RQ, RS> Mono<RS> call(HttpMethod method, String uri, Class<RQ> requestType, RQ request, Class<RS> responseType, HttpHeaders headers, MultiValueMap<String, String> queryParams) {
-        return execute(method, uri, requestType, request, responseType, headers, queryParams, false);
+    protected <T, R> Mono<R> call(HttpMethod method, String uri, Class<T> requestType, T request, Class<R> responseType, HttpHeaders headers, MultiValueMap<String, String> queryParams) {
+        return execute(method, uri, requestType, request, responseType, new CallOptions(headers, queryParams, false));
     }
 
-    protected <RQ, RS> Mono<RS> call(HttpMethod method, String uri, Class<RQ> requestType, RQ request, Class<RS> responseType, boolean handleBadRequest) {
-        return execute(method, uri, requestType, request, responseType, null, null, handleBadRequest);
+    protected <T, R> Mono<R> call(HttpMethod method, String uri, Class<T> requestType, T request, Class<R> responseType, boolean handleBadRequest) {
+        return execute(method, uri, requestType, request, responseType, new CallOptions(null, null, handleBadRequest));
     }
 
-    private <RQ, RS> Mono<RS> execute(HttpMethod method, String uri, Class<RQ> requestType, RQ request, Class<RS> responseType, HttpHeaders customHeaders, MultiValueMap<String, String> queryParams, boolean handleBadRequest) {
+    private <T, R> Mono<R> execute(HttpMethod method, String uri, Class<T> requestType, T request, Class<R> responseType, CallOptions options) {
+        HttpHeaders customHeaders = options.headers();
+        MultiValueMap<String, String> queryParams = options.queryParams();
+        boolean handleBadRequest = options.handleBadRequest();
         log.info("Calling [{} {}]", method, uri);
         return webClient.method(method).uri(builder -> {
                     builder.path(uri);
@@ -74,6 +77,9 @@ public abstract class AbstractRestClient {
                 .doOnError(error -> log.error("API call failed [{} {}]", method, uri, error));
     }
 
+    private record CallOptions(HttpHeaders headers, MultiValueMap<String, String> queryParams, boolean handleBadRequest) {
+    }
+
     private boolean isLocalProfile() {
         return Arrays.asList(environment.getActiveProfiles())
                 .contains("local");
@@ -97,11 +103,11 @@ public abstract class AbstractRestClient {
         }
     }
 
-    protected <RQ, RS> RS callSync(HttpMethod method, String uri, Class<RQ> requestType, RQ request, Class<RS> responseType) {
+    protected <T, R> R callSync(HttpMethod method, String uri, Class<T> requestType, T request, Class<R> responseType) {
         return call(method, uri, requestType, request, responseType).block();
     }
 
-    protected <RS> RS callSync(HttpMethod method, String uri, Class<RS> responseType) {
+    protected <R> R callSync(HttpMethod method, String uri, Class<R> responseType) {
         return call(method, uri, Void.class, null, responseType).block();
     }
 

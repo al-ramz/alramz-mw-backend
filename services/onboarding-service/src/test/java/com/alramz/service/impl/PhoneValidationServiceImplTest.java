@@ -90,7 +90,9 @@ class PhoneValidationServiceImplTest {
     void validate_shouldRejectMissingPhone(String phone) {
         PhoneValidationServiceImpl service = service(PROPS, json(HttpStatus.OK, "{}"));
 
-        assertThatThrownBy(() -> service.validate(request(phone)))
+        var input = request(phone);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(IbanValidationException.class)
                 .hasMessage("Missing phone number")
                 .extracting("code").isEqualTo("1069");
@@ -101,7 +103,9 @@ class PhoneValidationServiceImplTest {
     void validate_shouldFailWhenApiKeyIsNotConfigured() {
         PhoneValidationServiceImpl service = service(new PhoneServiceProperties("https://phone.test", null, "5s"), json(HttpStatus.OK, "{}"));
 
-        assertThatThrownBy(() -> service.validate(request(PHONE)))
+        var input = request(PHONE);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(ExternalSystemException.class)
                 .hasMessage("Failed to retrieve phone base URL");
     }
@@ -110,7 +114,9 @@ class PhoneValidationServiceImplTest {
     void validate_shouldFailWhenBaseUrlIsNotConfigured() {
         PhoneValidationServiceImpl service = service(new PhoneServiceProperties("", "phone-key", "5s"), json(HttpStatus.OK, "{}"));
 
-        assertThatThrownBy(() -> service.validate(request(PHONE)))
+        var input = request(PHONE);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(ExternalSystemException.class)
                 .hasMessage("Failed to retrieve phone base URL");
     }
@@ -119,7 +125,9 @@ class PhoneValidationServiceImplTest {
     void validate_shouldMapProviderHttpErrorToExternalSystemException() {
         PhoneValidationServiceImpl service = service(PROPS, json(HttpStatus.BAD_GATEWAY, "{\"message\": \"down\"}"));
 
-        assertThatThrownBy(() -> service.validate(request(PHONE)))
+        var input = request(PHONE);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(ExternalSystemException.class)
                 .hasMessage("Phone validation service unavailable");
     }
@@ -128,7 +136,9 @@ class PhoneValidationServiceImplTest {
     void validate_shouldMapEmptyProviderBodyToExternalSystemException() {
         PhoneValidationServiceImpl service = service(PROPS, Mono.just(ClientResponse.create(HttpStatus.OK).build()));
 
-        assertThatThrownBy(() -> service.validate(request(PHONE)))
+        var input = request(PHONE);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(ExternalSystemException.class)
                 .hasMessage("Phone validation service unavailable");
     }
@@ -137,7 +147,9 @@ class PhoneValidationServiceImplTest {
     void validate_shouldMapUnexpectedFailureToTechnicalException() {
         PhoneValidationServiceImpl service = service(PROPS, Mono.error(new IllegalStateException("connection reset")));
 
-        assertThatThrownBy(() -> service.validate(request(PHONE)))
+        var input = request(PHONE);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(TechnicalException.class)
                 .hasMessage("Internal Server Error");
     }

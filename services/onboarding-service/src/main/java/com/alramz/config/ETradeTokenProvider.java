@@ -1,7 +1,6 @@
 package com.alramz.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,7 +21,6 @@ public class ETradeTokenProvider {
 
     private final ETradeProperties etradeProperties;
     private final WebClient webClient;
-    private final ObjectMapper objectMapper;
 
     private volatile String cachedToken;
     private volatile Instant cachedAt;
@@ -30,11 +28,9 @@ public class ETradeTokenProvider {
 
     public ETradeTokenProvider(
             @Qualifier("etradeValidationService") WebClient webClient,
-            ETradeProperties etradeProperties,
-            ObjectMapper objectMapper) {
+            ETradeProperties etradeProperties) {
         this.webClient = webClient;
         this.etradeProperties = etradeProperties;
-        this.objectMapper = objectMapper;
         this.tokenTtlSeconds = etradeProperties.tokenTtlSeconds();
     }
 
@@ -93,26 +89,7 @@ public class ETradeTokenProvider {
                 return Optional.empty();
             }
 
-            JsonNode resData = response.path("resData");
-            String accessToken = resData.path("access_token").asText(null);
-            int expiresIn = resData.path("expires_in").asInt(3000);
-
-            if (accessToken == null || accessToken.isEmpty()) {
-                if (log.isWarnEnabled()) {
-                    log.warn("eTrade token response missing access_token");
-                }
-                return Optional.empty();
-            }
-
-            long safetyMargin = 300;
-            this.tokenTtlSeconds = Math.max(expiresIn - safetyMargin, 60);
-            this.cachedToken = accessToken;
-            this.cachedAt = Instant.now();
-
-            if (log.isInfoEnabled()) {
-                log.info("Successfully fetched and cached eTrade token (ttl={}s)", tokenTtlSeconds);
-            }
-            return Optional.of(accessToken);
+            return cacheToken(response.path("resData"));
 
         } catch (WebClientResponseException e) {
             if (log.isWarnEnabled()) {
@@ -125,5 +102,27 @@ public class ETradeTokenProvider {
             }
             return Optional.empty();
         }
+    }
+
+    private Optional<String> cacheToken(JsonNode resData) {
+        String accessToken = resData.path("access_token").asText(null);
+        int expiresIn = resData.path("expires_in").asInt(3000);
+
+        if (accessToken == null || accessToken.isEmpty()) {
+            if (log.isWarnEnabled()) {
+                log.warn("eTrade token response missing access_token");
+            }
+            return Optional.empty();
+        }
+
+        long safetyMargin = 300;
+        this.tokenTtlSeconds = Math.max(expiresIn - safetyMargin, 60);
+        this.cachedToken = accessToken;
+        this.cachedAt = Instant.now();
+
+        if (log.isInfoEnabled()) {
+            log.info("Successfully fetched and cached eTrade token (ttl={}s)", tokenTtlSeconds);
+        }
+        return Optional.of(accessToken);
     }
 }

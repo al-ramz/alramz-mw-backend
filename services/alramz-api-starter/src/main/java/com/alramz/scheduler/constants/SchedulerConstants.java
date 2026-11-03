@@ -1,5 +1,8 @@
 package com.alramz.scheduler.constants;
 
-public interface SchedulerConstants {
-    String SCHEDULER_REINITIALIZATION_ERROR = "scheduler.scheduler.reinitialization.error";
+public final class SchedulerConstants {
+    public static final String SCHEDULER_REINITIALIZATION_ERROR = "scheduler.scheduler.reinitialization.error";
+
+    private SchedulerConstants() {
+    }
 }

@@ -19,7 +19,7 @@ public final class OpenTelemetryTraceContextExtractor implements TraceContextExt
             if (ctx != null && ctx.isValid()) {
                 return ctx.getTraceId();
             }
-        } catch (Throwable t) {
+        } catch (RuntimeException | LinkageError t) {
             // Defensive: OTel may not be fully initialized or context is invalid.
             return null;
         }
@@ -33,7 +33,7 @@ public final class OpenTelemetryTraceContextExtractor implements TraceContextExt
             if (ctx != null && ctx.isValid()) {
                 return ctx.getSpanId();
             }
-        } catch (Throwable t) {
+        } catch (RuntimeException | LinkageError t) {
             return null;
         }
         return null;

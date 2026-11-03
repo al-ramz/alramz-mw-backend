@@ -1,0 +1,130 @@
+CODE_SMELL	MAJOR	java:S1068	services/onboarding-service/src/main/java/com/alramz/client/ETradeClient.java:15	Remove this unused "etradeProperties" private field.
+BUG	MINOR	java:S3599	services/onboarding-service/src/main/java/com/alramz/client/ETradeClient.java:37	Use another way to initialize this instance.
+CODE_SMELL	MINOR	java:S2147	services/onboarding-service/src/main/java/com/alramz/client/ETradeClient.java:44	Combine this catch with the one at line 42, which has the same body.
+CODE_SMELL	MAJOR	java:S1068	services/onboarding-service/src/main/java/com/alramz/config/ETradeTokenProvider.java:25	Remove this unused "objectMapper" private field.
+CODE_SMELL	CRITICAL	java:S3776	services/onboarding-service/src/main/java/com/alramz/config/ETradeTokenProvider.java:66	Refactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/main/java/com/alramz/config/ExternalETradeServiceConfig.java:43	Remove this call to a deprecated class, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/main/java/com/alramz/config/ExternalETradeServiceConfig.java:43	Remove this call to a deprecated method, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/main/java/com/alramz/config/ExternalIbanServiceConfig.java:43	Remove this call to a deprecated class, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/main/java/com/alramz/config/ExternalIbanServiceConfig.java:43	Remove this call to a deprecated method, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/main/java/com/alramz/config/ExternalVeriPhoneServiceConfig.java:43	Remove this call to a deprecated class, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/main/java/com/alramz/config/ExternalVeriPhoneServiceConfig.java:43	Remove this call to a deprecated method, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/main/java/com/alramz/config/WebClientConfig.java:18	Remove this call to a deprecated class, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/main/java/com/alramz/config/WebClientConfig.java:21	Remove this call to a deprecated method, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S112	services/onboarding-service/src/main/java/com/alramz/controllers/ApplicationController.java:26	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MINOR	java:S1130	services/onboarding-service/src/main/java/com/alramz/controllers/ApplicationController.java:26	Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/main/java/com/alramz/controllers/DataValidationController.java:3	Remove this unused import 'com.alramz.api.DfmOnboardingApi'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/main/java/com/alramz/controllers/DataValidationController.java:9	Remove this unused import 'com.alramz.model.OnboardingRequest'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/main/java/com/alramz/controllers/DataValidationController.java:10	Remove this unused import 'com.alramz.model.OnboardingResponse'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/main/java/com/alramz/controllers/DataValidationController.java:11	Remove this unused import 'com.alramz.service.OnboardingService'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/main/java/com/alramz/controllers/DataValidationController.java:27	Remove this unused import 'jakarta.validation.Valid'.
+CODE_SMELL	CRITICAL	java:S3776	services/onboarding-service/src/main/java/com/alramz/dfm/DfmMemberApiClient.java:129	Refactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.
+CODE_SMELL	CRITICAL	java:S3776	services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingPayload.java:92	Refactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.
+CODE_SMELL	MINOR	java:S1075	services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:27	Refactor your code to get this URI from a customizable parameter.
+CODE_SMELL	MINOR	java:S1075	services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:28	Refactor your code to get this URI from a customizable parameter.
+CODE_SMELL	CRITICAL	java:S1192	services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:44	Define a constant instead of duplicating this literal "ONB011" 12 times.
+CODE_SMELL	CRITICAL	java:S1192	services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:90	Define a constant instead of duplicating this literal "errors" 10 times.
+CODE_SMELL	CRITICAL	java:S1192	services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:90	Define a constant instead of duplicating this literal "message" 10 times.
+CODE_SMELL	CRITICAL	java:S1192	services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:95	Define a constant instead of duplicating this literal "Invalid request" 5 times.
+CODE_SMELL	CRITICAL	java:S1192	services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:152	Define a constant instead of duplicating this literal "Malformed JSON request" 3 times.
+CODE_SMELL	CRITICAL	java:S1192	services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:354	Define a constant instead of duplicating this literal "Internal server error" 3 times.
+CODE_SMELL	CRITICAL	java:S1192	services/onboarding-service/src/main/java/com/alramz/exception/OnboardingExceptionHandler.java:32	Define a constant instead of duplicating this literal "ONB011" 5 times.
+CODE_SMELL	MAJOR	java:S6878	services/onboarding-service/src/main/java/com/alramz/service/impl/DfmInvestorServiceImpl.java:59	Use the record pattern instead of this pattern match variable.
+CODE_SMELL	MAJOR	java:S6878	services/onboarding-service/src/main/java/com/alramz/service/impl/DfmInvestorServiceImpl.java:61	Use the record pattern instead of this pattern match variable.
+CODE_SMELL	CRITICAL	java:S1192	services/onboarding-service/src/main/java/com/alramz/service/impl/DuplicateCheckHelper.java:51	Define a constant instead of duplicating this literal "Reference_No" 3 times.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:5	Remove this unused import 'com.alramz.exception.ApplicationException'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:32	Remove this unused import 'java.util.List'.
+CODE_SMELL	MAJOR	java:S1068	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:38	Remove this unused "objectMapper" private field.
+CODE_SMELL	MINOR	java:S2147	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:84	Combine this catch with the one at line 82, which has the same body.
+CODE_SMELL	MAJOR	java:S1854	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:112	Remove this useless assignment to local variable "charsCode".
+CODE_SMELL	MINOR	java:S1481	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:112	Remove this unused "charsCode" local variable.
+CODE_SMELL	MAJOR	java:S1854	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:113	Remove this useless assignment to local variable "accountCode".
+CODE_SMELL	MINOR	java:S1481	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:113	Remove this unused "accountCode" local variable.
+CODE_SMELL	MAJOR	java:S1854	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:114	Remove this useless assignment to local variable "ibanCode".
+CODE_SMELL	MINOR	java:S1481	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:114	Remove this unused "ibanCode" local variable.
+CODE_SMELL	MAJOR	java:S1854	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:115	Remove this useless assignment to local variable "lengthCode".
+CODE_SMELL	MINOR	java:S1481	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:115	Remove this unused "lengthCode" local variable.
+CODE_SMELL	MAJOR	java:S1854	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:116	Remove this useless assignment to local variable "countrySupportCode".
+CODE_SMELL	MINOR	java:S1481	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:116	Remove this unused "countrySupportCode" local variable.
+CODE_SMELL	MAJOR	java:S1854	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:117	Remove this useless assignment to local variable "structureCode".
+CODE_SMELL	MINOR	java:S1481	services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java:117	Remove this unused "structureCode" local variable.
+CODE_SMELL	MINOR	java:S1157	services/onboarding-service/src/main/java/com/alramz/service/impl/OnboardingServiceImpl.java:113	Replace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.
+CODE_SMELL	MINOR	java:S1157	services/onboarding-service/src/main/java/com/alramz/service/impl/OnboardingServiceImpl.java:120	Replace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.
+CODE_SMELL	MAJOR	java:S1068	services/onboarding-service/src/main/java/com/alramz/service/impl/PhoneValidationServiceImpl.java:32	Remove this unused "objectMapper" private field.
+CODE_SMELL	MINOR	java:S2147	services/onboarding-service/src/main/java/com/alramz/service/impl/PhoneValidationServiceImpl.java:75	Combine this catch with the one at line 73, which has the same body.
+CODE_SMELL	MAJOR	java:S1068	services/onboarding-service/src/main/java/com/alramz/service/impl/ValidationServiceImpl.java:33	Remove this unused "etradeProperties" private field.
+CODE_SMELL	CRITICAL	java:S3776	services/onboarding-service/src/main/java/com/alramz/service/impl/ValidationServiceImpl.java:108	Refactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.
+CODE_SMELL	MAJOR	java:S6880	services/onboarding-service/src/main/java/com/alramz/service/impl/ValidationServiceImpl.java:110	Replace the chain of if/else with a switch expression.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/main/java/com/alramz/service/ValidationRequestMapper.java:10	Remove this unused import 'com.fasterxml.jackson.core.JsonProcessingException'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/AopLoggingIntegrationTest.java:9	Remove this unused import 'org.springframework.test.context.ActiveProfiles'.
+CODE_SMELL	MINOR	java:S5853	services/onboarding-service/src/test/java/com/alramz/config/DfmMaskingConfigTest.java:105	Join these multiple assertions subject to one assertion chain.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/test/java/com/alramz/config/ETradeTokenProviderTest.java:45	Remove this call to a deprecated class, it has been marked for removal.
+CODE_SMELL	MAJOR	java:S5738	services/onboarding-service/src/test/java/com/alramz/config/ETradeTokenProviderTest.java:45	Remove this call to a deprecated method, it has been marked for removal.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/controllers/ApplicationControllerTest.java:13	Remove this unused import 'org.mockito.Mockito.when'.
+CODE_SMELL	MINOR	java:S5838	services/onboarding-service/src/test/java/com/alramz/controllers/ApplicationControllerTest.java:36	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S5838	services/onboarding-service/src/test/java/com/alramz/controllers/ApplicationControllerTest.java:37	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/dfm/DfmMemberApiClientTest.java:7	Remove this unused import 'com.alramz.model.DfmAddress'.
+CODE_SMELL	MAJOR	java:S5961	services/onboarding-service/src/test/java/com/alramz/dfm/DfmMemberApiClientTest.java:141	Refactor this method to reduce the number of assertions from 34 to less than 25.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/dfm/DfmMemberApiClientTest.java:401	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/dfm/DfmMemberApiClientTest.java:413	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java:12	Remove this unused import 'jakarta.validation.ConstraintViolation'.
+CODE_SMELL	MINOR	java:S8924	services/onboarding-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java:29	Use a static import for "mock".
+CODE_SMELL	MINOR	java:S8924	services/onboarding-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java:30	Use a static import for "mock".
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/repository/DfmOnboardingRepositoryImplTest.java:124	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/scheduler/job/DataValidationScheduledJobTest.java:10	Remove this unused import 'org.slf4j.Logger'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/scheduler/job/DataValidationScheduledJobTest.java:11	Remove this unused import 'org.slf4j.LoggerFactory'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/scheduler/job/DataValidationScheduledJobTest.java:16	Remove this unused import 'org.mockito.ArgumentMatchers.anyString'.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/DfmInvestorServiceImplTest.java:272	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/DfmInvestorServiceImplTest.java:282	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/DfmInvestorServiceImplTest.java:291	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/DfmInvestorServiceImplTest.java:315	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckHelperTest.java:8	Remove this unnecessary import: same package classes are always implicitly imported.
+CODE_SMELL	MINOR	java:S8924	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckHelperTest.java:44	Use a static import for "mock".
+CODE_SMELL	MINOR	java:S8924	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckHelperTest.java:50	Use a static import for "mock".
+CODE_SMELL	MAJOR	java:S4144	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckHelperTest.java:54	Update this method so that its implementation is not identical to "helperWithoutNinService" on line 49.
+CODE_SMELL	MINOR	java:S8924	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckHelperTest.java:55	Use a static import for "mock".
+CODE_SMELL	MINOR	java:S8924	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckHelperTest.java:61	Use a static import for "mock".
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:5	Remove this unused import 'com.alramz.exception.ExternalSystemException'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:6	Remove this unused import 'com.alramz.exceptions.ApiCallFailedException'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:7	Remove this unused import 'com.alramz.model.ETradeResponse'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:8	Remove this unused import 'com.alramz.service.DuplicateCheckService'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:9	Remove this unnecessary import: same package classes are always implicitly imported.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:17	Remove this unused import 'java.util.Optional'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:20	Remove this unused import 'org.assertj.core.api.Assertions.assertThatThrownBy'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:21	Remove this unused import 'org.mockito.ArgumentMatchers.any'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:22	Remove this unused import 'org.mockito.ArgumentMatchers.anyString'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:25	Remove this unused import 'org.mockito.Mockito.times'.
+CODE_SMELL	MAJOR	java:S1144	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:44	Remove this unused private "mockResData" method.
+CODE_SMELL	MINOR	java:S5853	services/onboarding-service/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImplTest.java:61	Join these multiple assertions subject to one assertion chain.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/IBANValidationServiceImplTest.java:111	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/IBANValidationServiceImplTest.java:122	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/IBANValidationServiceImplTest.java:131	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/IBANValidationServiceImplTest.java:140	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/IBANValidationServiceImplTest.java:149	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/IBANValidationServiceImplTest.java:158	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/NinTradingNumberValidationServiceTest.java:19	Remove this unused import 'org.mockito.Mockito.verify'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/OnboardingServiceImplTest.java:4	Remove this unused import 'com.alramz.exception.ExternalSystemException'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/OnboardingServiceImplTest.java:10	Remove this unused import 'com.alramz.service.OnboardingService'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/OnboardingServiceImplTest.java:16	Remove this unused import 'org.springframework.dao.DataAccessException'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/OnboardingServiceImplTest.java:23	Remove this unused import 'org.mockito.Mockito.never'.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/PhoneValidationServiceImplTest.java:93	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/PhoneValidationServiceImplTest.java:104	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/PhoneValidationServiceImplTest.java:113	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/PhoneValidationServiceImplTest.java:122	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/PhoneValidationServiceImplTest.java:131	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MAJOR	java:S5778	services/onboarding-service/src/test/java/com/alramz/service/impl/PhoneValidationServiceImplTest.java:140	Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/ResponseMappersTest.java:9	Remove this unused import 'org.junit.jupiter.params.ParameterizedTest'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/ResponseMappersTest.java:10	Remove this unused import 'org.junit.jupiter.params.provider.EnumSource'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/ValidationServiceImplTest.java:6	Remove this unused import 'com.alramz.config.ValidationDefinition'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/ValidationServiceImplTest.java:19	Remove this unused import 'com.alramz.service.ValidationService'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/ValidationServiceImplTest.java:26	Remove this unused import 'org.springframework.web.reactive.function.client.WebClient'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/impl/ValidationServiceImplTest.java:35	Remove this unused import 'org.mockito.Mockito.never'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/ValidationRequestMapperTest.java:8	Remove this unused import 'org.springframework.jdbc.core.JdbcTemplate'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/ValidationRequestMapperTest.java:13	Remove this unused import 'org.mockito.ArgumentMatchers.eq'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/ValidationRequestMapperTest.java:14	Remove this unused import 'org.mockito.Mockito.mock'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/ValidationRequestMapperTest.java:15	Remove this unused import 'org.mockito.Mockito.when'.
+CODE_SMELL	MINOR	java:S5838	services/onboarding-service/src/test/java/com/alramz/service/ValidationRequestMapperTest.java:38	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S5838	services/onboarding-service/src/test/java/com/alramz/service/ValidationRequestMapperTest.java:39	Use assertThat(actual).containsEntry(key, value) instead.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/ValidationResponseMapperRegistryTest.java:3	Remove this unused import 'com.alramz.config.ValidationDefinition'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/ValidationResponseMapperRegistryTest.java:4	Remove this unused import 'com.alramz.model.ValidationRequest'.
+CODE_SMELL	MINOR	java:S1128	services/onboarding-service/src/test/java/com/alramz/service/ValidationResponseMapperRegistryTest.java:18	Remove this unused import 'org.assertj.core.api.Assertions.assertThatThrownBy'.

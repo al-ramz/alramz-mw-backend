@@ -35,6 +35,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,14 +84,6 @@ class RedisCacheServiceTest {
 
         assertThat(result).extracting(m -> m.get("code")).containsExactly("AE", "SA");
         verify(jdbc, never()).query(anyString(), any(RowMapper.class));
-    }
-
-    @Test
-    void getEntry_shouldDelegateToGetAllEntries() {
-        when(redisTemplate.opsForValue()).thenReturn(valueOps);
-        when(valueOps.get(CACHE_KEY)).thenReturn(CACHED_JSON);
-
-        assertThat(service.getEntry(MAPPING, "AE")).hasSize(2);
     }
 
     @Test
@@ -183,6 +176,17 @@ class RedisCacheServiceTest {
         Map<String, Object> row = captor.getValue().mapRow(rs, 0);
 
         assertThat(row).containsExactly(Map.entry("code", "AE"), Map.entry("name", "UAE"));
+    }
+
+    @Test
+    void loadAllFromDatabase_shouldRejectTableNameThatIsNotAPlainIdentifier() {
+        when(redisTemplate.opsForValue()).thenReturn(valueOps);
+        mapping.setTable("countries; DROP TABLE banks");
+
+        assertThatThrownBy(() -> service.getAllEntries(MAPPING))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Invalid table name");
+        verifyNoInteractions(jdbc);
     }
 
     @Test

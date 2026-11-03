@@ -46,32 +46,10 @@ public record SmsProperties(
 
         final List<String> problems = new ArrayList<>();
         if (liveSendEnabled) {
-            require(problems, waselney.sendUrl(), "app.sms.waselney.send-url");
-            require(problems, waselney.username(), "app.sms.waselney.username");
-            require(problems, waselney.password(), "app.sms.waselney.password");
-            if (isEtisalat(preferredProvider)) {
-                require(problems, etisalat.baseUrl(), "app.sms.etisalat.base-url");
-                require(problems, etisalat.username(), "app.sms.etisalat.username");
-                require(problems, etisalat.password(), "app.sms.etisalat.password");
-                if (!etisalat.excludedPrefixes().isEmpty()) {
-                    require(problems, veriphone.apiKey(), "app.sms.veriphone.api-key");
-                }
-            }
+            validateLiveSend(problems, preferredProvider, etisalat, waselney, veriphone);
         }
         if (dispatch.enabled()) {
-            final Status status = dispatch.status();
-            if (dispatch.batchSize() < 1) {
-                problems.add("app.sms.dispatch.batch-size must be positive");
-            }
-            requireStatus(problems, status.pending(), "app.sms.dispatch.status.pending");
-            requireStatus(problems, status.inProgress(), "app.sms.dispatch.status.in-progress");
-            requireStatus(problems, status.invalidMobile(), "app.sms.dispatch.status.invalid-mobile");
-            if (status.pending() != null && status.inProgress() != null && status.invalidMobile() != null
-                    && new HashSet<>(List.of(status.pending(), status.inProgress(), status.invalidMobile(),
-                    STATUS_SENT, STATUS_FAILED)).size() != 5) {
-                problems.add("app.sms.dispatch.status pending/in-progress/invalid-mobile must be distinct from each"
-                        + " other and from sent (88) and failed (1)");
-            }
+            validateDispatch(problems, dispatch);
         }
         if (!problems.isEmpty()) {
             throw new IllegalStateException("Invalid SMS configuration: " + String.join("; ", problems));
@@ -86,6 +64,37 @@ public record SmsProperties(
         return provider != null && "ETISALAT".equals(provider.strip().toUpperCase(Locale.ROOT));
     }
 
+    private static void validateLiveSend(final List<String> problems, final String preferredProvider,
+                                         final Etisalat etisalat, final Waselney waselney, final Veriphone veriphone) {
+        require(problems, waselney.sendUrl(), "app.sms.waselney.send-url");
+        require(problems, waselney.username(), "app.sms.waselney.username");
+        require(problems, waselney.password(), "app.sms.waselney.password");
+        if (isEtisalat(preferredProvider)) {
+            require(problems, etisalat.baseUrl(), "app.sms.etisalat.base-url");
+            require(problems, etisalat.username(), "app.sms.etisalat.username");
+            require(problems, etisalat.password(), "app.sms.etisalat.password");
+            if (!etisalat.excludedPrefixes().isEmpty()) {
+                require(problems, veriphone.apiKey(), "app.sms.veriphone.api-key");
+            }
+        }
+    }
+
+    private static void validateDispatch(final List<String> problems, final Dispatch dispatch) {
+        final Status status = dispatch.status();
+        if (dispatch.batchSize() < 1) {
+            problems.add("app.sms.dispatch.batch-size must be positive");
+        }
+        requireStatus(problems, status.pending(), "app.sms.dispatch.status.pending");
+        requireStatus(problems, status.inProgress(), "app.sms.dispatch.status.in-progress");
+        requireStatus(problems, status.invalidMobile(), "app.sms.dispatch.status.invalid-mobile");
+        if (status.pending() != null && status.inProgress() != null && status.invalidMobile() != null
+                && new HashSet<>(List.of(status.pending(), status.inProgress(), status.invalidMobile(),
+                STATUS_SENT, STATUS_FAILED)).size() != 5) {
+            problems.add("app.sms.dispatch.status pending/in-progress/invalid-mobile must be distinct from each"
+                    + " other and from sent (88) and failed (1)");
+        }
+    }
+
     private static void require(final List<String> problems, final String value, final String key) {
         if (value == null || value.isBlank()) {
             problems.add(key + " is required when app.sms.live-send-enabled=true");
@@ -96,10 +105,6 @@ public record SmsProperties(
         if (value == null) {
             problems.add(key + " is required when app.sms.dispatch.enabled=true");
         }
-    }
-
-    private static List<String> clean(final List<String> values) {
-        return values == null ? List.of() : values.stream().filter(v -> v != null && !v.isBlank()).map(String::strip).toList();
     }
 
     private static String redact(final String secret) {
@@ -119,6 +124,10 @@ public record SmsProperties(
         public Etisalat {
             excludedPrefixes = clean(excludedPrefixes);
             excludedCountryCodes = clean(excludedCountryCodes);
+        }
+
+        private static List<String> clean(final List<String> values) {
+            return values == null ? List.of() : values.stream().filter(v -> v != null && !v.isBlank()).map(String::strip).toList();
         }
 
         @Override

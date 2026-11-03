@@ -102,7 +102,8 @@ class DfmMaskingConfigTest {
                  "trackingNumber": "2313258142", "cashTradingNumber": "9400000"}
                 """);
 
-        assertThat(masked).doesNotContain("SECRET", "784-0000", "AE0000", "1990-01-15", "1991-02-02");
-        assertThat(masked).contains("\"trackingNumber\": \"2313258142\"", "\"cashTradingNumber\": \"9400000\"");
+        assertThat(masked)
+                .doesNotContain("SECRET", "784-0000", "AE0000", "1990-01-15", "1991-02-02")
+                .contains("\"trackingNumber\": \"2313258142\"", "\"cashTradingNumber\": \"9400000\"");
     }
 }

@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import io.jsonwebtoken.JwtException;
@@ -24,11 +26,11 @@ public class TokenProvider {
     }
 
     public TokenPair generateTokenPair(String username, List<String> roles, String application, String environment) {
-        long now = System.currentTimeMillis();
+        Instant now = Instant.now();
         String accessToken = io.jsonwebtoken.Jwts.builder()
                 .subject(username)
-                .issuedAt(new java.util.Date(now))
-                .expiration(new java.util.Date(now + properties.getAccessTokenExpirationMs()))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusMillis(properties.getAccessTokenExpirationMs())))
                 .claim("roles", roles)
                 .claim(properties.getApplicationClaimName(), application)
                 .claim(properties.getEnvironmentClaimName(), environment)
@@ -38,8 +40,8 @@ public class TokenProvider {
         String refreshToken = io.jsonwebtoken.Jwts.builder()
                 .subject(username)
                 .id(java.util.UUID.randomUUID().toString())
-                .issuedAt(new java.util.Date(now))
-                .expiration(new java.util.Date(now + properties.getRefreshTokenExpirationMs()))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusMillis(properties.getRefreshTokenExpirationMs())))
                 .signWith(key)
                 .compact();
 
@@ -55,12 +57,12 @@ public class TokenProvider {
     }
 
     public String generateRefreshToken(String username) {
-        long now = System.currentTimeMillis();
+        Instant now = Instant.now();
         return io.jsonwebtoken.Jwts.builder()
                 .subject(username)
                 .id(java.util.UUID.randomUUID().toString())
-                .issuedAt(new java.util.Date(now))
-                .expiration(new java.util.Date(now + properties.getRefreshTokenExpirationMs()))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusMillis(properties.getRefreshTokenExpirationMs())))
                 .signWith(key)
                 .compact();
     }
@@ -73,8 +75,8 @@ public class TokenProvider {
                     .parseSignedClaims(token)
                     .getPayload();
 
-            java.util.Date expiration = claims.getExpiration();
-            if (expiration.before(new java.util.Date())) {
+            Instant expiration = claims.getExpiration().toInstant();
+            if (expiration.isBefore(Instant.now())) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Token validation failed: token expired for subject '{}'", claims.getSubject());
                 }

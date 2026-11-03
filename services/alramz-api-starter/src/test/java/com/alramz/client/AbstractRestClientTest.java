@@ -143,6 +143,8 @@ class AbstractRestClientTest {
                 .isInstanceOfSatisfying(ApiCallFailedException.class, e -> {
                     assertThat(e.getResponseCode()).isEqualTo(500);
                     assertThat(e.getResponseMessage()).isEqualTo("boom");
+                    assertThat(e.getMethod()).isEqualTo("POST");
+                    assertThat(e.getUri()).isNotBlank();
                 });
     }
 
@@ -150,7 +152,8 @@ class AbstractRestClientTest {
     void badRequestMapsToInvalidHttpRequestWhenRequested() {
         authenticateWithJwt();
 
-        assertThatThrownBy(() -> client(HttpStatus.BAD_REQUEST, "{\"message\":\"bad field\"}").strict())
+        TestClient strictClient = client(HttpStatus.BAD_REQUEST, "{\"message\":\"bad field\"}");
+        assertThatThrownBy(strictClient::strict)
                 .isInstanceOf(InvalidHttpRequestException.class).hasMessage("bad field");
         assertThatThrownBy(() -> client(HttpStatus.BAD_REQUEST, "not json").post("x"))
                 .isInstanceOfSatisfying(ApiCallFailedException.class,

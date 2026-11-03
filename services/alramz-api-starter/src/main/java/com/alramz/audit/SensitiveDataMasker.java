@@ -33,7 +33,6 @@ public class SensitiveDataMasker {
     }
 
     private static final Pattern BASE64_LONG_PATTERN = Pattern.compile("^[A-Za-z0-9+/]{40,}={0,2}$");
-    private static final int MAX_RECURSION_DEPTH = 20;
 
     private final ObjectMapper objectMapper;
     private final boolean enabled;
@@ -119,7 +118,7 @@ public class SensitiveDataMasker {
     }
 
     private Map<String, Object> maskMap(Map<?, ?> map) {
-        Map<String, Object> result = new LinkedHashMap<>(map.size());
+        Map<String, Object> result = LinkedHashMap.newLinkedHashMap(map.size());
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             String keyStr = entry.getKey() != null ? entry.getKey().toString() : "";
             String keyLower = keyStr.toLowerCase();
@@ -143,15 +142,12 @@ public class SensitiveDataMasker {
     private Collection<Object> maskCollection(Collection<?> collection) {
         List<Object> result = new ArrayList<>();
         for (Object item : collection) {
-            if (item instanceof Map<?, ?> map) {
-                result.add(maskMap(map));
-            } else if (item instanceof Collection<?> nested) {
-                result.add(maskCollection(nested));
-            } else if (item instanceof String str) {
-                result.add(maskString(null, str));
-            } else {
-                result.add(item);
-            }
+            result.add(switch (item) {
+                case Map<?, ?> map -> maskMap(map);
+                case Collection<?> nested -> maskCollection(nested);
+                case String str -> maskString(null, str);
+                case null, default -> item;
+            });
         }
         return result;
     }

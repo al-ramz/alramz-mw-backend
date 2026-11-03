@@ -88,7 +88,7 @@ public class EtisalatSmsClient {
                 .retrieve()
                 .body(Map.class);
         final Object status = response == null ? null : response.get("statusCode");
-        if (!"201".equals(String.valueOf(status))) {
+        if (response == null || !"201".equals(String.valueOf(status))) {
             final String code = SmsServiceImpl.providerCode(status);
             log.warn("SMS provider rejected provider={} statusCode={}", PROVIDER, code);
             throw new SmsException("SMS009", "SMS provider rejected " + PROVIDER + " " + code);

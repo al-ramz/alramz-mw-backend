@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class JdbcGlobalConfigurationSettingsRepository implements GlobalConfigurationSettingsRepository {
 
@@ -91,7 +90,7 @@ public class JdbcGlobalConfigurationSettingsRepository implements GlobalConfigur
 
         List<String> texts = dataList.stream()
             .map(GlobalConfigurationSettings::getIdentifierText)
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
 
         return Collections.unmodifiableMap(
             Map.of(identifier, texts)

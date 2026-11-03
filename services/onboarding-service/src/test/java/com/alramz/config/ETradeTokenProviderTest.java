@@ -37,7 +37,7 @@ class ETradeTokenProviderTest {
             sentRequest.set(request);
             return answer.get();
         }).exchangeStrategies(STRATEGIES).build();
-        return new ETradeTokenProvider(webClient, PROPS, new JacksonConfig().objectMapper());
+        return new ETradeTokenProvider(webClient, PROPS);
     }
 
     /** Same codec setup as ExternalETradeServiceConfig: the provider reads Jackson 2 {@code JsonNode}. */

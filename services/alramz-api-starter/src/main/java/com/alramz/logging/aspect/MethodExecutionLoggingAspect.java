@@ -46,37 +46,18 @@ public class MethodExecutionLoggingAspect {
             return pjp.proceed();
         }
 
-        
         log.info("Aspect intercepted: {}.{}", targetClass.getSimpleName(), method.getName());
-        
 
-        String className = targetClass.getSimpleName();
-        String methodName = method.getName();
-        String fullMethod = className + "#" + methodName;
-
-        Loggable loggable = annotationPresent ? method.getAnnotation(Loggable.class) : null;
-        boolean logEntry = loggable != null ? loggable.logEntry() : helper.isLogEntry();
-        boolean logExit = loggable != null ? loggable.logExit() : helper.isLogExit();
-        boolean logArgs = loggable != null ? loggable.logArgs() : helper.isLogArgs();
-        boolean logReturn = loggable != null ? loggable.logReturn() : helper.isLogReturn();
-        boolean logExceptions = loggable != null ? loggable.logExceptions() : helper.isLogExceptions();
-        int maxLength = helper.getMaxPayloadLength();
-        String separator = helper.getSeparator();
-
-        String correlationId = MDCUtil.getCorrelationId();
+        String fullMethod = targetClass.getSimpleName() + "#" + method.getName();
+        LogOptions options = LogOptions.resolve(annotationPresent ? method.getAnnotation(Loggable.class) : null, helper);
+        Invocation call = new Invocation(fullMethod, MDCUtil.getCorrelationId(), helper.getSeparator(),
+                helper.getMaxPayloadLength());
 
         // Child span per @Loggable method: masked args/return as tags, exceptions (with stack trace) recorded.
         Tracer tracer = tracerProvider.getIfAvailable();
         Span span = tracer == null ? null : tracer.nextSpan().name(fullMethod).tag("code.function", fullMethod).start();
 
-        String args = logArgs && (span != null || logEntry && log.isInfoEnabled()) ? helper.formatArgs(pjp, maxLength) : null;
-        if (span != null && args != null) {
-            span.tag("method.args", args);
-        }
-        if (logEntry && log.isInfoEnabled()) {
-            log.info("{}\n>>> ENTERING: {} [correlationId={}]\n>>> ARGS: {}\n{}",
-                    separator, fullMethod, correlationId, args == null ? "[]" : args, separator);
-        }
+        logEntry(pjp, helper, options, span, call);
 
         long start = System.nanoTime();
         Object result = null;
@@ -87,28 +68,71 @@ public class MethodExecutionLoggingAspect {
             return result;
         } catch (Throwable t) {
             thrown = t;
-            if (span != null) {
-                span.error(t);
-            }
-            if (logExceptions && log.isErrorEnabled()) {
-                log.error("{}\n<<< EXCEPTION in {} [correlationId={}]: {}\n{}",
-                        separator, fullMethod, correlationId, t.getMessage(), separator, t);
-            }
+            onException(t, options, span, call);
             throw t;
         } finally {
             long elapsedMs = (System.nanoTime() - start) / 1_000_000L;
-            String returnValue = logReturn && thrown == null && (span != null || logExit && log.isInfoEnabled())
-                    ? helper.serialize(result, maxLength) : null;
-            if (span != null) {
-                if (returnValue != null) {
-                    span.tag("method.return", returnValue);
-                }
-                span.end();
-            }
-            if (logExit && log.isInfoEnabled()) {
+            String returnValue = options.logReturn() && thrown == null && (span != null || isExitLogged(options))
+                    ? helper.serialize(result, call.maxLength()) : null;
+            endSpan(span, returnValue);
+            if (isExitLogged(options)) {
                 log.info("{}\n<<< EXITING: {} [correlationId={}]\n<<< RETURN: {}\n<<< EXECUTION TIME: {}ms\n{}",
-                        separator, fullMethod, correlationId, returnValue == null ? "[disabled]" : returnValue, elapsedMs, separator);
+                        call.separator(), call.fullMethod(), call.correlationId(),
+                        returnValue == null ? "[disabled]" : returnValue, elapsedMs, call.separator());
             }
+        }
+    }
+
+    private static void logEntry(ProceedingJoinPoint pjp, MethodExecutionLoggingHelper helper, LogOptions options,
+                                 Span span, Invocation call) {
+        boolean entryLogged = options.logEntry() && log.isInfoEnabled();
+        String args = options.logArgs() && (span != null || entryLogged)
+                ? helper.formatArgs(pjp, call.maxLength()) : null;
+        if (span != null && args != null) {
+            span.tag("method.args", args);
+        }
+        if (entryLogged) {
+            log.info("{}\n>>> ENTERING: {} [correlationId={}]\n>>> ARGS: {}\n{}",
+                    call.separator(), call.fullMethod(), call.correlationId(), args == null ? "[]" : args, call.separator());
+        }
+    }
+
+    private static void onException(Throwable t, LogOptions options, Span span, Invocation call) {
+        if (span != null) {
+            span.error(t);
+        }
+        if (options.logExceptions() && log.isErrorEnabled()) {
+            log.error("{}\n<<< EXCEPTION in {} [correlationId={}]: {}\n{}",
+                    call.separator(), call.fullMethod(), call.correlationId(), t.getMessage(), call.separator(), t);
+        }
+    }
+
+    private static boolean isExitLogged(LogOptions options) {
+        return options.logExit() && log.isInfoEnabled();
+    }
+
+    private static void endSpan(Span span, String returnValue) {
+        if (span != null) {
+            if (returnValue != null) {
+                span.tag("method.return", returnValue);
+            }
+            span.end();
+        }
+    }
+
+    private record Invocation(String fullMethod, String correlationId, String separator, int maxLength) {
+    }
+
+    /** Effective logging switches: the method's {@link Loggable} wins, otherwise the configured defaults. */
+    private record LogOptions(boolean logEntry, boolean logExit, boolean logArgs, boolean logReturn, boolean logExceptions) {
+
+        static LogOptions resolve(Loggable loggable, MethodExecutionLoggingHelper helper) {
+            if (loggable != null) {
+                return new LogOptions(loggable.logEntry(), loggable.logExit(), loggable.logArgs(),
+                        loggable.logReturn(), loggable.logExceptions());
+            }
+            return new LogOptions(helper.isLogEntry(), helper.isLogExit(), helper.isLogArgs(),
+                    helper.isLogReturn(), helper.isLogExceptions());
         }
     }
 }

@@ -20,7 +20,7 @@ public final class LoggingConstants {
     public static final String TRACE_ID = "traceId";
     public static final String SPAN_ID = "spanId";
     public static final String METHOD = "method";
-    public final static String URI = "uri";
+    public static final String URI = "uri";
 
     public static final String RESPONSE_STATUS = "responseStatus";
     public static final String RESPONSE_TIME_MS = "responseTimeMs";

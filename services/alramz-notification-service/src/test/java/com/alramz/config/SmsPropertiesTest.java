@@ -13,8 +13,6 @@ class SmsPropertiesTest {
 
     private static final SmsProperties.Waselney WASELNEY =
             new SmsProperties.Waselney("https://waselney.example.com/send", "https://waselney.example.com/report", "wuser", "wpass");
-    private static final SmsProperties.Etisalat ETISALAT =
-            new SmsProperties.Etisalat("https://etisalat.example.com", "euser", "epass", List.of(), List.of());
     private static final SmsProperties.Veriphone VERIPHONE = new SmsProperties.Veriphone("https://veriphone.example.com", "vkey");
 
     static SmsProperties properties(final boolean live, final String provider, final SmsProperties.Etisalat etisalat,
@@ -61,8 +59,9 @@ class SmsPropertiesTest {
 
     @Test
     void e45_liveSendNeedsWaselneyCredentials() {
-        assertThatThrownBy(() -> properties(true, "WASELNEY", null,
-                new SmsProperties.Waselney("https://w", null, "u", " "), null, null))
+        final SmsProperties.Waselney waselney = new SmsProperties.Waselney("https://w", null, "u", " ");
+
+        assertThatThrownBy(() -> properties(true, "WASELNEY", null, waselney, null, null))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("app.sms.waselney.password")
                 .hasMessageNotContaining("app.sms.waselney.send-url");
@@ -70,8 +69,9 @@ class SmsPropertiesTest {
 
     @Test
     void e45_liveSendWithEtisalatPreferredNeedsEtisalatCredentials() {
-        assertThatThrownBy(() -> properties(true, "ETISALAT",
-                new SmsProperties.Etisalat("https://e", null, "p", List.of(), List.of()), WASELNEY, null, null))
+        final SmsProperties.Etisalat etisalat = new SmsProperties.Etisalat("https://e", null, "p", List.of(), List.of());
+
+        assertThatThrownBy(() -> properties(true, "ETISALAT", etisalat, WASELNEY, null, null))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("app.sms.etisalat.username");
     }
@@ -81,8 +81,9 @@ class SmsPropertiesTest {
         final SmsProperties.Etisalat withPrefixes =
                 new SmsProperties.Etisalat("https://e", "u", "p", List.of("1"), List.of("US"));
 
-        assertThatThrownBy(() -> properties(true, "ETISALAT", withPrefixes, WASELNEY,
-                new SmsProperties.Veriphone("https://v", ""), null))
+        final SmsProperties.Veriphone noKey = new SmsProperties.Veriphone("https://v", "");
+
+        assertThatThrownBy(() -> properties(true, "ETISALAT", withPrefixes, WASELNEY, noKey, null))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("app.sms.veriphone.api-key");
     }
@@ -99,25 +100,32 @@ class SmsPropertiesTest {
 
     @Test
     void e44_dispatchNeedsEveryStatus() {
-        assertThatThrownBy(() -> properties(false, null, null, null, null, dispatch(10, null, 30)))
+        final SmsProperties.Dispatch dispatch = dispatch(10, null, 30);
+
+        assertThatThrownBy(() -> properties(false, null, null, null, null, dispatch))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("app.sms.dispatch.status.in-progress");
     }
 
     @Test
     void e44_dispatchStatusesMustBeDistinct() {
-        assertThatThrownBy(() -> properties(false, null, null, null, null, dispatch(10, 10, 30)))
+        final SmsProperties.Dispatch pendingEqualsInProgress = dispatch(10, 10, 30);
+        final SmsProperties.Dispatch pendingEqualsSent = dispatch(88, 20, 30);
+        final SmsProperties.Dispatch invalidEqualsFailed = dispatch(10, 20, 1);
+
+        assertThatThrownBy(() -> properties(false, null, null, null, null, pendingEqualsInProgress))
                 .isInstanceOf(IllegalStateException.class).hasMessageContaining("distinct");
-        assertThatThrownBy(() -> properties(false, null, null, null, null, dispatch(88, 20, 30)))
+        assertThatThrownBy(() -> properties(false, null, null, null, null, pendingEqualsSent))
                 .isInstanceOf(IllegalStateException.class).hasMessageContaining("distinct");
-        assertThatThrownBy(() -> properties(false, null, null, null, null, dispatch(10, 20, 1)))
+        assertThatThrownBy(() -> properties(false, null, null, null, null, invalidEqualsFailed))
                 .isInstanceOf(IllegalStateException.class).hasMessageContaining("distinct");
     }
 
     @Test
     void e44_dispatchBatchSizeMustBePositive() {
-        assertThatThrownBy(() -> properties(false, null, null, null, null,
-                new SmsProperties.Dispatch(true, 0, new SmsProperties.Status(10, 20, 30))))
+        final SmsProperties.Dispatch zeroBatch = new SmsProperties.Dispatch(true, 0, new SmsProperties.Status(10, 20, 30));
+
+        assertThatThrownBy(() -> properties(false, null, null, null, null, zeroBatch))
                 .isInstanceOf(IllegalStateException.class).hasMessageContaining("batch-size");
     }
 

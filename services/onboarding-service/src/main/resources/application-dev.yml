@@ -46,9 +46,9 @@ cipher:
 adapter:
   dfm-member-api:
     base-url: ${DFM_MEMBER_API_BASE_URL:https://api.dfmtest.ae}
-    onboarding-path: ${DFM_MEMBER_API_ONBOARDING_PATH:/memberapisproxy/onboarding}
+    onboarding-path: ${DFM_MEMBER_API_ONBOARDING_PATH:/memberapis/onboarding}
     member-code: ${DFM_MEMBER_API_MEMBER_CODE:RAMZ}
-    header-security-key: ${DFM_MEMBER_API_HEADER_SECURITY_KEY:342b8f1816e9409fa2d8922b390f5796}
+    header-security-key: ${DFM_MEMBER_API_HEADER_SECURITY_KEY:1f4e864b3d164e2ab2d38d8d7d37abdc}
     body-security-key: ${DFM_MEMBER_API_BODY_SECURITY_KEY:1f4e864b3d164e2ab2d38d8d7d37abdc}
     connect-timeout-seconds: 5
     read-timeout-seconds: 60

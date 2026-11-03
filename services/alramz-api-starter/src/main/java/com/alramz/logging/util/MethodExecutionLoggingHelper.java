@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.Predicate;
 
 public final class MethodExecutionLoggingHelper {
 
@@ -63,24 +64,19 @@ public final class MethodExecutionLoggingHelper {
             return false;
         }
         String className = targetClass.getName();
-        List<String> excludedPackages = properties.getAspect().getExcludedPackages();
-        if (excludedPackages != null) {
-            for (String pkg : excludedPackages) {
-                if (pkg != null && !pkg.isBlank() && className.startsWith(pkg)) {
-                    return true;
-                }
-            }
+        return anyMatch(properties.getAspect().getExcludedPackages(), className::startsWith)
+                || anyMatch(properties.getAspect().getExcludedClassPatterns(), className::contains)
+                || targetClass == Object.class || targetClass.isInterface() || targetClass.isPrimitive();
+    }
+
+    private static boolean anyMatch(List<String> candidates, Predicate<String> matcher) {
+        if (candidates == null) {
+            return false;
         }
-        List<String> excludedClassPatterns = properties.getAspect().getExcludedClassPatterns();
-        if (excludedClassPatterns != null) {
-            for (String pattern : excludedClassPatterns) {
-                if (pattern != null && !pattern.isBlank() && className.contains(pattern)) {
-                    return true;
-                }
+        for (String candidate : candidates) {
+            if (candidate != null && !candidate.isBlank() && matcher.test(candidate)) {
+                return true;
             }
-        }
-        if (targetClass == Object.class || targetClass.isInterface() || targetClass.isPrimitive()) {
-            return true;
         }
         return false;
     }

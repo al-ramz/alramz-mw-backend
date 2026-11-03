@@ -23,7 +23,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -48,6 +49,8 @@ import java.util.List;
 @ConditionalOnProperty(name = "company.logging.enabled", havingValue = "true", matchIfMissing = true)
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class LoggingAutoConfiguration {
+
+    private static final Logger log = LoggerFactory.getLogger(LoggingAutoConfiguration.class);
 
     private final ObjectProvider<LoggingProperties> propertiesProvider;
 
@@ -129,16 +132,16 @@ public class LoggingAutoConfiguration {
             ObjectProvider<MethodExecutionLoggingHelper> helperProvider,
             ObjectProvider<io.micrometer.tracing.Tracer> tracerProvider) {
         MethodExecutionLoggingAspect aspect = new MethodExecutionLoggingAspect(helperProvider, tracerProvider);
-        System.out.println("[LOGGING] MethodExecutionLoggingAspect bean created and registered");
+        log.info("[LOGGING] MethodExecutionLoggingAspect bean created and registered");
         return aspect;
     }
 
     @Bean
     org.springframework.boot.CommandLineRunner diagnosticLogAspectLoader() {
         return args -> {
-            System.out.println("[LOGGING] LoggingAutoConfiguration loaded successfully");
-            System.out.println("[LOGGING] AspectJ auto proxy enabled: true");
-            System.out.println("[LOGGING] Method execution logging aspect should be active");
+            log.info("[LOGGING] LoggingAutoConfiguration loaded successfully");
+            log.info("[LOGGING] AspectJ auto proxy enabled: true");
+            log.info("[LOGGING] Method execution logging aspect should be active");
         };
     }
 

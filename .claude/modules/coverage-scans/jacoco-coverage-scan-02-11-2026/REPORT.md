@@ -63,10 +63,10 @@ is at `services/<svc>/target/site/jacoco/index.html`.
 
 ## Reproduce
 
-Follow `.claude/skills/jacoco-coverage-gate/SKILL.md`, or:
+Follow `.claude/skills/alramz-jacoco-coverage-check/SKILL.md`, or:
 
 ```bash
 mvn -B -pl services/alramz-common-bom,services/alramz-api-starter install -DskipTests
 mvn -B -fae clean test
-python3 .claude/skills/jacoco-coverage-gate/scripts/coverage_summary.py <out_dir> --classes
+python3 .claude/skills/alramz-jacoco-coverage-check/scripts/coverage_summary.py <out_dir> --classes
 ```

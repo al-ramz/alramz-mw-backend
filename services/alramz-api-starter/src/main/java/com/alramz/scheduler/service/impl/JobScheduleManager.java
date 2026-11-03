@@ -11,12 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.core.task.TaskRejectedException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -25,6 +23,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+import com.alramz.logging.util.LoggingHelper;
 import com.alramz.scheduler.constants.SchedulerConstants;
 import com.alramz.scheduler.config.SchedulerProperties;
 import com.alramz.scheduler.model.ScheduleInfoBean;
@@ -34,6 +33,8 @@ import com.alramz.scheduler.service.Schedulable;
 
 public class JobScheduleManager implements ISchedulerService {
     private static final Logger log = LoggerFactory.getLogger(JobScheduleManager.class);
+    private static final String CRON_EXP = "CRON_EXP";
+    private static final String CANCELLING_TASK = "Cancelling task: [{}]...";
 
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final BeanFactory beanFactory;
@@ -48,10 +49,10 @@ public class JobScheduleManager implements ISchedulerService {
         this.middlewareNamedParameterJdbcTemplate = middlewareNamedParameterJdbcTemplate;
     }
 
-    private Map<ScheduleInfoBean, ScheduledFuture<Schedulable>> scheduledTasks = new ConcurrentHashMap<>();
+    private final Map<ScheduleInfoBean, ScheduledFuture<Schedulable>> scheduledTasks = new ConcurrentHashMap<>();
 
     @Override
-    public String stopScheduler() throws Exception {
+    public String stopScheduler() {
 
         if (log.isInfoEnabled()) {
             log.info("Shutdown requested...");
@@ -62,7 +63,7 @@ public class JobScheduleManager implements ISchedulerService {
 
         scheduledTasks.forEach((ScheduleInfoBean scheduleInfoBean, ScheduledFuture<Schedulable> futureTasks) -> {
             if (log.isInfoEnabled()) {
-                log.info("Cancelling task: [" + scheduleInfoBean.toString() + "]...");
+                log.info(CANCELLING_TASK, scheduleInfoBean);
             }
             if (futureTasks.cancel(false)) {
                 scheduledTasks.remove(scheduleInfoBean);
@@ -83,7 +84,7 @@ public class JobScheduleManager implements ISchedulerService {
     }
 
     @Override
-    public String hardStopScheduler() throws Exception {
+    public String hardStopScheduler() {
 
         if (log.isInfoEnabled()) {
             log.info("Force Shutdown requested...");
@@ -105,22 +106,22 @@ public class JobScheduleManager implements ISchedulerService {
     }
 
     @Override
-    public Map<String, Set<ScheduleInfoBean>> reintializeScheduler(final String jobGroupName) throws Exception {
+    public Map<String, Set<ScheduleInfoBean>> reintializeScheduler(final String jobGroupName) {
 
         if (log.isInfoEnabled()) {
             log.info("Reinitialization requested...");
         }
 
         if (log.isInfoEnabled()) {
-            log.info("Before initialization::: " + getSchedulerStat().toString());
+            log.info("Before initialization::: {}", getSchedulerStat());
         }
 
-        if (threadPoolTaskScheduler.getActiveCount() > 0 || threadPoolTaskScheduler.getPoolSize() > 0 || scheduledTasks.size() > 0) {
+        if (threadPoolTaskScheduler.getActiveCount() > 0 || threadPoolTaskScheduler.getPoolSize() > 0 || !scheduledTasks.isEmpty()) {
             if (log.isErrorEnabled()) {
                 log.error("The scheduler has not been shutdown yet. 1st Shutdown it by calling \"/api/secured/scheduler/stop\" before reinitializing...");
             }
 
-            throw new RuntimeException(SchedulerConstants.SCHEDULER_REINITIALIZATION_ERROR);
+            throw new IllegalStateException(SchedulerConstants.SCHEDULER_REINITIALIZATION_ERROR);
         }
 
         threadPoolTaskScheduler.initialize();
@@ -131,17 +132,17 @@ public class JobScheduleManager implements ISchedulerService {
         Map<String, Set<ScheduleInfoBean>> schedulingResult = schedule(jobGroupName);
 
         if (log.isInfoEnabled()) {
-            log.info("After initialization::: " + getSchedulerStat().toString());
+            log.info("After initialization::: {}", getSchedulerStat());
         }
 
         return schedulingResult;
     }
 
     @Override
-    public Map<String, Set<ScheduleInfoBean>> reintializeSchedulerForJobs(String jobGroupName, String... jobIds) throws Exception {
+    public Map<String, Set<ScheduleInfoBean>> reintializeSchedulerForJobs(String jobGroupName, String... jobIds) {
 
         if (log.isInfoEnabled()) {
-            log.info("Schedule Reinitialization requested for Jobs..." + Arrays.toString(jobIds));
+            log.info("Schedule Reinitialization requested for Jobs...{}", Arrays.toString(jobIds));
         }
         if (log.isInfoEnabled()) {
             log.info(getSchedulerStat().toString());
@@ -151,7 +152,7 @@ public class JobScheduleManager implements ISchedulerService {
 
             if (Arrays.stream(jobIds).anyMatch(scheduleInfoBean.getScheduleId()::equals)) {
                 if (log.isInfoEnabled()) {
-                    log.info("Cancelling task: [" + scheduleInfoBean.toString() + "]...");
+                    log.info(CANCELLING_TASK, scheduleInfoBean);
                 }
                 if (futureTasks.cancel(false)) {
                     scheduledTasks.remove(scheduleInfoBean);
@@ -159,7 +160,7 @@ public class JobScheduleManager implements ISchedulerService {
             }
         });
         if (log.isInfoEnabled()) {
-            log.info("Post cancelling the Jobs:\n" + getSchedulerStat().toString());
+            log.info("Post cancelling the Jobs:\n{}", getSchedulerStat());
         }
         if (log.isInfoEnabled()) {
             log.info("Registering those jobs to the scheduler...");
@@ -169,10 +170,10 @@ public class JobScheduleManager implements ISchedulerService {
     }
 
     @Override
-    public Map<String, Boolean> unregisterJobs(String... jobIds) throws Exception {
+    public Map<String, Boolean> unregisterJobs(String... jobIds) {
 
         if (log.isInfoEnabled()) {
-            log.info("Schedule unregister requested for Jobs..." + jobIds);
+            log.info("Schedule unregister requested for Jobs...{}", Arrays.toString(jobIds));
         }
         if (log.isInfoEnabled()) {
             log.info(getSchedulerStat().toString());
@@ -184,7 +185,7 @@ public class JobScheduleManager implements ISchedulerService {
 
             if (Arrays.stream(jobIds).anyMatch(scheduleInfoBean.getScheduleId()::equals)) {
                 if (log.isInfoEnabled()) {
-                    log.info("Cancelling task: [" + scheduleInfoBean.toString() + "]...");
+                    log.info(CANCELLING_TASK, scheduleInfoBean);
                 }
                 if (futureTasks.cancel(false)) {
                     scheduledTasks.remove(scheduleInfoBean);
@@ -195,7 +196,7 @@ public class JobScheduleManager implements ISchedulerService {
             }
         });
         if (log.isInfoEnabled()) {
-            log.info("Post cancelling the Jobs\n" + getSchedulerStat().toString());
+            log.info("Post cancelling the Jobs\n{}", getSchedulerStat());
         }
 
         return cancellationStatus;
@@ -212,201 +213,229 @@ public class JobScheduleManager implements ISchedulerService {
 
     }
 
-    @SuppressWarnings("unchecked")
     public synchronized Map<String, Set<ScheduleInfoBean>> schedule(String jobGroupName, String... jobIds) {
 
+        String safeGroupName = LoggingHelper.stripCrlf(jobGroupName);
         Set<ScheduleInfoBean> invalidSchedulingJobs = new HashSet<>();
         Set<ScheduleInfoBean> rejectedSchedulingJobs = new HashSet<>();
         Set<ScheduleInfoBean> succeedSchedulingJobs = new HashSet<>();
-        ScheduledFuture<Schedulable> future = null;
-        List<ScheduleInfoBean> scheduledJobs = new ArrayList<>();
         try {
-            List<ScheduleInfoBean> dbJobs = new ArrayList<>();
-            boolean dbMode = middlewareNamedParameterJdbcTemplate != null;
-            if (log.isInfoEnabled()) {
-                log.info("Scheduler startup loading: jobGroupName={}, jobIds={}, dbMode={}", jobGroupName,
-                        jobIds != null && jobIds.length > 0 ? Arrays.toString(jobIds) : "ALL", dbMode);
-            }
-
-            if (dbMode) {
-                String sql = "SELECT job_group_name, schedule_id, worker_bean_name, job_bean_names, job_parameter, " +
-                        "schedule_mode, cron_expr, delay, interval_seconds, enable FROM schedule_job " +
-                        "WHERE job_group_name = :jobGroupName AND enable = 'Y'";
-                MapSqlParameterSource params = new MapSqlParameterSource();
-                params.addValue("jobGroupName", jobGroupName);
-                dbJobs = middlewareNamedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
-                    ScheduleInfoBean b = new ScheduleInfoBean();
-                    b.setWorkerBeanName(rs.getString("worker_bean_name"));
-                    b.setJobBeanNames(rs.getString("job_bean_names"));
-                    b.setJobParameter(rs.getString("job_parameter"));
-                    b.setScheduleMode(rs.getString("schedule_mode"));
-                    b.setCronExpr(rs.getString("cron_expr"));
-                    b.setDelay(rs.getLong("delay"));
-                    b.setInterval(rs.getLong("interval_seconds"));
-                    b.setEnable(rs.getString("enable"));
-                    b.setScheduleId(rs.getString("schedule_id"));
-                    return b;
-                });
-                if (log.isInfoEnabled()) {
-                    log.info("Fetched {} scheduled jobs from schedule_job table for jobGroupName={}", dbJobs.size(), jobGroupName);
-                }
-            } else {
-                if (log.isInfoEnabled()) {
-                    log.info("middlewareNamedParameterJdbcTemplate is not available. Falling back to YAML properties for scheduler jobs");
-                }
-            }
-            if (dbJobs.isEmpty()) {
-                if (log.isInfoEnabled()) {
-                    log.info("No DB jobs found for jobGroupName={}. Loading from YAML properties...", jobGroupName);
-                }
-                for (SchedulerProperties.ScheduleJobProperties jobProps : properties.getJobs()) {
-                    if (!"Y".equalsIgnoreCase(jobProps.getEnable())) {
-                        continue;
-                    }
-                    if (jobIds != null && jobIds.length > 0) {
-                        boolean matched = Arrays.stream(jobIds).anyMatch(id -> id.equalsIgnoreCase(jobProps.getScheduleId()));
-                        if (!matched) {
-                            continue;
-                        }
-                    }
-                    java.sql.Timestamp startTime = null;
-                    ScheduleInfoBean b = new ScheduleInfoBean(
-                            jobProps.getWorkerBeanName(),
-                            jobProps.getJobBeanNames(),
-                            jobProps.getJobParameter(),
-                            jobProps.getScheduleMode(),
-                            startTime,
-                            jobProps.getCronExpr(),
-                            jobProps.getDelay(),
-                            jobProps.getInterval(),
-                            jobProps.getEnable()
-                    );
-                    b.setScheduleId(jobProps.getScheduleId());
-                    scheduledJobs.add(b);
-                    if (log.isInfoEnabled()) {
-                        log.info("YAML job loaded: scheduleId={}, workerBeanName={}, scheduleMode={}, cronExpr={}, interval={}",
-                                jobProps.getScheduleId(), jobProps.getWorkerBeanName(), jobProps.getScheduleMode(),
-                                jobProps.getCronExpr(), jobProps.getInterval());
-                    }
-                }
-            } else {
-                for (ScheduleInfoBean scheduleInfoBean : dbJobs) {
-                    if (jobIds != null && jobIds.length > 0) {
-                        boolean matched = Arrays.stream(jobIds).anyMatch(id -> id.equalsIgnoreCase(scheduleInfoBean.getScheduleId()));
-                        if (!matched) {
-                            continue;
-                        }
-                    }
-                    scheduledJobs.add(scheduleInfoBean);
-                    if (log.isInfoEnabled()) {
-                        log.info("DB Sceduled job loaded: scheduleId={}, workerBeanName={}, scheduleMode={}, cronExpr={}, delay={}, intervalSeconds={}",
-                                scheduleInfoBean.getScheduleId(), scheduleInfoBean.getWorkerBeanName(), scheduleInfoBean.getScheduleMode(),
-                                scheduleInfoBean.getCronExpr(), scheduleInfoBean.getDelay(), scheduleInfoBean.getInterval());
-                    }
-                }
-            }
+            List<ScheduleInfoBean> scheduledJobs = loadJobs(jobGroupName, safeGroupName, jobIds);
 
             if (log.isInfoEnabled()) {
-                log.info("Total jobs to schedule for jobGroupName={}: {}", jobGroupName, scheduledJobs.size());
+                log.info("Total jobs to schedule for jobGroupName={}: {}", safeGroupName, scheduledJobs.size());
             }
 
             for (final ScheduleInfoBean scheduleInfoBean : scheduledJobs) {
-
                 if (scheduledTasks.containsKey(scheduleInfoBean)) {
                     if (log.isErrorEnabled()) {
-                        log.error("Scheduler: ScheduleId= " + scheduleInfoBean.getScheduleId() + " already scheduled and active, hence rejecting");
+                        log.error("Scheduler: ScheduleId= {} already scheduled and active, hence rejecting",
+                                LoggingHelper.stripCrlf(scheduleInfoBean.getScheduleId()));
                     }
                     rejectedSchedulingJobs.add(scheduleInfoBean);
-
                 } else {
-                    Runnable runnableObj = () -> {
-                        Schedulable worker = (Schedulable) beanFactory.getBean(scheduleInfoBean.getWorkerBeanName());
-                        worker.run(scheduleInfoBean);
-                    };
-
-
-                    try {
-                        if ("FIXED_RATE".equalsIgnoreCase(scheduleInfoBean.getScheduleMode()) && scheduleInfoBean.getInterval() != null && scheduleInfoBean.getInterval() > -1) {
-                            if (scheduleInfoBean.getStartTime() != null) {
-                                future = (ScheduledFuture<Schedulable>) threadPoolTaskScheduler.scheduleAtFixedRate(
-                                        runnableObj, scheduleInfoBean.getStartTime(), scheduleInfoBean.getInterval());
-                            } else {
-                                future = (ScheduledFuture<Schedulable>) threadPoolTaskScheduler.scheduleAtFixedRate(runnableObj, scheduleInfoBean.getInterval());
-                            }
-
-                        } else if ("FIXED_DELAY".equalsIgnoreCase(scheduleInfoBean.getScheduleMode()) && scheduleInfoBean.getDelay() != null && scheduleInfoBean.getDelay() > -1) {
-                            if (scheduleInfoBean.getStartTime() != null) {
-                                future = (ScheduledFuture<Schedulable>) threadPoolTaskScheduler.scheduleWithFixedDelay(
-                                        runnableObj, scheduleInfoBean.getStartTime(), scheduleInfoBean.getDelay());
-                            } else {
-                                future = (ScheduledFuture<Schedulable>) threadPoolTaskScheduler.scheduleWithFixedDelay(runnableObj, scheduleInfoBean.getDelay());
-                            }
-
-                        } else if ("CRON_EXP".equalsIgnoreCase(scheduleInfoBean.getScheduleMode()) && scheduleInfoBean.getCronExpr() != null) {
-                            CronTrigger trigger = new CronTrigger(scheduleInfoBean.getCronExpr());
-                            future = (ScheduledFuture<Schedulable>) threadPoolTaskScheduler.schedule(runnableObj, trigger);
-
-                        } else if ("ONE_TIME".equalsIgnoreCase(scheduleInfoBean.getScheduleMode()) && scheduleInfoBean.getStartTime() != null) {
-                            future = (ScheduledFuture<Schedulable>) threadPoolTaskScheduler.schedule(runnableObj, scheduleInfoBean.getStartTime());
-
-                        } else {
-                            if (log.isErrorEnabled()) {
-                                log.error("Job: " + scheduleInfoBean.toString() + " has been ignored. Can't be schedule due to invalid scheduling configuration");
-                            }
-                            invalidSchedulingJobs.add(scheduleInfoBean);
-                        }
-                    } catch (TaskRejectedException | IllegalArgumentException tie) {
-                        if (tie instanceof IllegalArgumentException && "CRON_EXP".equalsIgnoreCase(scheduleInfoBean.getScheduleMode())) {
-                            if (log.isErrorEnabled()) {
-                                log.error("Job: " + scheduleInfoBean.toString() + " has invalid CRON expression. Failed to schedule.\n " + ExceptionUtils.getStackTrace(tie));
-                            }
-                            invalidSchedulingJobs.add(scheduleInfoBean);
-                        } else {
-                            rejectedSchedulingJobs.add(scheduleInfoBean);
-                            if (log.isErrorEnabled()) {
-                                log.error("Job: " + scheduleInfoBean.toString() + " got failed to schedule.\n " + ExceptionUtils.getStackTrace(tie));
-                            }
-                        }
-                    }
+                    // Each job uses its own future: an invalid/rejected job must not inherit the previous job's
+                    // future and be reported as SUCCEED (or be cancellable via the wrong task).
+                    ScheduledFuture<Schedulable> future =
+                            scheduleJob(scheduleInfoBean, invalidSchedulingJobs, rejectedSchedulingJobs);
                     if (future != null) {
                         succeedSchedulingJobs.add(scheduleInfoBean);
-                        if (scheduledTasks.containsKey(scheduleInfoBean)) {
-                            scheduledTasks.put(scheduleInfoBean, scheduledTasks.remove(scheduleInfoBean));
-                        } else {
-                            scheduledTasks.put(scheduleInfoBean, future);
-                        }
+                        registerScheduledTask(scheduleInfoBean, future);
                     }
                 }
             }
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             if (log.isErrorEnabled()) {
-                log.error("Exception occurred while scheduling.." + ExceptionUtils.getStackTrace(e));
+                log.error("Exception occurred while scheduling..", e);
             }
         }
-        if (invalidSchedulingJobs.size() > 0 || rejectedSchedulingJobs.size() > 0) {
+        logFailedJobs(invalidSchedulingJobs, rejectedSchedulingJobs);
+        if (log.isInfoEnabled()) {
+            log.info("Scheduling result for jobGroupName={} => SUCCEED={}, INVALID={}, REJECTED={}",
+                    safeGroupName, succeedSchedulingJobs.size(), invalidSchedulingJobs.size(), rejectedSchedulingJobs.size());
+        }
+        Map<String, Set<ScheduleInfoBean>> schedulingResult = new HashMap<>();
+        schedulingResult.put("SUCCEED", succeedSchedulingJobs);
+        schedulingResult.put("INVALID", invalidSchedulingJobs);
+        schedulingResult.put("REJECTED", rejectedSchedulingJobs);
+
+        return schedulingResult;
+    }
+
+    private List<ScheduleInfoBean> loadJobs(String jobGroupName, String safeGroupName, String... jobIds) {
+        boolean dbMode = middlewareNamedParameterJdbcTemplate != null;
+        if (log.isInfoEnabled()) {
+            log.info("Scheduler startup loading: jobGroupName={}, jobIds={}, dbMode={}", safeGroupName,
+                    hasJobIds(jobIds) ? LoggingHelper.stripCrlf(Arrays.toString(jobIds)) : "ALL", dbMode);
+        }
+
+        List<ScheduleInfoBean> dbJobs = new ArrayList<>();
+        if (dbMode) {
+            dbJobs = loadDbJobs(jobGroupName, safeGroupName);
+        } else if (log.isInfoEnabled()) {
+            log.info("middlewareNamedParameterJdbcTemplate is not available. Falling back to YAML properties for scheduler jobs");
+        }
+
+        if (dbJobs.isEmpty()) {
+            if (log.isInfoEnabled()) {
+                log.info("No DB jobs found for jobGroupName={}. Loading from YAML properties...", safeGroupName);
+            }
+            return loadYamlJobs(jobIds);
+        }
+        return filterDbJobs(dbJobs, jobIds);
+    }
+
+    private List<ScheduleInfoBean> loadDbJobs(String jobGroupName, String safeGroupName) {
+        String sql = "SELECT job_group_name, schedule_id, worker_bean_name, job_bean_names, job_parameter, " +
+                "schedule_mode, cron_expr, delay, interval_seconds, enable FROM schedule_job " +
+                "WHERE job_group_name = :jobGroupName AND enable = 'Y'";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("jobGroupName", jobGroupName);
+        List<ScheduleInfoBean> dbJobs = middlewareNamedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            ScheduleInfoBean b = new ScheduleInfoBean();
+            b.setWorkerBeanName(rs.getString("worker_bean_name"));
+            b.setJobBeanNames(rs.getString("job_bean_names"));
+            b.setJobParameter(rs.getString("job_parameter"));
+            b.setScheduleMode(rs.getString("schedule_mode"));
+            b.setCronExpr(rs.getString("cron_expr"));
+            b.setDelay(rs.getLong("delay"));
+            b.setInterval(rs.getLong("interval_seconds"));
+            b.setEnable(rs.getString("enable"));
+            b.setScheduleId(rs.getString("schedule_id"));
+            return b;
+        });
+        if (log.isInfoEnabled()) {
+            log.info("Fetched {} scheduled jobs from schedule_job table for jobGroupName={}", dbJobs.size(), safeGroupName);
+        }
+        return dbJobs;
+    }
+
+    private List<ScheduleInfoBean> loadYamlJobs(String... jobIds) {
+        List<ScheduleInfoBean> scheduledJobs = new ArrayList<>();
+        for (SchedulerProperties.ScheduleJobProperties jobProps : properties.getJobs()) {
+            if ("Y".equalsIgnoreCase(jobProps.getEnable()) && matchesJobIds(jobProps.getScheduleId(), jobIds)) {
+                ScheduleInfoBean b = new ScheduleInfoBean(
+                        jobProps.getWorkerBeanName(),
+                        jobProps.getJobBeanNames(),
+                        jobProps.getJobParameter(),
+                        jobProps.getScheduleMode(),
+                        null,
+                        jobProps.getCronExpr(),
+                        jobProps.getDelay(),
+                        jobProps.getInterval(),
+                        jobProps.getEnable()
+                );
+                b.setScheduleId(jobProps.getScheduleId());
+                scheduledJobs.add(b);
+                if (log.isInfoEnabled()) {
+                    log.info("YAML job loaded: scheduleId={}, workerBeanName={}, scheduleMode={}, cronExpr={}, interval={}",
+                            jobProps.getScheduleId(), jobProps.getWorkerBeanName(), jobProps.getScheduleMode(),
+                            jobProps.getCronExpr(), jobProps.getInterval());
+                }
+            }
+        }
+        return scheduledJobs;
+    }
+
+    private List<ScheduleInfoBean> filterDbJobs(List<ScheduleInfoBean> dbJobs, String... jobIds) {
+        List<ScheduleInfoBean> scheduledJobs = new ArrayList<>();
+        for (ScheduleInfoBean scheduleInfoBean : dbJobs) {
+            if (matchesJobIds(scheduleInfoBean.getScheduleId(), jobIds)) {
+                scheduledJobs.add(scheduleInfoBean);
+                if (log.isInfoEnabled()) {
+                    log.info("DB Sceduled job loaded: scheduleId={}, workerBeanName={}, scheduleMode={}, cronExpr={}, delay={}, intervalSeconds={}",
+                            scheduleInfoBean.getScheduleId(), scheduleInfoBean.getWorkerBeanName(), scheduleInfoBean.getScheduleMode(),
+                            scheduleInfoBean.getCronExpr(), scheduleInfoBean.getDelay(), scheduleInfoBean.getInterval());
+                }
+            }
+        }
+        return scheduledJobs;
+    }
+
+    private static boolean hasJobIds(String... jobIds) {
+        return jobIds != null && jobIds.length > 0;
+    }
+
+    private static boolean matchesJobIds(String scheduleId, String... jobIds) {
+        return !hasJobIds(jobIds) || Arrays.stream(jobIds).anyMatch(id -> id.equalsIgnoreCase(scheduleId));
+    }
+
+    /**
+     * Schedules a single job according to its mode. Returns the future, or {@code null} when the job was
+     * classified as invalid or rejected (in which case it has been added to the matching set).
+     */
+    private ScheduledFuture<Schedulable> scheduleJob(ScheduleInfoBean scheduleInfoBean,
+                                                     Set<ScheduleInfoBean> invalidSchedulingJobs,
+                                                     Set<ScheduleInfoBean> rejectedSchedulingJobs) {
+        Runnable runnableObj = () -> {
+            Schedulable worker = (Schedulable) beanFactory.getBean(scheduleInfoBean.getWorkerBeanName());
+            worker.run(scheduleInfoBean);
+        };
+        try {
+            ScheduledFuture<Schedulable> future = scheduleByMode(scheduleInfoBean, runnableObj);
+            if (future == null) {
+                if (log.isErrorEnabled()) {
+                    log.error("Job: {} has been ignored. Can't be schedule due to invalid scheduling configuration", scheduleInfoBean);
+                }
+                invalidSchedulingJobs.add(scheduleInfoBean);
+            }
+            return future;
+        } catch (TaskRejectedException | IllegalArgumentException tie) {
+            if (tie instanceof IllegalArgumentException && CRON_EXP.equalsIgnoreCase(scheduleInfoBean.getScheduleMode())) {
+                if (log.isErrorEnabled()) {
+                    log.error("Job: {} has invalid CRON expression. Failed to schedule.", scheduleInfoBean, tie);
+                }
+                invalidSchedulingJobs.add(scheduleInfoBean);
+            } else {
+                rejectedSchedulingJobs.add(scheduleInfoBean);
+                if (log.isErrorEnabled()) {
+                    log.error("Job: {} got failed to schedule.", scheduleInfoBean, tie);
+                }
+            }
+            return null;
+        }
+    }
+
+    /** Returns the scheduled future, or {@code null} when the job's scheduling configuration is invalid. */
+    @SuppressWarnings("unchecked") // ThreadPoolTaskScheduler returns ScheduledFuture<?>
+    private ScheduledFuture<Schedulable> scheduleByMode(ScheduleInfoBean job, Runnable runnableObj) {
+        String mode = job.getScheduleMode();
+        if ("FIXED_RATE".equalsIgnoreCase(mode) && job.getInterval() != null && job.getInterval() > -1) {
+            return (ScheduledFuture<Schedulable>) (job.getStartTime() != null
+                    ? threadPoolTaskScheduler.scheduleAtFixedRate(runnableObj, job.getStartTime(), job.getInterval())
+                    : threadPoolTaskScheduler.scheduleAtFixedRate(runnableObj, job.getInterval()));
+        }
+        if ("FIXED_DELAY".equalsIgnoreCase(mode) && job.getDelay() != null && job.getDelay() > -1) {
+            return (ScheduledFuture<Schedulable>) (job.getStartTime() != null
+                    ? threadPoolTaskScheduler.scheduleWithFixedDelay(runnableObj, job.getStartTime(), job.getDelay())
+                    : threadPoolTaskScheduler.scheduleWithFixedDelay(runnableObj, job.getDelay()));
+        }
+        if (CRON_EXP.equalsIgnoreCase(mode) && job.getCronExpr() != null) {
+            return (ScheduledFuture<Schedulable>) threadPoolTaskScheduler.schedule(runnableObj, new CronTrigger(job.getCronExpr()));
+        }
+        if ("ONE_TIME".equalsIgnoreCase(mode) && job.getStartTime() != null) {
+            return (ScheduledFuture<Schedulable>) threadPoolTaskScheduler.schedule(runnableObj, job.getStartTime());
+        }
+        return null;
+    }
+
+    private void registerScheduledTask(ScheduleInfoBean scheduleInfoBean, ScheduledFuture<Schedulable> future) {
+        if (scheduledTasks.containsKey(scheduleInfoBean)) {
+            scheduledTasks.put(scheduleInfoBean, scheduledTasks.remove(scheduleInfoBean));
+        } else {
+            scheduledTasks.put(scheduleInfoBean, future);
+        }
+    }
+
+    private static void logFailedJobs(Set<ScheduleInfoBean> invalidSchedulingJobs, Set<ScheduleInfoBean> rejectedSchedulingJobs) {
+        if (!invalidSchedulingJobs.isEmpty() || !rejectedSchedulingJobs.isEmpty()) {
             if (log.isInfoEnabled()) {
                 log.info("Below list of jobs failed to schedule...");
             }
             if (log.isErrorEnabled()) {
-                log.error("InvalidSchedulingJobs:" + invalidSchedulingJobs + "\nRejectedSchedulingJobs: " + rejectedSchedulingJobs.toString());
+                log.error("InvalidSchedulingJobs:{}\nRejectedSchedulingJobs: {}", invalidSchedulingJobs, rejectedSchedulingJobs);
             }
-
-            //TODO sendNotification(invalidSchedulingJobs, rejectedSchedulingJobs);
         }
-        if (log.isInfoEnabled()) {
-            log.info("Scheduling result for jobGroupName={} => SUCCEED={}, INVALID={}, REJECTED={}",
-                    jobGroupName, succeedSchedulingJobs.size(), invalidSchedulingJobs.size(), rejectedSchedulingJobs.size());
-        }
-        @SuppressWarnings("serial")
-        Map<String, Set<ScheduleInfoBean>> schedulingResult = new HashMap<String, Set<ScheduleInfoBean>>() {
-            {
-                put("SUCCEED", succeedSchedulingJobs);
-                put("INVALID", invalidSchedulingJobs);
-                put("REJECTED", rejectedSchedulingJobs);
-            }
-        };
-
-        return schedulingResult;
     }
 
 

@@ -396,6 +396,21 @@ public class OtpService {
     private static Recipients parse(final String value, final String sentVia) {
         final Set<String> mobiles = new LinkedHashSet<>();
         final Set<String> emails = new LinkedHashSet<>();
+        splitRecipients(value, mobiles, emails);
+        requireChannelRecipients(sentVia, mobiles, emails);
+        final boolean sms = VIA_SMS.equals(sentVia) || VIA_BOTH.equals(sentVia);
+        final boolean email = VIA_EMAIL.equals(sentVia) || VIA_BOTH.equals(sentVia);
+        if (!sms && !email) {
+            throw new OtpException("OTP010", "OTP template misconfiguration: unknown sent_via");
+        }
+        final Recipients kept = new Recipients(sms ? List.copyOf(mobiles) : List.of(), email ? List.copyOf(emails) : List.of());
+        if (kept.all().size() > MAX_RECIPIENTS) {
+            throw new OtpException("OTP005", "Number of recipients exceeds " + MAX_RECIPIENTS);
+        }
+        return kept;
+    }
+
+    private static void splitRecipients(final String value, final Set<String> mobiles, final Set<String> emails) {
         for (String token : tokens(value)) {
             if (TemplatedEmailService.EMAIL.matcher(token).matches()) {
                 emails.add(token);
@@ -407,22 +422,16 @@ public class OtpService {
             }
             mobiles.add(number);
         }
+    }
+
+    private static void requireChannelRecipients(final String sentVia, final Set<String> mobiles,
+                                                 final Set<String> emails) {
         if (VIA_SMS.equals(sentVia) && mobiles.isEmpty()) {
             throw invalidMobile();
         }
         if (VIA_EMAIL.equals(sentVia) && emails.isEmpty()) {
             throw invalidEmail();
         }
-        final boolean sms = VIA_SMS.equals(sentVia) || VIA_BOTH.equals(sentVia);
-        final boolean email = VIA_EMAIL.equals(sentVia) || VIA_BOTH.equals(sentVia);
-        if (!sms && !email) {
-            throw new OtpException("OTP010", "OTP template misconfiguration: unknown sent_via");
-        }
-        final Recipients kept = new Recipients(sms ? List.copyOf(mobiles) : List.of(), email ? List.copyOf(emails) : List.of());
-        if (kept.all().size() > MAX_RECIPIENTS) {
-            throw new OtpException("OTP005", "Number of recipients exceeds " + MAX_RECIPIENTS);
-        }
-        return kept;
     }
 
     private static List<String> tokens(final String value) {

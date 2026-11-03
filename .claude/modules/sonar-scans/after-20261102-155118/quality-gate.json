@@ -1,0 +1,61 @@
+{
+  "conditions": [
+    {
+      "actualValue": "1",
+      "comparator": "GT",
+      "errorThreshold": "1",
+      "metricKey": "new_reliability_rating",
+      "periodIndex": 1,
+      "status": "OK"
+    },
+    {
+      "actualValue": "1",
+      "comparator": "GT",
+      "errorThreshold": "1",
+      "metricKey": "new_security_rating",
+      "periodIndex": 1,
+      "status": "OK"
+    },
+    {
+      "actualValue": "1",
+      "comparator": "GT",
+      "errorThreshold": "1",
+      "metricKey": "new_maintainability_rating",
+      "periodIndex": 1,
+      "status": "OK"
+    },
+    {
+      "actualValue": "81.1",
+      "comparator": "LT",
+      "errorThreshold": "80",
+      "metricKey": "new_coverage",
+      "periodIndex": 1,
+      "status": "OK"
+    },
+    {
+      "actualValue": "1.2",
+      "comparator": "GT",
+      "errorThreshold": "3",
+      "metricKey": "new_duplicated_lines_density",
+      "periodIndex": 1,
+      "status": "OK"
+    },
+    {
+      "actualValue": "100.0",
+      "comparator": "LT",
+      "errorThreshold": "100",
+      "metricKey": "new_security_hotspots_reviewed",
+      "periodIndex": 1,
+      "status": "OK"
+    }
+  ],
+  "ignoredConditions": false,
+  "periods": [
+    {
+      "date": "2026-11-02T09:43:19+0000",
+      "index": 1,
+      "mode": "previous_version"
+    }
+  ],
+  "status": "OK"
+}

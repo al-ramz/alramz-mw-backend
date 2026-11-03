@@ -53,7 +53,8 @@ class CommunityPostServiceImplTest {
 
     @Test
     void publish_shouldRejectDescriptionThatIsBlankAfterSanitising() {
-        assertThatThrownBy(() -> service.publish(request("<script>alert('x')</script>")))
+        CommunityPostRequest postRequest = request("<script>alert('x')</script>");
+        assertThatThrownBy(() -> service.publish(postRequest))
                 .isInstanceOf(ApplicationException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.POST_DESC_INVALID);
         verifyNoInteractions(finouxClient);
@@ -61,7 +62,8 @@ class CommunityPostServiceImplTest {
 
     @Test
     void publish_shouldRejectDescriptionLongerThanTheCapAfterSanitising() {
-        assertThatThrownBy(() -> service.publish(request("a".repeat(10_001))))
+        CommunityPostRequest postRequest = request("a".repeat(10_001));
+        assertThatThrownBy(() -> service.publish(postRequest))
                 .isInstanceOf(ApplicationException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.POST_DESC_INVALID);
         verifyNoInteractions(finouxClient);
@@ -91,7 +93,8 @@ class CommunityPostServiceImplTest {
     void publish_shouldThrowFNX011WhenFinouxRejectsThePost() {
         when(finouxClient.insertPost(any(), anyString())).thenReturn(new FinouxResult.Rejected("Business rule failed"));
 
-        assertThatThrownBy(() -> service.publish(request("desc")))
+        CommunityPostRequest postRequest = request("desc");
+        assertThatThrownBy(() -> service.publish(postRequest))
                 .isInstanceOf(FinouxIntegrationException.class)
                 .hasMessage("Business rule failed")
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.FINOUX_REJECTED);
@@ -101,7 +104,8 @@ class CommunityPostServiceImplTest {
     void publish_shouldThrowFNX010WhenFinouxReturnsAnErrorStatus() {
         when(finouxClient.insertPost(any(), anyString())).thenReturn(new FinouxResult.Failed(500, "Finoux internal error"));
 
-        assertThatThrownBy(() -> service.publish(request("desc")))
+        CommunityPostRequest postRequest = request("desc");
+        assertThatThrownBy(() -> service.publish(postRequest))
                 .isInstanceOf(FinouxIntegrationException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.FINOUX_ERROR);
     }
@@ -111,7 +115,8 @@ class CommunityPostServiceImplTest {
         RuntimeException cause = new RuntimeException("connection refused");
         when(finouxClient.insertPost(any(), anyString())).thenReturn(new FinouxResult.Unavailable(cause));
 
-        assertThatThrownBy(() -> service.publish(request("desc")))
+        CommunityPostRequest postRequest = request("desc");
+        assertThatThrownBy(() -> service.publish(postRequest))
                 .isInstanceOf(FinouxUnavailableException.class)
                 .hasCause(cause);
     }

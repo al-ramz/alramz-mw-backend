@@ -23,7 +23,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.time.LocalDate;
@@ -39,7 +38,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -122,12 +120,12 @@ class MmfRepositoryImplTest {
         repository.findSweeps(MmfBook.MMF, "O", LocalDate.of(2025, 4, 1), LocalDate.of(2025, 5, 1));
 
         assertThat(params.getValue().getValue("type")).isEqualTo("O");
-        assertThat(params.getValue().getValue("fromDate")).isEqualTo(Date.valueOf("2025-04-01"));
-        assertThat(params.getValue().getValue("toDateExclusive")).isEqualTo(Date.valueOf("2025-05-01"));
+        assertThat(params.getValue().getValue("fromDate")).isEqualTo(LocalDate.of(2025, 4, 1));
+        assertThat(params.getValue().getValue("toDateExclusive")).isEqualTo(LocalDate.of(2025, 5, 1));
 
         ResultSet rs = mock(ResultSet.class);
         when(rs.getLong("SWEEP_NO")).thenReturn(52L);
-        when(rs.getDate("SWEEP_DATE")).thenReturn(Date.valueOf("2019-12-30"));
+        when(rs.getObject("SWEEP_DATE", LocalDate.class)).thenReturn(LocalDate.of(2019, 12, 30));
         when(rs.getString("CLIENT_ID")).thenReturn("2944237");
         when(rs.getBigDecimal("AMT")).thenReturn(new BigDecimal("3838.02"));
         MmfSweep sweep = (MmfSweep) mapper.getValue().mapRow(rs, 0);
@@ -194,7 +192,7 @@ class MmfRepositoryImplTest {
 
         MapSqlParameterSource mmf = params.getAllValues().get(0);
         assertThat(mmf.getValue("sweepNo")).isEqualTo(99L);
-        assertThat(mmf.getValue("sweepDate")).isEqualTo(Date.valueOf("2025-04-20"));
+        assertThat(mmf.getValue("sweepDate")).isEqualTo(LocalDate.of(2025, 4, 20));
         assertThat(mmf.getValue("accountNumber")).isEqualTo(1005L);
         assertThat(mmf.getValue("amount")).isEqualTo(new BigDecimal("2500.75"));
         assertThat(mmf.getValue("referenceId")).isEqualTo(987654321L);
@@ -245,7 +243,7 @@ class MmfRepositoryImplTest {
         when(rs.getBigDecimal("CLOSE_PRICE")).thenReturn(new BigDecimal("9.85"));
         when(rs.getString("CURRENCY")).thenReturn("AED");
         when(rs.getString("MARKET")).thenReturn("DFM", (String) null);
-        when(rs.getDate("PRICE_DATE")).thenReturn(Date.valueOf("2026-10-18"), (Date) null);
+        when(rs.getObject("PRICE_DATE", LocalDate.class)).thenReturn(LocalDate.of(2026, 10, 18), (LocalDate) null);
 
         MmfCustodianPosition first = (MmfCustodianPosition) mapper.getValue().mapRow(rs, 0);
         assertThat(first).isEqualTo(new MmfCustodianPosition().clientId("2001214").isin("AEE000301011").symbol("EMAAR")
@@ -258,14 +256,14 @@ class MmfRepositoryImplTest {
     }
 
     @Test
-    void findCustodianPositions_withDate_shouldBindSqlDate() throws Exception {
+    void findCustodianPositions_withDate_shouldBindDate() throws Exception {
         when(sqlQueriesManager.getSQLQueryFromConfig("mmf.custodian.positions")).thenReturn("POS");
         ArgumentCaptor<MapSqlParameterSource> params = ArgumentCaptor.forClass(MapSqlParameterSource.class);
         when(brokTemplate.query(eq("POS"), params.capture(), any(RowMapper.class))).thenReturn(List.of());
 
         repository.findCustodianPositions(List.of("1"), LocalDate.of(2025, 4, 20));
 
-        assertThat(params.getValue().getValue("asOfDate")).isEqualTo(Date.valueOf("2025-04-20"));
+        assertThat(params.getValue().getValue("asOfDate")).isEqualTo(LocalDate.of(2025, 4, 20));
     }
 
     // ---------- the real SQL file ----------

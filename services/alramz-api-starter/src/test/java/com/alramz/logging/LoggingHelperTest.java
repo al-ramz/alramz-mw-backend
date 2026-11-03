@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -221,7 +220,7 @@ class LoggingHelperTest {
 
         RequestLog noBody = RequestLog.builder().method("GET").uri("/y").payload(null).build();
         helper.logRequest(logger, noBody);
-        verify(logger).info(eq("Incoming request: {} {} {}"), eq("GET"), eq("/y"), eq(""));
+        verify(logger).info("Incoming request: {} {} {}", "GET", "/y", "");
         helper.logRequest(logger, null);
     }
 
@@ -243,11 +242,11 @@ class LoggingHelperTest {
 
         assertThat(seen).containsEntry("responseCode", "404").containsEntry("responseMessage", "Not Found")
                 .containsEntry("responseBody", "{}");
-        verify(logger).warn(eq("Slow {} detected: {}ms (threshold {}ms)"), eq("request"), eq(50L), eq(10L));
+        verify(logger).warn("Slow {} detected: {}ms (threshold {}ms)", "request", 50L, 10L);
         assertThat(MDCUtil.get("responseCode")).isNull();
 
         helper.logResponse(logger, helper.buildResponseLog(200, "", 1, 0, null));
-        verify(logger).info(eq("Completed response: status={} duration={}ms size={}B"), eq(200), eq(1L), eq(0L));
+        verify(logger).info("Completed response: status={} duration={}ms size={}B", 200, 1L, 0L);
 
         Logger silent = mock(Logger.class);
         helper.logResponse(silent, helper.buildResponseLog(200, "OK", 1, 0, null));

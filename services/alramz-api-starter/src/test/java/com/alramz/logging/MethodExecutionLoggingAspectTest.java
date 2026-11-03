@@ -25,6 +25,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class MethodExecutionLoggingAspectTest {
@@ -41,9 +43,9 @@ class MethodExecutionLoggingAspectTest {
         properties.getPerformance().setThreshold(Duration.ofMillis(0));
 
         MethodExecutionLoggingHelper helper = new MethodExecutionLoggingHelper(properties, new ObjectMapper());
-        ObjectProvider<MethodExecutionLoggingHelper> provider = Mockito.mock(ObjectProvider.class);
+        ObjectProvider<MethodExecutionLoggingHelper> provider = mock(ObjectProvider.class);
         when(provider.getIfAvailable()).thenReturn(helper);
-        aspect = new MethodExecutionLoggingAspect(provider, Mockito.mock(ObjectProvider.class));
+        aspect = new MethodExecutionLoggingAspect(provider, mock(ObjectProvider.class));
 
         Logger logger = (Logger) LoggerFactory.getLogger(MethodExecutionLoggingAspect.class);
         appender = new ListAppender<>();
@@ -76,11 +78,8 @@ class MethodExecutionLoggingAspectTest {
         String allMessages = events.stream()
                 .map(ILoggingEvent::getFormattedMessage)
                 .reduce("", (a, b) -> a + "\n" + b);
-        assertThat(allMessages).contains(">>> ENTERING:");
-        assertThat(allMessages).contains(">>> ARGS:");
-        assertThat(allMessages).contains("<<< EXITING:");
-        assertThat(allMessages).contains("<<< RETURN: result");
-        assertThat(allMessages).contains("<<< EXECUTION TIME:");
+        assertThat(allMessages).contains(">>> ENTERING:", ">>> ARGS:", "<<< EXITING:", "<<< RETURN: result",
+                "<<< EXECUTION TIME:");
     }
 
     @Test
@@ -99,6 +98,7 @@ class MethodExecutionLoggingAspectTest {
         try {
             aspect.logMethodExecution(pjp);
         } catch (RuntimeException ignored) {
+            // expected: the aspect rethrows after logging; only the logged/recorded side effects are asserted
         }
 
         List<ILoggingEvent> events = appender.list;
@@ -106,8 +106,7 @@ class MethodExecutionLoggingAspectTest {
         String allMessages = events.stream()
                 .map(ILoggingEvent::getFormattedMessage)
                 .reduce("", (a, b) -> a + "\n" + b);
-        assertThat(allMessages).contains("<<< EXCEPTION in");
-        assertThat(allMessages).contains("boom");
+        assertThat(allMessages).contains("<<< EXCEPTION in", "boom");
     }
 
     @Test
@@ -115,10 +114,11 @@ class MethodExecutionLoggingAspectTest {
         io.micrometer.tracing.Tracer tracer = mock(io.micrometer.tracing.Tracer.class);
         io.micrometer.tracing.Span span = mock(io.micrometer.tracing.Span.class, Mockito.RETURNS_SELF);
         when(tracer.nextSpan()).thenReturn(span);
-        when(tracer.withSpan(span)).thenReturn(mock(io.micrometer.tracing.Tracer.SpanInScope.class));
-        ObjectProvider<io.micrometer.tracing.Tracer> tracerProvider = Mockito.mock(ObjectProvider.class);
+        io.micrometer.tracing.Tracer.SpanInScope scope = mock(io.micrometer.tracing.Tracer.SpanInScope.class);
+        when(tracer.withSpan(span)).thenReturn(scope);
+        ObjectProvider<io.micrometer.tracing.Tracer> tracerProvider = mock(ObjectProvider.class);
         when(tracerProvider.getIfAvailable()).thenReturn(tracer);
-        ObjectProvider<MethodExecutionLoggingHelper> helperProvider = Mockito.mock(ObjectProvider.class);
+        ObjectProvider<MethodExecutionLoggingHelper> helperProvider = mock(ObjectProvider.class);
         when(helperProvider.getIfAvailable()).thenReturn(new MethodExecutionLoggingHelper(properties, new ObjectMapper()));
         MethodExecutionLoggingAspect tracingAspect = new MethodExecutionLoggingAspect(helperProvider, tracerProvider);
 
@@ -131,19 +131,20 @@ class MethodExecutionLoggingAspectTest {
 
         when(pjp.proceed()).thenReturn("result");
         tracingAspect.logMethodExecution(pjp);
-        Mockito.verify(span).name("TestService#doWork");
-        Mockito.verify(span).tag(Mockito.eq("method.args"), Mockito.contains("arg1"));
-        Mockito.verify(span).tag("method.return", "result");
-        Mockito.verify(span).end();
+        verify(span).name("TestService#doWork");
+        verify(span).tag(Mockito.eq("method.args"), Mockito.contains("arg1"));
+        verify(span).tag("method.return", "result");
+        verify(span).end();
 
         RuntimeException ex = new RuntimeException("boom");
         when(pjp.proceed()).thenThrow(ex);
         try {
             tracingAspect.logMethodExecution(pjp);
         } catch (RuntimeException ignored) {
+            // expected: the aspect rethrows after logging; only the logged/recorded side effects are asserted
         }
-        Mockito.verify(span).error(ex);
-        Mockito.verify(span, Mockito.times(2)).end();
+        verify(span).error(ex);
+        verify(span, times(2)).end();
     }
 
     @Test

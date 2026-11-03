@@ -119,7 +119,7 @@ public record DfmOnboardingPayload(
                 address.getPoBox(),
                 address.getZipCode(),
                 dialPrefix(address.getPhone()),
-                pay.getMethod() == DfmDividendPayment.MethodEnum.IVESTOR ? "iVESTOR" : "bank",
+                paymentMethod(pay),
                 pay.getAedIban(),
                 pay.getUsdIban(),
                 pay.getForeignAccount(),
@@ -130,15 +130,14 @@ public record DfmOnboardingPayload(
                 pay.getIvestorPrintName(),
                 portfolioOptions(r.getPortfolioOptions()),
                 crs == null ? null : yesNo(crs.getResident()),
-                crs == null || crs.getCountries() == null || crs.getCountries().isEmpty() ? null
-                        : new Csr(crs.getCountries().stream().map(DfmOnboardingPayload::csrCountry).toList()),
+                csr(crs),
                 fatca == null ? null : yesNo(fatca.getUsPerson()),
                 fatca == null ? null : fatca.getTin(),
                 eid == null ? null : eid.getEidNumber(),
                 eid == null ? null : date(eid.getExpiryDate()),
                 passport == null ? null : passport.getPassportNumber(),
                 passport == null ? null : date(passport.getExpiryDate()),
-                passport == null ? null : passport.getImageType().getValue(),
+                passportImageType(passport),
                 signature.getImageType().getValue(),
                 guardian == null ? null : guardian.getName(),
                 guardian == null ? null : guardian.getType(),
@@ -147,6 +146,21 @@ public record DfmOnboardingPayload(
                 passport == null ? null : passport.getImage(),
                 signature.getImage(),
                 guardian == null ? null : guardian.getProofDocument());
+    }
+
+    private static String paymentMethod(DfmDividendPayment pay) {
+        return pay.getMethod() == DfmDividendPayment.MethodEnum.IVESTOR ? "iVESTOR" : "bank";
+    }
+
+    private static Csr csr(DfmCrs crs) {
+        if (crs == null || crs.getCountries() == null || crs.getCountries().isEmpty()) {
+            return null;
+        }
+        return new Csr(crs.getCountries().stream().map(DfmOnboardingPayload::csrCountry).toList());
+    }
+
+    private static String passportImageType(DfmPassport passport) {
+        return passport == null ? null : passport.getImageType().getValue();
     }
 
     private static CsrCountry csrCountry(DfmCrsCountry c) {

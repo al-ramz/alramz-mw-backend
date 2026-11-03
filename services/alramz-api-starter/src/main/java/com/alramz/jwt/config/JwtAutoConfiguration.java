@@ -78,7 +78,7 @@ public class JwtAutoConfiguration {
     @Bean
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnClass(SecurityFilterChain.class)
-    SecurityFilterChain jwtSecurityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter, JwtProperties properties) throws Exception {
+    SecurityFilterChain jwtSecurityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter, JwtProperties properties) {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

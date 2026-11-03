@@ -1,14 +1,10 @@
 package com.alramz.controllers;
 
-import com.alramz.api.DfmOnboardingApi;
 import com.alramz.api.ExistingDataApi;
 import com.alramz.api.IbanApi;
 import com.alramz.api.VeriPhoneApi;
 import com.alramz.jwt.annotation.JwtSecured;
 import com.alramz.logging.aspect.Loggable;
-import com.alramz.model.OnboardingRequest;
-import com.alramz.model.OnboardingResponse;
-import com.alramz.service.OnboardingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +20,6 @@ import com.alramz.exception.ApplicationException;
 import com.alramz.exception.ExternalSystemException;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.context.request.RequestContextHolder;

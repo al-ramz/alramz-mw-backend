@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Component
 public class ValidationRequestMapper {

@@ -35,9 +35,10 @@ import java.util.regex.Pattern;
 public class SmsServiceImpl implements SmsService {
 
     private static final Pattern SEPARATORS = Pattern.compile("[;,/\\s]+");
-    private static final Pattern NUMBER = Pattern.compile("^[1-9][0-9]{7,14}$");
-    private static final Pattern MSG_CATEGORY = Pattern.compile("^[0-9]{1,3}(\\.[0-9]{1,3})?$");
+    private static final Pattern NUMBER = Pattern.compile("^[1-9]\\d{7,14}$");
+    private static final Pattern MSG_CATEGORY = Pattern.compile("^\\d{1,3}(\\.\\d{1,3})?$");
     private static final int MAX_EXPIRY_SECS = 86_400;
+    private static final String PROVIDER_REJECTED = "SMS009";
     private static final Pattern PROVIDER_CODE = Pattern.compile("^[A-Za-z0-9._-]{1,16}$");
 
     private final SmsProperties properties;
@@ -56,6 +57,27 @@ public class SmsServiceImpl implements SmsService {
     @Override
     public Outcome sendWithOutcome(final SmsSendRequest request) {
         final Map<String, Integer> numbers = numbersWithEntryIndex(request.getMobileNumbers());
+        validateBodyAndNumbers(request, numbers);
+        final String msgCategory = msgCategory(request);
+        final int expiry = expiry(request);
+
+        final String correlationId = correlationId();
+        final boolean live = properties.liveSendEnabled();
+        final Map<String, SmsRecipientResult> results = new LinkedHashMap<>();
+        numbers.keySet().forEach(n -> results.put(n, new SmsRecipientResult().mobileNumber(n).serviceProvider(route(n, live))));
+        boolean anyRejected = false;
+        for (ServiceProviderEnum provider : List.of(ServiceProviderEnum.WASELNEY, ServiceProviderEnum.ETISALAT)) {
+            for (SmsRecipientResult result : results.values()) {
+                if (result.getServiceProvider() == provider) {
+                    anyRejected |= send(result, request.getMessageBody(), msgCategory, expiry, correlationId, live);
+                }
+            }
+        }
+        return new Outcome(new SmsSendResult().correlationId(correlationId).simulated(!live)
+                .results(new ArrayList<>(results.values())), anyRejected);
+    }
+
+    private void validateBodyAndNumbers(final SmsSendRequest request, final Map<String, Integer> numbers) {
         final List<String> missing = new ArrayList<>();
         if (request.getMessageBody() == null || request.getMessageBody().isBlank()) {
             missing.add("messageBody");
@@ -77,31 +99,24 @@ public class SmsServiceImpl implements SmsService {
                 throw new SmsException("SMS002", "Invalid mobile number in: mobileNumbers[" + entry + "]");
             }
         });
+    }
+
+    private String msgCategory(final SmsSendRequest request) {
         final String msgCategory = request.getMsgCategory() == null
                 ? properties.defaults().msgCategory() : request.getMsgCategory();
         if (!MSG_CATEGORY.matcher(msgCategory).matches()) {
             throw new SmsException("SMS005", "Invalid field: msgCategory");
         }
+        return msgCategory;
+    }
+
+    private int expiry(final SmsSendRequest request) {
         final int expiry = request.getExpiryInSecs() == null
                 ? properties.defaults().expiryInSecs() : request.getExpiryInSecs();
         if (expiry < 1 || expiry > MAX_EXPIRY_SECS) {
             throw new SmsException("SMS005", "Invalid field: expiryInSecs");
         }
-
-        final String correlationId = correlationId();
-        final boolean live = properties.liveSendEnabled();
-        final Map<String, SmsRecipientResult> results = new LinkedHashMap<>();
-        numbers.keySet().forEach(n -> results.put(n, new SmsRecipientResult().mobileNumber(n).serviceProvider(route(n, live))));
-        boolean anyRejected = false;
-        for (ServiceProviderEnum provider : List.of(ServiceProviderEnum.WASELNEY, ServiceProviderEnum.ETISALAT)) {
-            for (SmsRecipientResult result : results.values()) {
-                if (result.getServiceProvider() == provider) {
-                    anyRejected |= send(result, request.getMessageBody(), msgCategory, expiry, correlationId, live);
-                }
-            }
-        }
-        return new Outcome(new SmsSendResult().correlationId(correlationId).simulated(!live)
-                .results(new ArrayList<>(results.values())), anyRejected);
+        return expiry;
     }
 
     /** Sends one number and fills its status; returns true when the provider rejected it. */
@@ -127,7 +142,7 @@ public class SmsServiceImpl implements SmsService {
             result.status(StatusEnum.FAILED);
             log.warn("SMS failed provider={} number={} code={} correlationId={}", result.getServiceProvider(),
                     mask(number), e.getCode(), correlationId);
-            return "SMS009".equals(e.getCode());
+            return PROVIDER_REJECTED.equals(e.getCode());
         }
     }
 
@@ -211,7 +226,7 @@ public class SmsServiceImpl implements SmsService {
         if (e instanceof RestClientResponseException response) {
             final int status = response.getStatusCode().value();
             log.warn("SMS provider rejected provider={} httpStatus={}", provider, status);
-            return new SmsException("SMS009", "SMS provider rejected " + provider + " " + status);
+            return new SmsException(PROVIDER_REJECTED, "SMS provider rejected " + provider + " " + status);
         }
         final String type = e.getMostSpecificCause().getClass().getSimpleName();
         if (e instanceof ResourceAccessException) {
@@ -219,6 +234,6 @@ public class SmsServiceImpl implements SmsService {
             return new SmsException("SMS010", "SMS provider unavailable " + provider + " " + type);
         }
         log.warn("SMS provider response unreadable provider={} error={}", provider, type);
-        return new SmsException("SMS009", "SMS provider rejected " + provider + " " + type);
+        return new SmsException(PROVIDER_REJECTED, "SMS provider rejected " + provider + " " + type);
     }
 }

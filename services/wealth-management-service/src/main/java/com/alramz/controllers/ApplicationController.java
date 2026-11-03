@@ -22,7 +22,7 @@ public class ApplicationController {
     @GetMapping("/api/v1/info")
     @PermitAll
     @Loggable
-    public Map<String, Object> info() throws Exception {
+    public Map<String, Object> info() {
 
         Map<String, Object> response = new HashMap<>();
         response.put("applicationName", applicationName);

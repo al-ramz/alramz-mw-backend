@@ -48,7 +48,7 @@ class CommunityPostControllerTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode().value()).isEqualTo(201);
         assertThat(response.getHeaders().getLocation()).isNotNull();
-        assertThat(response.getHeaders().getLocation().toString()).isEqualTo("/api/v1/community/posts/4747");
+        assertThat(response.getHeaders().getLocation()).hasToString("/api/v1/community/posts/4747");
 
         GenericResponse body = response.getBody();
         assertThat(body).isNotNull();
@@ -73,7 +73,7 @@ class CommunityPostControllerTest {
 
         var response = controller.createCommunityPost(request);
 
-        assertThat(response.getBody().getCorrelationId().toString()).isEqualTo("2afe4a42-44f7-4e12-aae7-df0e42d4d757");
+        assertThat(response.getBody().getCorrelationId()).hasToString("2afe4a42-44f7-4e12-aae7-df0e42d4d757");
     }
 
     @Test

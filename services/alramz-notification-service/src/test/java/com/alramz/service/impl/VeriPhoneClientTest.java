@@ -79,8 +79,7 @@ class VeriPhoneClientTest {
         });
         assertThat(client.countryCode("14155550100")).isEmpty();
 
-        assertThat(logs.list).hasSize(2);
-        assertThat(logs.list).allSatisfy(e -> assertThat(e.getFormattedMessage())
+        assertThat(logs.list).hasSize(2).allSatisfy(e -> assertThat(e.getFormattedMessage())
                 .doesNotContain("Vk").doesNotContain("key=").doesNotContain("14155550100"));
     }
 }

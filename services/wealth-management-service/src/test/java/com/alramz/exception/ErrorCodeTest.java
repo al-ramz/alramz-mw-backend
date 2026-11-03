@@ -109,8 +109,8 @@ class ErrorCodeTest {
     @Test
     void codes_shouldBeUniqueAndPrefixed() {
         Set<String> codes = Arrays.stream(ErrorCode.values()).map(ErrorCode::code).collect(Collectors.toSet());
-        assertThat(codes).hasSize(ErrorCode.values().length);
-        assertThat(codes).allMatch(c -> c.matches("MMF\\d{3}"));
+        assertThat(codes).hasSize(ErrorCode.values().length)
+                .allMatch(c -> c.matches("MMF\\d{3}"));
         assertThat(ErrorCode.values()).allSatisfy(c -> assertThat(c.defaultMessage()).isNotBlank());
     }
 }

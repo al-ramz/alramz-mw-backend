@@ -295,8 +295,9 @@ class EmailServiceImplTest {
     @Test
     void sendEmail_graph401TwiceIsBackendB001() {
         doThrow(graphError(401, Map.of())).when(sendMailRequest).post();
+        final EmailRequest request = request();
 
-        assertThatThrownBy(() -> service.sendEmail(request()))
+        assertThatThrownBy(() -> service.sendEmail(request))
                 .isInstanceOf(EmailServiceException.class)
                 .hasFieldOrPropertyWithValue("code", "MGE-B-001")
                 .hasNoCause();
@@ -307,8 +308,9 @@ class EmailServiceImplTest {
     @Test
     void sendEmail_graph429WithRetryAfterIsB002WithHeaderValue() {
         doThrow(graphError(429, Map.of("Retry-After", "30"))).when(sendMailRequest).post();
+        final EmailRequest request = request();
 
-        assertThatThrownBy(() -> service.sendEmail(request()))
+        assertThatThrownBy(() -> service.sendEmail(request))
                 .isInstanceOf(EmailServiceException.class)
                 .hasFieldOrPropertyWithValue("code", "MGE-B-002")
                 .hasFieldOrPropertyWithValue("retryAfter", "30")
@@ -362,13 +364,14 @@ class EmailServiceImplTest {
     void sendEmail_clientOrUnexpectedExceptionIsB004() {
         final ClientException clientException = new ClientException("Error during http request", null);
         doThrow(clientException).when(sendMailRequest).post();
-        assertThatThrownBy(() -> service.sendEmail(request()))
+        final EmailRequest request = request();
+        assertThatThrownBy(() -> service.sendEmail(request))
                 .isInstanceOf(EmailServiceException.class)
                 .hasFieldOrPropertyWithValue("code", "MGE-B-004")
                 .hasCause(clientException);
 
         doThrow(new IllegalStateException("boom")).when(sendMailRequest).post();
-        assertThatThrownBy(() -> service.sendEmail(request()))
+        assertThatThrownBy(() -> service.sendEmail(request))
                 .hasFieldOrPropertyWithValue("code", "MGE-B-004");
     }
 
@@ -376,8 +379,9 @@ class EmailServiceImplTest {
     @SuppressWarnings({"unchecked", "rawtypes"})
     void sendEmail_noGraphClientIsConfigurationError() {
         when(((ObjectProvider) graphClientProvider).getIfAvailable()).thenReturn(null);
+        final EmailRequest request = request();
 
-        assertThatThrownBy(() -> service.sendEmail(request())).isInstanceOf(EmailConfigurationException.class);
+        assertThatThrownBy(() -> service.sendEmail(request)).isInstanceOf(EmailConfigurationException.class);
     }
 
     // ------------------------------------------------------------------ Retry-After parsing
@@ -404,17 +408,19 @@ class EmailServiceImplTest {
 
         assertThatThrownBy(() -> service.sendEmail(request)).isInstanceOf(EmailServiceException.class);
         service.sendEmail(request);
-        assertThatThrownBy(() -> service.sendEmail(request().to("leak@example.com,bad"))).isInstanceOf(EmailValidationException.class);
+        final EmailRequest invalid = request().to("leak@example.com,bad");
+        assertThatThrownBy(() -> service.sendEmail(invalid)).isInstanceOf(EmailValidationException.class);
 
-        assertThat(logs.list).isNotEmpty();
-        assertThat(logs.list).allSatisfy(e -> assertThat(e.getFormattedMessage())
+        assertThat(logs.list).isNotEmpty().allSatisfy(e -> assertThat(e.getFormattedMessage())
                 .doesNotContain(secretBody, "Secret Subject", "jane.doe@example.com", "manager@example.com",
                         "leak@example.com", "ATTACHMENT-SECRET"));
     }
 
     @Test
     void sendEmail_validationFailureDoesNotTouchGraphProvider() {
-        assertThatThrownBy(() -> service.sendEmail(request().from("ceo@example.com")))
+        final EmailRequest request = request().from("ceo@example.com");
+
+        assertThatThrownBy(() -> service.sendEmail(request))
                 .isInstanceOf(EmailValidationException.class);
         verify(graphClientProvider, never()).getIfAvailable();
         verify(userRequestBuilder, never()).sendMail(any());

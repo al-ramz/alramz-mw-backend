@@ -5,7 +5,6 @@ import com.alramz.config.ETradeTokenProvider;
 import com.alramz.exception.ExternalSystemException;
 import com.alramz.exceptions.ApiCallFailedException;
 import com.alramz.model.ETradeResponse;
-import com.alramz.service.impl.NinTradingNumberValidationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
@@ -41,24 +41,19 @@ class DuplicateCheckHelperTest {
     }
 
     private DuplicateCheckHelper helperWithNinService(NinTradingNumberValidationService ninService) {
-        ObjectProvider<NinTradingNumberValidationService> provider = org.mockito.Mockito.mock(ObjectProvider.class);
+        ObjectProvider<NinTradingNumberValidationService> provider = mock(ObjectProvider.class);
         when(provider.getIfAvailable()).thenReturn(ninService);
         return new DuplicateCheckHelper(etradeTokenProvider, etradeClient, provider);
     }
 
     private DuplicateCheckHelper helperWithoutNinService() {
-        ObjectProvider<NinTradingNumberValidationService> provider = org.mockito.Mockito.mock(ObjectProvider.class);
-        return new DuplicateCheckHelper(etradeTokenProvider, etradeClient, provider);
-    }
-
-    private DuplicateCheckHelper helperForETrade() {
-        ObjectProvider<NinTradingNumberValidationService> provider = org.mockito.Mockito.mock(ObjectProvider.class);
+        ObjectProvider<NinTradingNumberValidationService> provider = mock(ObjectProvider.class);
         return new DuplicateCheckHelper(etradeTokenProvider, etradeClient, provider);
     }
 
     @Test
     void checkNinExists_shouldReturnTrueWhenNinExists() {
-        NinTradingNumberValidationService ninService = org.mockito.Mockito.mock(NinTradingNumberValidationService.class);
+        NinTradingNumberValidationService ninService = mock(NinTradingNumberValidationService.class);
         when(ninService.checkIfNinOrTradingNumberExists("DFM", "NIN123", null)).thenReturn(true);
 
         DuplicateCheckHelper helper = helperWithNinService(ninService);
@@ -80,7 +75,7 @@ class DuplicateCheckHelperTest {
 
     @Test
     void checkEidExists_shouldReturnTrueWhenEidExists() {
-        DuplicateCheckHelper helper = helperForETrade();
+        DuplicateCheckHelper helper = helperWithoutNinService();
         when(etradeTokenProvider.getToken()).thenReturn(Optional.of("token"));
         when(etradeClient.callETrade(anyString(), anyString(), anyString(), any(), any()))
                 .thenReturn(new ETradeResponse("0", null, mockResData("{\"Exists\":true}"), true));
@@ -92,7 +87,7 @@ class DuplicateCheckHelperTest {
 
     @Test
     void checkEmailExists_shouldReturnTrueWhenEmailExists() {
-        DuplicateCheckHelper helper = helperForETrade();
+        DuplicateCheckHelper helper = helperWithoutNinService();
         when(etradeTokenProvider.getToken()).thenReturn(Optional.of("token"));
         when(etradeClient.callETrade(anyString(), anyString(), anyString(), any(), any()))
                 .thenReturn(new ETradeResponse("0", null, mockResData("{\"Exists\":true}"), true));
@@ -104,7 +99,7 @@ class DuplicateCheckHelperTest {
 
     @Test
     void checkPassportExists_shouldReturnTrueWhenPassportExists() {
-        DuplicateCheckHelper helper = helperForETrade();
+        DuplicateCheckHelper helper = helperWithoutNinService();
         when(etradeTokenProvider.getToken()).thenReturn(Optional.of("token"));
         when(etradeClient.callETrade(anyString(), anyString(), anyString(), any(), any()))
                 .thenReturn(new ETradeResponse("0", null, mockResData("{\"Exists\":true}"), true));
@@ -116,7 +111,7 @@ class DuplicateCheckHelperTest {
 
     @Test
     void checkEidExists_shouldThrowWhenTokenMissing() {
-        DuplicateCheckHelper helper = helperForETrade();
+        DuplicateCheckHelper helper = helperWithoutNinService();
         when(etradeTokenProvider.getToken()).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> helper.checkEidExists("EID123"))
@@ -126,7 +121,7 @@ class DuplicateCheckHelperTest {
 
     @Test
     void checkEidExists_shouldThrowWhenETradeReturnsError() {
-        DuplicateCheckHelper helper = helperForETrade();
+        DuplicateCheckHelper helper = helperWithoutNinService();
         when(etradeTokenProvider.getToken()).thenReturn(Optional.of("token"));
         when(etradeClient.callETrade(anyString(), anyString(), anyString(), any(), any()))
                 .thenReturn(new ETradeResponse("1", null, mockResData("{\"message\":\"error\"}"), null));
@@ -138,7 +133,7 @@ class DuplicateCheckHelperTest {
 
     @Test
     void checkEidExists_shouldRetryOn401AndSucceed() {
-        DuplicateCheckHelper helper = helperForETrade();
+        DuplicateCheckHelper helper = helperWithoutNinService();
         when(etradeTokenProvider.getToken()).thenReturn(Optional.of("token"));
 
         ApiCallFailedException apiException = new ApiCallFailedException("/path", "POST", 401, "Unauthorized");
@@ -154,7 +149,7 @@ class DuplicateCheckHelperTest {
 
     @Test
     void checkEidExists_shouldThrowExternalSystemExceptionOn401RetryFailure() {
-        DuplicateCheckHelper helper = helperForETrade();
+        DuplicateCheckHelper helper = helperWithoutNinService();
         when(etradeTokenProvider.getToken()).thenReturn(Optional.of("token"), Optional.empty());
 
         ApiCallFailedException apiException = new ApiCallFailedException("/path", "POST", 401, "Unauthorized");
@@ -168,7 +163,7 @@ class DuplicateCheckHelperTest {
 
     @Test
     void checkEidExists_shouldThrowExternalSystemExceptionOnNon401Error() {
-        DuplicateCheckHelper helper = helperForETrade();
+        DuplicateCheckHelper helper = helperWithoutNinService();
         when(etradeTokenProvider.getToken()).thenReturn(Optional.of("token"));
 
         ApiCallFailedException apiException = new ApiCallFailedException("/path", "POST", 500, "Server Error");

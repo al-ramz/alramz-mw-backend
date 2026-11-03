@@ -26,12 +26,11 @@ class SchedulerManagerControllerTest {
     @BeforeEach
     void setUp() {
         scheduler = mock(ISchedulerService.class);
-        controller = new SchedulerManagerController();
-        controller.scheduler = scheduler;
+        controller = new SchedulerManagerController(scheduler);
     }
 
     @Test
-    void stopReturnsSchedulerResult() throws Exception {
+    void stopReturnsSchedulerResult() {
         when(scheduler.stopScheduler()).thenReturn("stopped");
 
         ResponseEntity<String> response = controller.stopScheduler();
@@ -41,14 +40,14 @@ class SchedulerManagerControllerTest {
     }
 
     @Test
-    void stopFailureIsReportedInBody() throws Exception {
+    void stopFailureIsReportedInBody() {
         when(scheduler.stopScheduler()).thenThrow(new IllegalStateException("x"));
 
         assertThat(controller.stopScheduler().getBody()).isEqualTo("Failed to Stop the scheduler");
     }
 
     @Test
-    void restartDelegatesWithJobGroup() throws Exception {
+    void restartDelegatesWithJobGroup() {
         Map<String, Set<ScheduleInfoBean>> result = Map.of("SUCCEED", Set.of());
         when(scheduler.reintializeScheduler("grp")).thenReturn(result);
 
@@ -59,7 +58,18 @@ class SchedulerManagerControllerTest {
     }
 
     @Test
-    void restartFailureReturnsErrorKey() throws Exception {
+    void restartStripsCrlfFromJobGroupBeforeUseOrLogging() {
+        Map<String, Set<ScheduleInfoBean>> result = Map.of("SUCCEED", Set.of());
+        when(scheduler.reintializeScheduler("grp__FORGED")).thenReturn(result);
+
+        ResponseEntity<Map<String, Set<ScheduleInfoBean>>> response =
+                controller.restartScheduler(new RestartSchedulerRequest("grp\r\nFORGED"));
+
+        assertThat(response.getBody()).isSameAs(result);
+    }
+
+    @Test
+    void restartFailureReturnsErrorKey() {
         when(scheduler.reintializeScheduler("grp")).thenThrow(new RuntimeException("busy"));
 
         Map<String, Set<ScheduleInfoBean>> body = controller.restartScheduler(new RestartSchedulerRequest("grp")).getBody();
@@ -68,7 +78,7 @@ class SchedulerManagerControllerTest {
     }
 
     @Test
-    void refreshJobsPassesJobIdsAsArray() throws Exception {
+    void refreshJobsPassesJobIdsAsArray() {
         Map<String, Set<ScheduleInfoBean>> result = Map.of("SUCCEED", Set.of());
         when(scheduler.reintializeSchedulerForJobs("grp", "J1", "J2")).thenReturn(result);
 
@@ -79,7 +89,7 @@ class SchedulerManagerControllerTest {
     }
 
     @Test
-    void refreshJobsFailureReturnsErrorKey() throws Exception {
+    void refreshJobsFailureReturnsErrorKey() {
         when(scheduler.reintializeSchedulerForJobs("grp", "J1")).thenThrow(new RuntimeException("x"));
 
         assertThat(controller.restartScheduledForJobs(new RefreshJobsRequest("grp", List.of("J1"))).getBody())
@@ -87,14 +97,14 @@ class SchedulerManagerControllerTest {
     }
 
     @Test
-    void unregisterJobsReturnsCancellationStatus() throws Exception {
+    void unregisterJobsReturnsCancellationStatus() {
         when(scheduler.unregisterJobs("J1")).thenReturn(Map.of("J1", true));
 
         assertThat(controller.unregisterJobs(List.of("J1")).getBody()).containsEntry("J1", true);
     }
 
     @Test
-    void unregisterJobsFailureReturnsFalseFlag() throws Exception {
+    void unregisterJobsFailureReturnsFalseFlag() {
         when(scheduler.unregisterJobs("J1")).thenThrow(new RuntimeException("x"));
 
         assertThat(controller.unregisterJobs(List.of("J1")).getBody())
@@ -102,7 +112,7 @@ class SchedulerManagerControllerTest {
     }
 
     @Test
-    void statReturnsSchedulerStatus() throws Exception {
+    void statReturnsSchedulerStatus() {
         SchedStatus stat = new SchedStatus(Map.of(), 1, 2, 3L, 4L, 5);
         when(scheduler.getSchedulerStat()).thenReturn(stat);
 
@@ -117,14 +127,14 @@ class SchedulerManagerControllerTest {
     }
 
     @Test
-    void statFailureReturnsNullBody() throws Exception {
+    void statFailureReturnsNullBody() {
         when(scheduler.getSchedulerStat()).thenThrow(new RuntimeException("x"));
 
         assertThat(controller.getSchedulerStat().getBody()).isNull();
     }
 
     @Test
-    void hardStopReturnsResultOrFailureMessage() throws Exception {
+    void hardStopReturnsResultOrFailureMessage() {
         when(scheduler.hardStopScheduler()).thenReturn("forced");
         assertThat(controller.hardStopScheduler().getBody()).isEqualTo("forced");
 

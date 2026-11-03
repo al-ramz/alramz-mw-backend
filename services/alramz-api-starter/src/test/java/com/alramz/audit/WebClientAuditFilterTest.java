@@ -17,16 +17,17 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.net.ConnectException;
-import java.net.URI;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -99,7 +100,7 @@ class WebClientAuditFilterTest {
 
         assertThat(body).isEqualTo("{\"isSuccess\":true,\"password\":\"resp-secret\"}");
         ApiAuditLog entry = recordedEntry();
-        assertThat(entry.correlationId().toString()).isEqualTo(CORRELATION_ID);
+        assertThat(entry.correlationId()).hasToString(CORRELATION_ID);
         assertThat(entry.direction()).isEqualTo("OUTBOUND");
         assertThat(entry.serviceName()).isEqualTo("test-service");
         assertThat(entry.controllerName()).isEqualTo("finoux.example.invalid");
@@ -115,7 +116,9 @@ class WebClientAuditFilterTest {
 
     @Test
     void recordsAnErrorStatusAsFailure() {
-        assertThatThrownBy(() -> post(client(answering(HttpStatus.INTERNAL_SERVER_ERROR, "{\"message\":\"boom\"}"))).block());
+        var call = post(client(answering(HttpStatus.INTERNAL_SERVER_ERROR, "{\"message\":\"boom\"}")));
+        assertThatThrownBy(call::block)
+                .isInstanceOf(WebClientResponseException.class);
 
         ApiAuditLog entry = recordedEntry();
         assertThat(entry.status()).isEqualTo("FAILURE");
@@ -128,7 +131,8 @@ class WebClientAuditFilterTest {
     void recordsAConnectionFailure() {
         ExchangeFunction refused = request -> Mono.error(new ConnectException("Connection refused"));
 
-        assertThatThrownBy(() -> post(client(refused)).block());
+        assertThatThrownBy(() -> post(client(refused)).block())
+                .hasRootCauseInstanceOf(ConnectException.class);
 
         ApiAuditLog entry = recordedEntry();
         assertThat(entry.status()).isEqualTo("FAILURE");
@@ -141,7 +145,8 @@ class WebClientAuditFilterTest {
     void recordsATimeoutAsACancelledCall() {
         ExchangeFunction silent = request -> Mono.never();
 
-        assertThatThrownBy(() -> post(client(silent)).timeout(Duration.ofMillis(100)).block());
+        assertThatThrownBy(() -> post(client(silent)).timeout(Duration.ofMillis(100)).block())
+                .hasRootCauseInstanceOf(TimeoutException.class);
 
         ApiAuditLog entry = recordedEntry();
         assertThat(entry.status()).isEqualTo("FAILURE");

@@ -29,7 +29,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 public class PhoneValidationServiceImpl extends AbstractRestClient implements PhoneValidationService {
 
     private final PhoneServiceProperties phoneServiceProperties;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public PhoneValidationServiceImpl(
             @Qualifier("phoneValidationService") WebClient webClient,
@@ -70,9 +69,7 @@ public class PhoneValidationServiceImpl extends AbstractRestClient implements Ph
                     null,
                     params
             ).block();
-        } catch (ApiCallFailedException e) {
-            throw new ExternalSystemException("Phone validation service unavailable");
-        } catch (WebClientResponseException e) {
+        } catch (ApiCallFailedException | WebClientResponseException e) {
             throw new ExternalSystemException("Phone validation service unavailable");
         } catch (RuntimeException e) { // NOPMD AvoidCatchingGenericException
             throw new TechnicalException("Internal Server Error");

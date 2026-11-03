@@ -36,7 +36,6 @@ import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -283,7 +282,7 @@ class MmfApiDispatchTest {
 
     @Test
     void custodianPositions_shouldSerializePriceDateAndMarket() throws Exception {
-        when(mmfService.listCustodianPositions(eq(LocalDate.of(2025, 4, 20)))).thenReturn(List.of(new MmfCustodianPosition()
+        when(mmfService.listCustodianPositions(LocalDate.of(2025, 4, 20))).thenReturn(List.of(new MmfCustodianPosition()
                 .clientId("2001214").isin("AEE000301011").symbol("EMAAR").quantity(new BigDecimal("15000"))
                 .closePrice(new BigDecimal("9.85")).currency("AED").market(MmfMarket.DFM).priceDate(LocalDate.of(2025, 4, 20))));
 

@@ -1,6 +1,5 @@
 package com.alramz.service.impl;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
@@ -123,7 +122,8 @@ class MmfServiceImplTest {
 
     @Test
     void listSweeps_onlyOneDate_shouldThrow010or020() {
-        assertThatThrownBy(() -> service.listSweeps("W", LocalDate.of(2025, 4, 1), null))
+        LocalDate fromDate = LocalDate.of(2025, 4, 1);
+        assertThatThrownBy(() -> service.listSweeps("W", fromDate, null))
                 .isInstanceOf(ApplicationException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.SWEEP_IN_DATES_INCOMPLETE)
                 .hasMessage("Provide both fromDate and toDate, or neither");
@@ -222,9 +222,10 @@ class MmfServiceImplTest {
         when(repository.lockSweepTypes(eq(MmfBook.CAPITAL), anyCollection())).thenReturn(Map.of(1L, "W"));
         when(repository.lockSweepTypes(eq(MmfBook.MMF), anyCollection())).thenReturn(Map.of(7L, "O", 8L, "W"));
 
-        assertThatThrownBy(() -> service.confirmSweepIns(List.of(
+        List<MmfSweepConfirmationItem> items = List.of(
                 confirmItem(1, MmfBook.CAPITAL), confirmItem(2170412, MmfBook.CAPITAL),
-                confirmItem(7, MmfBook.MMF), confirmItem(8, MmfBook.MMF))))
+                confirmItem(7, MmfBook.MMF), confirmItem(8, MmfBook.MMF));
+        assertThatThrownBy(() -> service.confirmSweepIns(items))
                 .isInstanceOf(MmfConflictException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.CONFIRM_CONFLICT)
                 .hasMessage("Sweeps unknown or not pending: CAPITAL 2170412, MMF 7");
@@ -273,7 +274,8 @@ class MmfServiceImplTest {
     void confirm_lockFailsOnConnection_shouldPropagateForHandler() {
         when(repository.lockSweepTypes(any(), anyCollection())).thenThrow(new CannotGetJdbcConnectionException("down"));
 
-        assertThatThrownBy(() -> service.confirmSweepIns(List.of(confirmItem(1, MmfBook.CAPITAL))))
+        List<MmfSweepConfirmationItem> items = List.of(confirmItem(1, MmfBook.CAPITAL));
+        assertThatThrownBy(() -> service.confirmSweepIns(items))
                 .isInstanceOf(CannotGetJdbcConnectionException.class);
         verify(brokTm).rollback(any());
     }
@@ -297,7 +299,8 @@ class MmfServiceImplTest {
     @Test
     void profit_amountPrecision_shouldThrowMMF041BeforeAnyWrite() {
         MmfProfitDistributionItem fourDecimals = profitItem("2", MmfBook.CAPITAL).amount(new BigDecimal("1.2345"));
-        assertThatThrownBy(() -> service.createProfitDistributions(List.of(profitItem("1", MmfBook.CAPITAL), fourDecimals)))
+        List<MmfProfitDistributionItem> items = List.of(profitItem("1", MmfBook.CAPITAL), fourDecimals);
+        assertThatThrownBy(() -> service.createProfitDistributions(items))
                 .isInstanceOf(ApplicationException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PROFIT_ITEM_INVALID)
                 .hasMessage("Item 2: amount must be > 0 with at most 3 decimals");
@@ -394,7 +397,8 @@ class MmfServiceImplTest {
         doThrow(new DuplicateKeyException("insert", new SQLException(DUP_REF_MSG)))
                 .when(repository).insertProfitDistribution(MmfBook.CAPITAL, 1L, dup);
 
-        assertThatThrownBy(() -> service.createProfitDistributions(List.of(dup))).isInstanceOf(MmfConflictException.class);
+        List<MmfProfitDistributionItem> items = List.of(dup);
+        assertThatThrownBy(() -> service.createProfitDistributions(items)).isInstanceOf(MmfConflictException.class);
         verify(repository, times(1)).nextSweepNo(MmfBook.CAPITAL);
     }
 
@@ -404,8 +408,9 @@ class MmfServiceImplTest {
         doThrow(new DuplicateKeyException("x", new SQLException(DUP_REF_MSG.toLowerCase())))
                 .when(repository).insertProfitDistribution(any(), anyLong(), any());
 
-        assertThatThrownBy(() -> service.createProfitDistributions(List.of(
-                profitItem("987654321", MmfBook.CAPITAL), profitItem("123456789", MmfBook.MMF))))
+        List<MmfProfitDistributionItem> items = List.of(
+                profitItem("987654321", MmfBook.CAPITAL), profitItem("123456789", MmfBook.MMF));
+        assertThatThrownBy(() -> service.createProfitDistributions(items))
                 .isInstanceOf(MmfConflictException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PROFIT_DUPLICATE_REFERENCE)
                 .hasMessage("referenceId already booked: CAPITAL 987654321, MMF 123456789");
@@ -415,7 +420,8 @@ class MmfServiceImplTest {
     void profit_allNonConnectivityFailures_shouldThrowMMF045() {
         when(repository.nextSweepNo(any())).thenThrow(new QueryTimeoutException("slow"));
 
-        assertThatThrownBy(() -> service.createProfitDistributions(List.of(profitItem("1", MmfBook.CAPITAL))))
+        List<MmfProfitDistributionItem> items = List.of(profitItem("1", MmfBook.CAPITAL));
+        assertThatThrownBy(() -> service.createProfitDistributions(items))
                 .isInstanceOf(MmfBackendException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PROFIT_INTERNAL_ERROR)
                 .hasMessage("Internal Server Error");
@@ -425,8 +431,9 @@ class MmfServiceImplTest {
     void profit_bookUnreachableOnFirstItem_shouldThrowMMF046AndNotRetryThatBook() {
         when(repository.nextSweepNo(MmfBook.CAPITAL)).thenThrow(new CannotGetJdbcConnectionException("down"));
 
-        assertThatThrownBy(() -> service.createProfitDistributions(List.of(
-                profitItem("1", MmfBook.CAPITAL), profitItem("2", MmfBook.CAPITAL), profitItem("3", MmfBook.CAPITAL))))
+        List<MmfProfitDistributionItem> items = List.of(
+                profitItem("1", MmfBook.CAPITAL), profitItem("2", MmfBook.CAPITAL), profitItem("3", MmfBook.CAPITAL));
+        assertThatThrownBy(() -> service.createProfitDistributions(items))
                 .isInstanceOf(MmfBackendUnavailableException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PROFIT_UNAVAILABLE)
                 .hasMessage("MMF data source unavailable");
@@ -463,7 +470,8 @@ class MmfServiceImplTest {
 
     @Test
     void custodianPositions_futureDate_shouldThrowMMF060() {
-        assertThatThrownBy(() -> service.listCustodianPositions(LocalDate.of(2026, 10, 20)))
+        LocalDate tomorrow = LocalDate.of(2026, 10, 20);
+        assertThatThrownBy(() -> service.listCustodianPositions(tomorrow))
                 .isInstanceOf(ApplicationException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.POSITIONS_AS_OF_DATE_INVALID)
                 .hasMessage("asOfDate must be an ISO-8601 date not in the future");

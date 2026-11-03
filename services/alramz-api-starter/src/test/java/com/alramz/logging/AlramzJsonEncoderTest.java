@@ -82,8 +82,7 @@ class AlramzJsonEncoderTest {
 
         assertThat(appender.lines).isNotEmpty();
         String json = appender.lines.get(0);
-        assertThat(json).contains("\"message\":\"hello world\"");
-        assertThat(json).contains("\"level\":\"INFO\"");
-        assertThat(json).contains("\"service\":\"data-validation-service\"");
+        assertThat(json).contains("\"message\":\"hello world\"", "\"level\":\"INFO\"",
+                "\"service\":\"data-validation-service\"");
     }
 }

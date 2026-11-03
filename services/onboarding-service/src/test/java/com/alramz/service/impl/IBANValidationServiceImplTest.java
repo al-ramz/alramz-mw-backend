@@ -108,7 +108,9 @@ class IBANValidationServiceImplTest {
     void validate_shouldRejectMissingIban(String iban) {
         IBANValidationServiceImpl service = service(PROPS, json(HttpStatus.OK, "{}"));
 
-        assertThatThrownBy(() -> service.validate(request(iban)))
+        var input = request(iban);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(IbanValidationException.class)
                 .hasMessage("Missing IBAN")
                 .extracting("code").isEqualTo("1069");
@@ -119,7 +121,9 @@ class IBANValidationServiceImplTest {
     void validate_shouldFailWhenApiKeyIsNotConfigured() {
         IBANValidationServiceImpl service = service(new IbanServiceProperties("https://iban.test", "", "5s"), json(HttpStatus.OK, "{}"));
 
-        assertThatThrownBy(() -> service.validate(request(VALID_IBAN)))
+        var input = request(VALID_IBAN);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(ExternalSystemException.class)
                 .hasMessage("Failed to retrieve IBAN base URL");
     }
@@ -128,7 +132,9 @@ class IBANValidationServiceImplTest {
     void validate_shouldFailWhenBaseUrlIsNotConfigured() {
         IBANValidationServiceImpl service = service(new IbanServiceProperties(null, "secret-key", "5s"), json(HttpStatus.OK, "{}"));
 
-        assertThatThrownBy(() -> service.validate(request(VALID_IBAN)))
+        var input = request(VALID_IBAN);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(ExternalSystemException.class)
                 .hasMessage("Failed to retrieve IBAN base URL");
     }
@@ -137,7 +143,9 @@ class IBANValidationServiceImplTest {
     void validate_shouldMapProviderHttpErrorToExternalSystemException() {
         IBANValidationServiceImpl service = service(PROPS, json(HttpStatus.INTERNAL_SERVER_ERROR, "{\"message\": \"down\"}"));
 
-        assertThatThrownBy(() -> service.validate(request(VALID_IBAN)))
+        var input = request(VALID_IBAN);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(ExternalSystemException.class)
                 .hasMessage("IBAN validation service unavailable");
     }
@@ -146,7 +154,9 @@ class IBANValidationServiceImplTest {
     void validate_shouldMapEmptyProviderBodyToExternalSystemException() {
         IBANValidationServiceImpl service = service(PROPS, Mono.just(ClientResponse.create(HttpStatus.OK).build()));
 
-        assertThatThrownBy(() -> service.validate(request(VALID_IBAN)))
+        var input = request(VALID_IBAN);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(ExternalSystemException.class)
                 .hasMessage("IBAN validation service unavailable");
     }
@@ -155,7 +165,9 @@ class IBANValidationServiceImplTest {
     void validate_shouldMapUnexpectedFailureToTechnicalException() {
         IBANValidationServiceImpl service = service(PROPS, Mono.error(new IllegalStateException("connection reset")));
 
-        assertThatThrownBy(() -> service.validate(request(VALID_IBAN)))
+        var input = request(VALID_IBAN);
+
+        assertThatThrownBy(() -> service.validate(input))
                 .isInstanceOf(TechnicalException.class)
                 .hasMessage("Internal Server Error");
     }

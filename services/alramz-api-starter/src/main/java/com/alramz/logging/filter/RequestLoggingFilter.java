@@ -27,7 +27,7 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE + 20)
 public class RequestLoggingFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(RequestLoggingFilter.class);
 
     private final LoggingProperties properties;
     private final LoggingHelper loggingHelper;
@@ -45,18 +45,16 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(wrapped, response);
         } catch (Exception e) {
-            logger.error("Exception during request processing for {} {}", request.getMethod(), request.getRequestURI(), e);
-            if (e instanceof IOException ioe) {
-                throw ioe;
-            } else if (e instanceof ServletException se) {
-                throw se;
-            } else {
-                throw new ServletException(e);
+            log.error("Exception during request processing for {} {}", request.getMethod(), request.getRequestURI(), e);
+            switch (e) {
+                case IOException ioe -> throw ioe;
+                case ServletException se -> throw se;
+                default -> throw new ServletException(e);
             }
         } finally {
             String correlationId = (String) request.getAttribute(LoggingConstants.CORRELATION_ID_ATTRIBUTE);
             RequestLog requestLog = loggingHelper.buildRequestLog(wrapped, correlationId);
-            loggingHelper.logRequest(logger, requestLog);
+            loggingHelper.logRequest(log, requestLog);
             loggingHelper.tagRequestOnCurrentSpan(requestLog);
         }
     }

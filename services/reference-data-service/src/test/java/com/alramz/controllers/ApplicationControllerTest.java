@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ApplicationControllerTest {
 
     @Test
-    void info_shouldReturnConfiguredNameHostAndTimestamp() throws Exception {
+    void info_shouldReturnConfiguredNameHostAndTimestamp() {
         ApplicationController controller = new ApplicationController();
         ReflectionTestUtils.setField(controller, "applicationName", "reference-data-service");
         ReflectionTestUtils.setField(controller, "host", "localhost");

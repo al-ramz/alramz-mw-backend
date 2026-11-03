@@ -209,7 +209,8 @@ class JdbcGlobalConfigurationSettingsRepositoryTest {
             .thenReturn(List.of(data));
 
         Map<String, List<String>> result = repository.findAsMap("COUNTRY");
-        assertThatThrownBy(() -> result.put("NEW_KEY", List.of("value")))
+        List<String> newValue = List.of("value");
+        assertThatThrownBy(() -> result.put("NEW_KEY", newValue))
             .isInstanceOf(UnsupportedOperationException.class);
     }
 
@@ -259,7 +260,7 @@ class JdbcGlobalConfigurationSettingsRepositoryTest {
             .thenReturn(0);
 
         int result = repository.updateIdentifierText("NONEXISTENT", "ISO", "USA", "ACTIVE");
-        assertThat(result).isEqualTo(0);
+        assertThat(result).isZero();
     }
 
     @Test
@@ -305,7 +306,8 @@ class JdbcGlobalConfigurationSettingsRepositoryTest {
             .thenReturn(List.of(data));
 
         List<GlobalConfigurationSettings> result = repository.find("COUNTRY");
-        assertThatThrownBy(() -> result.add(new GlobalConfigurationSettings(2L, "CITY", "ISO", "NYC", "ACTIVE")))
+        GlobalConfigurationSettings extra = new GlobalConfigurationSettings(2L, "CITY", "ISO", "NYC", "ACTIVE");
+        assertThatThrownBy(() -> result.add(extra))
             .isInstanceOf(UnsupportedOperationException.class);
     }
 

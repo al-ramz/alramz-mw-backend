@@ -235,6 +235,16 @@ public class EmailServiceImpl implements EmailService {
             throw new EmailValidationException("MGE-V-003", "Field length exceeded: body");
         }
 
+        final long total = validateAttachments(attachments);
+
+        // An empty allow-list rejects every sender (fail closed).
+        if (emailProperties.allowedSenders().stream().noneMatch(s -> s.strip().equalsIgnoreCase(from))) {
+            throw new EmailValidationException("MGE-V-007", "Sender mailbox is not permitted");
+        }
+        return total;
+    }
+
+    private long validateAttachments(final List<EmailAttachment> attachments) {
         if (attachments.size() > emailProperties.maxAttachments()) {
             throw new EmailValidationException("MGE-V-004", "Number of attachments exceeds " + emailProperties.maxAttachments());
         }
@@ -252,11 +262,6 @@ public class EmailServiceImpl implements EmailService {
         }
         if (total > emailProperties.maxTotalAttachmentSizeBytes()) {
             throw new EmailValidationException("MGE-V-008", "Attachments size limit exceeded");
-        }
-
-        // An empty allow-list rejects every sender (fail closed).
-        if (emailProperties.allowedSenders().stream().noneMatch(s -> s.strip().equalsIgnoreCase(from))) {
-            throw new EmailValidationException("MGE-V-007", "Sender mailbox is not permitted");
         }
         return total;
     }

@@ -11,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
-import org.springframework.web.reactive.function.client.ExchangeFunction;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -36,14 +35,8 @@ public class WebClientLoggingFilter {
 
     public ExchangeFilterFunction filterFunction() {
         return (clientRequest, next) -> {
-            String headerName = properties.getCorrelationId().getHeader(); // NOPMD LawOfDemeter
             String correlationId = MDCUtil.getCorrelationId();
-            ClientRequest effectiveRequest = correlationId != null
-                    && !clientRequest.headers().containsHeader(headerName)
-                    ? ClientRequest.from(clientRequest)
-                        .headers(headers -> headers.set(headerName, correlationId))
-                        .build()
-                    : clientRequest;
+            ClientRequest effectiveRequest = withCorrelationId(clientRequest, correlationId);
 
             AtomicReference<String> sentBody = new AtomicReference<>();
             ClientRequest sentRequest = properties.getRequest().isIncludePayload() // NOPMD LawOfDemeter
@@ -52,35 +45,45 @@ public class WebClientLoggingFilter {
 
             long start = System.nanoTime();
             if (logger.isInfoEnabled()) {
-                if (logger.isInfoEnabled()) {
-                    logger.info("Outgoing {} {} (correlationId={})",
-                    effectiveRequest.method(), effectiveRequest.url(), correlationId);
-                }
+                logger.info("Outgoing {} {} (correlationId={})",
+                        effectiveRequest.method(), effectiveRequest.url(), correlationId);
             }
             // The WebClient client observation travels in the Reactor context; its key/values
             // become span tags when the observation stops (after this filter's Mono completes).
             return Mono.deferContextual(ctx -> next.exchange(sentRequest)
                     .flatMap(response -> tagSpan(ctx.getOrDefault(ObservationThreadLocalAccessor.KEY, null),
                             sentRequest, sentBody.get(), response)))
-                    .doOnSuccess(response -> {
-                        long elapsedMs = (System.nanoTime() - start) / 1_000_000L;
-                        int status = response.statusCode().value();
-                        if (logger.isInfoEnabled()) {
-                            logger.info("Outgoing response {} {} in {}ms status={}",
-                            effectiveRequest.method(), effectiveRequest.url(), elapsedMs, status);
-                        }
-                        warnIfSlow(elapsedMs, "outgoing call");
-                    })
-                    .doOnError(error -> {
-                        long elapsedMs = (System.nanoTime() - start) / 1_000_000L;
-                        if (logger.isErrorEnabled()) {
-                            if (logger.isErrorEnabled()) {
-                                logger.error("Outgoing {} {} failed in {}ms (correlationId={})",
-                                effectiveRequest.method(), effectiveRequest.url(), elapsedMs, correlationId, error);
-                            }
-                        }
-                    });
+                    .doOnSuccess(response -> logResponse(effectiveRequest, response, start))
+                    .doOnError(error -> logError(effectiveRequest, correlationId, error, start));
         };
+    }
+
+    private ClientRequest withCorrelationId(ClientRequest clientRequest, String correlationId) {
+        String headerName = properties.getCorrelationId().getHeader(); // NOPMD LawOfDemeter
+        if (correlationId == null || clientRequest.headers().containsHeader(headerName)) {
+            return clientRequest;
+        }
+        return ClientRequest.from(clientRequest)
+                .headers(headers -> headers.set(headerName, correlationId))
+                .build();
+    }
+
+    private void logResponse(ClientRequest request, ClientResponse response, long start) {
+        long elapsedMs = (System.nanoTime() - start) / 1_000_000L;
+        int status = response.statusCode().value();
+        if (logger.isInfoEnabled()) {
+            logger.info("Outgoing response {} {} in {}ms status={}",
+                    request.method(), request.url(), elapsedMs, status);
+        }
+        warnIfSlow(elapsedMs, "outgoing call");
+    }
+
+    private static void logError(ClientRequest request, String correlationId, Throwable error, long start) {
+        long elapsedMs = (System.nanoTime() - start) / 1_000_000L;
+        if (logger.isErrorEnabled()) {
+            logger.error("Outgoing {} {} failed in {}ms (correlationId={})",
+                    request.method(), request.url(), elapsedMs, correlationId, error);
+        }
     }
 
     private Mono<ClientResponse> tagSpan(Observation observation, ClientRequest request, String requestBody,
@@ -124,10 +127,8 @@ public class WebClientLoggingFilter {
 
     private void warnIfSlow(long durationMs, String context) {
         Duration threshold = properties.getPerformance().getThreshold();
-        if (threshold != null && durationMs > threshold.toMillis()) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Slow {} detected: {}ms (threshold {}ms)", context, durationMs, threshold.toMillis());
-            }
+        if (threshold != null && durationMs > threshold.toMillis() && logger.isWarnEnabled()) {
+            logger.warn("Slow {} detected: {}ms (threshold {}ms)", context, durationMs, threshold.toMillis());
         }
     }
 }

@@ -11,6 +11,7 @@ import com.microsoft.graph.httpcore.RetryHandler;
 import com.microsoft.graph.httpcore.middlewareoption.IShouldRetry;
 import com.microsoft.graph.httpcore.middlewareoption.RetryOptions;
 import com.alramz.utils.StringUtils;
+import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -43,7 +44,7 @@ public class GraphConfig {
 
     @Bean
     @ConditionalOnProperty(name = "app.email.service-provider", havingValue = "MICROSOFT_GRAPH")
-    public GraphServiceClient<?> graphServiceClient(final GraphProperties properties) {
+    public GraphServiceClient<Request> graphServiceClient(final GraphProperties properties) {
         final String tenantId = StringUtils.requireNonBlank(properties.tenantId(), "tenant-id");
         final String clientId = StringUtils.requireNonBlank(properties.clientId(), "client-id");
         final String clientSecret = StringUtils.requireNonBlank(properties.clientSecret(), "client-secret");
@@ -67,7 +68,7 @@ public class GraphConfig {
                         List.of(scopes),
                         credential);
 
-        final GraphServiceClient<?> graphClient = GraphServiceClient
+        final GraphServiceClient<Request> graphClient = GraphServiceClient
                 .builder()
                 .authenticationProvider(authProvider)
                 .httpClient(HttpClients.custom()

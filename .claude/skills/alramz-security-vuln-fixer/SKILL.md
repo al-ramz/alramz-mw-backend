@@ -1,5 +1,5 @@
 ---
-name: security-vuln-fix
+name: alramz-security-vuln-fixer
 description: Scan the alramz-mw-oss monorepo with Trivy (dependency CVEs, secrets, Dockerfile/k8s/Terraform misconfig, built service jars, container base images), fix what is fixable without breaking the build, and write a dated before/after report with changelog and per-service build status under .claude/modules/security-scans/. Use when asked to "scan for vulnerabilities", "run trivy", "fix CVEs", "security scan the services", or to refresh a previous security-scan report.
 ---
 

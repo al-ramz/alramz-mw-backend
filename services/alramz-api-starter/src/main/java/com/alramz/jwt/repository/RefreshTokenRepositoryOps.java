@@ -2,7 +2,6 @@ package com.alramz.jwt.repository;
 
 import com.alramz.jwt.model.RefreshToken;
 
-import java.util.Optional;
 
 public interface RefreshTokenRepositoryOps {
 

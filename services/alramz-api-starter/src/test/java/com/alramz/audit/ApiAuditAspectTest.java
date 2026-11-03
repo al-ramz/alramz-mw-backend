@@ -94,7 +94,7 @@ class ApiAuditAspectTest {
 
         invokeAudited();
 
-        assertThat(recordedEntry().correlationId().toString()).isEqualTo("2afe4a42-44f7-4e12-aae7-df0e42d4d757");
+        assertThat(recordedEntry().correlationId()).hasToString("2afe4a42-44f7-4e12-aae7-df0e42d4d757");
     }
 
     // --- the real pointcut, applied through a Spring AOP proxy

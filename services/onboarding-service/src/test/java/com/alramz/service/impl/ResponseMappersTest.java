@@ -6,8 +6,6 @@ import com.alramz.model.ValidationRequest.ValidationTypeEnum;
 import com.alramz.model.ValidationResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

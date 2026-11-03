@@ -72,13 +72,10 @@ public class SmsDispatchJob implements Schedulable {
             int failed = 0;
             int invalid = 0;
             for (SmsTableRow row : rows) {
-                final RowOutcome outcome = process(repository, row, status);
-                if (outcome == RowOutcome.SENT) {
-                    sent++;
-                } else if (outcome == RowOutcome.INVALID) {
-                    invalid++;
-                } else {
-                    failed++;
+                switch (process(repository, row, status)) {
+                    case SENT -> sent++;
+                    case INVALID -> invalid++;
+                    case FAILED -> failed++;
                 }
             }
             log.info("SMS dispatch run claimed={} sent={} failed={} invalid={} durationMs={}", rows.size(), sent, failed,
@@ -97,43 +94,49 @@ public class SmsDispatchJob implements Schedulable {
             if (row.mobileNo() == null) {
                 return invalid(repository, row, status, now, masked);
             }
-            final SmsRecipientResult result;
-            final SmsService.Outcome outcome;
-            try {
-                outcome = smsService.sendWithOutcome(new SmsSendRequest()
-                        .messageBody(row.messageBody())
-                        .mobileNumbers(List.of(row.mobileNo()))
-                        .msgCategory(properties.defaults().msgCategory())
-                        .expiryInSecs(properties.defaults().expiryInSecs()));
-                result = outcome.result().getResults().get(0);
-            } catch (SmsException e) {
-                if ("SMS002".equals(e.getCode())) {
-                    return invalid(repository, row, status, now, masked);
-                }
-                return unexpected(repository, row, status, now, correlationId, masked, e);
-            } catch (RuntimeException e) { // NOPMD AvoidCatchingGenericException: one bad row must not stop the batch
-                return unexpected(repository, row, status, now, correlationId, masked, e);
-            }
-            final String provider = result.getServiceProvider().getValue();
-            if (result.getStatus() == SmsRecipientResult.StatusEnum.SENT) {
-                repository.markResult(row.serialNo(), SmsProperties.STATUS_SENT,
-                        truncate("200|" + result.getMessageId() + "|" + correlationId + "|" + provider), now, true,
-                        status.inProgress());
-                log.info("SMS dispatch row serialNo={} provider={} outcome=SENT number={}", row.serialNo(), provider, masked);
-                return RowOutcome.SENT;
-            }
-            final String code = outcome.anyProviderRejected() ? "500" : "503";
-            repository.markResult(row.serialNo(), SmsProperties.STATUS_FAILED,
-                    truncate(code + "|" + correlationId + "|" + provider), now, true, status.inProgress());
-            log.warn("SMS dispatch row serialNo={} provider={} outcome=FAILED code={} number={}", row.serialNo(), provider,
-                    code, masked);
-            return RowOutcome.FAILED;
+            return send(repository, row, status, now, correlationId, masked);
         } catch (RuntimeException e) { // NOPMD AvoidCatchingGenericException: e.g. brok down during markResult
             log.error("SMS dispatch row serialNo={} not updated error={}", row.serialNo(), e.getClass().getSimpleName());
             return RowOutcome.FAILED;
         } finally {
             MDCUtil.clear();
         }
+    }
+
+    private RowOutcome send(final SmsTableRepository repository, final SmsTableRow row,
+                            final SmsProperties.Status status, final LocalDateTime now, final String correlationId,
+                            final String masked) {
+        final SmsRecipientResult result;
+        final SmsService.Outcome outcome;
+        try {
+            outcome = smsService.sendWithOutcome(new SmsSendRequest()
+                    .messageBody(row.messageBody())
+                    .mobileNumbers(List.of(row.mobileNo()))
+                    .msgCategory(properties.defaults().msgCategory())
+                    .expiryInSecs(properties.defaults().expiryInSecs()));
+            result = outcome.result().getResults().get(0);
+        } catch (SmsException e) {
+            if ("SMS002".equals(e.getCode())) {
+                return invalid(repository, row, status, now, masked);
+            }
+            return unexpected(repository, row, status, now, correlationId, masked, e);
+        } catch (RuntimeException e) { // NOPMD AvoidCatchingGenericException: one bad row must not stop the batch
+            return unexpected(repository, row, status, now, correlationId, masked, e);
+        }
+        final String provider = result.getServiceProvider().getValue();
+        if (result.getStatus() == SmsRecipientResult.StatusEnum.SENT) {
+            repository.markResult(row.serialNo(), SmsProperties.STATUS_SENT,
+                    truncate("200|" + result.getMessageId() + "|" + correlationId + "|" + provider), now, true,
+                    status.inProgress());
+            log.info("SMS dispatch row serialNo={} provider={} outcome=SENT number={}", row.serialNo(), provider, masked);
+            return RowOutcome.SENT;
+        }
+        final String code = outcome.anyProviderRejected() ? "500" : "503";
+        repository.markResult(row.serialNo(), SmsProperties.STATUS_FAILED,
+                truncate(code + "|" + correlationId + "|" + provider), now, true, status.inProgress());
+        log.warn("SMS dispatch row serialNo={} provider={} outcome=FAILED code={} number={}", row.serialNo(), provider,
+                code, masked);
+        return RowOutcome.FAILED;
     }
 
     private static RowOutcome invalid(final SmsTableRepository repository, final SmsTableRow row,

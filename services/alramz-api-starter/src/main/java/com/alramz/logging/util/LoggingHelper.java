@@ -71,6 +71,9 @@ public class LoggingHelper {
      */
     public void populateMdc(HttpServletRequest request) {
         MDCUtil.putServiceName(serviceName);
+        if (request == null) {
+            return;
+        }
         MDCUtil.putClientIp(extractClientIp(request));
         MDCUtil.putUserId(resolveHeader(request, properties.getCorrelationId().getUserIdHeader())); // NOPMD LawOfDemeter
         MDCUtil.putTenantId(resolveHeader(request, properties.getCorrelationId().getTenantIdHeader())); // NOPMD LawOfDemeter
@@ -92,6 +95,14 @@ public class LoggingHelper {
         return maskingEnabled && LogMaskingUtil.isSensitiveKey(headerName)
                 ? LogMaskingUtil.maskValue(headerName, value)
                 : value;
+    }
+
+    /**
+     * Neutralise CR/LF in untrusted values before they reach a log line, so a caller
+     * cannot forge extra log entries (CWE-117). {@code null} stays {@code null}.
+     */
+    public static String stripCrlf(String value) {
+        return value == null ? null : value.replace('\r', '_').replace('\n', '_');
     }
 
     public static String extractClientIp(HttpServletRequest request) {
@@ -295,11 +306,9 @@ public class LoggingHelper {
                     responseLog.status(), responseLog.responseTimeMs(),
                     responseLog.responseSizeBytes(), responseLog.payload());
                 }
-            } else {
-                if (logger.isInfoEnabled()) {
-                    logger.info("Completed response: status={} duration={}ms size={}B",
-                    responseLog.status(), responseLog.responseTimeMs(), responseLog.responseSizeBytes());
-                }
+            } else if (logger.isInfoEnabled()) {
+                logger.info("Completed response: status={} duration={}ms size={}B",
+                        responseLog.status(), responseLog.responseTimeMs(), responseLog.responseSizeBytes());
             }
             logPerformanceIfSlow(logger, responseLog.responseTimeMs(), "request");
         } finally {
@@ -314,10 +323,8 @@ public class LoggingHelper {
 
     private void logPerformanceIfSlow(Logger logger, long durationMs, String context) {
         var threshold = properties.getPerformance().getThreshold();
-        if (threshold != null && durationMs > threshold.toMillis()) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Slow {} detected: {}ms (threshold {}ms)", context, durationMs, threshold.toMillis());
-            }
+        if (threshold != null && durationMs > threshold.toMillis() && logger.isWarnEnabled()) {
+            logger.warn("Slow {} detected: {}ms (threshold {}ms)", context, durationMs, threshold.toMillis());
         }
     }
 

@@ -155,13 +155,13 @@ class GlobalConfigurationSettingsRowMapperTest {
         when(resultSet.getString("STATUS")).thenReturn("ACTIVE");
 
         // When
-        GlobalConfigurationSettings record = mapper.mapRow(resultSet, 0);
+        GlobalConfigurationSettings settings = mapper.mapRow(resultSet, 0);
 
         // Then - Entity should be properly mapped
-        assertThat(record).isNotNull();
+        assertThat(settings).isNotNull();
         // Verify fields are accessible via getters
-        assertThat(record.getId()).isEqualTo(6L);
-        assertThat(record.getIdentifier()).isEqualTo("IMMUTABLE_TEST");
+        assertThat(settings.getId()).isEqualTo(6L);
+        assertThat(settings.getIdentifier()).isEqualTo("IMMUTABLE_TEST");
         // This test verifies the entity structure is correct
     }
 
@@ -196,7 +196,7 @@ class GlobalConfigurationSettingsRowMapperTest {
         GlobalConfigurationSettings record2 = new GlobalConfigurationSettings(8L, "HASH_TEST", "TEST_TYPE", "VALUE2", "INACTIVE");
 
         // Then - Records with same values should have same hash code
-        assertThat(record1.hashCode()).isEqualTo(record2.hashCode());
+        assertThat(record1).hasSameHashCodeAs(record2);
     }
 
     @Test
@@ -208,12 +208,10 @@ class GlobalConfigurationSettingsRowMapperTest {
         when(resultSet.getString("IDENTIFIER_TEXT")).thenReturn("VALUE3");
         when(resultSet.getString("STATUS")).thenReturn("ACTIVE");
 
-        GlobalConfigurationSettings record = mapper.mapRow(resultSet, 0);
+        GlobalConfigurationSettings settings = mapper.mapRow(resultSet, 0);
 
         // Then - toString should contain record component values
-        String toStringResult = record.toString();
-        assertThat(toStringResult).contains("id=9");
-        assertThat(toStringResult).contains("TOSTRING_TEST");
-        assertThat(toStringResult).contains("VALUE3");
+        String toStringResult = settings.toString();
+        assertThat(toStringResult).contains("id=9", "TOSTRING_TEST", "VALUE3");
     }
 }

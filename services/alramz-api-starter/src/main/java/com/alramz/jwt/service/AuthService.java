@@ -70,7 +70,7 @@ public class AuthService {
                 null,
                 tokenPair.refreshToken(),
                 consumer,
-                Instant.now().plusSeconds(7 * 24 * 60 * 60),
+                Instant.now().plusSeconds(7L * 24 * 60 * 60),
                 Instant.now(),
                 false
         );
@@ -146,7 +146,7 @@ public class AuthService {
                 null,
                 tokenPair.refreshToken(),
                 storedToken.userId(),
-                Instant.now().plusSeconds(7 * 24 * 60 * 60),
+                Instant.now().plusSeconds(7L * 24 * 60 * 60),
                 Instant.now(),
                 false
         );

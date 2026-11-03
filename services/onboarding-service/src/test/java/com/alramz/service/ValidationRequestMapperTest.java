@@ -5,14 +5,10 @@ import com.alramz.model.ValidationRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ValidationRequestMapperTest {
@@ -34,8 +30,9 @@ class ValidationRequestMapperTest {
 
         Map<String, Object> result = mapper.map(request, definition);
 
-        assertThat(result).isNotNull();
-        assertThat(result.get("emailAddress")).isEqualTo("test@example.com");
-        assertThat(result.get("Reference_No")).isEqualTo("1");
+        assertThat(result)
+                .isNotNull()
+                .containsEntry("emailAddress", "test@example.com")
+                .containsEntry("Reference_No", "1");
     }
 }

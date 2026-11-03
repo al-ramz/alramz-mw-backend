@@ -1,6 +1,5 @@
 package com.alramz.jwt.model;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 

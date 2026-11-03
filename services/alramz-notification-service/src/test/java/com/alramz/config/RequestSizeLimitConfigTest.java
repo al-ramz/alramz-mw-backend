@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class RequestSizeLimitConfigTest {
 
@@ -37,7 +38,11 @@ class RequestSizeLimitConfigTest {
 
     @Test
     void rejectsContentLengthOverDerivedLimit() {
-        assertThatThrownBy(() -> interceptor.preHandle(requestWithLength(4_262_145), new MockHttpServletResponse(), new Object()))
+        final MockHttpServletRequest request = requestWithLength(4_262_145);
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Object handler = new Object();
+
+        assertThatThrownBy(() -> interceptor.preHandle(request, response, handler))
                 .isInstanceOf(EmailValidationException.class)
                 .hasFieldOrPropertyWithValue("code", "MGE-V-008")
                 .hasMessage("Attachments size limit exceeded");
@@ -57,7 +62,11 @@ class RequestSizeLimitConfigTest {
     void templatePathRejectsWithEml007() {
         final HandlerInterceptor template = config.templateSizeLimitInterceptor();
 
-        assertThatThrownBy(() -> template.preHandle(requestWithLength(4_262_145), new MockHttpServletResponse(), new Object()))
+        final MockHttpServletRequest request = requestWithLength(4_262_145);
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final Object handler = new Object();
+
+        assertThatThrownBy(() -> template.preHandle(request, response, handler))
                 .isInstanceOf(TemplatedEmailException.class)
                 .hasFieldOrPropertyWithValue("code", "EML007")
                 .hasMessage("Attachments size limit exceeded");
@@ -74,7 +83,7 @@ class RequestSizeLimitConfigTest {
         final InterceptorRegistry registry = mock(InterceptorRegistry.class, RETURNS_SELF);
         final org.springframework.web.servlet.config.annotation.InterceptorRegistration registration =
                 mock(org.springframework.web.servlet.config.annotation.InterceptorRegistration.class, RETURNS_SELF);
-        org.mockito.Mockito.when(registry.addInterceptor(any())).thenReturn(registration);
+        when(registry.addInterceptor(any())).thenReturn(registration);
 
         config.addInterceptors(registry);
 
@@ -151,7 +160,10 @@ class RequestSizeLimitConfigTest {
 
         @Test
         void rejectsMissingCredentials() {
-            assertThatThrownBy(() -> new GraphConfig().graphServiceClient(new GraphProperties(" ", "c", "s", "scope")))
+            final GraphConfig graphConfig = new GraphConfig();
+            final GraphProperties properties = new GraphProperties(" ", "c", "s", "scope");
+
+            assertThatThrownBy(() -> graphConfig.graphServiceClient(properties))
                     .isInstanceOf(IllegalStateException.class);
         }
     }

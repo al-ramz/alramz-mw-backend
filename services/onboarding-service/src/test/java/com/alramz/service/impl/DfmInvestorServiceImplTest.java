@@ -269,7 +269,9 @@ public class DfmInvestorServiceImplTest {
     void rejected_shouldBeDfn006WithDfmMessage() {
         when(client.onboard(any())).thenReturn(new DfmOnboardingOutcome.Rejected("400", "Request id should be a valid GUID.", false));
 
-        assertThatThrownBy(() -> service.register(validRequest()))
+        var input = validRequest();
+
+        assertThatThrownBy(() -> service.register(input))
                 .isInstanceOf(DfmRejectedException.class)
                 .hasMessage("Request id should be a valid GUID.")
                 .hasFieldOrPropertyWithValue("code", DfmInvestorErrorCode.DFN006);
@@ -279,7 +281,9 @@ public class DfmInvestorServiceImplTest {
     void rejectedWithoutMessage_shouldUseDefaultText() {
         when(client.onboard(any())).thenReturn(new DfmOnboardingOutcome.Rejected("400", null, false));
 
-        assertThatThrownBy(() -> service.register(validRequest()))
+        var input = validRequest();
+
+        assertThatThrownBy(() -> service.register(input))
                 .isInstanceOf(DfmRejectedException.class)
                 .hasMessage("DFM rejected the request (HTTP 400)");
     }
@@ -288,7 +292,9 @@ public class DfmInvestorServiceImplTest {
     void duplicateInProgress_shouldBeDfn007() {
         when(client.onboard(any())).thenReturn(new DfmOnboardingOutcome.Rejected("409", " ", true));
 
-        assertThatThrownBy(() -> service.register(validRequest()))
+        var input = validRequest();
+
+        assertThatThrownBy(() -> service.register(input))
                 .isInstanceOf(DfmRejectedException.class)
                 .hasMessage("A registration with this requestId is still in progress at DFM; retry later with the same requestId")
                 .hasFieldOrPropertyWithValue("code", DfmInvestorErrorCode.DFN007);
@@ -298,7 +304,9 @@ public class DfmInvestorServiceImplTest {
     void duplicateInProgressWithMessage_shouldEchoIt() {
         when(client.onboard(any())).thenReturn(new DfmOnboardingOutcome.Rejected("409", "In progress", true));
 
-        assertThatThrownBy(() -> service.register(validRequest())).hasMessage("In progress");
+        var input = validRequest();
+
+        assertThatThrownBy(() -> service.register(input)).hasMessage("In progress");
     }
 
     @ParameterizedTest
@@ -312,7 +320,9 @@ public class DfmInvestorServiceImplTest {
             case BAD_RESPONSE -> DfmInvestorErrorCode.DFN010;
         };
 
-        assertThatThrownBy(() -> service.register(validRequest()))
+        var input = validRequest();
+
+        assertThatThrownBy(() -> service.register(input))
                 .isInstanceOf(DfmUnavailableException.class)
                 .hasFieldOrPropertyWithValue("code", expected)
                 .hasCause(cause);

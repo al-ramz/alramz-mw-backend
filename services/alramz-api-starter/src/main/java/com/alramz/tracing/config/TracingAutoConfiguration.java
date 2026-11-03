@@ -95,11 +95,15 @@ public class TracingAutoConfiguration {
             return (name, context) -> {
                 HttpServletRequest request = context instanceof ServerRequestObservationContext server
                         ? server.getCarrier()
-                        : RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes
-                                ? attributes.getRequest()
-                                : null;
+                        : boundRequest();
                 return request == null || !isActuator(request.getRequestURI());
             };
+        }
+
+        private static HttpServletRequest boundRequest() {
+            return RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes
+                    ? attributes.getRequest()
+                    : null;
         }
 
         static boolean isActuator(String uri) {

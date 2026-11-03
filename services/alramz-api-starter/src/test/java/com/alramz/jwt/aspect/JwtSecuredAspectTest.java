@@ -26,16 +26,19 @@ class JwtSecuredAspectTest {
     static class Target {
         @JwtSecured
         void open() {
+            // annotation carrier only; the aspect reads @JwtSecured via reflection
         }
 
         @JwtSecured(roles = {"ADMIN"}, environment = {"prod", "qa"})
         void guarded() {
+            // annotation carrier only; the aspect reads @JwtSecured via reflection
         }
     }
 
     @BeforeEach
     void setUp() {
-        when(joinPoint.getSignature()).thenReturn(mock(Signature.class));
+        Signature signature = mock(Signature.class);
+        when(joinPoint.getSignature()).thenReturn(signature);
     }
 
     @AfterEach
@@ -54,7 +57,7 @@ class JwtSecuredAspectTest {
     }
 
     @Test
-    void grantsAccessWithMatchingRoleAndEnvironment() throws Exception {
+    void grantsAccessWithMatchingRoleAndEnvironment() {
         authenticate(true, "ROLE_ADMIN");
         when(jwtContext.getCurrentEnvironment()).thenReturn("qa");
 
@@ -62,7 +65,7 @@ class JwtSecuredAspectTest {
     }
 
     @Test
-    void annotationWithoutConstraintsOnlyRequiresAuthentication() throws Exception {
+    void annotationWithoutConstraintsOnlyRequiresAuthentication() {
         authenticate(true);
 
         assertThatCode(() -> aspect.checkJwtSecured(joinPoint, annotation("open"))).doesNotThrowAnyException();

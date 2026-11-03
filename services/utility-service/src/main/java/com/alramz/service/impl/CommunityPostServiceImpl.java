@@ -30,13 +30,13 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     public CommunityPost publish(CommunityPostRequest request) {
         FinouxResult result = finouxClient.insertPost(request, sanitize(request.getPostDesc()));
         return switch (result) {
-            case FinouxResult.Posted posted -> posted.post();
-            case FinouxResult.Rejected rejected ->
-                    throw new FinouxIntegrationException(ErrorCode.FINOUX_REJECTED, rejected.message());
+            case FinouxResult.Posted(var post) -> post;
+            case FinouxResult.Rejected(var message) ->
+                    throw new FinouxIntegrationException(ErrorCode.FINOUX_REJECTED, message);
             case FinouxResult.Failed failed ->
                     throw new FinouxIntegrationException(ErrorCode.FINOUX_ERROR, failed.message());
-            case FinouxResult.Unavailable unavailable ->
-                    throw new FinouxUnavailableException("Finoux community service unavailable", unavailable.cause());
+            case FinouxResult.Unavailable(var cause) ->
+                    throw new FinouxUnavailableException("Finoux community service unavailable", cause);
         };
     }
 

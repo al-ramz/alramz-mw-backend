@@ -216,7 +216,8 @@ class RelationshipManagerRepositoryImplTest {
     void findCommissionsByRelationshipManager_shouldWrapIOExceptionAsLookupException() throws IOException {
         when(sqlQueriesManager.getSQLQueryFromConfig(FIND_COMMISSIONS_KEY)).thenThrow(new IOException("boom"));
 
-        assertThatThrownBy(() -> repository.findCommissionsByRelationshipManager(LocalDate.now(), LocalDate.now(), null))
+        LocalDate today = LocalDate.now();
+        assertThatThrownBy(() -> repository.findCommissionsByRelationshipManager(today, today, null))
                 .isInstanceOf(RelationshipManagerLookupException.class);
     }
 
@@ -226,7 +227,8 @@ class RelationshipManagerRepositoryImplTest {
         when(brokNamedParameterJdbcTemplate.query(anyString(), any(MapSqlParameterSource.class), any(RowMapper.class)))
                 .thenThrow(new QueryTimeoutException("timeout"));
 
-        assertThatThrownBy(() -> repository.findCommissionsByRelationshipManager(LocalDate.now(), LocalDate.now(), null))
+        LocalDate today = LocalDate.now();
+        assertThatThrownBy(() -> repository.findCommissionsByRelationshipManager(today, today, null))
                 .isInstanceOf(RelationshipManagerLookupException.class);
     }
 }

@@ -2,27 +2,15 @@ package com.alramz.service.impl;
 
 import com.alramz.client.ETradeClient;
 import com.alramz.config.ETradeTokenProvider;
-import com.alramz.exception.ExternalSystemException;
-import com.alramz.exceptions.ApiCallFailedException;
-import com.alramz.model.ETradeResponse;
-import com.alramz.service.DuplicateCheckService;
-import com.alramz.service.impl.NinTradingNumberValidationService;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class DuplicateCheckServiceImplTest {
@@ -41,14 +29,6 @@ class DuplicateCheckServiceImplTest {
 
     private DuplicateCheckServiceImpl duplicateCheckService;
 
-    private JsonNode mockResData(String json) {
-        try {
-            return new com.fasterxml.jackson.databind.ObjectMapper().readTree(json);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @BeforeEach
     void setUp() {
         duplicateCheckService = new DuplicateCheckServiceImpl(duplicateCheckHelper);
@@ -58,8 +38,7 @@ class DuplicateCheckServiceImplTest {
     void checkDuplicates_shouldReturnAllFalseWhenAllNull() {
         boolean[] result = duplicateCheckService.checkDuplicates(null, null, null, null);
 
-        assertThat(result).hasSize(4);
-        assertThat(result).containsExactly(false, false, false, false);
+        assertThat(result).hasSize(4).containsExactly(false, false, false, false);
     }
 
     @Test

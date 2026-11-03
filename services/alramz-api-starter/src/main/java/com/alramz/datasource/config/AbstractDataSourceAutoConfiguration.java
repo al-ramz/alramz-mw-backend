@@ -83,36 +83,41 @@ public abstract class AbstractDataSourceAutoConfiguration {
     protected void applyDatabaseSpecificProperties(HikariConfig hikariConfig, DatasourceProperties.DatasourceConfig config, String dbName) {
         if ("brok".equals(dbName) || "integration".equals(dbName)) {
             if (config.getOracle() != null) {
-                Properties props = hikariConfig.getDataSourceProperties();
-                if (props == null) {
-                    props = new Properties();
-                    hikariConfig.setDataSourceProperties(props);
-                }
-                if (config.getOracle().getConnectTimeout() > 0) { // NOPMD LawOfDemeter
-                    props.setProperty("oracle.net.CONNECT_TIMEOUT", String.valueOf(config.getOracle().getConnectTimeout())); // NOPMD LawOfDemeter
-                }
-                if (config.getOracle().getReadTimeout() > 0) { // NOPMD LawOfDemeter
-                    props.setProperty("oracle.jdbc.ReadTimeout", String.valueOf(config.getOracle().getReadTimeout())); // NOPMD LawOfDemeter
-                }
-                if (config.getOracle().getDefaultRowPrefetch() > 0) { // NOPMD LawOfDemeter
-                    props.setProperty("defaultRowPrefetch", String.valueOf(config.getOracle().getDefaultRowPrefetch())); // NOPMD LawOfDemeter
-                }
+                applyOracleProperties(dataSourceProperties(hikariConfig), config.getOracle());
             }
-        } else if ("middleware".equals(dbName)) {
-            if (config.getPostgres() != null) {
-                Properties props = hikariConfig.getDataSourceProperties();
-                if (props == null) {
-                    props = new Properties();
-                    hikariConfig.setDataSourceProperties(props);
-                }
-                String url = config.getUrl();
-                boolean isLocal = url != null && (url.contains("localhost") || url.contains("127.0.0.1") || url.contains("mem:"));
-                boolean ssl = config.getPostgres().isSsl() && !isLocal;
-                props.setProperty("ssl", String.valueOf(ssl));
-                if (config.getPostgres().getPrepareThreshold() > 0) { // NOPMD LawOfDemeter
-                    props.setProperty("prepareThreshold", String.valueOf(config.getPostgres().getPrepareThreshold())); // NOPMD LawOfDemeter
-                }
-            }
+        } else if ("middleware".equals(dbName) && config.getPostgres() != null) {
+            applyPostgresProperties(dataSourceProperties(hikariConfig), config);
+        }
+    }
+
+    private static Properties dataSourceProperties(HikariConfig hikariConfig) {
+        Properties props = hikariConfig.getDataSourceProperties();
+        if (props == null) {
+            props = new Properties();
+            hikariConfig.setDataSourceProperties(props);
+        }
+        return props;
+    }
+
+    private static void applyOracleProperties(Properties props, DatasourceProperties.OracleProperties oracle) {
+        if (oracle.getConnectTimeout() > 0) {
+            props.setProperty("oracle.net.CONNECT_TIMEOUT", String.valueOf(oracle.getConnectTimeout()));
+        }
+        if (oracle.getReadTimeout() > 0) {
+            props.setProperty("oracle.jdbc.ReadTimeout", String.valueOf(oracle.getReadTimeout()));
+        }
+        if (oracle.getDefaultRowPrefetch() > 0) {
+            props.setProperty("defaultRowPrefetch", String.valueOf(oracle.getDefaultRowPrefetch()));
+        }
+    }
+
+    private static void applyPostgresProperties(Properties props, DatasourceProperties.DatasourceConfig config) {
+        String url = config.getUrl();
+        boolean isLocal = url != null && (url.contains("localhost") || url.contains("127.0.0.1") || url.contains("mem:"));
+        boolean ssl = config.getPostgres().isSsl() && !isLocal;
+        props.setProperty("ssl", String.valueOf(ssl));
+        if (config.getPostgres().getPrepareThreshold() > 0) { // NOPMD LawOfDemeter
+            props.setProperty("prepareThreshold", String.valueOf(config.getPostgres().getPrepareThreshold())); // NOPMD LawOfDemeter
         }
     }
 

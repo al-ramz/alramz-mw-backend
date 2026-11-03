@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApplicationControllerTest {
@@ -32,9 +31,10 @@ class ApplicationControllerTest {
 
         Map<String, Object> response = controller.info();
 
-        assertThat(response).isNotNull();
-        assertThat(response.get("applicationName")).isEqualTo("test-service");
-        assertThat(response.get("host")).isEqualTo("localhost");
+        assertThat(response)
+                .isNotNull()
+                .containsEntry("applicationName", "test-service")
+                .containsEntry("host", "localhost");
         assertThat(response.get("timestamp")).isNotNull();
     }
 }

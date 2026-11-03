@@ -120,7 +120,7 @@ public class FinouxClient extends AbstractRestClient {
 
     private static Map<String, Object> firstRow(FinouxData data) {
         if (data == null || data.table() == null || data.table().isEmpty()) {
-            return null;
+            return Map.of();
         }
         return data.table().get(0);
     }

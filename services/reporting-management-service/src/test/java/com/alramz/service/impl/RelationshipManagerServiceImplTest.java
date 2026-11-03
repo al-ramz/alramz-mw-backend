@@ -72,7 +72,7 @@ class RelationshipManagerServiceImplTest {
         service.getCommissionsByRelationshipManager(request);
 
         verify(relationshipManagerRepository)
-                .findCommissionsByRelationshipManager(eq(DEFAULT_START_DATE), eq(DEFAULT_END_DATE), eq(List.of()));
+                .findCommissionsByRelationshipManager(DEFAULT_START_DATE, DEFAULT_END_DATE, List.of());
     }
 
     @Test
@@ -86,7 +86,7 @@ class RelationshipManagerServiceImplTest {
         service.getCommissionsByRelationshipManager(request);
 
         verify(relationshipManagerRepository)
-                .findCommissionsByRelationshipManager(eq(DEFAULT_START_DATE), eq(DEFAULT_END_DATE), eq(List.of()));
+                .findCommissionsByRelationshipManager(DEFAULT_START_DATE, DEFAULT_END_DATE, List.of());
     }
 
     @Test

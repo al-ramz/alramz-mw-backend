@@ -1,7 +1,6 @@
 package com.alramz.service.impl;
 
 import com.alramz.client.ETradeClient;
-import com.alramz.config.ETradeProperties;
 import com.alramz.config.ETradeTokenProvider;
 import com.alramz.config.ValidationDefinition;
 import com.alramz.config.ValidationDefinitionRegistry;
@@ -30,20 +29,17 @@ public class ValidationServiceImpl implements ValidationService {
     private final ValidationRequestMapper requestMapper;
     private final ValidationResponseMapperRegistry responseMapperRegistry;
     private final ETradeClient etradeClient;
-    private final ETradeProperties etradeProperties;
 
     public ValidationServiceImpl(ETradeTokenProvider etradeTokenProvider,
                                  ValidationDefinitionRegistry definitionRegistry,
                                  ValidationRequestMapper requestMapper,
                                  ValidationResponseMapperRegistry responseMapperRegistry,
-                                 ETradeClient etradeClient,
-                                 ETradeProperties etradeProperties) {
+                                 ETradeClient etradeClient) {
         this.etradeTokenProvider = etradeTokenProvider;
         this.definitionRegistry = definitionRegistry;
         this.requestMapper = requestMapper;
         this.responseMapperRegistry = responseMapperRegistry;
         this.etradeClient = etradeClient;
-        this.etradeProperties = etradeProperties;
     }
 
     @Override
@@ -107,39 +103,24 @@ public class ValidationServiceImpl implements ValidationService {
 
     private void validateRequest(ValidationRequest request) {
         ValidationTypeEnum type = request.getValidationType(); // NOPMD LawOfDemeter
-        if (type == ValidationTypeEnum.EMAIL_EXISTS) {
-            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-                throw new ApplicationException("email", "email is required for EMAIL_EXISTS validation");
+        switch (type) {
+            case EMAIL_EXISTS -> requireField(request.getEmail(), "email", type);
+            case PASSPORT_EXISTS -> requireField(request.getPassportNumber(), "passportNumber", type);
+            case NIN_EXISTS -> requireField(request.getNin(), "nin", type);
+            case USERNAME_EXISTS -> requireField(request.getUsername(), "username", type);
+            case EID_EXISTS -> requireField(request.getEidNumber(), "eidNumber", type);
+            case TP_UUID_EXISTS -> {
+                requireField(request.getUuid(), "uuid", type);
+                requireField(request.getThirdParty(), "thirdParty", type);
             }
-        } else if (type == ValidationTypeEnum.PASSPORT_EXISTS) {
-            if (request.getPassportNumber() == null || request.getPassportNumber().trim().isEmpty()) {
-                throw new ApplicationException("passportNumber", "passportNumber is required for PASSPORT_EXISTS validation");
-            }
-        } else if (type == ValidationTypeEnum.NIN_EXISTS) {
-            if (request.getNin() == null || request.getNin().trim().isEmpty()) {
-                throw new ApplicationException("nin", "nin is required for NIN_EXISTS validation");
-            }
-        } else if (type == ValidationTypeEnum.USERNAME_EXISTS) {
-            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
-                throw new ApplicationException("username", "username is required for USERNAME_EXISTS validation");
-            }
-        } else if (type == ValidationTypeEnum.EID_EXISTS) {
-            if (request.getEidNumber() == null || request.getEidNumber().trim().isEmpty()) {
-                throw new ApplicationException("eidNumber", "eidNumber is required for EID_EXISTS validation");
-            }
-        } else if (type == ValidationTypeEnum.TP_UUID_EXISTS) {
-            if (request.getUuid() == null || request.getUuid().trim().isEmpty()) {
-                throw new ApplicationException("uuid", "uuid is required for TP_UUID_EXISTS validation");
-            }
-            if (request.getThirdParty() == null || request.getThirdParty().trim().isEmpty()) {
-                throw new ApplicationException("thirdParty", "thirdParty is required for TP_UUID_EXISTS validation");
-            }
-        } else if (type == ValidationTypeEnum.MOBILE_EXISTS) {
-            if (request.getMobileNumber() == null || request.getMobileNumber().trim().isEmpty()) {
-                throw new ApplicationException("mobileNumber", "mobileNumber is required for MOBILE_EXISTS validation");
-            }
-        } else {
-            throw new ApplicationException("validationType", "Unsupported validation type: " + type);
+            case MOBILE_EXISTS -> requireField(request.getMobileNumber(), "mobileNumber", type);
+            case null, default -> throw new ApplicationException("validationType", "Unsupported validation type: " + type);
+        }
+    }
+
+    private static void requireField(String value, String field, ValidationTypeEnum type) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new ApplicationException(field, field + " is required for " + type.name() + " validation");
         }
     }
 }

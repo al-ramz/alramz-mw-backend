@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,8 +70,8 @@ public class RelationshipManagerRepositoryImpl implements RelationshipManagerRep
             LocalDate startDate, LocalDate endDate, List<String> relationshipManagerCodes) {
         try {
             MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("startDate", Date.valueOf(startDate));
-            params.addValue("endDate", Date.valueOf(endDate));
+            params.addValue("startDate", startDate);
+            params.addValue("endDate", endDate);
 
             String dynamicWhereClause = buildRelationshipManagerClause(relationshipManagerCodes, params);
             String sql = sqlQueriesManager.getSQLQueryFromConfig("relationship.manager.commissions.find")
@@ -118,7 +117,7 @@ public class RelationshipManagerRepositoryImpl implements RelationshipManagerRep
             return values.stream().map(RelationshipManagerRepositoryImpl::toSqlLiteral)
                     .collect(Collectors.joining(", "));
         }
-        if (value instanceof Date date) {
+        if (value instanceof LocalDate date) {
             return "DATE '" + date + "'";
         }
         if (value instanceof Number) {

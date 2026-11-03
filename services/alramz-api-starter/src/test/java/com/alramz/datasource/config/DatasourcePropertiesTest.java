@@ -17,13 +17,13 @@ class DatasourcePropertiesTest {
         assertThat(pool.getIdleTimeout()).isEqualTo(600000L);
         assertThat(pool.getKeepaliveTime()).isEqualTo(30000L);
         assertThat(pool.getMaxLifetime()).isEqualTo(1800000L);
-        assertThat(pool.getLeakDetectionThreshold()).isEqualTo(0L);
-        assertThat(pool.getQueryTimeout()).isEqualTo(0L);
+        assertThat(pool.getLeakDetectionThreshold()).isZero();
+        assertThat(pool.getQueryTimeout()).isZero();
 
         assertThat(properties.getMiddleware().getStartupValidation().isEnabled()).isTrue();
         assertThat(properties.getMiddleware().getSqlLogging().isEnabled()).isFalse();
         assertThat(properties.getMiddleware().getSqlLogging().isLogParameters()).isFalse();
-        assertThat(properties.getMiddleware().getSqlLogging().getSlowQueryThresholdMs()).isEqualTo(0L);
+        assertThat(properties.getMiddleware().getSqlLogging().getSlowQueryThresholdMs()).isZero();
         assertThat(properties.getBrok().getSqlLogging().isEnabled()).isFalse();
         assertThat(properties.getIntegration().getSqlLogging().isEnabled()).isFalse();
     }

@@ -1,5 +1,5 @@
 ---
-name: jacoco-coverage-gate
+name: alramz-jacoco-coverage-check
 description: Measure JaCoCo coverage for every module in the alramz-mw-oss Maven reactor, add real unit tests to bring each service up to the 80% line-coverage gate, and write a dated before/after coverage summary, per-service build status and changelog under .claude/modules/coverage-scans/. Use when asked for a "coverage report", "jacoco summary", "raise test coverage", "80% coverage gate", "which services are under-tested", or to refresh a previous coverage-scan report.
 ---
 
@@ -33,7 +33,7 @@ From the repo root:
 
 ```bash
 mvn -B -fae clean test > $R/before/build-before.log 2>&1      # -fae: one red module doesn't hide the rest
-python3 .claude/skills/jacoco-coverage-gate/scripts/coverage_summary.py $R/before --classes
+python3 .claude/skills/alramz-jacoco-coverage-check/scripts/coverage_summary.py $R/before --classes
 ```
 
 `coverage_summary.py` copies every `services/*/target/site/jacoco/jacoco.csv`, totals the line, branch and
@@ -65,7 +65,7 @@ classes has no jacoco.csv, its tests probably did not run.** Find the cause befo
 ```bash
 mvn -B -pl services/alramz-common-bom,services/alramz-api-starter install -DskipTests
 mvn -B -fae clean test > $R/after/build-after.log 2>&1        # must be green
-python3 .claude/skills/jacoco-coverage-gate/scripts/coverage_summary.py $R/after --classes
+python3 .claude/skills/alramz-jacoco-coverage-check/scripts/coverage_summary.py $R/after --classes
 ```
 
 Then write CHANGELOG.md, BUILD-STATUS.md and REPORT.md. The REPORT table puts before and after side by side

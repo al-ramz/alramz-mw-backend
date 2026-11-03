@@ -1,6 +1,5 @@
 package com.alramz.jwt.model;
 
-import java.time.Instant;
 
 public record TokenPair(
         String accessToken,

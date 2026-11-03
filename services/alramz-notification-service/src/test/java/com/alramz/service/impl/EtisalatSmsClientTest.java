@@ -218,8 +218,7 @@ class EtisalatSmsClientTest {
                 .hasFieldOrPropertyWithValue("code", "SMS010")
                 .hasMessage("SMS provider unavailable ETISALAT SocketTimeoutException")
                 .hasNoCause();
-        assertThat(logs.list).isNotEmpty();
-        assertThat(logs.list).allSatisfy(e -> assertThat(e.getFormattedMessage())
+        assertThat(logs.list).isNotEmpty().allSatisfy(e -> assertThat(e.getFormattedMessage())
                 .doesNotContain("S3cretPass").doesNotContain("tok-1").doesNotContain(NUMBER).doesNotContain("hello body"));
     }
 }

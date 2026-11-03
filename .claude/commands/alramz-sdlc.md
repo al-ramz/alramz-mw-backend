@@ -168,5 +168,5 @@ user:
 A stage reporting **BLOCKED** is not a gate — it's a hard stop. Do not attempt to resolve its
 question yourself, do not re-invoke it with a guessed answer, and do not skip ahead. Report the
 blocking question(s) and the stage's own recommended options to the user verbatim, and end the
-command. The user can re-run `/sdlc` for the same feature once they've decided; Step 0's resume
+command. The user can re-run `/alramz-sdlc` for the same feature once they've decided; Step 0's resume
 check will pick up from the last completed artifact.

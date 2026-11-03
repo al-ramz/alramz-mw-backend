@@ -402,9 +402,11 @@ class OtpServiceTest {
             new OtpConfig(1, "LOGIN_OTP", 300, 6, null, null, 5, "EMAIL", "subject ^+^  ", null, null),
             new OtpConfig(1, "LOGIN_OTP", 300, 6, null, null, 5, "EMAIL", null, null, null),
         };
+        final OtpService service = service(false);
+        final OtpSendRequest request = sendRequest(MOBILE + "|" + EMAIL, "EN");
         for (OtpConfig config : broken) {
             givenConfig(config);
-            assertThatThrownBy(() -> service(false).send(sendRequest(MOBILE + "|" + EMAIL, "EN")))
+            assertThatThrownBy(() -> service.send(request))
                     .isInstanceOf(OtpException.class).hasFieldOrPropertyWithValue("code", "OTP010");
         }
         assertNoWritesOrSends();
@@ -413,8 +415,10 @@ class OtpServiceTest {
     @Test
     void unknownSentViaIsOtp010() {
         givenConfig(config("LOGIN_OTP", "WHATSAPP", null));
+        final OtpService service = service(false);
+        final OtpSendRequest request = sendRequest(MOBILE, "EN");
 
-        assertThatThrownBy(() -> service(false).send(sendRequest(MOBILE, "EN")))
+        assertThatThrownBy(() -> service.send(request))
                 .isInstanceOf(OtpException.class).hasFieldOrPropertyWithValue("code", "OTP010");
         assertNoWritesOrSends();
     }
@@ -544,14 +548,16 @@ class OtpServiceTest {
         final MockEnvironment prod = new MockEnvironment();
         prod.setActiveProfiles("prod");
 
+        final OtpProperties fixedOtpOn = new OtpProperties(true, "notification@alramz.ae");
+
         assertThatThrownBy(() -> new OtpService(repository, smsService, emailService,
-                new OtpProperties(true, "notification@alramz.ae"), EMAIL_PROPERTIES, txManager, prod, jwtContextProvider))
+                fixedOtpOn, EMAIL_PROPERTIES, txManager, prod, jwtContextProvider))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("app.otp.fixed-test-otp-enabled must be false in prod and preprod");
         final MockEnvironment preprod = new MockEnvironment();
         preprod.setActiveProfiles("preprod");
         assertThatThrownBy(() -> new OtpService(repository, smsService, emailService,
-                new OtpProperties(true, "notification@alramz.ae"), EMAIL_PROPERTIES, txManager, preprod, jwtContextProvider))
+                fixedOtpOn, EMAIL_PROPERTIES, txManager, preprod, jwtContextProvider))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("app.otp.fixed-test-otp-enabled must be false in prod and preprod");
         // prod with the flag off, and dev with it on, both start.
@@ -565,9 +571,11 @@ class OtpServiceTest {
 
     @Test
     void e23_emailFromOutsideTheAllowListFailsStartup() {
+        final MockEnvironment environment = new MockEnvironment();
         for (String from : new String[]{"cm@alramz.ae", null}) {
-            assertThatThrownBy(() -> new OtpService(repository, smsService, emailService, new OtpProperties(false, from),
-                    EMAIL_PROPERTIES, txManager, new MockEnvironment(), jwtContextProvider, CLOCK))
+            final OtpProperties properties = new OtpProperties(false, from);
+            assertThatThrownBy(() -> new OtpService(repository, smsService, emailService, properties,
+                    EMAIL_PROPERTIES, txManager, environment, jwtContextProvider, CLOCK))
                     .isInstanceOf(IllegalStateException.class)
                     .hasMessage("app.otp.email-from is not an allowed sender");
         }
@@ -587,7 +595,9 @@ class OtpServiceTest {
 
         service(true).send(sendRequest(MOBILE + "|" + EMAIL, "EN"));
         service(false).send(sendRequest(MOBILE + "|" + EMAIL, "EN"));
-        assertThatThrownBy(() -> service(false).validate(validateRequest(HASH_1234))).isInstanceOf(OtpException.class);
+        final OtpService validator = service(false);
+        final OtpValidateRequest validateRequest = validateRequest(HASH_1234);
+        assertThatThrownBy(() -> validator.validate(validateRequest)).isInstanceOf(OtpException.class);
 
         final ArgumentCaptor<SmsSendRequest> sms = ArgumentCaptor.forClass(SmsSendRequest.class);
         verify(smsService).sendWithOutcome(sms.capture());

@@ -1,6 +1,5 @@
 package com.alramz.config;
 
-import com.alramz.config.CompanyRedisProperties;
 import com.alramz.service.RedisCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

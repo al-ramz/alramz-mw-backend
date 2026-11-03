@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Strongly typed configuration bound to the {@code company.logging} namespace.
@@ -43,11 +44,13 @@ public class LoggingProperties {
      * Paths that should be excluded from request/response logging.
      * Patterns use Spring Ant-style matching.
      */
-    private List<String> excludedPaths = new ArrayList<>(List.of("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**"));
+    private static final List<String> DEFAULT_EXCLUDED_PATHS = List.of("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**");
+
+    private List<String> excludedPaths = new ArrayList<>(DEFAULT_EXCLUDED_PATHS);
 
     public void setExcludedPaths(List<String> excludedPaths) {
         if (excludedPaths == null) {
-            this.excludedPaths = new ArrayList<>(List.of("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**"));
+            this.excludedPaths = new ArrayList<>(DEFAULT_EXCLUDED_PATHS);
         } else {
             this.excludedPaths = new ArrayList<>(excludedPaths);
         }
@@ -192,8 +195,8 @@ public class LoggingProperties {
          */
         private boolean outboundEnabled = false;
         /** Endpoints to exclude from audit logging. */
-        private List<String> excludedPaths = new ArrayList<>(List.of(
-                "/api/v1/info", "/actuator/**", "/swagger-ui/**", "/v3/api-docs/**"));
+        private List<String> excludedPaths = new ArrayList<>(
+                Stream.concat(Stream.of("/api/v1/info"), DEFAULT_EXCLUDED_PATHS.stream()).toList());
     }
 
     // ------------------------------------------------------------------ seq

@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Order(1)
 public class OnboardingExceptionHandler {
 
-
+    private static final String DEFAULT_INTERNAL_ERROR_CODE = "ONB011";
 
     private String friendlyMessage(String field, String defaultMessage) {
         if (field == null) return defaultMessage;
@@ -29,7 +29,7 @@ public class OnboardingExceptionHandler {
     }
 
     private String mapFieldToInternalErrorCode(String field) {
-        if (field == null) return "ONB011";
+        if (field == null) return DEFAULT_INTERNAL_ERROR_CODE;
         String normalized = field.contains(".") ? field.substring(field.lastIndexOf('.') + 1) : field;
         return switch (normalized) {
             case "custMobile", "cust_mobile" -> "ONB001";
@@ -37,7 +37,7 @@ public class OnboardingExceptionHandler {
             case "custNin", "cust_nin" -> "ONB003";
             case "kycMatch", "kyc_match" -> "ONB004";
             case "fatcaUscitizen", "fatca_uscitizen" -> "ONB005";
-            default -> "ONB011";
+            default -> DEFAULT_INTERNAL_ERROR_CODE;
         };
     }
 
@@ -68,9 +68,9 @@ public class OnboardingExceptionHandler {
         response.setMemberReferenceNumber(correlationId);
         String internalErrorCode = ex.getBindingResult().getFieldErrors().stream()
                 .map(fe -> mapFieldToInternalErrorCode(fe.getField()))
-                .filter(code -> !"ONB011".equals(code))
+                .filter(code -> !DEFAULT_INTERNAL_ERROR_CODE.equals(code))
                 .findFirst()
-                .orElse("ONB011");
+                .orElse(DEFAULT_INTERNAL_ERROR_CODE);
         response.setInternalErrorCode(internalErrorCode);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -84,7 +84,7 @@ public class OnboardingExceptionHandler {
         response.setResponseCode("503");
         response.setResponseMessage(ex.getMessage());
         response.setMemberReferenceNumber(correlationId);
-        response.setInternalErrorCode("ONB011");
+        response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
 
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }

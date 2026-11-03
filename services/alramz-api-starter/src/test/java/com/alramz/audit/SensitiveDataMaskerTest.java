@@ -49,13 +49,13 @@ class SensitiveDataMaskerTest {
 
         Map<String, Object> masked = (Map<String, Object>) masker.mask(input);
 
-        assertThat(masked.get("Password")).isEqualTo("***");
-        assertThat(masked.get("api_key")).isEqualTo("***");
-        assertThat(masked).containsEntry("secret", null);
+        assertThat(masked)
+                .containsEntry("Password", "***")
+                .containsEntry("api_key", "***")
+                .containsEntry("secret", null);
         assertThat((String) masked.get("eid_attachment_front")).isEqualTo("A".repeat(20) + "... [truncated]");
         assertThat((String) masked.get("profile_image")).endsWith("... [truncated]");
-        assertThat(masked.get("name")).isEqualTo("Ali");
-        assertThat(masked.get("age")).isEqualTo(30);
+        assertThat(masked).containsEntry("name", "Ali").containsEntry("age", 30);
         assertThat((String) masked.get("photo")).isEqualTo("data:image/png;base6... [truncated]");
         assertThat((Map<String, Object>) masked.get("nested"))
                 .containsEntry("accessToken", "***").containsEntry("city", "Dubai");

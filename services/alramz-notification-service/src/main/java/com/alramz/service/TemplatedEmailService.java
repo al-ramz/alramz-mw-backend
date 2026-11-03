@@ -50,8 +50,10 @@ public class TemplatedEmailService {
     // Same rule as EmailServiceImpl.EMAIL (kept there untouched): fail fast with EML001 before the gateway sees it.
     static final Pattern EMAIL = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     private static final Pattern SEPARATORS = Pattern.compile("[;,/\\s\\\\]+");
+    private static final String MSWORD = "MSWORD";
+    private static final String MSEXCEL = "MSEXCEL";
     private static final Set<String> KNOWN_TYPES =
-            Set.of("JPEG", "JPG", "PNG", "PDF", "MSWORD", "MSEXCEL", "CSV", "TRN", "TEXT");
+            Set.of("JPEG", "JPG", "PNG", "PDF", MSWORD, MSEXCEL, "CSV", "TRN", "TEXT");
     private static final ZoneId DUBAI = ZoneId.of("Asia/Dubai");
     private static final JsonMapper JSON = JsonMapper.builder().build();
     private static final int MAX_IP_LENGTH = 45;
@@ -171,33 +173,39 @@ public class TemplatedEmailService {
                 : Arrays.stream(template.typeOfAttachments().split(",")).map(String::trim).toList();
         long total = 0;
         for (TemplateAttachment attachment : attachments) {
-            final String code = attachment.getContentType();
-            if (!KNOWN_TYPES.contains(code) || !allowedTypes.contains(code)) {
-                throw typeMismatch();
-            }
-            if (isBlank(attachment.getFileName())) {
-                throw new TemplatedEmailException("EML006", "Please provide the fileName for all attachments");
-            }
-            final String extension = extension(attachment.getFileName());
-            if ("MSWORD".equals(code) && !"doc".equals(extension) && !"docx".equals(extension)
-                    || "MSEXCEL".equals(code) && !"xls".equals(extension) && !"xlsx".equals(extension)) {
-                throw typeMismatch();
-            }
+            checkAttachment(attachment, allowedTypes);
             total += attachment.getContent().length;
         }
         if (attachments.isEmpty()) {
             return 0;
         }
-        final long max;
-        try {
-            max = Long.parseLong(template.attachmentsMaxSize() == null ? "" : template.attachmentsMaxSize().trim());
-        } catch (NumberFormatException e) {
-            throw misconfigured("attachments_max_size is not a number", template);
-        }
-        if (total > max) {
+        if (total > attachmentsMaxSize(template)) {
             throw new TemplatedEmailException("EML007", "Attachments size limit exceeded");
         }
         return total;
+    }
+
+    private static void checkAttachment(final TemplateAttachment attachment, final List<String> allowedTypes) {
+        final String code = attachment.getContentType();
+        if (!KNOWN_TYPES.contains(code) || !allowedTypes.contains(code)) {
+            throw typeMismatch();
+        }
+        if (isBlank(attachment.getFileName())) {
+            throw new TemplatedEmailException("EML006", "Please provide the fileName for all attachments");
+        }
+        final String extension = extension(attachment.getFileName());
+        if (MSWORD.equals(code) && !"doc".equals(extension) && !"docx".equals(extension)
+                || MSEXCEL.equals(code) && !"xls".equals(extension) && !"xlsx".equals(extension)) {
+            throw typeMismatch();
+        }
+    }
+
+    private static long attachmentsMaxSize(final EmailTemplate template) {
+        try {
+            return Long.parseLong(template.attachmentsMaxSize() == null ? "" : template.attachmentsMaxSize().trim());
+        } catch (NumberFormatException e) {
+            throw misconfigured("attachments_max_size is not a number", template);
+        }
     }
 
     private void checkDailyLimit(final EmailTemplate template, final String invoker, final String toJoined) {
@@ -268,9 +276,9 @@ public class TemplatedEmailService {
             case "JPEG", "JPG" -> "image/jpeg";
             case "PNG" -> "image/png";
             case "PDF" -> "application/pdf";
-            case "MSWORD" -> "docx".equals(extension(fileName))
+            case MSWORD -> "docx".equals(extension(fileName))
                     ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : "application/msword";
-            case "MSEXCEL" -> "xlsx".equals(extension(fileName))
+            case MSEXCEL -> "xlsx".equals(extension(fileName))
                     ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/vnd.ms-excel";
             case "CSV" -> "text/csv; charset=UTF-8";
             default -> "text/plain; charset=UTF-8"; // TRN, TEXT (codes were checked against KNOWN_TYPES)

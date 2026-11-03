@@ -30,7 +30,7 @@ class ProfileSecurityConfigTest {
             if ("application-dev.yml".equals(file)) {
                 assertThat(jwt.get("secret")).isIn("${JWT_SECRET}", DEV_SECRET_WITH_FALLBACK);
             } else {
-                assertThat(jwt.get("secret")).isEqualTo("${JWT_SECRET}");
+                assertThat(jwt).containsEntry("secret", "${JWT_SECRET}");
             }
             assertThat((List<String>) jwt.get("permit-all-urls")).doesNotContain("/api/v1/email/send",
                     "/api/v1/email/template/send", "/api/v1/sms/send", "/api/v1/sms/report/**",

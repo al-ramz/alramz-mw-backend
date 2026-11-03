@@ -69,5 +69,5 @@ covers it (100% lines), and a clean rerun gives 98.6%.
 
 ## Tooling
 
-- `.claude/skills/jacoco-coverage-gate/SKILL.md`: a repeatable procedure for this scan.
-- `.claude/skills/jacoco-coverage-gate/scripts/coverage_summary.py`: per-service jacoco.csv → summary.md/json with gate and worst-classes list.
+- `.claude/skills/alramz-jacoco-coverage-check/SKILL.md`: a repeatable procedure for this scan.
+- `.claude/skills/alramz-jacoco-coverage-check/scripts/coverage_summary.py`: per-service jacoco.csv → summary.md/json with gate and worst-classes list.

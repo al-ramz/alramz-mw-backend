@@ -110,14 +110,14 @@ public class OnboardingServiceImpl implements OnboardingService {
         if (value == null || value.isBlank()) {
             return false;
         }
-        return "Y".equals(value.trim().toUpperCase());
+        return "Y".equalsIgnoreCase(value.trim());
     }
 
     private boolean isUsCitizen(String value) {
         if (value == null || value.isBlank()) {
             return false;
         }
-        return "USA".equals(value.trim().toUpperCase());
+        return "USA".equalsIgnoreCase(value.trim());
     }
 
     private String normalizeMobile(String mobile) {

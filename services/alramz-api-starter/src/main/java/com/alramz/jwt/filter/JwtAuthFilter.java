@@ -27,14 +27,12 @@ import io.jsonwebtoken.JwtException;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
 
-    private final JwtProperties properties;
     private final TokenProvider tokenProvider;
     private final SecretKey key;
 
     public JwtAuthFilter(JwtProperties properties, TokenProvider tokenProvider) {
-        this.properties = properties;
         this.tokenProvider = tokenProvider;
         this.key = Keys.hmacShaKeyFor(properties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
@@ -51,8 +49,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = header.substring(7);
         Optional<String> usernameOpt = tokenProvider.validateToken(token);
         if (usernameOpt.isEmpty()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Invalid JWT token for request: {}", request.getRequestURI());
+            if (log.isDebugEnabled()) {
+                log.debug("Invalid JWT token for request: {}", request.getRequestURI());
             }
             filterChain.doFilter(request, response);
             return;
@@ -64,8 +62,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 new UsernamePasswordAuthenticationToken(username, null, authorities);
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        if (logger.isDebugEnabled()) {
-            logger.debug("Authenticated user '{}' for request: {}", username, request.getRequestURI());
+        if (log.isDebugEnabled()) {
+            log.debug("Authenticated user '{}' for request: {}", username, request.getRequestURI());
         }
 
         filterChain.doFilter(request, response);

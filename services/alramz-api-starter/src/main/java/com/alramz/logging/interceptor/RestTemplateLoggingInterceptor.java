@@ -85,10 +85,8 @@ public class RestTemplateLoggingInterceptor implements ClientHttpRequestIntercep
 
     private void warnIfSlow(long durationMs, String context) {
         Duration threshold = properties.getPerformance().getThreshold();
-        if (threshold != null && durationMs > threshold.toMillis()) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Slow {} detected: {}ms (threshold {}ms)", context, durationMs, threshold.toMillis());
-            }
+        if (threshold != null && durationMs > threshold.toMillis() && logger.isWarnEnabled()) {
+            logger.warn("Slow {} detected: {}ms (threshold {}ms)", context, durationMs, threshold.toMillis());
         }
     }
 }

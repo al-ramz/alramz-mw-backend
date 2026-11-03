@@ -51,7 +51,7 @@ public final class SeqLoggingConfig {
         Map<Integer, String> map = new HashMap<>();
         map.put(Level.ERROR_INT, "Error");
         map.put(Level.WARN_INT, "Warning");
-        map.put(Level.INFO_INT, "Information");
+        map.put(Level.INFO_INT, DEFAULT_LEVEL);
         map.put(Level.DEBUG_INT, "Debug");
         map.put(Level.TRACE_INT, "Verbose");
         return Collections.unmodifiableMap(map);

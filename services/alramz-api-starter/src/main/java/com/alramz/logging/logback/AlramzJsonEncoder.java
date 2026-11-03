@@ -84,7 +84,7 @@ public class AlramzJsonEncoder extends EncoderBase<ILoggingEvent> {
                 return toJson(event);
             } catch (JsonProcessingException e) {
                 // Fall back to a minimal string to never lose a log line.
-                return fallback(event, e);
+                return fallback(event);
             }
         }
         if (classicLayout != null) {
@@ -142,10 +142,10 @@ public class AlramzJsonEncoder extends EncoderBase<ILoggingEvent> {
             node.put("exception", exception);
         }
 
-        String json = prettyPrint
+        String rendered = prettyPrint
                 ? objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(node)
                 : objectMapper.writeValueAsString(node);
-        return (json + System.lineSeparator()).getBytes(StandardCharsets.UTF_8);
+        return (rendered + System.lineSeparator()).getBytes(StandardCharsets.UTF_8);
     }
 
     private void putIfPresent(ObjectNode node, String key, String value) {
@@ -159,7 +159,7 @@ public class AlramzJsonEncoder extends EncoderBase<ILoggingEvent> {
         return timestampFormatter.format(zdt);
     }
 
-    private byte[] fallback(ILoggingEvent event, Exception cause) {
+    private byte[] fallback(ILoggingEvent event) {
         StringBuilder sb = new StringBuilder();
         sb.append(formatInstant(event.getTimeStamp()))
                 .append(" ")

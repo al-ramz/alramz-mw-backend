@@ -1,0 +1,50 @@
+[
+  {
+    "service": "alramz-notification-service",
+    "port": "8082",
+    "result": "STARTED_BUT_HEALTHCHECK_FAILED",
+    "health": "HTTP 403 ",
+    "seconds": 13,
+    "detail": "context started; /actuator/health is not in the JWT permit-all list (secured)"
+  },
+  {
+    "service": "onboarding-service",
+    "port": "8080",
+    "result": "BLOCKED_BY_DEPENDENCY",
+    "health": "n/a",
+    "seconds": 13,
+    "detail": "Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=nNl9cp2WRC2/652qxhy5Vw==)"
+  },
+  {
+    "service": "reference-data-service",
+    "port": "18080",
+    "result": "BLOCKED_BY_DEPENDENCY",
+    "health": "n/a",
+    "seconds": 19,
+    "detail": "configured port 8081 in use by another process; ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=dTI0p8mESUSsU+M1qPuDyA==)"
+  },
+  {
+    "service": "reporting-management-service",
+    "port": "8084",
+    "result": "BLOCKED_BY_DEPENDENCY",
+    "health": "n/a",
+    "seconds": 12,
+    "detail": "Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=IL0S4IfVRKCQQCYHRHEoog==)"
+  },
+  {
+    "service": "utility-service",
+    "port": "8083",
+    "result": "STARTED_BUT_HEALTHCHECK_FAILED",
+    "health": "HTTP 403 ",
+    "seconds": 12,
+    "detail": "context started; /actuator/health is not in the JWT permit-all list (secured)"
+  },
+  {
+    "service": "wealth-management-service",
+    "port": "8085",
+    "result": "BLOCKED_BY_DEPENDENCY",
+    "health": "n/a",
+    "seconds": 13,
+    "detail": "Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=ajVW4pObTA2pXOLE679SkA==)"
+  }
+]

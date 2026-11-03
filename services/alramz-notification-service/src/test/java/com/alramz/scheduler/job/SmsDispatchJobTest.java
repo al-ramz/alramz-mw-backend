@@ -225,9 +225,8 @@ class SmsDispatchJobTest {
         job(true).run(new ScheduleInfoBean());
 
         assertThat(logs.list).allSatisfy(e -> assertThat(e.getFormattedMessage())
-                .doesNotContain(NUMBER).doesNotContain("Statement ready"));
-        assertThat(logs.list).anyMatch(e -> e.getFormattedMessage()
-                .contains("claimed=2 sent=1 failed=0 invalid=1"));
-        assertThat(logs.list).anyMatch(e -> e.getFormattedMessage().contains("***0010"));
+                        .doesNotContain(NUMBER).doesNotContain("Statement ready"))
+                .anyMatch(e -> e.getFormattedMessage().contains("claimed=2 sent=1 failed=0 invalid=1"))
+                .anyMatch(e -> e.getFormattedMessage().contains("***0010"));
     }
 }

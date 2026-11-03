@@ -1,7 +1,5 @@
 package com.alramz.service;
 
-import com.alramz.config.ValidationDefinition;
-import com.alramz.model.ValidationRequest;
 import com.alramz.model.ValidationRequest.ValidationTypeEnum;
 import com.alramz.service.impl.EIDExistsResponseMapper;
 import com.alramz.service.impl.EmailExistsResponseMapper;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 class ValidationResponseMapperRegistryTest {

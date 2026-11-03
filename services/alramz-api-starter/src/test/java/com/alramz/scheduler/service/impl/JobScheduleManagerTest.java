@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class JobScheduleManagerTest {
@@ -71,7 +72,7 @@ class JobScheduleManagerTest {
     }
 
     @Test
-    void schedulesYamlJobsByModeAndClassifiesInvalidOnes() throws Exception {
+    void schedulesYamlJobsByModeAndClassifiesInvalidOnes() throws InterruptedException {
         SchedulerProperties.ScheduleJobProperties rate = job("RATE", "FIXED_RATE");
         rate.setInterval(50L);
         SchedulerProperties.ScheduleJobProperties delay = job("DELAY", "FIXED_DELAY");
@@ -95,6 +96,23 @@ class JobScheduleManagerTest {
         SchedStatus stat = manager.getSchedulerStat();
         assertThat(ids(stat.getScheduledTasks().keySet())).containsExactlyInAnyOrder("RATE", "DELAY", "CRON");
         assertThat(stat.getMaxPoolSize()).isPositive();
+    }
+
+    @Test
+    void invalidJobAfterSuccessfulOneIsNotReportedAsSucceeded() {
+        SchedulerProperties.ScheduleJobProperties rate = job("RATE", "FIXED_RATE");
+        rate.setInterval(60_000L);
+        SchedulerProperties.ScheduleJobProperties badCron = job("BADCRON", "CRON_EXP");
+        badCron.setCronExpr("not a cron");
+        SchedulerProperties.ScheduleJobProperties oneTimeNoStart = job("ONCE", "ONE_TIME");
+
+        // valid job first: before the fix its future leaked into the following invalid jobs
+        JobScheduleManager manager = yamlManager(rate, badCron, oneTimeNoStart);
+        Map<String, Set<ScheduleInfoBean>> result = manager.schedule("group");
+
+        assertThat(ids(result.get("SUCCEED"))).containsExactly("RATE");
+        assertThat(ids(result.get("INVALID"))).containsExactlyInAnyOrder("BADCRON", "ONCE");
+        assertThat(ids(manager.getSchedulerStat().getScheduledTasks().keySet())).containsExactly("RATE");
     }
 
     @Test
@@ -127,7 +145,7 @@ class JobScheduleManagerTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void loadsJobsFromDatabaseWhenTemplateAvailable() throws Exception {
+    void loadsJobsFromDatabaseWhenTemplateAvailable() throws java.sql.SQLException {
         NamedParameterJdbcTemplate jdbc = mock(NamedParameterJdbcTemplate.class);
         ResultSet rs = mock(ResultSet.class);
         when(rs.getString("worker_bean_name")).thenReturn("worker");
@@ -161,7 +179,7 @@ class JobScheduleManagerTest {
     }
 
     @Test
-    void unregisterJobsCancelsMatchingTasks() throws Exception {
+    void unregisterJobsCancelsMatchingTasks() {
         SchedulerProperties.ScheduleJobProperties a = job("A", "FIXED_DELAY");
         a.setDelay(60_000L);
         SchedulerProperties.ScheduleJobProperties b = job("B", "FIXED_DELAY");
@@ -176,7 +194,7 @@ class JobScheduleManagerTest {
     }
 
     @Test
-    void reinitializeForJobsCancelsAndReschedules() throws Exception {
+    void reinitializeForJobsCancelsAndReschedules() {
         SchedulerProperties.ScheduleJobProperties a = job("A", "FIXED_DELAY");
         a.setDelay(60_000L);
         JobScheduleManager manager = yamlManager(a);
@@ -189,7 +207,7 @@ class JobScheduleManagerTest {
     }
 
     @Test
-    void stopCancelsAllTasksAndReportsCompletion() throws Exception {
+    void stopCancelsAllTasksAndReportsCompletion() {
         SchedulerProperties.ScheduleJobProperties a = job("A", "FIXED_DELAY");
         a.setDelay(60_000L);
         JobScheduleManager manager = yamlManager(a);
@@ -203,7 +221,7 @@ class JobScheduleManagerTest {
     }
 
     @Test
-    void hardStopShutsDownExecutorImmediately() throws Exception {
+    void hardStopShutsDownExecutorImmediately() {
         JobScheduleManager manager = yamlManager();
 
         String result = manager.hardStopScheduler();
@@ -225,7 +243,7 @@ class JobScheduleManagerTest {
     }
 
     @Test
-    void reinitializeSchedulesJobsOnIdleScheduler() throws Exception {
+    void reinitializeSchedulesJobsOnIdleScheduler() {
         ThreadPoolTaskScheduler idle = mock(ThreadPoolTaskScheduler.class);
         java.util.concurrent.ScheduledThreadPoolExecutor executor = new java.util.concurrent.ScheduledThreadPoolExecutor(1);
         when(idle.getActiveCount()).thenReturn(0);
@@ -239,7 +257,7 @@ class JobScheduleManagerTest {
         manager.stop();
 
         assertThat(ids(result.get("INVALID"))).containsExactly("X");
-        org.mockito.Mockito.verify(idle).initialize();
+        verify(idle).initialize();
         assertThat(executor.isShutdown()).isTrue();
     }
 }

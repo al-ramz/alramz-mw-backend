@@ -436,10 +436,11 @@ class TemplatedEmailServiceTest {
 
     @Test
     void e13_unparseableMaxSizeWithAttachmentsIsMisconfiguration() {
+        final TemplatedEmailRequest request = request().attachments(List.of(attachment("PDF", "a.pdf", "x")));
         for (String bad : new String[]{null, " ", "3MB"}) {
             givenTemplate(template(2, 1, "PDF", bad, false, "b"));
 
-            assertThatThrownBy(() -> service.send(request().attachments(List.of(attachment("PDF", "a.pdf", "x"))), IP))
+            assertThatThrownBy(() -> service.send(request, IP))
                     .isInstanceOf(TemplatedEmailException.class)
                     .hasFieldOrPropertyWithValue("code", "EML010");
         }
@@ -522,8 +523,9 @@ class TemplatedEmailServiceTest {
         givenTemplate(simpleTemplate());
         doThrow(new EmailServiceException("MGE-B-003", "Graph said no to jane.doe@example.com"))
                 .when(emailService).sendEmail(any());
+        final TemplatedEmailRequest request = request();
 
-        assertThatThrownBy(() -> service.send(request(), IP))
+        assertThatThrownBy(() -> service.send(request, IP))
                 .isInstanceOf(TemplatedEmailException.class)
                 .hasFieldOrPropertyWithValue("code", "EML009")
                 .hasMessage("Email service failed MGE-B-003")
@@ -541,8 +543,9 @@ class TemplatedEmailServiceTest {
     void e16_gatewayValidationCodesAreMapped(final String gatewayCode, final String code, final String message) {
         givenTemplate(simpleTemplate());
         doThrow(new EmailValidationException(gatewayCode, "detail")).when(emailService).sendEmail(any());
+        final TemplatedEmailRequest request = request();
 
-        assertThatThrownBy(() -> service.send(request(), IP))
+        assertThatThrownBy(() -> service.send(request, IP))
                 .isInstanceOf(TemplatedEmailException.class)
                 .hasFieldOrPropertyWithValue("code", code)
                 .hasMessage(message);
@@ -567,10 +570,10 @@ class TemplatedEmailServiceTest {
         givenTemplate(simpleTemplate());
         service.send(request().cc("boss@example.com").attachments(List.of(attachment("PDF", "a.pdf", "SECRETDATA"))), IP);
         when(repository.findByName("STATEMENT")).thenReturn(java.util.Optional.empty());
-        assertThatThrownBy(() -> service.send(request(), IP)).isInstanceOf(TemplatedEmailException.class);
+        final TemplatedEmailRequest request = request();
+        assertThatThrownBy(() -> service.send(request, IP)).isInstanceOf(TemplatedEmailException.class);
 
-        assertThat(logs.list).isNotEmpty();
-        assertThat(logs.list).allSatisfy(e -> assertThat(e.getFormattedMessage())
+        assertThat(logs.list).isNotEmpty().allSatisfy(e -> assertThat(e.getFormattedMessage())
                 .doesNotContain("@example.com").doesNotContain("Jane").doesNotContain("Q3")
                 .doesNotContain("Statement ready").doesNotContain("Dear").doesNotContain("SECRETDATA"));
         assertThat(logs.list.get(0).getFormattedMessage()).contains("outcome=OK", "to=2", "cc=1", "attachments=1",

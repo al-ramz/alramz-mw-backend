@@ -17,7 +17,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,6 +36,8 @@ import java.util.Optional;
 @ConditionalOnProperty(prefix = "company.datasource", name = "brok.enabled", havingValue = "true")
 public class MmfRepositoryImpl implements MmfRepository {
 
+    private static final String CLIENT_ID = "CLIENT_ID";
+
     private final NamedParameterJdbcTemplate jdbc;
     private final SqlQueriesManager sqlQueriesManager;
 
@@ -53,7 +54,7 @@ public class MmfRepositoryImpl implements MmfRepository {
         List<MmfAccount> rows = jdbc.query(sql("mmf.account.find"),
                 new MapSqlParameterSource("accountNumber", accountNumber),
                 (rs, rowNum) -> new MmfAccount()
-                        .clientId(rs.getString("CLIENT_ID"))
+                        .clientId(rs.getString(CLIENT_ID))
                         .clientNameEn(rs.getString("CLIENT_NAME_EN"))
                         .clientNameAr(rs.getString("CLIENT_NAME_AR"))
                         .accountNumber(rs.getString("ACCOUNT_NUMBER"))
@@ -71,13 +72,13 @@ public class MmfRepositoryImpl implements MmfRepository {
         String key = "mmf.sweep.find.today";
         if (fromDate != null) {
             key = "mmf.sweep.find.range";
-            params.addValue("fromDate", Date.valueOf(fromDate));
-            params.addValue("toDateExclusive", Date.valueOf(toDateExclusive));
+            params.addValue("fromDate", fromDate);
+            params.addValue("toDateExclusive", toDateExclusive);
         }
         return jdbc.query(sql(key), params, (rs, rowNum) -> new MmfSweep()
                 .sweepNo(rs.getLong("SWEEP_NO"))
-                .date(rs.getDate("SWEEP_DATE").toLocalDate())
-                .accountNumber(rs.getString("CLIENT_ID"))
+                .date(rs.getObject("SWEEP_DATE", LocalDate.class))
+                .accountNumber(rs.getString(CLIENT_ID))
                 .amount(rs.getBigDecimal("AMT"))
                 .source(book));
     }
@@ -111,7 +112,7 @@ public class MmfRepositoryImpl implements MmfRepository {
     public void insertProfitDistribution(MmfBook book, long sweepNo, MmfProfitDistributionItem item) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("sweepNo", sweepNo)
-                .addValue("sweepDate", Date.valueOf(item.getSweepDate()))
+                .addValue("sweepDate", item.getSweepDate())
                 .addValue("accountNumber", Long.valueOf(item.getAccountNumber()))
                 .addValue("amount", item.getAmount())
                 .addValue("referenceId", Long.valueOf(item.getReferenceId()))
@@ -134,19 +135,19 @@ public class MmfRepositoryImpl implements MmfRepository {
     public List<MmfCustodianPosition> findCustodianPositions(Collection<String> clientIds, LocalDate asOfDate) {
         MapSqlParameterSource params = new MapSqlParameterSource("clientIds", new ArrayList<>(clientIds))
                 // Typed so a null bind reaches Oracle's NVL as a DATE.
-                .addValue("asOfDate", asOfDate != null ? Date.valueOf(asOfDate) : null, Types.DATE);
+                .addValue("asOfDate", asOfDate, Types.DATE);
         return jdbc.query(sql("mmf.custodian.positions"), params, (rs, rowNum) -> {
             String market = rs.getString("MARKET");
-            Date priceDate = rs.getDate("PRICE_DATE");
+            LocalDate priceDate = rs.getObject("PRICE_DATE", LocalDate.class);
             return new MmfCustodianPosition()
-                    .clientId(rs.getString("CLIENT_ID"))
+                    .clientId(rs.getString(CLIENT_ID))
                     .isin(rs.getString("ISIN"))
                     .symbol(rs.getString("SYMBOL"))
                     .quantity(rs.getBigDecimal("QUANTITY"))
                     .closePrice(rs.getBigDecimal("CLOSE_PRICE"))
                     .currency(rs.getString("CURRENCY"))
                     .market(market != null ? MmfMarket.fromValue(market) : null)
-                    .priceDate(priceDate != null ? priceDate.toLocalDate() : null);
+                    .priceDate(priceDate);
         });
     }
 

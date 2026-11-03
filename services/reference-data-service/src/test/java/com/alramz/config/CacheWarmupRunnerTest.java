@@ -55,7 +55,7 @@ class CacheWarmupRunnerTest {
     }
 
     @Test
-    void warmupRunner_shouldContinueWhenWarmingAMappingFails() throws Exception {
+    void warmupRunner_shouldContinueWhenWarmingAMappingFails() {
         Map<String, CompanyRedisProperties.Cache.CacheMapping> mappings = new LinkedHashMap<>();
         mappings.put("countries", mapping("startup", true));
         mappings.put("banks", mapping("startup", true));

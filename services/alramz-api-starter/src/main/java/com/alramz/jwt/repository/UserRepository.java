@@ -72,7 +72,7 @@ public class UserRepository implements com.alramz.jwt.repository.UserRepositoryO
         entity.setEnable(user.enabled() ? "Y" : "N");
         entity.setApplication(user.application());
         entity.setEnvironment(user.environment());
-        entity.setCreatedAt(LocalDateTime.now());
+        entity.setCreatedAt(LocalDateTime.now(ZoneId.systemDefault()));
         return entity;
     }
 }

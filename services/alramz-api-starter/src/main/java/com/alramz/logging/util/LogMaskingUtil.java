@@ -1,6 +1,5 @@
 package com.alramz.logging.util;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,11 +26,11 @@ public final class LogMaskingUtil {
     private static final CopyOnWriteArrayList<Pattern> customPatterns = new CopyOnWriteArrayList<>();
 
     private static final Pattern JSON_PAIR = Pattern.compile(
-            "\"([^\"]*)\"\\s*:\\s*(\"(?:[^\"\\\\]|\\\\.)*\"|\\d+(?:\\.\\d+)?|true|false|null)");
+            "\"([^\"]*+)\"\\s*+:\\s*+(\"(?:[^\"\\\\]++|\\\\.)*+\"|[-+.\\w]++)");
 
     private static final List<Pattern> DEFAULT_PATTERNS = List.of(
-            Pattern.compile("(?i)(eyJ[A-Za-z0-9_\\-]+\\.eyJ[A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-.]+)"),
-            Pattern.compile("(?i)(bearer\\s+[A-Za-z0-9_=\\-\\.]+)"),
+            Pattern.compile("(?i)(eyJ[A-Z0-9_\\-]+\\.eyJ[A-Z0-9_\\-]+\\.[A-Z0-9_\\-.]+)"),
+            Pattern.compile("(?i)(bearer\\s+[A-Z0-9_=\\-.]+)"),
             Pattern.compile("(?i)(authorization\\s*[=:]{1,2}\\s*\\S+)"),
             Pattern.compile("(?i)(api[_-]?key\\s*[=:]{1,2}\\s*\\S+)"),
             Pattern.compile("\\b\\d{3}-\\d{2}-\\d{4}\\b"),

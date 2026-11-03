@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import com.alramz.logging.util.LoggingHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.HttpStatus;
@@ -31,13 +30,18 @@ import com.alramz.scheduler.model.RefreshJobsRequest;
 @RestController
 public class SchedulerManagerController {
 
-    private static Logger log = LoggerFactory.getLogger(SchedulerManagerController.class);
+    private static final Logger log = LoggerFactory.getLogger(SchedulerManagerController.class);
+    private static final String RESTART_FAILED = "ERROR: Failed to restart the scheduler";
+    private static final String RESTART_EXCEPTION = "Exception occurred while trying to restart the scheduler.";
 
-    @Autowired
-    ISchedulerService scheduler;
+    private final ISchedulerService scheduler;
+
+    public SchedulerManagerController(ISchedulerService scheduler) {
+        this.scheduler = scheduler;
+    }
 
     @PostMapping(value = "/api/secured/scheduler/stop", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> stopScheduler() throws Exception {
+    public ResponseEntity<String> stopScheduler() {
 
         if (log.isInfoEnabled()) {
             log.info("Request received to stop the scheduler. Trying to stop the scheduler...");
@@ -48,7 +52,7 @@ public class SchedulerManagerController {
 
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             if (log.isErrorEnabled()) {
-                log.error("Exception occurred while trying to stop the scheduler. " + ExceptionUtils.getStackTrace(e));
+                log.error("Exception occurred while trying to stop the scheduler.", e);
             }
 
             return new ResponseEntity<>("Failed to Stop the scheduler", HttpStatus.OK);
@@ -61,14 +65,13 @@ public class SchedulerManagerController {
     }
 
     @PostMapping(value = "/api/secured/scheduler/restart", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Set<ScheduleInfoBean>>> restartScheduler(@RequestBody RestartSchedulerRequest request)
-            throws Exception {
+    public ResponseEntity<Map<String, Set<ScheduleInfoBean>>> restartScheduler(@RequestBody RestartSchedulerRequest request) {
 
-        String jobGroupName = request.getJobGroupName();
+        String jobGroupName = LoggingHelper.stripCrlf(request.getJobGroupName());
 
         if (log.isInfoEnabled()) {
-            log.info("Request received to restart the scheduler with jobGroupName=" + jobGroupName
-            + ". Trying to restart the scheduler...");
+            log.info("Request received to restart the scheduler with jobGroupName={}. Trying to restart the scheduler...",
+                    jobGroupName);
         }
         Map<String, Set<ScheduleInfoBean>> result = new HashMap<>();
         try {
@@ -76,28 +79,27 @@ public class SchedulerManagerController {
 
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             if (log.isErrorEnabled()) {
-                log.error("Exception occurred while trying to restart the scheduler. " + ExceptionUtils.getStackTrace(e));
+                log.error(RESTART_EXCEPTION, e);
             }
-            result.put("ERROR: Failed to restart the scheduler", null);
+            result.put(RESTART_FAILED, null);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         if (log.isInfoEnabled()) {
             log.info("Scheduler restarted successfully");
         }
 
-        return new ResponseEntity<Map<String, Set<ScheduleInfoBean>>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(value = "/api/secured/scheduler/refresh/jobs", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Set<ScheduleInfoBean>>> restartScheduledForJobs(@RequestBody RefreshJobsRequest request)
-            throws Exception {
+    public ResponseEntity<Map<String, Set<ScheduleInfoBean>>> restartScheduledForJobs(@RequestBody RefreshJobsRequest request) {
 
-        String jobGroupName = request.getJobGroupName();
-        List<String> jobIds = request.getJobIds();
+        String jobGroupName = LoggingHelper.stripCrlf(request.getJobGroupName());
+        List<String> jobIds = request.getJobIds().stream().map(LoggingHelper::stripCrlf).toList();
 
         if (log.isInfoEnabled()) {
-            log.info("Request received to restart the scheduler with jobGroupName=" + jobGroupName + " and JobIds=["
-            + String.join(",", jobIds) + "]. Trying to restart the scheduler...");
+            log.info("Request received to restart the scheduler with jobGroupName={} and JobIds=[{}]. Trying to restart the scheduler...",
+                    jobGroupName, String.join(",", jobIds));
         }
         Map<String, Set<ScheduleInfoBean>> result = new HashMap<>();
         try {
@@ -105,23 +107,24 @@ public class SchedulerManagerController {
 
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             if (log.isErrorEnabled()) {
-                log.error("Exception occurred while trying to restart the scheduler. " + ExceptionUtils.getStackTrace(e));
+                log.error(RESTART_EXCEPTION, e);
             }
-            result.put("ERROR: Failed to restart the scheduler", null);
+            result.put(RESTART_FAILED, null);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         if (log.isInfoEnabled()) {
             log.info("Scheduler restarted successfully");
         }
 
-        return new ResponseEntity<Map<String, Set<ScheduleInfoBean>>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(value = "/api/secured/scheduler/unregister/jobs", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Boolean>> unregisterJobs(@RequestBody List<String> jobIds) throws Exception {
+    public ResponseEntity<Map<String, Boolean>> unregisterJobs(@RequestBody List<String> requestedJobIds) {
 
+        List<String> jobIds = requestedJobIds.stream().map(LoggingHelper::stripCrlf).toList();
         if (log.isInfoEnabled()) {
-            log.info("Request received to unregisterJobs - JobIds=[" + String.join(",", jobIds) + "]");
+            log.info("Request received to unregisterJobs - JobIds=[{}]", String.join(",", jobIds));
         }
         Map<String, Boolean> result = new HashMap<>();
         try {
@@ -129,20 +132,20 @@ public class SchedulerManagerController {
 
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             if (log.isErrorEnabled()) {
-                log.error("Exception occurred while trying to restart the scheduler. " + ExceptionUtils.getStackTrace(e));
+                log.error(RESTART_EXCEPTION, e);
             }
-            result.put("ERROR: Failed to restart the scheduler", false);
+            result.put(RESTART_FAILED, false);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         if (log.isInfoEnabled()) {
             log.info("Scheduler restarted successfully");
         }
 
-        return new ResponseEntity<Map<String, Boolean>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/secured/scheduler/stat", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SchedStatus> getSchedulerStat() throws Exception {
+    public ResponseEntity<SchedStatus> getSchedulerStat() {
 
         if (log.isInfoEnabled()) {
             log.info("Request received to get the scheduler current status..");
@@ -153,7 +156,7 @@ public class SchedulerManagerController {
 
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             if (log.isErrorEnabled()) {
-                log.error("Exception occurred while getting the scheduler status" + ExceptionUtils.getStackTrace(e));
+                log.error("Exception occurred while getting the scheduler status", e);
             }
             return new ResponseEntity<>(stat, HttpStatus.OK);
         }
@@ -165,7 +168,7 @@ public class SchedulerManagerController {
     }
 
     @PostMapping(value = "/api/secured/scheduler/hardstop", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> hardStopScheduler() throws Exception {
+    public ResponseEntity<String> hardStopScheduler() {
 
         if (log.isInfoEnabled()) {
             log.info("Request received to force stop the scheduler. Trying to stop ...");
@@ -176,7 +179,7 @@ public class SchedulerManagerController {
 
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             if (log.isErrorEnabled()) {
-                log.error("Exception occurred while trying to stop the scheduler" + ExceptionUtils.getStackTrace(e));
+                log.error("Exception occurred while trying to stop the scheduler", e);
             }
             return new ResponseEntity<>("Failed to stop the scheduler", HttpStatus.OK);
         }

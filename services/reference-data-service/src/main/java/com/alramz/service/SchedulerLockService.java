@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 @Service
@@ -16,6 +17,7 @@ public class SchedulerLockService {
     private static final Logger log = LoggerFactory.getLogger(SchedulerLockService.class);
     private static final String INSTANCE_ID = UUID.randomUUID().toString();
     private static final String LOCK_STATUS = "IN_PROGRESS";
+    private static final String JOB_ID = "jobId";
 
     private final NamedParameterJdbcTemplate middlewareNamedParameterJdbcTemplate;
 
@@ -32,14 +34,14 @@ public class SchedulerLockService {
                 "WHERE application_workflow_locks.expires_at < NOW() AND application_workflow_locks.status = :status";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("jobId", jobId);
+        params.addValue(JOB_ID, jobId);
         params.addValue("lockedBy", INSTANCE_ID);
         params.addValue("status", LOCK_STATUS);
-        params.addValue("expiresAt", LocalDateTime.now().plus(leaseDuration));
+        params.addValue("expiresAt", LocalDateTime.now(ZoneId.systemDefault()).plus(leaseDuration));
 
         if (log.isDebugEnabled()) {
             log.debug("Executing try acquire lock SQL: {} | params: jobId={}, lockedBy={}, status={}, expiresAt={}",
-                    sql, jobId, INSTANCE_ID, LOCK_STATUS, LocalDateTime.now().plus(leaseDuration));
+                    sql, jobId, INSTANCE_ID, LOCK_STATUS, LocalDateTime.now(ZoneId.systemDefault()).plus(leaseDuration));
         }
 
         try {
@@ -55,7 +57,7 @@ public class SchedulerLockService {
         String sql = "DELETE FROM application_workflow_locks WHERE mapping_name = :jobId AND locked_by = :lockedBy";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("jobId", jobId);
+        params.addValue(JOB_ID, jobId);
         params.addValue("lockedBy", INSTANCE_ID);
 
         if (log.isDebugEnabled()) {
@@ -73,7 +75,7 @@ public class SchedulerLockService {
         String sql = "DELETE FROM application_workflow_locks WHERE mapping_name = :jobId AND expires_at < NOW()";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("jobId", jobId);
+        params.addValue(JOB_ID, jobId);
 
         if (log.isDebugEnabled()) {
             log.debug("Executing clean stale locks SQL: {} | params: jobId={}", sql, jobId);

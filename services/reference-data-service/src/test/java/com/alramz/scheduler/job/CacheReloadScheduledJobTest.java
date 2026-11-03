@@ -1,6 +1,5 @@
 package com.alramz.scheduler.job;
 
-import com.alramz.config.CompanyRedisProperties;
 import com.alramz.scheduler.model.ScheduleInfoBean;
 import com.alramz.service.RedisCacheService;
 import com.alramz.service.SchedulerLockService;
@@ -35,7 +34,7 @@ class CacheReloadScheduledJobTest {
 
     @BeforeEach
     void setUp() {
-        job = new CacheReloadScheduledJob(redisCacheService, new CompanyRedisProperties(), lockService);
+        job = new CacheReloadScheduledJob(redisCacheService, lockService);
     }
 
     private static ScheduleInfoBean bean(String param) {

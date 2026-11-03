@@ -40,8 +40,8 @@ class AuthServiceTest {
         RefreshTokenRepositoryOps refreshRepo = new RefreshTokenRepositoryOps() {
             @Override public RefreshToken save(RefreshToken t) { return t; }
             @Override public java.util.Optional<RefreshToken> findByToken(String t) { return java.util.Optional.empty(); }
-            @Override public void revoke(String t) {}
-            @Override public void revokeAllByUserId(String u) {}
+            @Override public void revoke(String t) { /* no-op stub: revocation is not under test */ }
+            @Override public void revokeAllByUserId(String u) { /* no-op stub: revocation is not under test */ }
         };
 
         AuthService service = new AuthService(userRepo, encoder, tokenProvider, refreshRepo);
@@ -70,8 +70,8 @@ class AuthServiceTest {
         RefreshTokenRepositoryOps refreshRepo = new RefreshTokenRepositoryOps() {
             @Override public RefreshToken save(RefreshToken t) { return t; }
             @Override public java.util.Optional<RefreshToken> findByToken(String t) { return java.util.Optional.empty(); }
-            @Override public void revoke(String t) {}
-            @Override public void revokeAllByUserId(String u) {}
+            @Override public void revoke(String t) { /* no-op stub: revocation is not under test */ }
+            @Override public void revokeAllByUserId(String u) { /* no-op stub: revocation is not under test */ }
         };
 
         AuthService service = new AuthService(userRepo, encoder, tokenProvider, refreshRepo);
@@ -96,8 +96,8 @@ class AuthServiceTest {
         RefreshTokenRepositoryOps refreshRepo = new RefreshTokenRepositoryOps() {
             @Override public RefreshToken save(RefreshToken t) { return t; }
             @Override public java.util.Optional<RefreshToken> findByToken(String t) { return java.util.Optional.empty(); }
-            @Override public void revoke(String t) {}
-            @Override public void revokeAllByUserId(String u) {}
+            @Override public void revoke(String t) { /* no-op stub: revocation is not under test */ }
+            @Override public void revokeAllByUserId(String u) { /* no-op stub: revocation is not under test */ }
         };
 
         AuthService service = new AuthService(userRepo, encoder, tokenProvider, refreshRepo);

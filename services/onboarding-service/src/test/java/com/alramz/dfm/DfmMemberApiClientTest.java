@@ -4,7 +4,6 @@ import com.alramz.config.DfmMemberApiProperties;
 import com.alramz.config.ExternalDfmMemberApiConfig;
 import com.alramz.config.JacksonConfig;
 import com.alramz.exception.DfmConfigurationException;
-import com.alramz.model.DfmAddress;
 import com.alramz.model.DfmCrs;
 import com.alramz.model.DfmCrsCountry;
 import com.alramz.model.DfmDividendPayment;
@@ -45,6 +44,8 @@ import java.net.http.HttpConnectTimeoutException;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.function.Function;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -157,34 +158,35 @@ class DfmMemberApiClientTest {
         assertThat(sent.headers().containsHeader(HttpHeaders.AUTHORIZATION)).isFalse();
 
         JsonNode body = new ObjectMapper().readTree(sentBody.get());
-        assertThat(body.get("request_id").asText()).isEqualTo("3f2b8c1e-7d4a-4f6b-9c2e-1a0b9d8e7f60");
-        assertThat(body.get("securitykey").asText()).isEqualTo("body-key");
-        assertThat(body.get("request_mbrcode").asText()).isEqualTo("TEST01");
-        assertThat(body.get("cust_firstname").asText()).isEqualTo("Test");
-        assertThat(body.get("cust_engfullname").asText()).isEqualTo("Test User");
-        assertThat(body.get("cust_dob").asText()).isEqualTo("1990-01-15");
-        assertThat(body.get("cust_gender").asText()).isEqualTo("M");
-        assertThat(body.get("cust_mobile").asText()).isEqualTo("00971500000000");
-        assertThat(body.get("adr_phone").asText()).isEqualTo("0097140000000");
-        assertThat(body.get("adr_address").asText()).isEqualTo(line);
-        assertThat(body.get("adr_pobox").asText()).isEqualTo("00000");
-        assertThat(body.get("portfolio_options").asText()).isEqualTo("cash,margin");
-        assertThat(body.get("pay_method").asText()).isEqualTo("bank");
-        assertThat(body.get("pay_aed_iban").asText()).isEqualTo("AE000000000000000000000");
-        assertThat(body.get("fatca_uscitizen").asText()).isEqualTo("N");
-        assertThat(body.get("csr_resident").asText()).isEqualTo("Y");
-        assertThat(body.at("/csr/csr_countries/0/csr_country").asText()).isEqualTo("AE");
-        assertThat(body.at("/csr/csr_countries/0/csr_havetin").asText()).isEqualTo("N");
-        assertThat(body.at("/csr/csr_countries/0/csr_notinreason").asText()).isEqualTo("B");
-        assertThat(body.get("eid_no").asText()).isEqualTo("784-0000-0000000-0");
-        assertThat(body.get("eid_expirydate").asText()).isEqualTo("2030-01-01");
-        assertThat(body.get("eid_attachment_front").asText()).isEqualTo(DfmInvestorServiceImplTest.PNG);
-        assertThat(body.get("cust_signatureimage_type").asText()).isEqualTo("png");
+        Map<String, String> expected = Map.ofEntries(
+                Map.entry("/request_id", "3f2b8c1e-7d4a-4f6b-9c2e-1a0b9d8e7f60"),
+                Map.entry("/securitykey", "body-key"),
+                Map.entry("/request_mbrcode", "TEST01"),
+                Map.entry("/cust_firstname", "Test"),
+                Map.entry("/cust_engfullname", "Test User"),
+                Map.entry("/cust_dob", "1990-01-15"),
+                Map.entry("/cust_gender", "M"),
+                Map.entry("/cust_mobile", "00971500000000"),
+                Map.entry("/adr_phone", "0097140000000"),
+                Map.entry("/adr_address", line),
+                Map.entry("/adr_pobox", "00000"),
+                Map.entry("/portfolio_options", "cash,margin"),
+                Map.entry("/pay_method", "bank"),
+                Map.entry("/pay_aed_iban", "AE000000000000000000000"),
+                Map.entry("/fatca_uscitizen", "N"),
+                Map.entry("/csr_resident", "Y"),
+                Map.entry("/csr/csr_countries/0/csr_country", "AE"),
+                Map.entry("/csr/csr_countries/0/csr_havetin", "N"),
+                Map.entry("/csr/csr_countries/0/csr_notinreason", "B"),
+                Map.entry("/eid_no", "784-0000-0000000-0"),
+                Map.entry("/eid_expirydate", "2030-01-01"),
+                Map.entry("/eid_attachment_front", DfmInvestorServiceImplTest.PNG),
+                Map.entry("/cust_signatureimage_type", "png"));
+        Map<String, String> actual = expected.keySet().stream()
+                .collect(Collectors.toMap(Function.identity(), pointer -> body.at(pointer).asText()));
+        assertThat(actual).isEqualTo(expected);
         // nulls are omitted, not sent as null
-        assertThat(body.has("cust_familyid")).isFalse();
-        assertThat(body.has("pp_no")).isFalse();
-        assertThat(body.has("fatca_tin")).isFalse();
-        assertThat(body.has("guardian_name")).isFalse();
+        assertThat(List.of("cust_familyid", "pp_no", "fatca_tin", "guardian_name")).noneMatch(body::has);
         // key first, attachments last (keeps the key inside the masked prefix when spans truncate)
         assertThat(sentBody.get().indexOf("\"securitykey\"")).isLessThan(sentBody.get().indexOf("\"eid_attachment_front\""));
     }
@@ -398,7 +400,10 @@ class DfmMemberApiClientTest {
     void missingOrInsecureConfig_shouldFailBeforeAnyRequest(String baseUrl, String memberCode, String headerKey, String bodyKey, String expectedKey) {
         DfmMemberApiProperties props = new DfmMemberApiProperties(baseUrl, "/memberapis/onboarding", memberCode, headerKey, bodyKey, 5, 5, List.of());
 
-        assertThatThrownBy(() -> client(props, json(HttpStatus.OK, OK_BODY)).onboard(request()))
+        DfmMemberApiClient apiClient = client(props, json(HttpStatus.OK, OK_BODY));
+        DfmInvestorRegistrationRequest input = request();
+
+        assertThatThrownBy(() -> apiClient.onboard(input))
                 .isInstanceOf(DfmConfigurationException.class)
                 .hasMessageContaining(expectedKey)
                 .hasMessageNotContaining("header-key")
@@ -410,7 +415,10 @@ class DfmMemberApiClientTest {
     void nullConfig_shouldFailBeforeAnyRequest() {
         DfmMemberApiProperties props = new DfmMemberApiProperties(null, null, null, null, null, 5, 5, null);
 
-        assertThatThrownBy(() -> client(props, json(HttpStatus.OK, OK_BODY)).onboard(request()))
+        DfmMemberApiClient apiClient = client(props, json(HttpStatus.OK, OK_BODY));
+        DfmInvestorRegistrationRequest input = request();
+
+        assertThatThrownBy(() -> apiClient.onboard(input))
                 .isInstanceOf(DfmConfigurationException.class);
         assertThat(exchanges).hasValue(0);
     }

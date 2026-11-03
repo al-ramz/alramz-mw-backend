@@ -76,8 +76,9 @@ class SmsControllerTest {
     void e28_allFailedWithRejectionIsSms009() {
         final SmsSendRequest request = new SmsSendRequest();
         when(smsService.sendWithOutcome(request)).thenReturn(outcome(true, result(SmsRecipientResult.StatusEnum.FAILED)));
+        final SmsController controller = controller(true);
 
-        assertThatThrownBy(() -> controller(true).sendSms(request))
+        assertThatThrownBy(() -> controller.sendSms(request))
                 .isInstanceOf(SmsException.class).hasFieldOrPropertyWithValue("code", "SMS009");
     }
 
@@ -85,8 +86,9 @@ class SmsControllerTest {
     void e29_allFailedByTransportIsSms010() {
         final SmsSendRequest request = new SmsSendRequest();
         when(smsService.sendWithOutcome(request)).thenReturn(outcome(false, result(SmsRecipientResult.StatusEnum.FAILED)));
+        final SmsController controller = controller(true);
 
-        assertThatThrownBy(() -> controller(true).sendSms(request))
+        assertThatThrownBy(() -> controller.sendSms(request))
                 .isInstanceOf(SmsException.class).hasFieldOrPropertyWithValue("code", "SMS010");
     }
 
@@ -115,19 +117,22 @@ class SmsControllerTest {
 
     @Test
     void e33_invalidMessageIdIsSms007WithoutProviderCall() {
+        final SmsController controller = controller(true);
         for (String bad : new String[]{"abc&pwd=x", "", "a".repeat(66), "a b"}) {
-            assertThatThrownBy(() -> controller(true).getSmsReport(bad))
+            assertThatThrownBy(() -> controller.getSmsReport(bad))
                     .isInstanceOf(SmsException.class)
                     .hasFieldOrPropertyWithValue("code", "SMS007")
                     .hasMessage("Invalid message id");
         }
-        assertThatThrownBy(() -> controller(true).getSmsReport(null)).hasFieldOrPropertyWithValue("code", "SMS007");
+        assertThatThrownBy(() -> controller.getSmsReport(null)).hasFieldOrPropertyWithValue("code", "SMS007");
         verifyNoInteractions(waselney);
     }
 
     @Test
     void e34_simulatedModeReportIsNotFoundWithoutProviderCall() {
-        assertThatThrownBy(() -> controller(false).getSmsReport("88123456"))
+        final SmsController controller = controller(false);
+
+        assertThatThrownBy(() -> controller.getSmsReport("88123456"))
                 .isInstanceOf(SmsException.class)
                 .hasFieldOrPropertyWithValue("code", "SMS008")
                 .hasMessage("No SMS record found");

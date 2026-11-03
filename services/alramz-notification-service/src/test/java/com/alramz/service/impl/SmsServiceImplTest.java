@@ -293,10 +293,10 @@ class SmsServiceImplTest {
 
         liveWaselney().send(request(UAE));
 
-        assertThat(logs.list).isNotEmpty();
-        assertThat(logs.list).allSatisfy(e -> assertThat(e.getFormattedMessage())
-                .doesNotContain(UAE).doesNotContain("Your statement is ready"));
-        assertThat(logs.list).anyMatch(e -> e.getFormattedMessage().contains("***4567"));
+        assertThat(logs.list).isNotEmpty()
+                .allSatisfy(e -> assertThat(e.getFormattedMessage())
+                        .doesNotContain(UAE).doesNotContain("Your statement is ready"))
+                .anyMatch(e -> e.getFormattedMessage().contains("***4567"));
     }
 
     @Test

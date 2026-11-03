@@ -23,10 +23,12 @@ import javax.sql.DataSource;
 @EnableConfigurationProperties(DatasourceProperties.class)
 public class MiddlewareDataSourceAutoConfiguration extends AbstractDataSourceAutoConfiguration {
 
+    private static final String DB_NAME = "middleware";
+
     @Bean(name = "middlewareDataSource", destroyMethod = "close")
     public DataSource middlewareDataSource(DatasourceProperties properties, PWProtector pwProtector, ObjectProvider<TracingQueryExecutionListener> tracingListenerProvider) {
-        HikariDataSource hikariDataSource = createHikariDataSource(properties.getMiddleware(), pwProtector, "middleware");
-        return wrapWithProxy(hikariDataSource, properties.getMiddleware().getSqlLogging(), "middleware", tracingListenerProvider); // NOPMD LawOfDemeter
+        HikariDataSource hikariDataSource = createHikariDataSource(properties.getMiddleware(), pwProtector, DB_NAME);
+        return wrapWithProxy(hikariDataSource, properties.getMiddleware().getSqlLogging(), DB_NAME, tracingListenerProvider); // NOPMD LawOfDemeter
     }
 
     @Bean(name = "middlewareJdbcTemplate")
@@ -47,12 +49,12 @@ public class MiddlewareDataSourceAutoConfiguration extends AbstractDataSourceAut
     @Bean(name = "middlewareHealthIndicator")
     public PoolHealthIndicator middlewareHealthIndicator(@Qualifier("middlewareDataSource") DataSource dataSource) {
         HikariDataSource raw = unwrapHikariDataSource(dataSource);
-        return new PoolHealthIndicator(raw, "middleware");
+        return new PoolHealthIndicator(raw, DB_NAME);
     }
 
     @Override
     protected String getDbName() {
-        return "middleware";
+        return DB_NAME;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class MiddlewareDataSourceAutoConfiguration extends AbstractDataSourceAut
 
     @Override
     protected String getDefaultDriverClassName(String dbName) {
-        if ("middleware".equals(dbName)) {
+        if (DB_NAME.equals(dbName)) {
             return "org.postgresql.Driver";
         }
         return null;

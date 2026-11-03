@@ -1,0 +1,6 @@
+organization=alramzit
+projectKey=alramzit_alramz-mw-backend
+serverUrl=https://sonarcloud.io
+dashboardUrl=https://sonarcloud.io/dashboard?id=alramzit_alramz-mw-backend
+ceTaskId=AaGbpx7htVdjkAlttlmX
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AaGbpx7htVdjkAlttlmX

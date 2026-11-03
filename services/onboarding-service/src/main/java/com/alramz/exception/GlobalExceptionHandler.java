@@ -26,6 +26,12 @@ public class GlobalExceptionHandler {
 
     private static final String VALIDATION_PATH = "/api/v1/existing-data/validation";
     private static final String ONBOARDING_PATH = "/api/v1/dfm/onboarding";
+    private static final String DEFAULT_INTERNAL_ERROR_CODE = "ONB011";
+    private static final String ERRORS_KEY = "errors";
+    private static final String MESSAGE_KEY = "message";
+    private static final String INVALID_REQUEST_MESSAGE = "Invalid request";
+    private static final String MALFORMED_JSON_MESSAGE = "Malformed JSON request";
+    private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Internal server error";
 
     private String friendlyMessage(String field, String defaultMessage) {
         if (field == null) return defaultMessage;
@@ -41,7 +47,7 @@ public class GlobalExceptionHandler {
     }
 
     private String mapFieldToInternalErrorCode(String field) {
-        if (field == null) return "ONB011";
+        if (field == null) return DEFAULT_INTERNAL_ERROR_CODE;
         String normalized = field.contains(".") ? field.substring(field.lastIndexOf('.') + 1) : field;
         return switch (normalized) {
             case "custMobile", "cust_mobile" -> "ONB001";
@@ -49,7 +55,7 @@ public class GlobalExceptionHandler {
             case "custNin", "cust_nin" -> "ONB003";
             case "kycMatch", "kyc_match" -> "ONB004";
             case "fatcaUscitizen", "fatca_uscitizen" -> "ONB005";
-            default -> "ONB011";
+            default -> DEFAULT_INTERNAL_ERROR_CODE;
         };
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -78,21 +84,21 @@ public class GlobalExceptionHandler {
             response.setMemberReferenceNumber(extractCorrelationId(request));
             String internalErrorCode = ex.getBindingResult().getFieldErrors().stream()
                     .map(fe -> mapFieldToInternalErrorCode(fe.getField()))
-                    .filter(code -> !"ONB011".equals(code))
+                    .filter(code -> !DEFAULT_INTERNAL_ERROR_CODE.equals(code))
                     .findFirst()
-                    .orElse("ONB011");
+                    .orElse(DEFAULT_INTERNAL_ERROR_CODE);
             response.setInternalErrorCode(internalErrorCode);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "400", "message", message))
+                ERRORS_KEY, List.of(Map.of("code", "400", MESSAGE_KEY, message))
         );
 
         GenericResponse apiResponse = new GenericResponse();
         apiResponse.setResponseCode("400");
-        apiResponse.setResponseMessage("Invalid request");
+        apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
@@ -124,21 +130,21 @@ public class GlobalExceptionHandler {
             response.setMemberReferenceNumber(extractCorrelationId(request));
             String internalErrorCode = ex.getConstraintViolations().stream()
                     .map(cv -> mapFieldToInternalErrorCode(cv.getPropertyPath().toString()))
-                    .filter(code -> !"ONB011".equals(code))
+                    .filter(code -> !DEFAULT_INTERNAL_ERROR_CODE.equals(code))
                     .findFirst()
-                    .orElse("ONB011");
+                    .orElse(DEFAULT_INTERNAL_ERROR_CODE);
             response.setInternalErrorCode(internalErrorCode);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "400", "message", message))
+                ERRORS_KEY, List.of(Map.of("code", "400", MESSAGE_KEY, message))
         );
 
         GenericResponse apiResponse = new GenericResponse();
         apiResponse.setResponseCode("400");
-        apiResponse.setResponseMessage("Invalid request");
+        apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
@@ -149,7 +155,7 @@ public class GlobalExceptionHandler {
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
             apiResponse.setResponseCode("400");
-            apiResponse.setResponseMessage("Malformed JSON request");
+            apiResponse.setResponseMessage(MALFORMED_JSON_MESSAGE);
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
 
@@ -159,20 +165,20 @@ public class GlobalExceptionHandler {
         if (isOnboardingRequest(request)) {
             OnboardingResponse response = new OnboardingResponse();
             response.setResponseCode("400");
-            response.setResponseMessage("Malformed JSON request");
+            response.setResponseMessage(MALFORMED_JSON_MESSAGE);
             response.setMemberReferenceNumber(extractCorrelationId(request));
-            response.setInternalErrorCode("ONB011");
+            response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "400", "message", "Malformed JSON request"))
+                ERRORS_KEY, List.of(Map.of("code", "400", MESSAGE_KEY, MALFORMED_JSON_MESSAGE))
         );
 
         GenericResponse apiResponse = new GenericResponse();
         apiResponse.setResponseCode("400");
-        apiResponse.setResponseMessage("Invalid request");
+        apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
@@ -181,12 +187,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IbanValidationException.class)
     public ResponseEntity<GenericResponse> handleIbanValidation(IbanValidationException ex) {
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", ex.getCode(), "message", ex.getMessage()))
+                ERRORS_KEY, List.of(Map.of("code", ex.getCode(), MESSAGE_KEY, ex.getMessage()))
         );
 
         GenericResponse apiResponse = new GenericResponse();
         apiResponse.setResponseCode("400");
-        apiResponse.setResponseMessage("Invalid request");
+        apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
         return ResponseEntity.ok(apiResponse);
@@ -209,13 +215,13 @@ public class GlobalExceptionHandler {
             response.setResponseCode("503");
             response.setResponseMessage(ex.getMessage());
             response.setMemberReferenceNumber(extractCorrelationId(request));
-            response.setInternalErrorCode("ONB011");
+            response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
 
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
         }
 
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "503", "message", ex.getMessage()))
+                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, ex.getMessage()))
         );
 
         GenericResponse apiResponse = new GenericResponse();
@@ -243,13 +249,13 @@ public class GlobalExceptionHandler {
             response.setResponseCode("503");
             response.setResponseMessage(ex.getMessage());
             response.setMemberReferenceNumber(extractCorrelationId(request));
-            response.setInternalErrorCode("ONB011");
+            response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
 
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
         }
 
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "503", "message", ex.getMessage()))
+                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, ex.getMessage()))
         );
 
         GenericResponse apiResponse = new GenericResponse();
@@ -281,18 +287,18 @@ public class GlobalExceptionHandler {
             response.setResponseCode("400");
             response.setResponseMessage(message);
             response.setMemberReferenceNumber(extractCorrelationId(request));
-            response.setInternalErrorCode("ONB011");
+            response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "400", "message", message))
+                ERRORS_KEY, List.of(Map.of("code", "400", MESSAGE_KEY, message))
         );
 
         GenericResponse apiResponse = new GenericResponse();
         apiResponse.setResponseCode("400");
-        apiResponse.setResponseMessage("Invalid request");
+        apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
@@ -301,7 +307,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiCallFailedException.class)
     public ResponseEntity<GenericResponse> handleApiCallFailed(ApiCallFailedException ex) {
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "503", "message", "IBAN validation service unavailable"))
+                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, "IBAN validation service unavailable"))
         );
 
         GenericResponse apiResponse = new GenericResponse();
@@ -329,13 +335,13 @@ public class GlobalExceptionHandler {
             response.setResponseCode("503");
             response.setResponseMessage(ex.getMessage());
             response.setMemberReferenceNumber(extractCorrelationId(request));
-            response.setInternalErrorCode("ONB011");
+            response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
 
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
         }
 
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "503", "message", ex.getMessage()))
+                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, ex.getMessage()))
         );
 
         GenericResponse apiResponse = new GenericResponse();
@@ -351,7 +357,7 @@ public class GlobalExceptionHandler {
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
             apiResponse.setResponseCode("503");
-            apiResponse.setResponseMessage("Internal server error");
+            apiResponse.setResponseMessage(INTERNAL_SERVER_ERROR_MESSAGE);
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
 
@@ -363,18 +369,18 @@ public class GlobalExceptionHandler {
             response.setResponseCode("500");
             response.setResponseMessage("Internal Server Error");
             response.setMemberReferenceNumber(extractCorrelationId(request));
-            response.setInternalErrorCode("ONB011");
+            response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 
         Map<String, Object> response = Map.of(
-                "errors", List.of(Map.of("code", "503", "message", "Internal server error"))
+                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, INTERNAL_SERVER_ERROR_MESSAGE))
         );
 
         GenericResponse apiResponse = new GenericResponse();
         apiResponse.setResponseCode("503");
-        apiResponse.setResponseMessage("Internal server error");
+        apiResponse.setResponseMessage(INTERNAL_SERVER_ERROR_MESSAGE);
         apiResponse.setResponse(response);
 
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(apiResponse);

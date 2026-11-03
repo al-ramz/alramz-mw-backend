@@ -134,18 +134,7 @@ public class DfmMemberApiClient {
                 status.value(), responseCode, message, requestId);
 
         if (status.is2xxSuccessful()) {
-            if (responseCode == null) {
-                return badResponse();
-            }
-            if (isDuplicateInProgress(responseCode)) {
-                return Mono.just(new DfmOnboardingOutcome.Rejected(responseCode, message, true));
-            }
-            if ("200".equals(responseCode)) {
-                return Mono.just(new DfmOnboardingOutcome.Success(parsed));
-            }
-            return isClientErrorCode(responseCode)
-                    ? Mono.just(new DfmOnboardingOutcome.Rejected(responseCode, message, false))
-                    : badResponse();
+            return classifySuccessStatus(parsed, responseCode, message);
         }
         if (status.value() == 401 || status.value() == 403) {
             log.error("DFM rejected credentials: http_status={} request_id={}", status.value(), requestId);
@@ -156,6 +145,21 @@ public class DfmMemberApiClient {
             return Mono.just(new DfmOnboardingOutcome.Rejected(code, message, status.value() == 409));
         }
         return badResponse();
+    }
+
+    private Mono<DfmOnboardingOutcome> classifySuccessStatus(DfmOnboardingResponse parsed, String responseCode, String message) {
+        if (responseCode == null) {
+            return badResponse();
+        }
+        if (isDuplicateInProgress(responseCode)) {
+            return Mono.just(new DfmOnboardingOutcome.Rejected(responseCode, message, true));
+        }
+        if ("200".equals(responseCode)) {
+            return Mono.just(new DfmOnboardingOutcome.Success(parsed));
+        }
+        return isClientErrorCode(responseCode)
+                ? Mono.just(new DfmOnboardingOutcome.Rejected(responseCode, message, false))
+                : badResponse();
     }
 
     private DfmOnboardingResponse parse(String body) {

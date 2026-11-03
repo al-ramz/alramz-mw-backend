@@ -67,3 +67,15 @@ Full CLI reference: [`docs/COMMANDS.md`](docs/COMMANDS.md). Local Postgres/Redis
 - [`docs/COMMANDS.md`](docs/COMMANDS.md) — full CLI command reference
 - [`.claude/howtos/`](.claude/howtos/README.md) — subsystem how-tos (JWT, datasource, Liquibase, masking, secrets)
 
+
+
+brew install trivy
+
+trivy image --download-db-only
+
+trivy fs \
+  --scanners vuln,misconfig,secret \
+  --severity HIGH,CRITICAL \
+
+
+mvn -DskipTests dependency:resolve

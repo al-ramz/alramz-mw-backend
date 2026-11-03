@@ -1,0 +1,22 @@
+CODE_SMELL	MINOR	java:S1128	services/reference-data-service/src/main/java/com/alramz/config/CacheWarmupRunner.java:3	Remove this unnecessary import: same package classes are always implicitly imported.
+CODE_SMELL	MINOR	java:S1128	services/reference-data-service/src/main/java/com/alramz/config/CompanyRedisProperties.java:4	Remove this unused import 'org.springframework.boot.context.properties.bind.DefaultValue'.
+CODE_SMELL	MINOR	java:S1220	services/reference-data-service/src/main/java/com/alramz/config/JpaConfig.java:0	Move this file to a named package.
+CODE_SMELL	MAJOR	java:S112	services/reference-data-service/src/main/java/com/alramz/controllers/ApplicationController.java:26	Replace generic exceptions with specific library exceptions or a custom exception.
+CODE_SMELL	MINOR	java:S1130	services/reference-data-service/src/main/java/com/alramz/controllers/ApplicationController.java:26	Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.
+CODE_SMELL	MAJOR	java:S1068	services/reference-data-service/src/main/java/com/alramz/scheduler/job/CacheReloadScheduledJob.java:20	Remove this unused "companyRedisProperties" private field.
+CODE_SMELL	MINOR	java:S1128	services/reference-data-service/src/main/java/com/alramz/service/CacheAuditService.java:10	Remove this unused import 'java.time.LocalDateTime'.
+CODE_SMELL	MAJOR	java:S1172	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:62	Remove this unused method parameter "key".
+CODE_SMELL	MAJOR	java:S1854	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:71	Remove this useless assignment to local variable "deleted".
+CODE_SMELL	MINOR	java:S1481	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:71	Remove this unused "deleted" local variable.
+CODE_SMELL	MAJOR	java:S1141	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:96	Extract this nested try block into a separate method.
+CODE_SMELL	MINOR	java:S1481	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:128	Remove this unused "lastReloaded" local variable.
+CODE_SMELL	INFO	java:S8688	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:172	Explicitly specify the time zone by passing a ZoneId or a Clock to the .now() method.
+CODE_SMELL	MAJOR	java:S1141	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:184	Extract this nested try block into a separate method.
+CODE_SMELL	MAJOR	java:S2139	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:198	Either log this exception and handle it, or rethrow it with some contextual information.
+VULNERABILITY	MAJOR	java:S2077	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:208	Make sure using a dynamically formatted SQL query is safe here.
+CODE_SMELL	CRITICAL	java:S1192	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:237	Define a constant instead of duplicating this literal "mappingName" 3 times.
+CODE_SMELL	INFO	java:S8688	services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java:239	Explicitly specify the time zone by passing a ZoneId or a Clock to the .now() method.
+CODE_SMELL	CRITICAL	java:S1192	services/reference-data-service/src/main/java/com/alramz/service/SchedulerLockService.java:35	Define a constant instead of duplicating this literal "jobId" 3 times.
+CODE_SMELL	INFO	java:S8688	services/reference-data-service/src/main/java/com/alramz/service/SchedulerLockService.java:38	Explicitly specify the time zone by passing a ZoneId or a Clock to the .now() method.
+CODE_SMELL	INFO	java:S8688	services/reference-data-service/src/main/java/com/alramz/service/SchedulerLockService.java:42	Explicitly specify the time zone by passing a ZoneId or a Clock to the .now() method.
+CODE_SMELL	MINOR	java:S1130	services/reference-data-service/src/test/java/com/alramz/config/CacheWarmupRunnerTest.java:58	Remove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.

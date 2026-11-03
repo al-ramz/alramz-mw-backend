@@ -1,7 +1,6 @@
 package com.alramz.globalconfigurationsettings.repository;
 
 import com.alramz.globalconfigurationsettings.model.GlobalConfigurationSettings;
-import com.alramz.globalconfigurationsettings.service.GlobalConfigurationSettingsService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -148,7 +147,8 @@ class JdbcGlobalConfigurationSettingsRepositoryIT {
 
             List<GlobalConfigurationSettings> result = repository.find("COUNTRY");
 
-            assertThatThrownBy(() -> result.add(new GlobalConfigurationSettings(99L, "TEST", "TYPE", "TEXT", "ACTIVE")))
+            GlobalConfigurationSettings extra = new GlobalConfigurationSettings(99L, "TEST", "TYPE", "TEXT", "ACTIVE");
+            assertThatThrownBy(() -> result.add(extra))
                 .isInstanceOf(UnsupportedOperationException.class);
         });
     }

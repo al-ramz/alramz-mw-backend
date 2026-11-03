@@ -146,6 +146,12 @@ public class MmfServiceImpl implements MmfService {
 
     private void validateAndConfirm(Map<MmfBook, List<Long>> byBook, Map<MmfBook, Map<Long, String>> locked,
                                     MmfSweepConfirmationResult result) {
+        rejectConflicts(byBook, locked);
+        byBook.forEach((book, numbers) -> confirmBook(book, numbers, locked.get(book), result));
+    }
+
+    /** Every requested sweep must exist and be pending or already confirmed, or nothing is updated. */
+    private static void rejectConflicts(Map<MmfBook, List<Long>> byBook, Map<MmfBook, Map<Long, String>> locked) {
         List<String> conflicts = new ArrayList<>();
         byBook.forEach((book, numbers) -> numbers.forEach(no -> {
             String type = locked.get(book).get(no);
@@ -157,22 +163,24 @@ public class MmfServiceImpl implements MmfService {
             throw new MmfConflictException(ErrorCode.CONFIRM_CONFLICT,
                     "Sweeps unknown or not pending: " + String.join(", ", conflicts));
         }
-        byBook.forEach((book, numbers) -> {
-            List<Long> pending = new ArrayList<>();
-            for (Long no : numbers) {
-                if (PENDING.equals(locked.get(book).get(no))) {
-                    pending.add(no);
-                } else {
-                    result.getAlreadyConfirmed().add(new MmfSweepRef().sweepNo(no).book(book));
-                }
-            }
-            int confirmed = pending.isEmpty() ? 0 : repository.confirmSweepIns(book, pending);
-            if (book == MmfBook.CAPITAL) {
-                result.setConfirmedCapital(confirmed);
+    }
+
+    private void confirmBook(MmfBook book, List<Long> numbers, Map<Long, String> bookTypes,
+                             MmfSweepConfirmationResult result) {
+        List<Long> pending = new ArrayList<>();
+        for (Long no : numbers) {
+            if (PENDING.equals(bookTypes.get(no))) {
+                pending.add(no);
             } else {
-                result.setConfirmedMmf(confirmed);
+                result.getAlreadyConfirmed().add(new MmfSweepRef().sweepNo(no).book(book));
             }
-        });
+        }
+        int confirmed = pending.isEmpty() ? 0 : repository.confirmSweepIns(book, pending);
+        if (book == MmfBook.CAPITAL) {
+            result.setConfirmedCapital(confirmed);
+        } else {
+            result.setConfirmedMmf(confirmed);
+        }
     }
 
     /**
@@ -181,15 +189,7 @@ public class MmfServiceImpl implements MmfService {
      */
     @Override
     public List<MmfProfitDistributionResult> createProfitDistributions(List<MmfProfitDistributionItem> items) {
-        if (items == null || items.isEmpty() || items.size() > MAX_PROFIT_ITEMS) {
-            throw new ApplicationException(ErrorCode.PROFIT_ITEM_COUNT_INVALID, ErrorCode.PROFIT_ITEM_COUNT_INVALID.defaultMessage());
-        }
-        for (int i = 0; i < items.size(); i++) {
-            if (!isValidAmount(items.get(i).getAmount())) {
-                throw new ApplicationException(ErrorCode.PROFIT_ITEM_INVALID,
-                        "Item " + (i + 1) + ": " + ErrorCode.PROFIT_ITEM_INVALID.defaultMessage());
-            }
-        }
+        validateProfitItems(items);
         Set<MmfBook> unreachable = EnumSet.noneOf(MmfBook.class);
         List<MmfProfitDistributionResult> results = new ArrayList<>(items.size());
         Boolean firstFailureUnavailable = null;
@@ -202,28 +202,46 @@ public class MmfServiceImpl implements MmfService {
                 fail(result, ErrorCode.PROFIT_ITEM_FAILED);
                 continue;
             }
-            try {
-                long sweepNo = insertProfit(book, item);
-                result.status(StatusEnum.CREATED).sweepNo(sweepNo).errorCode(null);
-            } catch (DuplicateKeyException e) {
-                boolean refDuplicate = isReferenceDuplicate(e);
-                log.warn("Profit distribution {} {} rejected as duplicate ({}): {}", book, item.getReferenceId(),
-                        refDuplicate ? "MMF044" : "MMF047", NestedExceptionUtils.getMostSpecificCause(e).getMessage());
-                fail(result, refDuplicate ? ErrorCode.PROFIT_DUPLICATE_REFERENCE : ErrorCode.PROFIT_ITEM_FAILED);
-            } catch (DataAccessException e) {
-                boolean bookDown = GlobalExceptionHandler.isResourceFailure(e);
-                if (bookDown) {
-                    unreachable.add(book);
-                }
-                log.error("Profit distribution {} {} failed{}", book, item.getReferenceId(),
-                        bookDown ? "; book unreachable, skipping its remaining items" : "", e);
-                fail(result, ErrorCode.PROFIT_ITEM_FAILED);
-            }
+            distribute(book, item, result, unreachable);
             if (firstFailureUnavailable == null && result.getStatus() == StatusEnum.FAILED) {
                 firstFailureUnavailable = unreachable.contains(book);
             }
         }
         return aggregate(results, Boolean.TRUE.equals(firstFailureUnavailable));
+    }
+
+    private static void validateProfitItems(List<MmfProfitDistributionItem> items) {
+        if (items == null || items.isEmpty() || items.size() > MAX_PROFIT_ITEMS) {
+            throw new ApplicationException(ErrorCode.PROFIT_ITEM_COUNT_INVALID, ErrorCode.PROFIT_ITEM_COUNT_INVALID.defaultMessage());
+        }
+        for (int i = 0; i < items.size(); i++) {
+            if (!isValidAmount(items.get(i).getAmount())) {
+                throw new ApplicationException(ErrorCode.PROFIT_ITEM_INVALID,
+                        "Item " + (i + 1) + ": " + ErrorCode.PROFIT_ITEM_INVALID.defaultMessage());
+            }
+        }
+    }
+
+    /** Books one item and records its outcome on {@code result}; a book found unreachable is added to {@code unreachable}. */
+    private void distribute(MmfBook book, MmfProfitDistributionItem item, MmfProfitDistributionResult result,
+                            Set<MmfBook> unreachable) {
+        try {
+            long sweepNo = insertProfit(book, item);
+            result.status(StatusEnum.CREATED).sweepNo(sweepNo).errorCode(null);
+        } catch (DuplicateKeyException e) {
+            boolean refDuplicate = isReferenceDuplicate(e);
+            log.warn("Profit distribution {} {} rejected as duplicate ({}): {}", book, item.getReferenceId(),
+                    refDuplicate ? "MMF044" : "MMF047", NestedExceptionUtils.getMostSpecificCause(e).getMessage());
+            fail(result, refDuplicate ? ErrorCode.PROFIT_DUPLICATE_REFERENCE : ErrorCode.PROFIT_ITEM_FAILED);
+        } catch (DataAccessException e) {
+            boolean bookDown = GlobalExceptionHandler.isResourceFailure(e);
+            if (bookDown) {
+                unreachable.add(book);
+            }
+            log.error("Profit distribution {} {} failed{}", book, item.getReferenceId(),
+                    bookDown ? "; book unreachable, skipping its remaining items" : "", e);
+            fail(result, ErrorCode.PROFIT_ITEM_FAILED);
+        }
     }
 
     private static List<MmfProfitDistributionResult> aggregate(List<MmfProfitDistributionResult> results,
