@@ -136,7 +136,7 @@ dms:
     base-url: ${DMS_OPENBEE_BASE_URL:}
     time-zone: Asia/Dubai
   consumers:
-    "[onboarding-portal]":
-      api-key: ${DMS_OPENBEE_API_KEY_ONBOARDING_PORTAL:}
+    "[finoux]":
+      api-key: ${DMS_OPENBEE_API_KEY_FINOUX:}
     "[crm]":
       api-key: ${DMS_OPENBEE_API_KEY_CRM:}
