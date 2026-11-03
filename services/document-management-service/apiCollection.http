@@ -1,0 +1,116 @@
+@baseUrl=http://localhost:8086
+
+### Get a token first by registering + logging in below, then paste it here.
+@authToken=
+
+###
+GET {{baseUrl}}/api/v1/info
+
+### The consumer name is the JWT subject and must equal a dms.consumers key (onboarding-portal or crm), otherwise every DMS call returns 403 DMS109.
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+    "authType": "JWT",
+    "consumer": "onboarding-portal",
+    "email": "onboarding-portal@example.com",
+    "consumerPassword": "password123",
+    "roles": ["APP_DOCUMENT_MANAGEMENT_SERVICE_USER"],
+    "application": "document-management-service",
+    "environment": "local"
+}
+
+###
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "consumer": "onboarding-portal",
+    "consumerPassword": "password123"
+}
+
+### List DMS filing categories
+GET {{baseUrl}}/api/v1/dms/filing-categories
+Authorization: Bearer {{authToken}}
+
+### Save DMS document (plain form fields; metadata is a JSON text field)
+POST {{baseUrl}}/api/v1/dms/documents
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=DmsBoundary
+
+--DmsBoundary
+Content-Disposition: form-data; name="file"; filename="sample.txt"
+Content-Type: text/plain
+
+Synthetic sample document for local testing only.
+--DmsBoundary
+Content-Disposition: form-data; name="filingCategoryId"
+
+42
+--DmsBoundary
+Content-Disposition: form-data; name="fileName"
+
+sample.txt
+--DmsBoundary
+Content-Disposition: form-data; name="metadata"
+
+{"11329": "TEST-000001", "11330": "Passport"}
+--DmsBoundary
+Content-Disposition: form-data; name="overwrite"
+
+true
+--DmsBoundary--
+
+### Save DMS document -ve test case (metadata not a JSON object -> 400 DMS101)
+POST {{baseUrl}}/api/v1/dms/documents
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=DmsBoundary
+
+--DmsBoundary
+Content-Disposition: form-data; name="file"; filename="sample.txt"
+Content-Type: text/plain
+
+Synthetic sample document for local testing only.
+--DmsBoundary
+Content-Disposition: form-data; name="filingCategoryId"
+
+42
+--DmsBoundary
+Content-Disposition: form-data; name="metadata"
+
+["TEST-000001"]
+--DmsBoundary--
+
+### Search DMS documents
+POST {{baseUrl}}/api/v1/dms/documents/search
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "filingCategoryId": 42,
+    "metadata": { "11329": "TEST-000001" },
+    "page": 1,
+    "pageSize": 25
+}
+
+### Search DMS documents -ve test case (pageSize over the maximum -> 400 DMS101)
+POST {{baseUrl}}/api/v1/dms/documents/search
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "filingCategoryId": 42,
+    "pageSize": 101
+}
+
+### Download DMS document content
+GET {{baseUrl}}/api/v1/dms/documents/88213/content
+Accept: application/octet-stream, application/json
+Authorization: Bearer {{authToken}}
+
+### Download DMS document content -ve test case (documentId 0 -> 400 DMS101)
+GET {{baseUrl}}/api/v1/dms/documents/0/content
+Accept: application/octet-stream, application/json
+Authorization: Bearer {{authToken}}
+
+###

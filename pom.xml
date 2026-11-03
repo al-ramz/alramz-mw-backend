@@ -25,6 +25,7 @@
         <module>services/utility-service</module>
         <module>services/reporting-management-service</module>
         <module>services/wealth-management-service</module>
+        <module>services/document-management-service</module>
     </modules>
 
     <build>

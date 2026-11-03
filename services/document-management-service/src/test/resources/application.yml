@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: document-management-service
+  liquibase:
+    change-log: classpath:db/changelog/test/db.changelog-master.yaml
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.H2Dialect
+
+company:
+  datasource:
+    middleware:
+      enabled: true
+      url: jdbc:h2:mem:testdb
+      driverClassName: org.h2.Driver
+      username: sa
+      password:
+      plainPassword: sa
+      startup-validation:
+        enabled: false
+      pool:
+        maximum-pool-size: 5
+        minimum-idle: 1
+
+cipher:
+  password: 1234567890123456
+
+# Obviously fake values so every test context starts without secrets (DmsProperties fails fast on blanks).
+# Tests that talk to WireMock override dms.openbee.base-url with @DynamicPropertySource.
+dms:
+  openbee:
+    base-url: http://localhost:65535
+    time-zone: Asia/Dubai
+  consumers:
+    "[onboarding-portal]":
+      api-key: test-key-onboarding
+    "[crm]":
+      api-key: test-key-crm

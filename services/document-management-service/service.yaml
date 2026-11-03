@@ -1,0 +1,18 @@
+# Deployment sizing consumed by the k8s/ Kustomize overlays — separate from Spring's application*.yml.
+# Tune cpu/memory/replicas to the service's actual expected load; these are reasonable defaults,
+# not requirements.
+container:
+  cpu: "0.5"
+  memory: "1Gi"
+  targetPort: 8080
+
+scale:
+  minReplicas: 1
+  maxReplicas: 5
+
+ingress:
+  external: true
+
+environment:
+  springProfile: dev
+  javaOpts: "-Xms512m -Xmx768m"
