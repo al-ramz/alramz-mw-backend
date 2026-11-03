@@ -1,6 +1,6 @@
 @baseUrl=http://localhost:8080
 
-@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYXRhX3ZhbGlkYXRpb25fYXBwIiwiaWF0IjoxNzkzNjIwNzk5LCJleHAiOjE3OTM3MDcxOTksInJvbGVzIjpbIkFQUF9EQVRBX1ZBTElEQVRJT04iXSwiYXBwbGljYXRpb24iOiJkYXRhLXZhbGlkYXRpb24tc2VydmljZSIsImVudmlyb25tZW50IjoibG9jYWwifQ.GoxdsSytZWSHXL-Ek0cv9t36rf6Ji5IE2UtQ2KprVbM
+@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYXRhX3ZhbGlkYXRpb25fYXBwIiwiaWF0IjoxNzkzNjg4NDYxLCJleHAiOjE3OTM3NzQ4NjEsInJvbGVzIjpbIkFQUF9EQVRBX1ZBTElEQVRJT04iXSwiYXBwbGljYXRpb24iOiJkYXRhLXZhbGlkYXRpb24tc2VydmljZSIsImVudmlyb25tZW50IjoibG9jYWwifQ.lT2ZRwTtS_WUH_0JGKqaF8I9vy-Nb-2rCeQ09z36b2Q
 
 ### Info 
 GET {{baseUrl}}/api/v1/info
@@ -277,7 +277,7 @@ securitykey: 1f4e864b3d164e2ab2d38d8d7d37abdc
 X-Correlation-Id: 6a1f0c2e-3b7d-4e55-9a10-2f8c4d1e7b33
 
 {
-    "requestId": "2297142a-e3a0-4342-b4a5-8c052b3c9d05",
+    "requestId": "1297142a-e3a0-4342-b4a5-8c052b3c9d03",
     "firstName": "Rim",
     "lastName": "Tawfik",
     "fullNameAr": "Rim AS",
@@ -342,7 +342,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "requestId": "3f2b8c1e-7d4a-4f6b-9c2e-1a0b9d8e7f60",
+    "requestId": "1f2b8c1e-7d4a-4f6b-9c2e-1a0b9d8e7f61",
     "firstName": "Test",
     "lastName": "User",
     "fullNameEn": "Test User",
@@ -355,7 +355,8 @@ Authorization: Bearer {{authToken}}
     "address": {
         "city": "Dubai",
         "line": "Example Street 1",
-        "poBox": "00000"
+        "poBox": "00000",
+        "country": "IN"
     },
     "dividendPayment": {
         "method": "BANK",

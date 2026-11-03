@@ -173,10 +173,10 @@ class DfmMemberApiClientTest {
                 Map.entry("/portfolio_options", "cash,margin"),
                 Map.entry("/pay_method", "bank"),
                 Map.entry("/pay_aed_iban", "AE000000000000000000000"),
-                Map.entry("/fatca_uscitizen", "N"),
-                Map.entry("/csr_resident", "Y"),
+                Map.entry("/fatca_uscitizen", "2"),
+                Map.entry("/csr_resident", "1"),
                 Map.entry("/csr/csr_countries/0/csr_country", "AE"),
-                Map.entry("/csr/csr_countries/0/csr_havetin", "N"),
+                Map.entry("/csr/csr_countries/0/csr_havetin", "2"),
                 Map.entry("/csr/csr_countries/0/csr_notinreason", "B"),
                 Map.entry("/eid_no", "784-0000-0000000-0"),
                 Map.entry("/eid_expirydate", "2030-01-01"),
@@ -215,7 +215,7 @@ class DfmMemberApiClientTest {
         assertThat(body.get("guardian_name").asText()).isEqualTo("Guardian Name");
         assertThat(body.get("guardianship_type").asText()).isEqualTo("PARENT");
         assertThat(body.get("proof_of_guardianship").asText()).isEqualTo(DfmInvestorServiceImplTest.PDF);
-        assertThat(body.get("fatca_uscitizen").asText()).isEqualTo("Y");
+        assertThat(body.get("fatca_uscitizen").asText()).isEqualTo("1");
         assertThat(body.get("fatca_tin").asText()).isEqualTo("123");
         assertThat(body.get("cust_gender").asText()).isEqualTo("F");
         assertThat(body.has("eid_no")).isFalse();

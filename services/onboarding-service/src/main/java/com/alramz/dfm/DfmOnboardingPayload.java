@@ -129,9 +129,9 @@ public record DfmOnboardingPayload(
                 pay.getRouteCode(),
                 pay.getIvestorPrintName(),
                 portfolioOptions(r.getPortfolioOptions()),
-                crs == null ? null : yesNo(crs.getResident()),
+                crs == null ? null : oneTwo(crs.getResident()),
                 csr(crs),
-                fatca == null ? null : yesNo(fatca.getUsPerson()),
+                fatca == null ? null : oneTwo(fatca.getUsPerson()),
                 fatca == null ? null : fatca.getTin(),
                 eid == null ? null : eid.getEidNumber(),
                 eid == null ? null : date(eid.getExpiryDate()),
@@ -164,7 +164,7 @@ public record DfmOnboardingPayload(
     }
 
     private static CsrCountry csrCountry(DfmCrsCountry c) {
-        return new CsrCountry(c.getCountry(), yesNo(c.getHasTin()), c.getTin(), c.getNoTinReason(), c.getWhyNoTinIssued());
+        return new CsrCountry(c.getCountry(), oneTwo(c.getHasTin()), c.getTin(), c.getNoTinReason(), c.getWhyNoTinIssued());
     }
 
     /** E.164 to DFM's international format: +971501234567 becomes 00971501234567. */
@@ -180,12 +180,14 @@ public record DfmOnboardingPayload(
                 .collect(Collectors.joining(","));
     }
 
-    private static String yesNo(Boolean value) {
+    /** DFM's 1/2 flag code (FATCA US-citizen, CRS resident, CRS have-TIN): 1 = true, 2 = false. */
+    private static String oneTwo(Boolean value) {
         if (value == null) {
             return null;
         }
-        return value ? "Y" : "N";
+        return value ? "1" : "2";
     }
+
 
     private static String date(LocalDate value) {
         return value == null ? null : value.toString();
