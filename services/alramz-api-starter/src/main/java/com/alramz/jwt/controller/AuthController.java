@@ -4,7 +4,9 @@ import com.alramz.jwt.config.JwtProperties;
 import com.alramz.jwt.model.TokenPair;
 import com.alramz.jwt.service.AuthService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthController {
@@ -32,11 +34,8 @@ public class AuthController {
         if (!jwtProperties.isRegistrationEnabled()) {
             return ResponseEntity.notFound().build();
         }
-        if (request.consumer() == null || request.consumer().isBlank() ||
-            request.email() == null || request.email().isBlank() ||
-            request.consumerPassword() == null || request.consumerPassword().isBlank() ||
-            request.application() == null || request.application().isBlank() ||
-            request.environment() == null || request.environment().isBlank()) {
+        if (anyBlank(request.consumer(), request.email(), request.consumerPassword(),
+                request.application(), request.environment())) {
             return ResponseEntity.badRequest().build();
         }
         TokenPair tokens = authService.register(request.consumer(), request.email(), request.consumerPassword(), request.roles(), request.application(), request.environment());
@@ -80,4 +79,13 @@ public class AuthController {
             String tokenType,
             long expiresIn
     ) {}
+
+    private static boolean anyBlank(String... values) {
+        for (String value : values) {
+            if (value == null || value.isBlank()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

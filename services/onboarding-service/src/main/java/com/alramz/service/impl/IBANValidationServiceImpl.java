@@ -75,9 +75,9 @@ public class IBANValidationServiceImpl extends AbstractRestClient implements IBA
                     params
             ).block();
         } catch (ApiCallFailedException | WebClientResponseException e) {
-            throw new ExternalSystemException("IBAN validation service unavailable");
+            throw new ExternalSystemException("IBAN validation service unavailable", e);
         } catch (RuntimeException e) { // NOPMD AvoidCatchingGenericException
-            throw new TechnicalException("Internal Server Error");
+            throw new TechnicalException("Internal Server Error", "ONB011", e);
         }
 
         if (externalResponse == null) {

@@ -1,7 +1,6 @@
 package com.alramz.service.impl;
 
 import com.alramz.exception.ApplicationException;
-import com.alramz.exception.ExternalSystemException;
 import com.alramz.exception.TechnicalException;
 import com.alramz.logging.aspect.Loggable;
 import com.alramz.model.OnboardingRequest;
@@ -51,7 +50,7 @@ public class OnboardingServiceImpl implements OnboardingService {
             dfmOnboardingRepository.insert(request, memberReferenceNumber);
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             log.error("Failed to persist onboarding request", e);
-            throw new TechnicalException("Failed to persist onboarding request: " + e.getMessage(), "ONB011");
+            throw new TechnicalException("Failed to persist onboarding request: " + e.getMessage(), "ONB011", e);
         }
 
         OnboardingResponse response = new OnboardingResponse();
@@ -84,8 +83,8 @@ public class OnboardingServiceImpl implements OnboardingService {
     }
 
     private void validateNationalityPresence(OnboardingRequest request) {
-        boolean hasEidNationality = request.getEidNationality() != null && !request.getEidNationality().isBlank();
-        boolean hasPassportNationality = request.getPpNationality() != null && !request.getPpNationality().isBlank();
+        boolean hasEidNationality = !isBlank(request.getEidNationality());
+        boolean hasPassportNationality = !isBlank(request.getPpNationality());
         if (!hasEidNationality && !hasPassportNationality) {
             throw new ApplicationException("nationality", "Client nationality is missing", "ONB006");
         }
@@ -127,7 +126,7 @@ public class OnboardingServiceImpl implements OnboardingService {
         return mobile;
     }
 
-    private void logDuplicates(boolean[] duplicates) {
+    private void logDuplicates(boolean... duplicates) {
         String[] labels = {"NIN", "EmiratesID", "Email", "Passport"};
         for (int i = 0; i < duplicates.length; i++) {
             if (duplicates[i]) {

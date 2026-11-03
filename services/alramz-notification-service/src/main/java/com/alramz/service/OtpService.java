@@ -61,7 +61,7 @@ import java.util.stream.Stream;
 @Service
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.CyclomaticComplexity", "PMD.CognitiveComplexity",
         "PMD.ExcessiveImports", "PMD.AvoidCatchingGenericException"})
-public class OtpService {
+public final class OtpService {
 
     static final int MAX_RECIPIENTS = 5;
     static final String SMS_MSG_CATEGORY = "4.5";
@@ -308,9 +308,11 @@ public class OtpService {
                     .filter(r -> r.getStatus() == SmsRecipientResult.StatusEnum.SENT)
                     .map(SmsRecipientResult::getMobileNumber)
                     .collect(Collectors.toSet());
+        } catch (SmsException e) {
+            log.warn("OTP SMS failed code={} correlationId={}", e.getCode(), correlationId);
+            return Set.of();
         } catch (RuntimeException e) {
-            log.warn("OTP SMS failed code={} correlationId={}",
-                    e instanceof SmsException sms ? sms.getCode() : e.getClass().getSimpleName(), correlationId);
+            log.warn("OTP SMS failed code={} correlationId={}", e.getClass().getSimpleName(), correlationId);
             return Set.of();
         }
     }
@@ -325,10 +327,10 @@ public class OtpService {
                 sent.add(address);
             } catch (EmailValidationException e) {
                 log.error("OTP email misconfiguration {} correlationId={}", e.getCode(), correlationId);
+            } catch (EmailServiceException e) {
+                log.warn("OTP email failed code={} correlationId={}", e.getCode(), correlationId);
             } catch (RuntimeException e) {
-                log.warn("OTP email failed code={} correlationId={}",
-                        e instanceof EmailServiceException gateway ? gateway.getCode() : e.getClass().getSimpleName(),
-                        correlationId);
+                log.warn("OTP email failed code={} correlationId={}", e.getClass().getSimpleName(), correlationId);
             }
         }
         return sent;

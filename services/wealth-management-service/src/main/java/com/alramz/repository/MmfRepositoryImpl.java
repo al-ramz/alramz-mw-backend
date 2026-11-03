@@ -37,6 +37,7 @@ import java.util.Optional;
 public class MmfRepositoryImpl implements MmfRepository {
 
     private static final String CLIENT_ID = "CLIENT_ID";
+    private static final int SINGLE_ROW = 1;
 
     private final NamedParameterJdbcTemplate jdbc;
     private final SqlQueriesManager sqlQueriesManager;
@@ -60,7 +61,7 @@ public class MmfRepositoryImpl implements MmfRepository {
                         .accountNumber(rs.getString("ACCOUNT_NUMBER"))
                         .accountName(rs.getString("ACCOUNT_NAME"))
                         .baseCurrency(rs.getString("BASE_CURRENCY")));
-        if (rows.size() > 1) {
+        if (rows.size() > SINGLE_ROW) {
             log.warn("Account {} matched {} rows in book {}; using the first", accountNumber, rows.size(), book);
         }
         return rows.stream().findFirst();
@@ -152,14 +153,15 @@ public class MmfRepositoryImpl implements MmfRepository {
     }
 
     private String sql(String key) {
+        String sql;
         try {
-            String sql = sqlQueriesManager.getSQLQueryFromConfig(key);
-            if (sql == null) {
-                throw new MmfBackendException(null, "SQL key not configured: " + key, null);
-            }
-            return sql;
+            sql = sqlQueriesManager.getSQLQueryFromConfig(key);
         } catch (IOException e) {
             throw new MmfBackendException(null, "Unable to load SQL " + key, e);
         }
+        if (sql == null) {
+            throw new MmfBackendException(null, "SQL key not configured: " + key, null);
+        }
+        return sql;
     }
 }

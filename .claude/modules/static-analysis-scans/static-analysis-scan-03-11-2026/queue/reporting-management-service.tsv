@@ -1,0 +1,10 @@
+tool	severity	rule	file:line	message
+pmd	HIGH	FieldNamingConventions	services/reporting-management-service/src/main/java/com/alramz/ReportingManagementServiceApplication.java:14	The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	HIGH	FieldNamingConventions	services/reporting-management-service/src/main/java/com/alramz/exception/InvalidDateRangeException.java:10	The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	HIGH	FieldNamingConventions	services/reporting-management-service/src/main/java/com/alramz/exception/RelationshipManagerLookupException.java:9	The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	MEDIUM	PreserveStackTrace	services/reporting-management-service/src/main/java/com/alramz/repository/RelationshipManagerRepositoryImpl.java:61	Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+pmd	MEDIUM	PreserveStackTrace	services/reporting-management-service/src/main/java/com/alramz/repository/RelationshipManagerRepositoryImpl.java:64	Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+pmd	MEDIUM	PreserveStackTrace	services/reporting-management-service/src/main/java/com/alramz/repository/RelationshipManagerRepositoryImpl.java:92	Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+pmd	MEDIUM	PreserveStackTrace	services/reporting-management-service/src/main/java/com/alramz/repository/RelationshipManagerRepositoryImpl.java:95	Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+spotbugs	MEDIUM	NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE	services/reporting-management-service/src/main/java/com/alramz/repository/RelationshipManagerRepositoryImpl.java:105	Possible null pointer dereference in com.alramz.repository.RelationshipManagerRepositoryImpl.inlineParams(String, MapSqlParameterSource) due to return value of called method
+pmd	MEDIUM	PreserveStackTrace	services/reporting-management-service/src/main/java/com/alramz/service/impl/RelationshipManagerServiceImpl.java:82	Thrown exception does not preserve the stack trace of exception 'e' on all code paths

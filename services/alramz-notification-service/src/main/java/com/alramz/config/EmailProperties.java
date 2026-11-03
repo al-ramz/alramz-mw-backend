@@ -12,6 +12,8 @@ public record EmailProperties(
     long maxTotalAttachmentSizeBytes,
     List<String> allowedSenders
 ) {
+    // Compact-constructor parameters are written to the record fields implicitly; PMD misses that.
+    @SuppressWarnings("PMD.UnusedAssignment")
     public EmailProperties {
         allowedSenders = allowedSenders == null ? List.of() : List.copyOf(allowedSenders);
     }

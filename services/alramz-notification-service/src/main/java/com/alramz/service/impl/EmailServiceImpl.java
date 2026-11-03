@@ -48,6 +48,8 @@ public class EmailServiceImpl implements EmailService {
     private static final Pattern EMAIL = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     private static final String RETRY_AFTER = "retry-after";
     private static final String STATUS_TAG = "messaging.status";
+    private static final int HTTP_UNAUTHORIZED = 401;
+    private static final int HTTP_TOO_MANY_REQUESTS = 429;
 
     private final EmailProperties emailProperties;
     private final ObjectProvider<GraphServiceClient<?>> graphClientProvider;
@@ -138,7 +140,7 @@ public class EmailServiceImpl implements EmailService {
         try {
             post(graphClient, from, params);
         } catch (GraphServiceException first) {
-            if (first.getResponseCode() != 401) {
+            if (first.getResponseCode() != HTTP_UNAUTHORIZED) {
                 throw first;
             }
             log.warn("Graph returned 401, retrying once correlationId={}", correlationId());
@@ -156,11 +158,11 @@ public class EmailServiceImpl implements EmailService {
         final GraphErrorResponse errorResponse = gse.getError();
         final GraphError serviceError = errorResponse != null ? errorResponse.error : null;
         final String graphCode = serviceError != null ? serviceError.code : null;
-        if (status == 401) {
+        if (status == HTTP_UNAUTHORIZED) {
             logOutcome(ctx, "FAILURE", "MGE-B-001", status, graphCode);
             return new EmailServiceException("MGE-B-001", "Graph rejected token as unauthorized");
         }
-        if (status == 429) {
+        if (status == HTTP_TOO_MANY_REQUESTS) {
             final String retryAfter = retryAfter(gse.getResponseHeaders());
             logOutcome(ctx, "THROTTLED", "MGE-B-002", status, graphCode);
             log.warn("MGE-B-002 Graph throttled; Retry-After={} correlationId={}", retryAfter, ctx.correlationId());

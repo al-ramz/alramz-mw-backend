@@ -2,6 +2,7 @@ package com.alramz.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class SchedulerLockService {
         try {
             int updated = middlewareNamedParameterJdbcTemplate.update(sql, params);
             return updated > 0;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Failed to acquire scheduler lock for job {}: {}", jobId, e.getMessage(), e);
             return false;
         }
@@ -66,7 +67,7 @@ public class SchedulerLockService {
 
         try {
             middlewareNamedParameterJdbcTemplate.update(sql, params);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Failed to release scheduler lock for job {}: {}", jobId, e.getMessage(), e);
         }
     }
@@ -83,7 +84,7 @@ public class SchedulerLockService {
 
         try {
             middlewareNamedParameterJdbcTemplate.update(sql, params);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.warn("Failed to clean stale scheduler locks for job {}: {}", jobId, e.getMessage(), e);
         }
     }

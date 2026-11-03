@@ -6,7 +6,13 @@ package com.alramz.exception;
  */
 public class RelationshipManagerLookupException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public RelationshipManagerLookupException(String message) {
         super(message);
+    }
+
+    public RelationshipManagerLookupException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

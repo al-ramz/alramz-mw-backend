@@ -70,9 +70,9 @@ public class PhoneValidationServiceImpl extends AbstractRestClient implements Ph
                     params
             ).block();
         } catch (ApiCallFailedException | WebClientResponseException e) {
-            throw new ExternalSystemException("Phone validation service unavailable");
+            throw new ExternalSystemException("Phone validation service unavailable", e);
         } catch (RuntimeException e) { // NOPMD AvoidCatchingGenericException
-            throw new TechnicalException("Internal Server Error");
+            throw new TechnicalException("Internal Server Error", "ONB011", e);
         }
 
         if (externalResponse == null) {

@@ -3,6 +3,8 @@ package com.alramz.exception;
 /** Finoux answered, but with an error status or a rejection; always answered with 500. */
 public class FinouxIntegrationException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     private final ErrorCode errorCode;
 
     public FinouxIntegrationException(ErrorCode errorCode, String message) {

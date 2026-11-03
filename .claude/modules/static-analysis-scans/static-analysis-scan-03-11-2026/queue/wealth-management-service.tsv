@@ -1,0 +1,29 @@
+tool	severity	rule	file:line	message
+pmd	HIGH	FieldNamingConventions	services/wealth-management-service/src/main/java/com/alramz/WealthManagementServiceApplication.java:14	The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	HIGH	FieldNamingConventions	services/wealth-management-service/src/main/java/com/alramz/exception/ApplicationException.java:6	The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	HIGH	FieldNamingConventions	services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendException.java:9	The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	HIGH	FieldNamingConventions	services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendUnavailableException.java:6	The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	HIGH	FieldNamingConventions	services/wealth-management-service/src/main/java/com/alramz/exception/MmfConflictException.java:6	The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	HIGH	FieldNamingConventions	services/wealth-management-service/src/main/java/com/alramz/exception/MmfNotFoundException.java:6	The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+pmd	MEDIUM	ShortMethodName	services/wealth-management-service/src/main/java/com/alramz/controllers/MmfController.java:96	Avoid using short method names
+pmd	MEDIUM	ExcessivePublicCount	services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java:13	This class has a bunch of public methods and attributes
+pmd	MEDIUM	FieldDeclarationsShouldBeAtStartOfClass	services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java:90	Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+pmd	MEDIUM	AvoidFieldNameMatchingMethodName	services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java:129	Field code has the same name as a method
+pmd	MEDIUM	FieldDeclarationsShouldBeAtStartOfClass	services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java:129	Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+pmd	MEDIUM	AvoidFieldNameMatchingMethodName	services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java:130	Field defaultMessage has the same name as a method
+pmd	MEDIUM	FieldDeclarationsShouldBeAtStartOfClass	services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java:130	Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+pmd	MEDIUM	CouplingBetweenObjects	services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:1	A value of 30 may denote a high amount of coupling within the class (threshold: 20)
+pmd	MEDIUM	ExcessiveImports	services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:1	A high number of imports can indicate a high degree of coupling within an object.
+checkstyle	MEDIUM	ClassFanOutComplexity	services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:44	Class Fan-Out Complexity is 35 (max allowed is 30).
+pmd	MEDIUM	GodClass	services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:47	Possible God Class (WMC=64, ATFD=77, TCC=1.087%)
+pmd	MEDIUM	TooManyMethods	services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:47	This class has too many methods, consider refactoring it.
+pmd	MEDIUM	CognitiveComplexity	services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:164	The method 'handleNotReadable(HttpMessageNotReadableException, HandlerMethod)' has a cognitive complexity of 15, current threshold is 15
+pmd	MEDIUM	AvoidLiteralsInIfCondition	services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:247	Avoid using literals in if statements
+pmd	LOW	UseVarargs	services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java:253	Consider using varargs for methods or constructors which take an array the last parameter.
+pmd	MEDIUM	AvoidLiteralsInIfCondition	services/wealth-management-service/src/main/java/com/alramz/repository/MmfRepositoryImpl.java:63	Avoid using literals in if statements
+pmd	MEDIUM	ExceptionAsFlowControl	services/wealth-management-service/src/main/java/com/alramz/repository/MmfRepositoryImpl.java:161	Exception thrown at line 158 is caught in this block.
+pmd	MEDIUM	CouplingBetweenObjects	services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java:1	A value of 28 may denote a high amount of coupling within the class (threshold: 20)
+pmd	MEDIUM	ExcessiveImports	services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java:1	A high number of imports can indicate a high degree of coupling within an object.
+pmd	MEDIUM	GodClass	services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java:58	Possible God Class (WMC=73, ATFD=27, TCC=18.333%)
+pmd	MEDIUM	TooManyMethods	services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java:58	This class has too many methods, consider refactoring it.
+pmd	MEDIUM	CyclomaticComplexity	services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java:99	The method 'listSweeps(String, LocalDate, LocalDate)' has a cyclomatic complexity of 10.

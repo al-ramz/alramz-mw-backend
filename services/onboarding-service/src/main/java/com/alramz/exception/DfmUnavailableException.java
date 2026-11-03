@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 public class DfmUnavailableException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     private final DfmInvestorErrorCode code;
 
     public DfmUnavailableException(DfmInvestorErrorCode code, String message, Throwable cause) {

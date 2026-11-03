@@ -13,6 +13,7 @@ import java.io.UncheckedIOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -22,20 +23,8 @@ import java.util.Optional;
 @Repository
 public class OtpRepository {
 
-    public record OtpConfig(int messageId, String serviceName, int expiryInSeconds, int tokenLength,
-                            String smsMessageEnglish, String smsMessageArabic, int maxAttempts, String sentVia,
-                            String emailMessageEnglish, String emailMessageArabic, Integer maxValidationAttempts) {
-    }
-
-    /** A new otp_management row; it is always inserted active with status PENDING. */
-    public record OtpRow(String serviceName, String mobileEmail, String otpHash, LocalDateTime created,
-                         LocalDateTime expiry, String ipAddress) {
-    }
-
-    public record OtpCandidate(long id, String mobileEmail, String otpHash, int validationAttempts) {
-    }
-
     private static final String SERVICE_NAME = "serviceName";
+    private static final String IDS = "ids";
 
     private static final RowMapper<OtpConfig> CONFIG = (rs, rowNum) -> new OtpConfig(
             rs.getInt("message_id"),
@@ -52,6 +41,19 @@ public class OtpRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
     private final SqlQueriesManager sqlQueriesManager;
+
+    public record OtpConfig(int messageId, String serviceName, int expiryInSeconds, int tokenLength,
+                            String smsMessageEnglish, String smsMessageArabic, int maxAttempts, String sentVia,
+                            String emailMessageEnglish, String emailMessageArabic, Integer maxValidationAttempts) {
+    }
+
+    /** A new otp_management row; it is always inserted active with status PENDING. */
+    public record OtpRow(String serviceName, String mobileEmail, String otpHash, LocalDateTime created,
+                         LocalDateTime expiry, String ipAddress) {
+    }
+
+    public record OtpCandidate(long id, String mobileEmail, String otpHash, int validationAttempts) {
+    }
 
     public OtpRepository(
             @Qualifier("middlewareNamedParameterJdbcTemplate") final NamedParameterJdbcTemplate jdbc,
@@ -89,15 +91,16 @@ public class OtpRepository {
                 .addValue("expiry", row.expiry())
                 .addValue("ipAddress", row.ipAddress()), keyHolder, new String[]{"id"});
         // getKey(), not getKeys().get("id"): H2 reports the column upper-cased.
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey(), "otp_management insert returned no generated key")
+                .longValue();
     }
 
     public void markSent(final Collection<Long> ids) {
-        jdbc.update(sql("otp.management.markSent"), new MapSqlParameterSource("ids", ids));
+        jdbc.update(sql("otp.management.markSent"), new MapSqlParameterSource(IDS, ids));
     }
 
     public void markFailed(final Collection<Long> ids) {
-        jdbc.update(sql("otp.management.markFailed"), new MapSqlParameterSource("ids", ids));
+        jdbc.update(sql("otp.management.markFailed"), new MapSqlParameterSource(IDS, ids));
     }
 
     /** Daily send counter +1, restarting at 1 when the row was last touched before dayStart. */
@@ -120,11 +123,11 @@ public class OtpRepository {
     }
 
     public void markValidated(final Collection<Long> ids) {
-        jdbc.update(sql("otp.management.markValidated"), new MapSqlParameterSource("ids", ids));
+        jdbc.update(sql("otp.management.markValidated"), new MapSqlParameterSource(IDS, ids));
     }
 
     public void incrementValidationAttempts(final Collection<Long> ids) {
-        jdbc.update(sql("otp.management.incrementValidation"), new MapSqlParameterSource("ids", ids));
+        jdbc.update(sql("otp.management.incrementValidation"), new MapSqlParameterSource(IDS, ids));
     }
 
     public void resetAttempts(final String serviceName, final Collection<String> recipients) {

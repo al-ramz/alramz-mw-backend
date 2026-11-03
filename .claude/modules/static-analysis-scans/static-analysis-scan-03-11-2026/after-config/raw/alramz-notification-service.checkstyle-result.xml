@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.21.0">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/repository/SmsTableRepository.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/repository/EmailTemplateRepository.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/repository/OtpRepository.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/config/RequestSizeLimitConfig.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/config/SmsProperties.java">
+<error line="38" column="5" severity="warning" message="NPath Complexity is 1,024 (max allowed is 200)." source="com.puppycrawl.tools.checkstyle.checks.metrics.NPathComplexityCheck"/>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/config/OtpProperties.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/config/DatasourceConfiguration.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/config/GraphProperties.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/config/EmailProperties.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/config/GraphConfig.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/SmsDispatchJob.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/utils/StringUtils.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/model/EmailLogEntry.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/model/EmailTemplate.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java">
+<error line="203" column="5" severity="warning" message="NPath Complexity is 512 (max allowed is 200)." source="com.puppycrawl.tools.checkstyle.checks.metrics.NPathComplexityCheck"/>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/impl/WaselneySmsClient.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/impl/VeriPhoneClient.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EtisalatSmsClient.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java">
+<error line="60" column="1" severity="warning" message="Class Fan-Out Complexity is 36 (max allowed is 30)." source="com.puppycrawl.tools.checkstyle.checks.metrics.ClassFanOutComplexityCheck"/>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/SmsService.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java">
+<error line="83" column="5" severity="warning" message="NPath Complexity is 294 (max allowed is 200)." source="com.puppycrawl.tools.checkstyle.checks.metrics.NPathComplexityCheck"/>
+<error line="140" column="5" severity="warning" message="NPath Complexity is 720 (max allowed is 200)." source="com.puppycrawl.tools.checkstyle.checks.metrics.NPathComplexityCheck"/>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/service/EmailService.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/controllers/ApplicationController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/controllers/SmsController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/controllers/TemplatedEmailController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/controllers/OtpController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/controllers/EmailController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/AlramzNotificationServiceApplication.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailServiceException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailValidationException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/exception/TemplatedEmailException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/exception/SmsException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/exception/OtpException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailConfigurationException.java">
+</file>
+</checkstyle>

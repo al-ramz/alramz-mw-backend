@@ -51,7 +51,8 @@ public abstract class AbstractDataSourceAutoConfiguration {
         }
 
         if (logger.isInfoEnabled()) {
-            logger.info("[{}] DataSource created: url={}, poolSize={}, minIdle={}", dbName, maskUrl(config.getUrl()), config.getPool().getMaximumPoolSize(), config.getPool().getMinimumIdle()); // NOPMD LawOfDemeter
+            logger.info("[{}] DataSource created: url={}, poolSize={}, minIdle={}", dbName, maskUrl(config.getUrl()), // NOPMD LawOfDemeter
+                    config.getPool().getMaximumPoolSize(), config.getPool().getMinimumIdle());
         }
         return dataSource;
     }
@@ -134,7 +135,8 @@ public abstract class AbstractDataSourceAutoConfiguration {
         }
     }
 
-    protected DataSource wrapWithProxy(DataSource dataSource, DatasourceProperties.SqlLoggingProperties sqlLogging, String dbName, ObjectProvider<TracingQueryExecutionListener> tracingListenerProvider) {
+    protected DataSource wrapWithProxy(DataSource dataSource, DatasourceProperties.SqlLoggingProperties sqlLogging, String dbName,
+                                       ObjectProvider<TracingQueryExecutionListener> tracingListenerProvider) {
         // Tracing is independent of SQL logging: proxy whenever either one needs to see the queries.
         TracingQueryExecutionListener tracingListener = tracingListenerProvider.getIfAvailable();
         if (!sqlLogging.isEnabled() && tracingListener == null) {
@@ -155,7 +157,8 @@ public abstract class AbstractDataSourceAutoConfiguration {
             proxyDataSource.addListener(queryLoggingListener);
 
             if (sqlLogging.getSlowQueryThresholdMs() > 0) {
-                net.ttddyy.dsproxy.listener.logging.SLF4JSlowQueryListener slowQueryListener = new net.ttddyy.dsproxy.listener.logging.SLF4JSlowQueryListener(sqlLogging.getSlowQueryThresholdMs(), TimeUnit.MILLISECONDS);
+                net.ttddyy.dsproxy.listener.logging.SLF4JSlowQueryListener slowQueryListener =
+                        new net.ttddyy.dsproxy.listener.logging.SLF4JSlowQueryListener(sqlLogging.getSlowQueryThresholdMs(), TimeUnit.MILLISECONDS);
                 slowQueryListener.setQueryLogEntryCreator(logEntryCreator);
                 proxyDataSource.addListener(slowQueryListener);
             }

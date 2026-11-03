@@ -1,0 +1,32 @@
+tool	severity	rule	file:line	message
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditAspect.java:13	Using the '.*' form of import should be avoided - java.util.*.
+checkstyle	MEDIUM	LineLength	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditAspect.java:33	Line is longer than 200 characters (found 361).
+checkstyle	MEDIUM	NPathComplexity	services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditLogFilter.java:63	NPath Complexity is 321 (max allowed is 200).
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/audit/SensitiveDataMasker.java:11	Using the '.*' form of import should be avoided - java.util.*.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:16	Using the '.*' form of import should be avoided - org.springframework.http.*.
+checkstyle	MEDIUM	LineLength	services/alramz-api-starter/src/main/java/com/alramz/client/AbstractRestClient.java:119	Line is longer than 200 characters (found 232).
+checkstyle	MEDIUM	LineLength	services/alramz-api-starter/src/main/java/com/alramz/datasource/config/AbstractDataSourceAutoConfiguration.java:54	Line is longer than 200 characters (found 214).
+checkstyle	MEDIUM	LineLength	services/alramz-api-starter/src/main/java/com/alramz/datasource/config/AbstractDataSourceAutoConfiguration.java:137	Line is longer than 200 characters (found 203).
+checkstyle	MEDIUM	LineLength	services/alramz-api-starter/src/main/java/com/alramz/datasource/config/AbstractDataSourceAutoConfiguration.java:158	Line is longer than 200 characters (found 219).
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/model/GlobalConfigurationSettings.java:3	Using the '.*' form of import should be avoided - jakarta.persistence.*.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/jwt/annotation/JwtSecured.java:4	Using the '.*' form of import should be avoided - java.lang.annotation.*.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/jwt/annotation/PermitAll.java:5	Using the '.*' form of import should be avoided - java.lang.annotation.*.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/jwt/annotation/RefreshToken.java:3	Using the '.*' form of import should be avoided - java.lang.annotation.*.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/jwt/config/JwtAutoConfiguration.java:10	Using the '.*' form of import should be avoided - org.springframework.boot.autoconfigure.condition.*.
+checkstyle	MEDIUM	UnusedImports	services/alramz-api-starter/src/main/java/com/alramz/jwt/config/JwtAutoConfiguration.java:22	Unused import - org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/jwt/controller/AuthController.java:7	Using the '.*' form of import should be avoided - org.springframework.web.bind.annotation.*.
+checkstyle	MEDIUM	BooleanExpressionComplexity	services/alramz-api-starter/src/main/java/com/alramz/jwt/controller/AuthController.java:35	Boolean expression complexity is 9 (max allowed is 5).
+checkstyle	MEDIUM	UnusedImports	services/alramz-api-starter/src/main/java/com/alramz/jwt/service/TokenProvider.java:12	Unused import - java.util.Map.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/logging/aspect/Loggable.java:3	Using the '.*' form of import should be avoided - java.lang.annotation.*.
+checkstyle	MEDIUM	NPathComplexity	services/alramz-api-starter/src/main/java/com/alramz/logging/aspect/MethodExecutionLoggingAspect.java:30	NPath Complexity is 1,150 (max allowed is 200).
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingAutoConfiguration.java:20	Using the '.*' form of import should be avoided - org.springframework.boot.autoconfigure.condition.*.
+checkstyle	MEDIUM	ClassFanOutComplexity	services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingAutoConfiguration.java:47	Class Fan-Out Complexity is 35 (max allowed is 30).
+checkstyle	MEDIUM	UnusedImports	services/alramz-api-starter/src/main/java/com/alramz/logging/logback/AlramzJsonEncoder.java:9	Unused import - org.slf4j.MDC.
+checkstyle	MEDIUM	ConstantName	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:25	Name 'sensitiveKeys' must match pattern '^([A-Z][A-Z0-9]*(_[A-Z0-9]+)*|log|logger|auditLogger)$'.
+checkstyle	MEDIUM	ConstantName	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LogMaskingUtil.java:26	Name 'customPatterns' must match pattern '^([A-Z][A-Z0-9]*(_[A-Z0-9]+)*|log|logger|auditLogger)$'.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LoggingHelper.java:18	Using the '.*' form of import should be avoided - java.util.*.
+checkstyle	MEDIUM	NPathComplexity	services/alramz-api-starter/src/main/java/com/alramz/logging/util/LoggingHelper.java:254	NPath Complexity is 225 (max allowed is 200).
+checkstyle	MEDIUM	UnusedImports	services/alramz-api-starter/src/main/java/com/alramz/logging/util/MethodExecutionLoggingHelper.java:4	Unused import - com.alramz.logging.constants.LoggingConstants.
+checkstyle	MEDIUM	AvoidStarImport	services/alramz-api-starter/src/main/java/com/alramz/logging/util/MethodExecutionLoggingHelper.java:12	Using the '.*' form of import should be avoided - java.util.*.
+checkstyle	MEDIUM	RedundantModifier	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/ISchedulerService.java:15	Redundant 'final' modifier.
+checkstyle	MEDIUM	NPathComplexity	services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java:400	NPath Complexity is 225 (max allowed is 200).

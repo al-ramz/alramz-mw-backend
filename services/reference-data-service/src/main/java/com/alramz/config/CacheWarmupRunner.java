@@ -13,6 +13,8 @@ public class CacheWarmupRunner {
     private static final Logger log = LoggerFactory.getLogger(CacheWarmupRunner.class);
 
     @Bean
+    // reason: startup warmup boundary; one failing mapping must not abort startup or the other mappings
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public ApplicationRunner warmupRunner(RedisCacheService redisCacheService,
                                                 CompanyRedisProperties companyRedisProperties) {
         return args -> {

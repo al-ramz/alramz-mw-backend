@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-03T12:48:08.741">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/utility-service/src/main/java/com/alramz/UtilityServiceApplication.java">
+<violation beginline="14" endline="14" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz" class="UtilityServiceApplication" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/utility-service/src/main/java/com/alramz/config/FinouxProperties.java">
+<violation beginline="30" endline="30" begincolumn="19" endcolumn="24" rule="ShortClassName" ruleset="Code Style" package="com.alramz.config" class="Post" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortclassname" priority="4">
+Avoid short class names like Post
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/utility-service/src/main/java/com/alramz/exception/ApplicationException.java">
+<violation beginline="6" endline="6" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="ApplicationException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/utility-service/src/main/java/com/alramz/exception/ErrorCode.java">
+<violation beginline="19" endline="19" begincolumn="26" endcolumn="30" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.exception" class="ErrorCode" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field code has the same name as a method
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/utility-service/src/main/java/com/alramz/exception/FinouxIntegrationException.java">
+<violation beginline="6" endline="6" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="FinouxIntegrationException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/utility-service/src/main/java/com/alramz/exception/FinouxUnavailableException.java">
+<violation beginline="6" endline="6" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="FinouxUnavailableException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/utility-service/src/main/java/com/alramz/service/impl/CommunityPostServiceImpl.java">
+<violation beginline="22" endline="22" begincolumn="53" endcolumn="58" rule="UseUnderscoresInNumericLiterals" ruleset="Code Style" package="com.alramz.service.impl" class="CommunityPostServiceImpl" variable="MAX_POST_DESC_LENGTH" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#useunderscoresinnumericliterals" priority="3">
+Number 10000 should separate every third digit with an underscore
+</violation>
+</file>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/utility-service/src/main/java/com/alramz/finoux/FinouxClient.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException - timeout, connection refused, circuit open
+"></suppressedviolation>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

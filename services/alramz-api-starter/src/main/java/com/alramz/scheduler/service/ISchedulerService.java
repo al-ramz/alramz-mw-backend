@@ -12,7 +12,7 @@ public interface ISchedulerService {
 
     String hardStopScheduler() ;
 
-    Map<String, Set<ScheduleInfoBean>> reintializeScheduler(final String jobGroupName) ;
+    Map<String, Set<ScheduleInfoBean>> reintializeScheduler(String jobGroupName) ;
 
     Map<String, Set<ScheduleInfoBean>> reintializeSchedulerForJobs(String jobGroupName, String... jobIds) ;
 

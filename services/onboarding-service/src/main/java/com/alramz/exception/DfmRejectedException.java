@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 public class DfmRejectedException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     private final DfmInvestorErrorCode code;
 
     public DfmRejectedException(DfmInvestorErrorCode code, String message) {

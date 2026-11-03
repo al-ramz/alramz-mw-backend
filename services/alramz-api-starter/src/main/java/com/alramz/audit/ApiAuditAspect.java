@@ -10,7 +10,10 @@ import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @Aspect
 @Slf4j
@@ -30,7 +33,11 @@ public class ApiAuditAspect {
 
     // Outbound calls only: ApiAuditLogFilter already writes the INBOUND row for every request, so
     // matching controllers here would audit each request twice.
-    @Around("execution(* com.alramz.client..*(..)) || execution(* com.alramz.config.ETradeTokenProvider.fetchAndCacheToken(..)) || execution(* com.alramz.service.impl.IBANValidationServiceImpl.validate(..)) || execution(* com.alramz.service.impl.PhoneValidationServiceImpl.validate(..)) || execution(* com.alramz.service.impl.DuplicateCheckServiceImpl..*(..))")
+    @Around("execution(* com.alramz.client..*(..))"
+            + " || execution(* com.alramz.config.ETradeTokenProvider.fetchAndCacheToken(..))"
+            + " || execution(* com.alramz.service.impl.IBANValidationServiceImpl.validate(..))"
+            + " || execution(* com.alramz.service.impl.PhoneValidationServiceImpl.validate(..))"
+            + " || execution(* com.alramz.service.impl.DuplicateCheckServiceImpl..*(..))")
     public Object auditApiCall(ProceedingJoinPoint pjp) throws Throwable {
         long startTime = System.currentTimeMillis();
         String status = "SUCCESS";

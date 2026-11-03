@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CommunityPostServiceImpl implements CommunityPostService {
 
-    private static final int MAX_POST_DESC_LENGTH = 10000;
+    private static final int MAX_POST_DESC_LENGTH = 10_000;
     private static final PolicyFactory SANITIZER =
             Sanitizers.FORMATTING.and(Sanitizers.LINKS).and(Sanitizers.BLOCKS);
 

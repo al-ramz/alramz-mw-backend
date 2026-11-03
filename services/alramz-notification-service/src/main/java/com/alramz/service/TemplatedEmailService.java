@@ -58,7 +58,7 @@ public class TemplatedEmailService {
     private static final JsonMapper JSON = JsonMapper.builder().build();
     private static final int MAX_IP_LENGTH = 45;
     private static final String UNKNOWN = "unknown";
-    private static final Pattern LOGGABLE = Pattern.compile("^[A-Za-z0-9 ._-]{1,100}$");
+    private static final Pattern LOGGABLE_VALUE = Pattern.compile("^[A-Za-z0-9 ._-]{1,100}$");
 
     private final EmailService emailService;
     private final EmailTemplateRepository repository;
@@ -328,7 +328,7 @@ public class TemplatedEmailService {
 
     /** Caller-supplied value for a log line: kept only if short and free of CR/LF and other control characters. */
     static String loggable(final String value) {
-        return value == null || LOGGABLE.matcher(value).matches() ? value : "<invalid>";
+        return value == null || LOGGABLE_VALUE.matcher(value).matches() ? value : "<invalid>";
     }
 
     private static boolean isBlank(final String value) {

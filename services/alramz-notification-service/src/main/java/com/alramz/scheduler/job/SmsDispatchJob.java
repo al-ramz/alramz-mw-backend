@@ -29,9 +29,10 @@ import java.util.UUID;
  */
 @Slf4j
 @Component("smsDispatchJobRunner")
-public class SmsDispatchJob implements Schedulable {
+public final class SmsDispatchJob implements Schedulable {
 
     private static final int MAX_MESSAGE_ID_LENGTH = 65;
+    private static final String INVALID_MOBILE_CODE = "SMS002";
 
     private final ObjectProvider<SmsTableRepository> repositoryProvider;
     private final SmsService smsService;
@@ -116,7 +117,7 @@ public class SmsDispatchJob implements Schedulable {
                     .expiryInSecs(properties.defaults().expiryInSecs()));
             result = outcome.result().getResults().get(0);
         } catch (SmsException e) {
-            if ("SMS002".equals(e.getCode())) {
+            if (INVALID_MOBILE_CODE.equals(e.getCode())) {
                 return invalid(repository, row, status, now, masked);
             }
             return unexpected(repository, row, status, now, correlationId, masked, e);

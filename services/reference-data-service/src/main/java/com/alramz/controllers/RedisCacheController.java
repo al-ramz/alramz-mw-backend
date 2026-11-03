@@ -19,6 +19,9 @@ import java.util.Map;
 @Generated("org.openapitools.codegen.languages.SpringCodegen")
 public class RedisCacheController implements RedisCacheApi, HealthApi {
 
+    private static final String REQUIRED_ROLE = "APP_REFERENCE_DATA";
+    private static final String SUCCESS_CODE = "200";
+
     private final RedisCacheService redisCacheService;
 
     public RedisCacheController(RedisCacheService redisCacheService) {
@@ -26,63 +29,63 @@ public class RedisCacheController implements RedisCacheApi, HealthApi {
     }
 
     @Override
-    @JwtSecured(roles = "APP_REFERENCE_DATA")
+    @JwtSecured(roles = REQUIRED_ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> flushCache(String cacheKey) {
         String result = redisCacheService.flushCache(cacheKey);
         GenericResponse response = new GenericResponse();
-        response.setResponseCode("200");
+        response.setResponseCode(SUCCESS_CODE);
         response.setResponseMessage(result);
         response.setResponse(null);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    @JwtSecured(roles = "APP_REFERENCE_DATA")
+    @JwtSecured(roles = REQUIRED_ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> getCacheEntriesByKey(String cacheKey) {
         List<Map<String, Object>> entries = redisCacheService.getAllEntries(cacheKey);
         GenericResponse response = new GenericResponse();
-        response.setResponseCode("200");
+        response.setResponseCode(SUCCESS_CODE);
         response.setResponseMessage("OK");
         response.setResponse(entries);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    @JwtSecured(roles = "APP_REFERENCE_DATA")
+    @JwtSecured(roles = REQUIRED_ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> getCacheStatus(String cacheKey) {
         Map<String, Object> status = redisCacheService.getCacheStatus(cacheKey);
 
         GenericResponse response = new GenericResponse();
-        response.setResponseCode("200");
+        response.setResponseCode(SUCCESS_CODE);
         response.setResponseMessage("OK");
         response.setResponse(status);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    @JwtSecured(roles = "APP_REFERENCE_DATA")
+    @JwtSecured(roles = REQUIRED_ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> reloadCache(String cacheKey) {
         String result = redisCacheService.reloadGlobalConfig(cacheKey);
         List<Map<String, Object>> entries = redisCacheService.getAllEntries(cacheKey);
         GenericResponse response = new GenericResponse();
-        response.setResponseCode("200");
+        response.setResponseCode(SUCCESS_CODE);
         response.setResponseMessage(result);
         response.setResponse(entries);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    @JwtSecured(roles = "APP_REFERENCE_DATA")
+    @JwtSecured(roles = REQUIRED_ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> checkDeepHealth() {
         Map<String, Object> health = redisCacheService.checkDeepHealth();
 
         GenericResponse response = new GenericResponse();
-        response.setResponseCode("200");
+        response.setResponseCode(SUCCESS_CODE);
         response.setResponseMessage("OK");
         response.setResponse(health);
         return ResponseEntity.ok(response);

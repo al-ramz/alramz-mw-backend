@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-03T12:48:18.588">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/reporting-management-service/src/main/java/com/alramz/ReportingManagementServiceApplication.java">
+<violation beginline="14" endline="14" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz" class="ReportingManagementServiceApplication" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/reporting-management-service/src/main/java/com/alramz/exception/InvalidDateRangeException.java">
+<violation beginline="10" endline="10" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="InvalidDateRangeException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/reporting-management-service/src/main/java/com/alramz/exception/RelationshipManagerLookupException.java">
+<violation beginline="9" endline="9" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="RelationshipManagerLookupException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/reporting-management-service/src/main/java/com/alramz/repository/RelationshipManagerRepositoryImpl.java">
+<violation beginline="61" endline="61" begincolumn="19" endcolumn="101" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.repository" class="RelationshipManagerRepositoryImpl" method="findActiveRelationshipManagers" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="64" endline="64" begincolumn="19" endcolumn="101" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.repository" class="RelationshipManagerRepositoryImpl" method="findActiveRelationshipManagers" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="92" endline="92" begincolumn="19" endcolumn="97" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.repository" class="RelationshipManagerRepositoryImpl" method="findCommissionsByRelationshipManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="95" endline="95" begincolumn="19" endcolumn="97" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.repository" class="RelationshipManagerRepositoryImpl" method="findCommissionsByRelationshipManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/reporting-management-service/src/main/java/com/alramz/service/impl/RelationshipManagerServiceImpl.java">
+<violation beginline="82" endline="83" begincolumn="19" endcolumn="89" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="RelationshipManagerServiceImpl" method="resolveDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

@@ -11,27 +11,27 @@ import org.springframework.core.env.Environment;
 @SpringBootApplication
 public class UtilityServiceApplication {
 
-	private static final Logger log = LoggerFactory.getLogger(UtilityServiceApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(UtilityServiceApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication.run(UtilityServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(UtilityServiceApplication.class, args);
+    }
 
-	@Bean
-	ApplicationRunner runner(Environment env) {
-		return args -> {
-			String port = env.getProperty("server.port", "8080");
-			String host = env.getProperty("server.address", "localhost");
-			String appName = env.getProperty("spring.application.name", "unknown");
-			String[] activeProfiles = env.getActiveProfiles();
-			String profile = activeProfiles.length > 0 ? String.join(", ", activeProfiles) : "default";
-			log.info("========================================");
-			log.info("Application:  {}", appName);
-			log.info("Profile:      {}", profile);
-			log.info("Host:         {}", host);
-			log.info("Port:         {}", port);
-			log.info("========================================");
-		};
-	}
+    @Bean
+    ApplicationRunner runner(Environment env) {
+        return args -> {
+            String port = env.getProperty("server.port", "8080");
+            String host = env.getProperty("server.address", "localhost");
+            String appName = env.getProperty("spring.application.name", "unknown");
+            String[] activeProfiles = env.getActiveProfiles();
+            String profile = activeProfiles.length > 0 ? String.join(", ", activeProfiles) : "default";
+            log.info("========================================");
+            log.info("Application:  {}", appName);
+            log.info("Profile:      {}", profile);
+            log.info("Host:         {}", host);
+            log.info("Port:         {}", port);
+            log.info("========================================");
+        };
+    }
 
 }

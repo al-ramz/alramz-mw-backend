@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-03T12:47:14.598">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/OnboardingServiceApplication.java">
+<violation beginline="22" endline="22" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz" class="OnboardingServiceApplication" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="74" endline="74" begincolumn="49" endcolumn="94" rule="AvoidDuplicateLiterals" ruleset="Error Prone" package="com.alramz" class="OnboardingServiceApplication" method="globalConfigurationSettingsDemoRunner" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidduplicateliterals" priority="3">
+The String literal "   \u2713 {} \u2192 Type: {} | Value: {} | Status: {}" appears 5 times in this file; the first occurrence is on line 74
+</violation>
+<violation beginline="99" endline="99" begincolumn="21" endcolumn="28" rule="UseExplicitTypes" ruleset="Code Style" package="com.alramz" class="OnboardingServiceApplication" method="globalConfigurationSettingsDemoRunner" variable="mapData" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#useexplicittypes" priority="3">
+Use Explicit Types
+</violation>
+<violation beginline="110" endline="110" begincolumn="22" endcolumn="31" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz" class="OnboardingServiceApplication" method="globalConfigurationSettingsDemoRunner" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/client/ETradeClient.java">
+<violation beginline="37" endline="37" begincolumn="19" endcolumn="106" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.client" class="ETradeClient" method="callETrade" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/config/ETradeTokenProvider.java">
+<violation beginline="41" endline="43" begincolumn="17" endcolumn="18" rule="AvoidDeeplyNestedIfStmts" ruleset="Design" package="com.alramz.config" class="ETradeTokenProvider" method="getToken" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoiddeeplynestedifstmts" priority="3">
+Deeply nested if..then statements are hard to read
+</violation>
+<violation beginline="58" endline="58" begincolumn="23" endcolumn="27" rule="NullAssignment" ruleset="Error Prone" package="com.alramz.config" class="ETradeTokenProvider" method="invalidate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#nullassignment" priority="3">
+Assigning an Object to null is a code smell.  Consider refactoring.
+</violation>
+<violation beginline="59" endline="59" begincolumn="20" endcolumn="24" rule="NullAssignment" ruleset="Error Prone" package="com.alramz.config" class="ETradeTokenProvider" method="invalidate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#nullassignment" priority="3">
+Assigning an Object to null is a code smell.  Consider refactoring.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/config/WebClientConfig.java">
+<violation beginline="18" endline="18" begincolumn="13" endcolumn="20" rule="UseExplicitTypes" ruleset="Code Style" package="com.alramz.config" class="WebClientConfig" method="webClient" variable="decoder" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#useexplicittypes" priority="3">
+Use Explicit Types
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/dfm/DfmMemberApiClient.java">
+<violation beginline="96" endline="96" begincolumn="50" endcolumn="67" rule="CompareObjectsWithEquals" ruleset="Error Prone" package="com.alramz.dfm" class="DfmMemberApiClient" method="isConnectFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#compareobjectswithequals" priority="3">
+Use equals() to compare object references.
+</violation>
+<violation beginline="96" endline="96" begincolumn="70" endcolumn="74" rule="NullAssignment" ruleset="Error Prone" package="com.alramz.dfm" class="DfmMemberApiClient" method="isConnectFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#nullassignment" priority="3">
+Assigning an Object to null is a code smell.  Consider refactoring.
+</violation>
+<violation beginline="157" endline="157" begincolumn="13" endcolumn="18" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.dfm" class="DfmMemberApiClient" method="classifySuccessStatus" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="206" endline="206" begincolumn="35" endcolumn="51" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.dfm" class="BadResponseException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingPayload.java">
+<violation beginline="92" endline="92" begincolumn="40" endcolumn="44" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.dfm" class="DfmOnboardingPayload" method="from" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'from(DfmInvestorRegistrationRequest, String, String)' has a cyclomatic complexity of 15.
+</violation>
+<violation beginline="92" endline="92" begincolumn="40" endcolumn="44" rule="NPathComplexity" ruleset="Design" package="com.alramz.dfm" class="DfmOnboardingPayload" method="from" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#npathcomplexity" priority="3">
+The method 'from(DfmInvestorRegistrationRequest, String, String)' has an NPath complexity of 16384, current threshold is 200
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/ApplicationException.java">
+<violation beginline="5" endline="5" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="ApplicationException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/DfmConfigurationException.java">
+<violation beginline="6" endline="6" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="DfmConfigurationException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/DfmInvestorExceptionHandler.java">
+<violation beginline="37" endline="154" begincolumn="42" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.exception" class="DfmInvestorExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/DfmRejectedException.java">
+<violation beginline="9" endline="9" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="DfmRejectedException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/DfmUnavailableException.java">
+<violation beginline="9" endline="9" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="DfmUnavailableException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/ExternalSystemException.java">
+<violation beginline="5" endline="5" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="ExternalSystemException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+<violation beginline="25" endline="409" begincolumn="37" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="36" endline="36" begincolumn="20" endcolumn="35" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="friendlyMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'friendlyMessage(String, String)' has a cyclomatic complexity of 13.
+</violation>
+<violation beginline="37" endline="37" begincolumn="28" endcolumn="50" rule="ControlStatementBraces" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="friendlyMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#controlstatementbraces" priority="3">
+This statement should have braces
+</violation>
+<violation beginline="49" endline="49" begincolumn="20" endcolumn="47" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="mapFieldToInternalErrorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'mapFieldToInternalErrorCode(String)' has a cyclomatic complexity of 13.
+</violation>
+<violation beginline="50" endline="50" begincolumn="28" endcolumn="63" rule="ControlStatementBraces" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="mapFieldToInternalErrorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#controlstatementbraces" priority="3">
+This statement should have braces
+</violation>
+<violation beginline="69" endline="69" begincolumn="41" endcolumn="46" rule="AvoidDuplicateLiterals" ruleset="Error Prone" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleValidation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidduplicateliterals" priority="3">
+The String literal "400" appears 17 times in this file; the first occurrence is on line 69
+</violation>
+<violation beginline="96" endline="96" begincolumn="44" endcolumn="50" rule="AvoidDuplicateLiterals" ruleset="Error Prone" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleValidation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidduplicateliterals" priority="3">
+The String literal "code" appears 10 times in this file; the first occurrence is on line 96
+</violation>
+<violation beginline="205" endline="205" begincolumn="41" endcolumn="46" rule="AvoidDuplicateLiterals" ruleset="Error Prone" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleExternalSystem" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidduplicateliterals" priority="3">
+The String literal "503" appears 17 times in this file; the first occurrence is on line 205
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/IbanValidationException.java">
+<violation beginline="5" endline="5" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="IbanValidationException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/OnboardingExceptionHandler.java">
+<violation beginline="18" endline="18" begincolumn="20" endcolumn="35" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="OnboardingExceptionHandler" method="friendlyMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'friendlyMessage(String, String)' has a cyclomatic complexity of 13.
+</violation>
+<violation beginline="19" endline="19" begincolumn="28" endcolumn="50" rule="ControlStatementBraces" ruleset="Code Style" package="com.alramz.exception" class="OnboardingExceptionHandler" method="friendlyMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#controlstatementbraces" priority="3">
+This statement should have braces
+</violation>
+<violation beginline="31" endline="31" begincolumn="20" endcolumn="47" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="OnboardingExceptionHandler" method="mapFieldToInternalErrorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'mapFieldToInternalErrorCode(String)' has a cyclomatic complexity of 13.
+</violation>
+<violation beginline="32" endline="32" begincolumn="28" endcolumn="63" rule="ControlStatementBraces" ruleset="Code Style" package="com.alramz.exception" class="OnboardingExceptionHandler" method="mapFieldToInternalErrorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#controlstatementbraces" priority="3">
+This statement should have braces
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/TechnicalException.java">
+<violation beginline="5" endline="5" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="TechnicalException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/exception/ValidationException.java">
+<violation beginline="5" endline="5" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="ValidationException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/repository/DfmOnboardingRepositoryImpl.java">
+<violation beginline="36" endline="36" begincolumn="17" endcolumn="23" rule="NcssCount" ruleset="Design" package="com.alramz.repository" class="DfmOnboardingRepositoryImpl" method="insert" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#ncsscount" priority="3">
+The method 'insert(OnboardingRequest, String)' has a NCSS line count of 94.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/repository/DfmOnboardingRequest.java">
+<violation beginline="13" endline="96" begincolumn="35" endcolumn="2" rule="TooManyFields" ruleset="Design" package="com.alramz.repository" class="DfmOnboardingRequest" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanyfields" priority="3">
+Too many fields
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/scheduler/job/DataValidationScheduledJob.java">
+<violation beginline="16" endline="16" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.scheduler.job" class="DataValidationScheduledJob" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/DuplicateCheckService.java">
+<violation beginline="5" endline="5" begincolumn="15" endcolumn="30" rule="UseObjectForClearerAPI" ruleset="Design" package="com.alramz.service" class="DuplicateCheckService" method="checkDuplicates" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#useobjectforclearerapi" priority="3">
+Rather than using a lot of String arguments, consider using a container object for those values.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/DfmInvestorServiceImpl.java">
+<violation beginline="1" endline="231" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.service.impl" class="DfmInvestorServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 21 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="38" endline="231" begincolumn="67" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.service.impl" class="DfmInvestorServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="132" endline="132" begincolumn="19" endcolumn="66" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="DfmInvestorServiceImpl" method="fileType" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/DuplicateCheckHelper.java">
+<violation beginline="43" endline="43" begincolumn="19" endcolumn="95" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="DuplicateCheckHelper" method="checkNinExists" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="100" endline="100" begincolumn="40" endcolumn="43" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.service.impl" class="DuplicateCheckHelper" method="callETradeWithRetry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="114" endline="114" begincolumn="19" endcolumn="92" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="DuplicateCheckHelper" method="callETradeWithRetry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/DuplicateCheckServiceImpl.java">
+<violation beginline="20" endline="20" begincolumn="22" endcolumn="37" rule="UseObjectForClearerAPI" ruleset="Design" package="com.alramz.service.impl" class="DuplicateCheckServiceImpl" method="checkDuplicates" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#useobjectforclearerapi" priority="3">
+Rather than using a lot of String arguments, consider using a container object for those values.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java">
+<violation beginline="50" endline="50" begincolumn="28" endcolumn="36" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="IBANValidationServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'validate(IBANRequest)' has a cyclomatic complexity of 15.
+</violation>
+<violation beginline="78" endline="78" begincolumn="19" endcolumn="85" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="IBANValidationServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="80" endline="80" begincolumn="19" endcolumn="66" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="IBANValidationServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/NinTradingNumberValidationService.java">
+<violation beginline="29" endline="29" begincolumn="20" endcolumn="51" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="NinTradingNumberValidationService" method="checkIfNinOrTradingNumberExists" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'checkIfNinOrTradingNumberExists(String, String, String)' has a cyclomatic complexity of 14.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/OnboardingServiceImpl.java">
+<violation beginline="4" endline="4" begincolumn="1" endcolumn="53" rule="UnnecessaryImport" ruleset="Code Style" package="com.alramz.service.impl" class="OnboardingServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#unnecessaryimport" priority="4">
+Unused import 'com.alramz.exception.ExternalSystemException'
+</violation>
+<violation beginline="54" endline="54" begincolumn="19" endcolumn="110" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="OnboardingServiceImpl" method="onboard" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="64" endline="64" begincolumn="18" endcolumn="40" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="OnboardingServiceImpl" method="validateRequiredFields" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'validateRequiredFields(OnboardingRequest)' has a cyclomatic complexity of 11.
+</violation>
+<violation beginline="130" endline="130" begincolumn="32" endcolumn="52" rule="UseVarargs" ruleset="Best Practices" package="com.alramz.service.impl" class="OnboardingServiceImpl" method="logDuplicates" variable="duplicates" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#usevarargs" priority="4">
+Consider using varargs for methods or constructors which take an array the last parameter.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/PhoneValidationServiceImpl.java">
+<violation beginline="47" endline="47" begincolumn="28" endcolumn="36" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="PhoneValidationServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'validate(PhoneRequest)' has a cyclomatic complexity of 15.
+</violation>
+<violation beginline="73" endline="73" begincolumn="19" endcolumn="86" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="PhoneValidationServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="75" endline="75" begincolumn="19" endcolumn="66" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="PhoneValidationServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/ValidationServiceImpl.java">
+<violation beginline="87" endline="87" begincolumn="40" endcolumn="43" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.service.impl" class="ValidationServiceImpl" method="callExternalWithRetry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="100" endline="100" begincolumn="19" endcolumn="87" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="ValidationServiceImpl" method="callExternalWithRetry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/client/ETradeClient.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/config/ETradeTokenProvider.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/ValidationRequestMapper.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/DuplicateCheckHelper.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/PhoneValidationServiceImpl.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/onboarding-service/src/main/java/com/alramz/service/impl/OnboardingServiceImpl.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

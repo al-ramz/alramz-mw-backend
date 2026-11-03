@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-03T12:48:29.055">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/WealthManagementServiceApplication.java">
+<violation beginline="14" endline="14" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/controllers/MmfController.java">
+<violation beginline="96" endline="96" begincolumn="52" endcolumn="54" rule="ShortMethodName" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="ok" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortmethodname" priority="3">
+Avoid using short method names
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/exception/ApplicationException.java">
+<violation beginline="6" endline="6" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="ApplicationException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java">
+<violation beginline="13" endline="13" begincolumn="8" endcolumn="12" rule="ExcessivePublicCount" ruleset="Design" package="com.alramz.exception" class="ErrorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessivepubliccount" priority="3">
+This class has a bunch of public methods and attributes
+</violation>
+<violation beginline="90" endline="90" begincolumn="44" endcolumn="49" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="RULES" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="129" endline="129" begincolumn="26" endcolumn="30" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.exception" class="ErrorCode" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field code has the same name as a method
+</violation>
+<violation beginline="129" endline="129" begincolumn="26" endcolumn="30" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="130" endline="130" begincolumn="26" endcolumn="40" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.exception" class="ErrorCode" variable="defaultMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field defaultMessage has the same name as a method
+</violation>
+<violation beginline="130" endline="130" begincolumn="26" endcolumn="40" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="defaultMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+<violation beginline="1" endline="285" begincolumn="1" endcolumn="3" rule="ExcessiveImports" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessiveimports" priority="3">
+A high number of imports can indicate a high degree of coupling within an object.
+</violation>
+<violation beginline="1" endline="285" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 30 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="47" endline="47" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=64, ATFD=77, TCC=1.087%)
+</violation>
+<violation beginline="47" endline="285" begincolumn="37" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="164" endline="164" begincolumn="44" endcolumn="61" rule="CognitiveComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cognitivecomplexity" priority="3">
+The method 'handleNotReadable(HttpMessageNotReadableException, HandlerMethod)' has a cognitive complexity of 15, current threshold is 15
+</violation>
+<violation beginline="247" endline="247" begincolumn="13" endcolumn="22" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.exception" class="GlobalExceptionHandler" method="kindOf" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="253" endline="253" begincolumn="36" endcolumn="50" rule="UseVarargs" ruleset="Best Practices" package="com.alramz.exception" class="GlobalExceptionHandler" method="lastCode" variable="codes" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#usevarargs" priority="4">
+Consider using varargs for methods or constructors which take an array the last parameter.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendException.java">
+<violation beginline="9" endline="9" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="MmfBackendException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendUnavailableException.java">
+<violation beginline="6" endline="6" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="MmfBackendUnavailableException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/exception/MmfConflictException.java">
+<violation beginline="6" endline="6" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="MmfConflictException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/exception/MmfNotFoundException.java">
+<violation beginline="6" endline="6" begincolumn="31" endcolumn="47" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.exception" class="MmfNotFoundException" variable="serialVersionUID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'serialVersionUID' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/repository/MmfRepositoryImpl.java">
+<violation beginline="63" endline="63" begincolumn="27" endcolumn="28" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.repository" class="MmfRepositoryImpl" method="findAccount" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="161" endline="163" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.repository" class="MmfRepositoryImpl" method="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 158 is caught in this block.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/a07b0375-ec16-4b2d-824f-2dc8d14b9d94/scratchpad/snap/services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java">
+<violation beginline="1" endline="315" begincolumn="1" endcolumn="3" rule="ExcessiveImports" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessiveimports" priority="3">
+A high number of imports can indicate a high degree of coupling within an object.
+</violation>
+<violation beginline="1" endline="315" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 28 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="58" endline="58" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=73, ATFD=27, TCC=18.333%)
+</violation>
+<violation beginline="58" endline="315" begincolumn="51" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="99" endline="99" begincolumn="27" endcolumn="37" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'listSweeps(String, LocalDate, LocalDate)' has a cyclomatic complexity of 10.
+</violation>
+</file>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

@@ -22,8 +22,8 @@ public final class LogMaskingUtil {
 
     private static volatile boolean enabled = true;
     private static volatile String mask = DEFAULT_MASK;
-    private static final CopyOnWriteArrayList<String> sensitiveKeys = new CopyOnWriteArrayList<>();
-    private static final CopyOnWriteArrayList<Pattern> customPatterns = new CopyOnWriteArrayList<>();
+    private static final CopyOnWriteArrayList<String> SENSITIVE_KEYS = new CopyOnWriteArrayList<>();
+    private static final CopyOnWriteArrayList<Pattern> CUSTOM_PATTERNS = new CopyOnWriteArrayList<>();
 
     private static final Pattern JSON_PAIR = Pattern.compile(
             "\"([^\"]*+)\"\\s*+:\\s*+(\"(?:[^\"\\\\]++|\\\\.)*+\"|[-+.\\w]++)");
@@ -42,15 +42,15 @@ public final class LogMaskingUtil {
     public static void configure(boolean enabled, String mask, List<String> keys, List<String> patterns) {
         LogMaskingUtil.enabled = enabled;
         LogMaskingUtil.mask = mask == null || mask.isBlank() ? DEFAULT_MASK : mask;
-        sensitiveKeys.clear();
+        SENSITIVE_KEYS.clear();
         if (keys != null) {
-            sensitiveKeys.addAll(keys);
+            SENSITIVE_KEYS.addAll(keys);
         }
-        customPatterns.clear();
+        CUSTOM_PATTERNS.clear();
         if (patterns != null) {
             for (String p : patterns) {
                 try {
-                    customPatterns.add(Pattern.compile(p));
+                    CUSTOM_PATTERNS.add(Pattern.compile(p));
                 } catch (PatternSyntaxException e) {
                     // ignore invalid pattern
                 }
@@ -68,7 +68,7 @@ public final class LogMaskingUtil {
             return text;
         }
         String masked = maskJsonKeys(text);
-        for (Pattern pattern : customPatterns) {
+        for (Pattern pattern : CUSTOM_PATTERNS) {
             masked = pattern.matcher(masked).replaceAll(mask);
         }
         for (Pattern pattern : DEFAULT_PATTERNS) {
@@ -111,7 +111,7 @@ public final class LogMaskingUtil {
             return false;
         }
         String lowered = key.toLowerCase();
-        for (String sensitive : sensitiveKeys) {
+        for (String sensitive : SENSITIVE_KEYS) {
             if (lowered.contains(sensitive.toLowerCase())) {
                 return true;
             }
@@ -134,7 +134,7 @@ public final class LogMaskingUtil {
     }
 
     public static List<String> getSensitiveKeys() {
-        return Collections.unmodifiableList(sensitiveKeys);
+        return Collections.unmodifiableList(SENSITIVE_KEYS);
     }
 
     public static void setDefaults(List<String> keys, String maskReplacement) {

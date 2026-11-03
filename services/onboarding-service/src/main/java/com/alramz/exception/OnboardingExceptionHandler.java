@@ -16,7 +16,9 @@ public class OnboardingExceptionHandler {
     private static final String DEFAULT_INTERNAL_ERROR_CODE = "ONB011";
 
     private String friendlyMessage(String field, String defaultMessage) {
-        if (field == null) return defaultMessage;
+        if (field == null) {
+            return defaultMessage;
+        }
         String normalized = field.contains(".") ? field.substring(field.lastIndexOf('.') + 1) : field;
         return switch (normalized) {
             case "custMobile", "cust_mobile" -> "Mobile Number (cust_mobile) is missing";
@@ -29,7 +31,9 @@ public class OnboardingExceptionHandler {
     }
 
     private String mapFieldToInternalErrorCode(String field) {
-        if (field == null) return DEFAULT_INTERNAL_ERROR_CODE;
+        if (field == null) {
+            return DEFAULT_INTERNAL_ERROR_CODE;
+        }
         String normalized = field.contains(".") ? field.substring(field.lastIndexOf('.') + 1) : field;
         return switch (normalized) {
             case "custMobile", "cust_mobile" -> "ONB001";

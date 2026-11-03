@@ -34,13 +34,13 @@ public class EtisalatSmsClient {
     private static final long REFRESH_MARGIN_SECONDS = 60;
     private static final long EPOCH_MILLIS_THRESHOLD = 100_000_000_000L;
 
-    private record Token(String value, Instant expiry) {
-    }
-
     private final SmsProperties.Etisalat config;
     private final RestClient restClient;
     private final Clock clock;
-    private Token token;
+    private Token cachedToken;
+
+    private record Token(String value, Instant expiry) {
+    }
 
     @Autowired
     public EtisalatSmsClient(final SmsProperties properties) {
@@ -69,13 +69,13 @@ public class EtisalatSmsClient {
             return submit(token(false), body, number);
         } catch (HttpClientErrorException.Unauthorized e) {
             log.info("Etisalat token rejected; refreshing once");
-            try {
-                return submit(token(true), body, number);
-            } catch (RestClientException retry) {
-                throw SmsServiceImpl.providerFailure(PROVIDER, retry);
-            }
         } catch (RestClientException e) {
             throw SmsServiceImpl.providerFailure(PROVIDER, e);
+        }
+        try {
+            return submit(token(true), body, number);
+        } catch (RestClientException retry) {
+            throw SmsServiceImpl.providerFailure(PROVIDER, retry);
         }
     }
 
@@ -99,9 +99,9 @@ public class EtisalatSmsClient {
 
     // ponytail: one lock per pod around login; per-username caching only if several Etisalat accounts appear.
     private synchronized String token(final boolean forceRefresh) {
-        if (!forceRefresh && token != null
-                && clock.instant().isBefore(token.expiry().minusSeconds(REFRESH_MARGIN_SECONDS))) {
-            return token.value();
+        if (!forceRefresh && cachedToken != null
+                && clock.instant().isBefore(cachedToken.expiry().minusSeconds(REFRESH_MARGIN_SECONDS))) {
+            return cachedToken.value();
         }
         final Map<?, ?> response;
         try {
@@ -120,8 +120,8 @@ public class EtisalatSmsClient {
             throw new SmsException("SMS009", "SMS provider rejected " + PROVIDER + " login");
         }
         final Object decoded = response.get("decodedValue");
-        token = new Token(value.toString(), parseExpiry(decoded instanceof Map<?, ?> map ? map.get("expiryDt") : null));
-        return token.value();
+        cachedToken = new Token(value.toString(), parseExpiry(decoded instanceof Map<?, ?> map ? map.get("expiryDt") : null));
+        return cachedToken.value();
     }
 
     /**

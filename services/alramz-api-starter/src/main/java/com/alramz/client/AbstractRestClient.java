@@ -13,7 +13,10 @@ import io.github.resilience4j.timelimiter.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.MultiValueMap;
@@ -116,7 +119,10 @@ public abstract class AbstractRestClient {
     }
 
     private String getToken() {
-        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication()).filter(auth -> auth.getPrincipal() instanceof Jwt).map(auth -> ((Jwt) auth.getPrincipal()).getTokenValue()).orElseGet(this::getContextToken);
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .filter(auth -> auth.getPrincipal() instanceof Jwt)
+                .map(auth -> ((Jwt) auth.getPrincipal()).getTokenValue())
+                .orElseGet(this::getContextToken);
     }
 
     private String getContextToken() {

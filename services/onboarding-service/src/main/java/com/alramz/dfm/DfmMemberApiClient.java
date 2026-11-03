@@ -14,6 +14,7 @@ import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.timelimiter.TimeLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeoutException;
 public class DfmMemberApiClient {
 
     private static final String SECURITY_KEY_HEADER = "securitykey";
+    private static final String SUCCESS_RESPONSE_CODE = "200";
 
     private final WebClient webClient;
     private final CircuitBreaker circuitBreaker;
@@ -93,7 +95,7 @@ public class DfmMemberApiClient {
 
     /** True when DFM was never reached (connection refused or connect timeout), so resending is safe. */
     public static boolean isConnectFailure(Throwable error) {
-        for (Throwable t = error; t != null; t = t.getCause() == t ? null : t.getCause()) {
+        for (Throwable t = error; t != null; t = t.getCause()) {
             if (t instanceof ConnectException || t instanceof HttpConnectTimeoutException) {
                 return true;
             }
@@ -136,7 +138,7 @@ public class DfmMemberApiClient {
         if (status.is2xxSuccessful()) {
             return classifySuccessStatus(parsed, responseCode, message);
         }
-        if (status.value() == 401 || status.value() == 403) {
+        if (status.value() == HttpStatus.UNAUTHORIZED.value() || status.value() == HttpStatus.FORBIDDEN.value()) {
             log.error("DFM rejected credentials: http_status={} request_id={}", status.value(), requestId);
             return badResponse();
         }
@@ -154,7 +156,7 @@ public class DfmMemberApiClient {
         if (isDuplicateInProgress(responseCode)) {
             return Mono.just(new DfmOnboardingOutcome.Rejected(responseCode, message, true));
         }
-        if ("200".equals(responseCode)) {
+        if (SUCCESS_RESPONSE_CODE.equals(responseCode)) {
             return Mono.just(new DfmOnboardingOutcome.Success(parsed));
         }
         return isClientErrorCode(responseCode)

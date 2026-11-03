@@ -12,13 +12,13 @@ import com.alramz.service.OnboardingService;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController 
+@RestController
 @RequestMapping ("/api/v1")
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class OnboardingController implements  DfmOnboardingApi {
 
     private final OnboardingService onboardingService;
-    
+
     @Override
     @JwtSecured(roles = "APP_DATA_VALIDATION")
     public ResponseEntity<OnboardingResponse> onboard(OnboardingRequest onboardingRequest) {

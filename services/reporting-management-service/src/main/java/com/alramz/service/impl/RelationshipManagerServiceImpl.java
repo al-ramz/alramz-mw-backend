@@ -80,7 +80,7 @@ public class RelationshipManagerServiceImpl implements RelationshipManagerServic
             return LocalDate.parse(value);
         } catch (DateTimeParseException e) {
             throw new InvalidDateRangeException(
-                    fieldName + ": must be blank or a valid ISO-8601 date (YYYY-MM-DD)");
+                    fieldName + ": must be blank or a valid ISO-8601 date (YYYY-MM-DD)", e);
         }
     }
 }

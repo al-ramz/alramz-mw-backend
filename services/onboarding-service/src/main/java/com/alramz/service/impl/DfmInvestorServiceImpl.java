@@ -94,8 +94,9 @@ public class DfmInvestorServiceImpl implements DfmInvestorService {
         rule(isAdult(r.getDateOfBirth()) || r.getGuardian() != null, "guardian",
                 "guardian is required when the investor is under 18");
 
-        if (r.getCrs() != null && r.getCrs().getCountries() != null) {
-            List<DfmCrsCountry> countries = r.getCrs().getCountries();
+        com.alramz.model.DfmCrs crs = r.getCrs();
+        List<DfmCrsCountry> countries = crs == null ? null : crs.getCountries();
+        if (countries != null) {
             for (int i = 0; i < countries.size(); i++) {
                 String field = "crs.countries[" + i + "].country";
                 rule(ISO_COUNTRIES.contains(countries.get(i).getCountry()), field, field + " must be an ISO 3166-1 alpha-2 code");
@@ -129,7 +130,9 @@ public class DfmInvestorServiceImpl implements DfmInvestorService {
         try {
             bytes = Base64.getDecoder().decode(base64);
         } catch (IllegalArgumentException e) {
-            throw invalid(field, field + " must be valid Base64");
+            ApplicationException ex = invalid(field, field + " must be valid Base64");
+            ex.initCause(e);
+            throw ex;
         }
         if (startsWith(bytes, 0xFF, 0xD8, 0xFF)) {
             return FileType.JPEG;

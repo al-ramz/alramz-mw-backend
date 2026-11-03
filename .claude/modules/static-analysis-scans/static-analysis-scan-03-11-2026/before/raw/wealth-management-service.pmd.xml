@@ -1,0 +1,1083 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-03T12:38:30.029">
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/WealthManagementServiceApplication.java">
+<violation beginline="12" endline="12" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="14" endline="14" begincolumn="30" endcolumn="33" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="16" endline="16" begincolumn="35" endcolumn="39" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" method="main" variable="args" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'args' is not assigned and could be declared final
+</violation>
+<violation beginline="21" endline="21" begincolumn="20" endcolumn="26" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" method="runner" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'runner(Environment)'
+</violation>
+<violation beginline="21" endline="21" begincolumn="39" endcolumn="42" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" method="runner" variable="env" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'env' is not assigned and could be declared final
+</violation>
+<violation beginline="23" endline="23" begincolumn="11" endcolumn="15" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" method="runner" variable="port" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'port' could be declared final
+</violation>
+<violation beginline="24" endline="24" begincolumn="11" endcolumn="15" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" method="runner" variable="host" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'host' could be declared final
+</violation>
+<violation beginline="25" endline="25" begincolumn="11" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" method="runner" variable="appName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'appName' could be declared final
+</violation>
+<violation beginline="26" endline="26" begincolumn="13" endcolumn="27" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" method="runner" variable="activeProfiles" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'activeProfiles' could be declared final
+</violation>
+<violation beginline="27" endline="27" begincolumn="11" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="WealthManagementServiceApplication" method="runner" variable="profile" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'profile' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/config/DatasourceConfiguration.java">
+<violation beginline="13" endline="13" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="17" endline="17" begincolumn="87" endcolumn="107" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="primaryDataSource" variable="middlewareDataSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareDataSource
+</violation>
+<violation beginline="17" endline="17" begincolumn="87" endcolumn="107" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="primaryDataSource" variable="middlewareDataSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareDataSource' is not assigned and could be declared final
+</violation>
+<violation beginline="24" endline="24" begincolumn="85" endcolumn="113" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="transactionManager" variable="middlewareTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareTransactionManager
+</violation>
+<violation beginline="24" endline="24" begincolumn="85" endcolumn="113" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="transactionManager" variable="middlewareTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareTransactionManager' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/config/JacksonConfig.java">
+<violation beginline="10" endline="10" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="JacksonConfig" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/config/MmfConfiguration.java">
+<violation beginline="9" endline="9" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="MmfConfiguration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/config/MmfProperties.java">
+<violation beginline="14" endline="14" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="MmfProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/controllers/ApplicationController.java">
+<violation beginline="14" endline="14" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.controllers" class="ApplicationController" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="27" endline="27" begincolumn="29" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="ApplicationController" method="info" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/controllers/MmfController.java">
+<violation beginline="39" endline="39" begincolumn="37" endcolumn="47" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="MmfController" variable="mmfService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mmfService' is not assigned and could be declared final
+</violation>
+<violation beginline="46" endline="46" begincolumn="65" endcolumn="78" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="getMmfAccount" variable="accountNumber" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'accountNumber' is not assigned and could be declared final
+</violation>
+<violation beginline="46" endline="46" begincolumn="88" endcolumn="92" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="getMmfAccount" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'book' is not assigned and could be declared final
+</violation>
+<violation beginline="53" endline="53" begincolumn="70" endcolumn="78" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="listMmfSweepIns" variable="fromDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'fromDate' is not assigned and could be declared final
+</violation>
+<violation beginline="53" endline="53" begincolumn="90" endcolumn="96" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="listMmfSweepIns" variable="toDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'toDate' is not assigned and could be declared final
+</violation>
+<violation beginline="60" endline="60" begincolumn="71" endcolumn="79" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="listMmfSweepOuts" variable="fromDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'fromDate' is not assigned and could be declared final
+</violation>
+<violation beginline="60" endline="60" begincolumn="91" endcolumn="97" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="listMmfSweepOuts" variable="toDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'toDate' is not assigned and could be declared final
+</violation>
+<violation beginline="67" endline="67" begincolumn="94" endcolumn="118" rule="LongVariable" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="confirmMmfSweepIns" variable="mmfSweepConfirmationItem" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like mmfSweepConfirmationItem
+</violation>
+<violation beginline="67" endline="67" begincolumn="94" endcolumn="118" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="confirmMmfSweepIns" variable="mmfSweepConfirmationItem" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mmfSweepConfirmationItem' is not assigned and could be declared final
+</violation>
+<violation beginline="74" endline="74" begincolumn="105" endcolumn="130" rule="LongVariable" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="createMmfProfitDistributions" variable="mmfProfitDistributionItem" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like mmfProfitDistributionItem
+</violation>
+<violation beginline="74" endline="74" begincolumn="105" endcolumn="130" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="createMmfProfitDistributions" variable="mmfProfitDistributionItem" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mmfProfitDistributionItem' is not assigned and could be declared final
+</violation>
+<violation beginline="75" endline="75" begincolumn="43" endcolumn="50" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="createMmfProfitDistributions" variable="results" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'results' could be declared final
+</violation>
+<violation beginline="76" endline="76" begincolumn="17" endcolumn="26" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="createMmfProfitDistributions" variable="anyFailed" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'anyFailed' could be declared final
+</violation>
+<violation beginline="77" endline="77" begincolumn="49" endcolumn="94" rule="LawOfDemeter" ruleset="Design" package="com.alramz.controllers" class="MmfController" method="createMmfProfitDistributions" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Access to field `FAILED` on foreign value `MmfProfitDistributionResult.StatusEnum` (degree 1)
+</violation>
+<violation beginline="85" endline="85" begincolumn="78" endcolumn="86" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="listMmfCustodianCash" variable="clientId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'clientId' is not assigned and could be declared final
+</violation>
+<violation beginline="92" endline="92" begincolumn="80" endcolumn="88" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="listMmfCustodianPositions" variable="asOfDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'asOfDate' is not assigned and could be declared final
+</violation>
+<violation beginline="96" endline="96" begincolumn="52" endcolumn="54" rule="ShortMethodName" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="ok" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortmethodname" priority="3">
+Avoid using short method names
+</violation>
+<violation beginline="96" endline="96" begincolumn="62" endcolumn="69" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="ok" variable="payload" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'payload' is not assigned and could be declared final
+</violation>
+<violation beginline="100" endline="100" begincolumn="71" endcolumn="77" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="respond" variable="status" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'status' is not assigned and could be declared final
+</violation>
+<violation beginline="100" endline="100" begincolumn="86" endcolumn="93" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="respond" variable="payload" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'payload' is not assigned and could be declared final
+</violation>
+<violation beginline="101" endline="101" begincolumn="25" endcolumn="29" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="MmfController" method="respond" variable="body" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'body' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/exception/ApplicationException.java">
+<violation beginline="10" endline="10" begincolumn="43" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ApplicationException" method="ApplicationException" variable="errorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'errorCode' is not assigned and could be declared final
+</violation>
+<violation beginline="10" endline="10" begincolumn="61" endcolumn="68" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ApplicationException" method="ApplicationException" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'message' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java">
+<violation beginline="13" endline="13" begincolumn="8" endcolumn="12" rule="ExcessivePublicCount" ruleset="Design" package="com.alramz.exception" class="ErrorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessivepubliccount" priority="3">
+This class has a bunch of public methods and attributes
+</violation>
+<violation beginline="15" endline="15" begincolumn="5" endcolumn="27" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="ACCOUNT_NUMBER_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like ACCOUNT_NUMBER_INVALID
+</violation>
+<violation beginline="19" endline="19" begincolumn="5" endcolumn="27" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="ACCOUNT_INTERNAL_ERROR" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like ACCOUNT_INTERNAL_ERROR
+</violation>
+<violation beginline="20" endline="20" begincolumn="5" endcolumn="24" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="ACCOUNT_UNAVAILABLE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like ACCOUNT_UNAVAILABLE
+</violation>
+<violation beginline="22" endline="22" begincolumn="5" endcolumn="30" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_IN_DATES_INCOMPLETE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_IN_DATES_INCOMPLETE
+</violation>
+<violation beginline="23" endline="23" begincolumn="5" endcolumn="26" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_IN_DATE_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_IN_DATE_INVALID
+</violation>
+<violation beginline="24" endline="24" begincolumn="5" endcolumn="27" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_IN_RANGE_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_IN_RANGE_INVALID
+</violation>
+<violation beginline="25" endline="25" begincolumn="5" endcolumn="28" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_IN_INTERNAL_ERROR" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_IN_INTERNAL_ERROR
+</violation>
+<violation beginline="26" endline="26" begincolumn="5" endcolumn="25" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_IN_UNAVAILABLE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_IN_UNAVAILABLE
+</violation>
+<violation beginline="28" endline="28" begincolumn="5" endcolumn="31" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_OUT_DATES_INCOMPLETE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_OUT_DATES_INCOMPLETE
+</violation>
+<violation beginline="29" endline="29" begincolumn="5" endcolumn="27" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_OUT_DATE_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_OUT_DATE_INVALID
+</violation>
+<violation beginline="30" endline="30" begincolumn="5" endcolumn="28" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_OUT_RANGE_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_OUT_RANGE_INVALID
+</violation>
+<violation beginline="31" endline="31" begincolumn="5" endcolumn="29" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_OUT_INTERNAL_ERROR" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_OUT_INTERNAL_ERROR
+</violation>
+<violation beginline="32" endline="32" begincolumn="5" endcolumn="26" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="SWEEP_OUT_UNAVAILABLE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SWEEP_OUT_UNAVAILABLE
+</violation>
+<violation beginline="34" endline="34" begincolumn="5" endcolumn="31" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CONFIRM_ITEM_COUNT_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CONFIRM_ITEM_COUNT_INVALID
+</violation>
+<violation beginline="35" endline="35" begincolumn="5" endcolumn="25" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CONFIRM_ITEM_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CONFIRM_ITEM_INVALID
+</violation>
+<violation beginline="36" endline="36" begincolumn="5" endcolumn="29" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CONFIRM_SWEEP_NO_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CONFIRM_SWEEP_NO_INVALID
+</violation>
+<violation beginline="38" endline="38" begincolumn="5" endcolumn="27" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CONFIRM_INTERNAL_ERROR" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CONFIRM_INTERNAL_ERROR
+</violation>
+<violation beginline="39" endline="39" begincolumn="5" endcolumn="24" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CONFIRM_UNAVAILABLE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CONFIRM_UNAVAILABLE
+</violation>
+<violation beginline="41" endline="41" begincolumn="5" endcolumn="30" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="PROFIT_ITEM_COUNT_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like PROFIT_ITEM_COUNT_INVALID
+</violation>
+<violation beginline="42" endline="42" begincolumn="5" endcolumn="24" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="PROFIT_ITEM_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like PROFIT_ITEM_INVALID
+</violation>
+<violation beginline="43" endline="43" begincolumn="5" endcolumn="34" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="PROFIT_ACCOUNT_NUMBER_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like PROFIT_ACCOUNT_NUMBER_INVALID
+</violation>
+<violation beginline="44" endline="44" begincolumn="5" endcolumn="26" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="PROFIT_SOURCE_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like PROFIT_SOURCE_INVALID
+</violation>
+<violation beginline="45" endline="45" begincolumn="5" endcolumn="31" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="PROFIT_DUPLICATE_REFERENCE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like PROFIT_DUPLICATE_REFERENCE
+</violation>
+<violation beginline="46" endline="46" begincolumn="5" endcolumn="26" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="PROFIT_INTERNAL_ERROR" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like PROFIT_INTERNAL_ERROR
+</violation>
+<violation beginline="47" endline="47" begincolumn="5" endcolumn="23" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="PROFIT_UNAVAILABLE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like PROFIT_UNAVAILABLE
+</violation>
+<violation beginline="48" endline="48" begincolumn="5" endcolumn="23" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="PROFIT_ITEM_FAILED" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like PROFIT_ITEM_FAILED
+</violation>
+<violation beginline="50" endline="50" begincolumn="5" endcolumn="27" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CASH_CLIENT_ID_MISSING" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CASH_CLIENT_ID_MISSING
+</violation>
+<violation beginline="51" endline="51" begincolumn="5" endcolumn="27" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CASH_CLIENT_ID_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CASH_CLIENT_ID_INVALID
+</violation>
+<violation beginline="52" endline="52" begincolumn="5" endcolumn="28" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CASH_CLIENT_ID_TOO_MANY" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CASH_CLIENT_ID_TOO_MANY
+</violation>
+<violation beginline="53" endline="53" begincolumn="5" endcolumn="24" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="CASH_INTERNAL_ERROR" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like CASH_INTERNAL_ERROR
+</violation>
+<violation beginline="56" endline="56" begincolumn="5" endcolumn="33" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="POSITIONS_AS_OF_DATE_INVALID" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like POSITIONS_AS_OF_DATE_INVALID
+</violation>
+<violation beginline="57" endline="57" begincolumn="5" endcolumn="37" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="POSITIONS_CLIENTS_NOT_CONFIGURED" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like POSITIONS_CLIENTS_NOT_CONFIGURED
+</violation>
+<violation beginline="58" endline="58" begincolumn="5" endcolumn="29" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="POSITIONS_INTERNAL_ERROR" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like POSITIONS_INTERNAL_ERROR
+</violation>
+<violation beginline="59" endline="59" begincolumn="5" endcolumn="26" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="POSITIONS_UNAVAILABLE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like POSITIONS_UNAVAILABLE
+</violation>
+<violation beginline="83" endline="83" begincolumn="33" endcolumn="53" rule="LongVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="DATES_INCOMPLETE_MSG" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like DATES_INCOMPLETE_MSG
+</violation>
+<violation beginline="90" endline="90" begincolumn="44" endcolumn="49" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="RULES" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="129" endline="129" begincolumn="26" endcolumn="30" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.exception" class="ErrorCode" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field code has the same name as a method
+</violation>
+<violation beginline="129" endline="129" begincolumn="26" endcolumn="30" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="130" endline="130" begincolumn="26" endcolumn="40" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.exception" class="ErrorCode" variable="defaultMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field defaultMessage has the same name as a method
+</violation>
+<violation beginline="130" endline="130" begincolumn="26" endcolumn="40" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" variable="defaultMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="132" endline="132" begincolumn="22" endcolumn="26" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="ErrorCode" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'code' is not assigned and could be declared final
+</violation>
+<violation beginline="132" endline="132" begincolumn="35" endcolumn="49" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="ErrorCode" variable="defaultMessage" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'defaultMessage' is not assigned and could be declared final
+</violation>
+<violation beginline="146" endline="146" begincolumn="45" endcolumn="56" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="forInput" variable="operationId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'operationId' is not assigned and could be declared final
+</violation>
+<violation beginline="146" endline="146" begincolumn="65" endcolumn="70" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="forInput" variable="input" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'input' is not assigned and could be declared final
+</violation>
+<violation beginline="146" endline="146" begincolumn="77" endcolumn="81" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="forInput" variable="kind" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'kind' is not assigned and could be declared final
+</violation>
+<violation beginline="151" endline="151" begincolumn="46" endcolumn="57" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="inputMessage" variable="operationId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'operationId' is not assigned and could be declared final
+</violation>
+<violation beginline="151" endline="151" begincolumn="66" endcolumn="71" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="inputMessage" variable="input" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'input' is not assigned and could be declared final
+</violation>
+<violation beginline="151" endline="151" begincolumn="78" endcolumn="82" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="inputMessage" variable="kind" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'kind' is not assigned and could be declared final
+</violation>
+<violation beginline="156" endline="156" begincolumn="48" endcolumn="59" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="internalFor" variable="operationId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'operationId' is not assigned and could be declared final
+</violation>
+<violation beginline="161" endline="161" begincolumn="51" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="unavailableFor" variable="operationId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'operationId' is not assigned and could be declared final
+</violation>
+<violation beginline="165" endline="165" begincolumn="39" endcolumn="50" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="lookup" variable="operationId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'operationId' is not assigned and could be declared final
+</violation>
+<violation beginline="165" endline="165" begincolumn="59" endcolumn="64" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="lookup" variable="input" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'input' is not assigned and could be declared final
+</violation>
+<violation beginline="165" endline="165" begincolumn="71" endcolumn="75" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="lookup" variable="kind" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'kind' is not assigned and could be declared final
+</violation>
+<violation beginline="173" endline="173" begincolumn="37" endcolumn="39" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="rule" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="173" endline="173" begincolumn="37" endcolumn="39" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="rule" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'op' is not assigned and could be declared final
+</violation>
+<violation beginline="173" endline="173" begincolumn="48" endcolumn="53" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="rule" variable="input" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'input' is not assigned and could be declared final
+</violation>
+<violation beginline="173" endline="173" begincolumn="60" endcolumn="64" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="rule" variable="kind" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'kind' is not assigned and could be declared final
+</violation>
+<violation beginline="173" endline="173" begincolumn="76" endcolumn="80" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="rule" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'code' is not assigned and could be declared final
+</violation>
+<violation beginline="173" endline="173" begincolumn="89" endcolumn="96" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="rule" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'message' is not assigned and could be declared final
+</violation>
+<violation beginline="177" endline="177" begincolumn="40" endcolumn="42" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="backend" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="177" endline="177" begincolumn="40" endcolumn="42" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="backend" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'op' is not assigned and could be declared final
+</violation>
+<violation beginline="177" endline="177" begincolumn="54" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="backend" variable="internal" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'internal' is not assigned and could be declared final
+</violation>
+<violation beginline="177" endline="177" begincolumn="74" endcolumn="85" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="backend" variable="unavailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'unavailable' is not assigned and could be declared final
+</violation>
+<violation beginline="182" endline="182" begincolumn="38" endcolumn="40" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="key" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="182" endline="182" begincolumn="38" endcolumn="40" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="key" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'op' is not assigned and could be declared final
+</violation>
+<violation beginline="182" endline="182" begincolumn="49" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="key" variable="input" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'input' is not assigned and could be declared final
+</violation>
+<violation beginline="182" endline="182" begincolumn="61" endcolumn="65" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="ErrorCode" method="key" variable="kind" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'kind' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+<violation beginline="1" endline="285" begincolumn="1" endcolumn="3" rule="ExcessiveImports" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessiveimports" priority="3">
+A high number of imports can indicate a high degree of coupling within an object.
+</violation>
+<violation beginline="1" endline="285" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 30 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="47" endline="47" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="47" endline="47" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=64, ATFD=77, TCC=1.087%)
+</violation>
+<violation beginline="47" endline="285" begincolumn="37" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="53" endline="53" begincolumn="83" endcolumn="85" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleApplication" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="53" endline="53" begincolumn="83" endcolumn="85" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleApplication" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="58" endline="58" begincolumn="80" endcolumn="82" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotFound" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="58" endline="58" begincolumn="80" endcolumn="82" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotFound" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="63" endline="63" begincolumn="80" endcolumn="82" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConflict" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="63" endline="63" begincolumn="80" endcolumn="82" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConflict" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="68" endline="68" begincolumn="78" endcolumn="80" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleBackend" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="68" endline="68" begincolumn="78" endcolumn="80" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleBackend" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="68" endline="68" begincolumn="96" endcolumn="109" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleBackend" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="71" endline="71" begincolumn="13" endcolumn="133" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleBackend" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="73" endline="73" begincolumn="9" endcolumn="107" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleBackend" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="78" endline="78" begincolumn="93" endcolumn="95" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleUnavailable" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="78" endline="78" begincolumn="93" endcolumn="95" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleUnavailable" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="79" endline="79" begincolumn="9" endcolumn="108" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleUnavailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="85" endline="85" begincolumn="71" endcolumn="73" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleDataAccess" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="85" endline="85" begincolumn="71" endcolumn="73" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleDataAccess" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="85" endline="85" begincolumn="89" endcolumn="102" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleDataAccess" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="86" endline="86" begincolumn="16" endcolumn="18" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleDataAccess" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="86" endline="86" begincolumn="16" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleDataAccess" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'op' could be declared final
+</violation>
+<violation beginline="89" endline="89" begincolumn="13" endcolumn="113" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleDataAccess" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="96" endline="96" begincolumn="107" endcolumn="109" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMissingParameter" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="96" endline="96" begincolumn="107" endcolumn="109" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMissingParameter" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="97" endline="97" begincolumn="81" endcolumn="94" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMissingParameter" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="102" endline="102" begincolumn="99" endcolumn="101" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleTypeMismatch" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="102" endline="102" begincolumn="99" endcolumn="101" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleTypeMismatch" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="103" endline="103" begincolumn="77" endcolumn="90" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleTypeMismatch" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="108" endline="108" begincolumn="91" endcolumn="93" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotValid" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="108" endline="108" begincolumn="91" endcolumn="93" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotValid" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="108" endline="108" begincolumn="109" endcolumn="122" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotValid" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="114" endline="114" begincolumn="100" endcolumn="102" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="114" endline="114" begincolumn="100" endcolumn="102" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="115" endline="115" begincolumn="16" endcolumn="18" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="115" endline="115" begincolumn="16" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'op' could be declared final
+</violation>
+<violation beginline="115" endline="115" begincolumn="21" endcolumn="35" rule="LawOfDemeter" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getMethod` on foreign value `ex` (degree 1)
+</violation>
+<violation beginline="116" endline="116" begincolumn="41" endcolumn="48" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="results" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'results' could be declared final
+</violation>
+<violation beginline="118" endline="118" begincolumn="13" endcolumn="57" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="120" endline="120" begincolumn="35" endcolumn="41" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'result' could be declared final
+</violation>
+<violation beginline="122" endline="122" begincolumn="13" endcolumn="88" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="124" endline="124" begincolumn="39" endcolumn="45" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="errors" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'errors' could be declared final
+</violation>
+<violation beginline="125" endline="125" begincolumn="16" endcolumn="26" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleMethodValidation" variable="constraint" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'constraint' could be declared final
+</violation>
+<violation beginline="136" endline="136" begincolumn="99" endcolumn="101" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="136" endline="136" begincolumn="99" endcolumn="101" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="136" endline="136" begincolumn="117" endcolumn="130" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="137" endline="137" begincolumn="16" endcolumn="18" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="137" endline="137" begincolumn="16" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'op' could be declared final
+</violation>
+<violation beginline="138" endline="138" begincolumn="32" endcolumn="41" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="violation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'violation' could be declared final
+</violation>
+<violation beginline="144" endline="144" begincolumn="13" endcolumn="57" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="147" endline="147" begincolumn="24" endcolumn="28" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="node" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'node' could be declared final
+</violation>
+<violation beginline="147" endline="147" begincolumn="31" endcolumn="58" rule="LawOfDemeter" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getPropertyPath` on foreign value `violation` (degree 1)
+</violation>
+<violation beginline="152" endline="152" begincolumn="14" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="kind" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'kind' could be declared final
+</violation>
+<violation beginline="152" endline="152" begincolumn="28" endcolumn="63" rule="LawOfDemeter" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getConstraintDescriptor` on foreign value `violation` (degree 1)
+</violation>
+<violation beginline="154" endline="154" begincolumn="17" endcolumn="21" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="item" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'item' could be declared final
+</violation>
+<violation beginline="155" endline="155" begincolumn="13" endcolumn="76" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="157" endline="157" begincolumn="13" endcolumn="23" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="paramIndex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'paramIndex' could be declared final
+</violation>
+<violation beginline="158" endline="158" begincolumn="16" endcolumn="21" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleConstraintViolation" variable="input" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'input' could be declared final
+</violation>
+<violation beginline="164" endline="164" begincolumn="44" endcolumn="61" rule="CognitiveComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cognitivecomplexity" priority="3">
+The method 'handleNotReadable(HttpMessageNotReadableException, HandlerMethod)' has a cognitive complexity of 15, current threshold is 15
+</violation>
+<violation beginline="164" endline="164" begincolumn="94" endcolumn="96" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="164" endline="164" begincolumn="94" endcolumn="96" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="164" endline="164" begincolumn="112" endcolumn="125" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="165" endline="165" begincolumn="16" endcolumn="18" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="165" endline="165" begincolumn="16" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'op' could be declared final
+</violation>
+<violation beginline="170" endline="170" begincolumn="49" endcolumn="52" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" variable="ref" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'ref' could be declared final
+</violation>
+<violation beginline="178" endline="178" begincolumn="21" endcolumn="67" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="187" endline="187" begincolumn="85" endcolumn="87" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleAccessDenied" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="192" endline="192" begincolumn="68" endcolumn="70" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleGeneric" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="192" endline="192" begincolumn="68" endcolumn="70" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleGeneric" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="192" endline="192" begincolumn="86" endcolumn="99" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleGeneric" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="193" endline="193" begincolumn="16" endcolumn="18" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleGeneric" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="193" endline="193" begincolumn="16" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleGeneric" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'op' could be declared final
+</violation>
+<violation beginline="200" endline="200" begincolumn="55" endcolumn="57" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="isResourceFailure" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="200" endline="200" begincolumn="55" endcolumn="57" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="isResourceFailure" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="203" endline="203" begincolumn="17" endcolumn="29" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="isResourceFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="209" endline="209" begincolumn="63" endcolumn="65" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="209" endline="209" begincolumn="63" endcolumn="65" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'op' is not assigned and could be declared final
+</violation>
+<violation beginline="209" endline="209" begincolumn="84" endcolumn="95" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" variable="fieldErrors" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'fieldErrors' is not assigned and could be declared final
+</violation>
+<violation beginline="209" endline="209" begincolumn="105" endcolumn="114" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" variable="itemIndex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'itemIndex' is not assigned and could be declared final
+</violation>
+<violation beginline="211" endline="211" begincolumn="13" endcolumn="67" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="213" endline="213" begincolumn="20" endcolumn="22" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" variable="fe" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like fe
+</violation>
+<violation beginline="213" endline="213" begincolumn="20" endcolumn="22" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" variable="fe" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'fe' could be declared final
+</violation>
+<violation beginline="214" endline="214" begincolumn="16" endcolumn="20" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" variable="path" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'path' could be declared final
+</violation>
+<violation beginline="215" endline="215" begincolumn="16" endcolumn="21" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="fieldError" variable="field" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'field' could be declared final
+</violation>
+<violation beginline="219" endline="219" begincolumn="63" endcolumn="65" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputError" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like op
+</violation>
+<violation beginline="219" endline="219" begincolumn="63" endcolumn="65" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputError" variable="op" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'op' is not assigned and could be declared final
+</violation>
+<violation beginline="219" endline="219" begincolumn="74" endcolumn="79" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputError" variable="input" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'input' is not assigned and could be declared final
+</violation>
+<violation beginline="219" endline="219" begincolumn="86" endcolumn="90" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputError" variable="kind" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'kind' is not assigned and could be declared final
+</violation>
+<violation beginline="219" endline="219" begincolumn="100" endcolumn="109" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputError" variable="itemIndex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'itemIndex' is not assigned and could be declared final
+</violation>
+<violation beginline="227" endline="227" begincolumn="44" endcolumn="48" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="parameterIndex" variable="path" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'path' is not assigned and could be declared final
+</violation>
+<violation beginline="228" endline="228" begincolumn="24" endcolumn="28" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="parameterIndex" variable="node" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'node' could be declared final
+</violation>
+<violation beginline="229" endline="229" begincolumn="17" endcolumn="31" rule="LawOfDemeter" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="parameterIndex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getKind` on foreign value `node` (degree 1)
+</violation>
+<violation beginline="230" endline="230" begincolumn="17" endcolumn="78" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="parameterIndex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="237" endline="237" begincolumn="39" endcolumn="43" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="itemIndex" variable="path" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'path' is not assigned and could be declared final
+</violation>
+<violation beginline="238" endline="238" begincolumn="24" endcolumn="28" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="itemIndex" variable="node" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'node' could be declared final
+</violation>
+<violation beginline="240" endline="240" begincolumn="17" endcolumn="40" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="itemIndex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="246" endline="246" begincolumn="39" endcolumn="49" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="kindOf" variable="constraint" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'constraint' is not assigned and could be declared final
+</violation>
+<violation beginline="247" endline="247" begincolumn="13" endcolumn="22" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.exception" class="GlobalExceptionHandler" method="kindOf" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="248" endline="248" begincolumn="13" endcolumn="33" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="kindOf" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="253" endline="253" begincolumn="36" endcolumn="50" rule="UseVarargs" ruleset="Best Practices" package="com.alramz.exception" class="GlobalExceptionHandler" method="lastCode" variable="codes" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#usevarargs" priority="4">
+Consider using varargs for methods or constructors which take an array the last parameter.
+</violation>
+<violation beginline="253" endline="253" begincolumn="45" endcolumn="50" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="lastCode" variable="codes" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'codes' is not assigned and could be declared final
+</violation>
+<violation beginline="257" endline="257" begincolumn="53" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputName" variable="parameter" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'parameter' is not assigned and could be declared final
+</violation>
+<violation beginline="259" endline="259" begincolumn="13" endcolumn="35" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="261" endline="261" begincolumn="22" endcolumn="34" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputName" variable="requestParam" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'requestParam' could be declared final
+</violation>
+<violation beginline="263" endline="263" begincolumn="13" endcolumn="41" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="265" endline="265" begincolumn="22" endcolumn="34" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputName" variable="pathVariable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'pathVariable' could be declared final
+</violation>
+<violation beginline="267" endline="267" begincolumn="13" endcolumn="41" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="inputName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="272" endline="272" begincolumn="53" endcolumn="66" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="operationOf" variable="handlerMethod" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'handlerMethod' is not assigned and could be declared final
+</violation>
+<violation beginline="273" endline="273" begincolumn="47" endcolumn="72" rule="LawOfDemeter" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="operationOf" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getMethod` on foreign value `handlerMethod` (degree 1)
+</violation>
+<violation beginline="276" endline="276" begincolumn="70" endcolumn="76" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="buildResponse" variable="status" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'status' is not assigned and could be declared final
+</violation>
+<violation beginline="276" endline="276" begincolumn="88" endcolumn="97" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="buildResponse" variable="errorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'errorCode' is not assigned and could be declared final
+</violation>
+<violation beginline="276" endline="276" begincolumn="106" endcolumn="114" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="buildResponse" variable="errorMsg" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'errorMsg' is not assigned and could be declared final
+</violation>
+<violation beginline="277" endline="277" begincolumn="25" endcolumn="29" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="buildResponse" variable="body" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'body' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendException.java">
+<violation beginline="13" endline="13" begincolumn="42" endcolumn="51" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfBackendException" method="MmfBackendException" variable="errorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'errorCode' is not assigned and could be declared final
+</violation>
+<violation beginline="13" endline="13" begincolumn="60" endcolumn="67" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfBackendException" method="MmfBackendException" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'message' is not assigned and could be declared final
+</violation>
+<violation beginline="13" endline="13" begincolumn="79" endcolumn="84" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfBackendException" method="MmfBackendException" variable="cause" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cause' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendUnavailableException.java">
+<violation beginline="10" endline="10" begincolumn="53" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfBackendUnavailableException" method="MmfBackendUnavailableException" variable="errorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'errorCode' is not assigned and could be declared final
+</violation>
+<violation beginline="10" endline="10" begincolumn="71" endcolumn="78" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfBackendUnavailableException" method="MmfBackendUnavailableException" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'message' is not assigned and could be declared final
+</violation>
+<violation beginline="10" endline="10" begincolumn="90" endcolumn="95" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfBackendUnavailableException" method="MmfBackendUnavailableException" variable="cause" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cause' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/exception/MmfConflictException.java">
+<violation beginline="10" endline="10" begincolumn="43" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfConflictException" method="MmfConflictException" variable="errorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'errorCode' is not assigned and could be declared final
+</violation>
+<violation beginline="10" endline="10" begincolumn="61" endcolumn="68" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfConflictException" method="MmfConflictException" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'message' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/exception/MmfNotFoundException.java">
+<violation beginline="10" endline="10" begincolumn="43" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfNotFoundException" method="MmfNotFoundException" variable="errorCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'errorCode' is not assigned and could be declared final
+</violation>
+<violation beginline="10" endline="10" begincolumn="61" endcolumn="68" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="MmfNotFoundException" method="MmfNotFoundException" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'message' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/repository/MmfRepositoryImpl.java">
+<violation beginline="45" endline="45" begincolumn="85" endcolumn="115" rule="LongVariable" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="MmfRepositoryImpl" variable="brokNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like brokNamedParameterJdbcTemplate
+</violation>
+<violation beginline="45" endline="45" begincolumn="85" endcolumn="115" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="MmfRepositoryImpl" variable="brokNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'brokNamedParameterJdbcTemplate' is not assigned and could be declared final
+</violation>
+<violation beginline="46" endline="46" begincolumn="31" endcolumn="48" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="MmfRepositoryImpl" variable="sqlQueriesManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'sqlQueriesManager' is not assigned and could be declared final
+</violation>
+<violation beginline="52" endline="52" begincolumn="53" endcolumn="57" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findAccount" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'book' is not assigned and could be declared final
+</violation>
+<violation beginline="52" endline="52" begincolumn="66" endcolumn="79" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findAccount" variable="accountNumber" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'accountNumber' is not assigned and could be declared final
+</violation>
+<violation beginline="54" endline="54" begincolumn="26" endcolumn="30" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findAccount" variable="rows" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'rows' could be declared final
+</violation>
+<violation beginline="63" endline="63" begincolumn="27" endcolumn="28" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.repository" class="MmfRepositoryImpl" method="findAccount" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="64" endline="64" begincolumn="13" endcolumn="114" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.repository" class="MmfRepositoryImpl" method="findAccount" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="70" endline="70" begincolumn="46" endcolumn="50" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findSweeps" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'book' is not assigned and could be declared final
+</violation>
+<violation beginline="70" endline="70" begincolumn="59" endcolumn="68" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findSweeps" variable="sweepType" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'sweepType' is not assigned and could be declared final
+</violation>
+<violation beginline="70" endline="70" begincolumn="80" endcolumn="88" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findSweeps" variable="fromDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'fromDate' is not assigned and could be declared final
+</violation>
+<violation beginline="70" endline="70" begincolumn="100" endcolumn="115" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findSweeps" variable="toDateExclusive" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'toDateExclusive' is not assigned and could be declared final
+</violation>
+<violation beginline="71" endline="71" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findSweeps" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="87" endline="87" begincolumn="76" endcolumn="84" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="lockSweepTypes" variable="sweepNos" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'sweepNos' is not assigned and could be declared final
+</violation>
+<violation beginline="88" endline="88" begincolumn="27" endcolumn="32" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="lockSweepTypes" variable="types" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'types' could be declared final
+</violation>
+<violation beginline="97" endline="97" begincolumn="63" endcolumn="71" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="confirmSweepIns" variable="sweepNos" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'sweepNos' is not assigned and could be declared final
+</violation>
+<violation beginline="104" endline="104" begincolumn="14" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="nextSweepNo" variable="next" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'next' could be declared final
+</violation>
+<violation beginline="112" endline="112" begincolumn="50" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="insertProfitDistribution" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'book' is not assigned and could be declared final
+</violation>
+<violation beginline="112" endline="112" begincolumn="61" endcolumn="68" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="insertProfitDistribution" variable="sweepNo" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'sweepNo' is not assigned and could be declared final
+</violation>
+<violation beginline="112" endline="112" begincolumn="96" endcolumn="100" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="insertProfitDistribution" variable="item" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'item' is not assigned and could be declared final
+</violation>
+<violation beginline="113" endline="113" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="insertProfitDistribution" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="124" endline="124" begincolumn="72" endcolumn="81" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findCustodianCash" variable="clientIds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'clientIds' is not assigned and could be declared final
+</violation>
+<violation beginline="135" endline="135" begincolumn="81" endcolumn="90" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findCustodianPositions" variable="clientIds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'clientIds' is not assigned and could be declared final
+</violation>
+<violation beginline="135" endline="135" begincolumn="102" endcolumn="110" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findCustodianPositions" variable="asOfDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'asOfDate' is not assigned and could be declared final
+</violation>
+<violation beginline="136" endline="136" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findCustodianPositions" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="140" endline="140" begincolumn="20" endcolumn="26" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findCustodianPositions" variable="market" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'market' could be declared final
+</violation>
+<violation beginline="141" endline="141" begincolumn="23" endcolumn="32" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="findCustodianPositions" variable="priceDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'priceDate' could be declared final
+</violation>
+<violation beginline="154" endline="154" begincolumn="31" endcolumn="34" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="sql" variable="key" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'key' is not assigned and could be declared final
+</violation>
+<violation beginline="156" endline="156" begincolumn="20" endcolumn="23" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.repository" class="MmfRepositoryImpl" method="sql" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="161" endline="163" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.repository" class="MmfRepositoryImpl" method="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 158 is caught in this block.
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java">
+<violation beginline="1" endline="315" begincolumn="1" endcolumn="3" rule="ExcessiveImports" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessiveimports" priority="3">
+A high number of imports can indicate a high degree of coupling within an object.
+</violation>
+<violation beginline="1" endline="315" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 28 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="58" endline="58" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=73, ATFD=27, TCC=18.333%)
+</violation>
+<violation beginline="58" endline="315" begincolumn="51" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="60" endline="60" begincolumn="25" endcolumn="30" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" variable="DUBAI" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on field 'DUBAI'
+</violation>
+<violation beginline="66" endline="66" begincolumn="30" endcolumn="55" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" variable="MAX_AMOUNT_INTEGER_DIGITS" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like MAX_AMOUNT_INTEGER_DIGITS
+</violation>
+<violation beginline="79" endline="79" begincolumn="41" endcolumn="51" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="repository" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'repository' is not assigned and could be declared final
+</violation>
+<violation beginline="79" endline="79" begincolumn="67" endcolumn="77" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="properties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'properties' is not assigned and could be declared final
+</violation>
+<violation beginline="80" endline="80" begincolumn="91" endcolumn="113" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="brokTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like brokTransactionManager
+</violation>
+<violation beginline="80" endline="80" begincolumn="91" endcolumn="113" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="brokTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'brokTransactionManager' is not assigned and could be declared final
+</violation>
+<violation beginline="84" endline="84" begincolumn="5" endcolumn="19" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on constructor 'MmfServiceImpl(MmfRepository, MmfProperties, PlatformTransactionManager, Clock)'
+</violation>
+<violation beginline="84" endline="84" begincolumn="34" endcolumn="44" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="repository" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'repository' is not assigned and could be declared final
+</violation>
+<violation beginline="84" endline="84" begincolumn="60" endcolumn="70" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="properties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'properties' is not assigned and could be declared final
+</violation>
+<violation beginline="85" endline="85" begincolumn="47" endcolumn="69" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="brokTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like brokTransactionManager
+</violation>
+<violation beginline="85" endline="85" begincolumn="47" endcolumn="69" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="brokTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'brokTransactionManager' is not assigned and could be declared final
+</violation>
+<violation beginline="85" endline="85" begincolumn="77" endcolumn="82" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="MmfServiceImpl" variable="clock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'clock' is not assigned and could be declared final
+</violation>
+<violation beginline="93" endline="93" begincolumn="41" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="getAccount" variable="accountNumber" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'accountNumber' is not assigned and could be declared final
+</violation>
+<violation beginline="93" endline="93" begincolumn="64" endcolumn="68" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="getAccount" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'book' is not assigned and could be declared final
+</violation>
+<violation beginline="99" endline="99" begincolumn="27" endcolumn="37" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'listSweeps(String, LocalDate, LocalDate)' has a cyclomatic complexity of 10.
+</violation>
+<violation beginline="99" endline="99" begincolumn="45" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" variable="sweepType" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'sweepType' is not assigned and could be declared final
+</violation>
+<violation beginline="99" endline="99" begincolumn="66" endcolumn="74" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" variable="fromDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'fromDate' is not assigned and could be declared final
+</violation>
+<violation beginline="99" endline="99" begincolumn="86" endcolumn="92" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" variable="toDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'toDate' is not assigned and could be declared final
+</violation>
+<violation beginline="100" endline="100" begincolumn="17" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" variable="sweepIn" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sweepIn' could be declared final
+</violation>
+<violation beginline="102" endline="102" begincolumn="23" endcolumn="27" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'code' could be declared final
+</violation>
+<violation beginline="108" endline="108" begincolumn="27" endcolumn="31" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'code' could be declared final
+</violation>
+<violation beginline="113" endline="113" begincolumn="24" endcolumn="30" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" variable="sweeps" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sweeps' could be declared final
+</violation>
+<violation beginline="114" endline="114" begincolumn="22" endcolumn="26" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listSweeps" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'book' could be declared final
+</violation>
+<violation beginline="126" endline="126" begincolumn="86" endcolumn="91" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmSweepIns" variable="items" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'items' is not assigned and could be declared final
+</violation>
+<violation beginline="130" endline="130" begincolumn="34" endcolumn="40" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmSweepIns" variable="byBook" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'byBook' could be declared final
+</violation>
+<violation beginline="131" endline="131" begincolumn="39" endcolumn="43" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmSweepIns" variable="item" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'item' could be declared final
+</violation>
+<violation beginline="132" endline="132" begincolumn="24" endcolumn="31" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmSweepIns" variable="numbers" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'numbers' could be declared final
+</violation>
+<violation beginline="137" endline="137" begincolumn="41" endcolumn="47" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmSweepIns" variable="locked" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'locked' could be declared final
+</violation>
+<violation beginline="138" endline="138" begincolumn="36" endcolumn="42" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmSweepIns" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'result' could be declared final
+</violation>
+<violation beginline="147" endline="147" begincolumn="62" endcolumn="68" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="validateAndConfirm" variable="byBook" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'byBook' is not assigned and could be declared final
+</violation>
+<violation beginline="147" endline="147" begincolumn="102" endcolumn="108" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="validateAndConfirm" variable="locked" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'locked' is not assigned and could be declared final
+</violation>
+<violation beginline="148" endline="148" begincolumn="64" endcolumn="70" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="validateAndConfirm" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'result' is not assigned and could be declared final
+</violation>
+<violation beginline="154" endline="154" begincolumn="66" endcolumn="72" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="rejectConflicts" variable="byBook" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'byBook' is not assigned and could be declared final
+</violation>
+<violation beginline="154" endline="154" begincolumn="106" endcolumn="112" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="rejectConflicts" variable="locked" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'locked' is not assigned and could be declared final
+</violation>
+<violation beginline="155" endline="155" begincolumn="22" endcolumn="31" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="rejectConflicts" variable="conflicts" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'conflicts' could be declared final
+</violation>
+<violation beginline="157" endline="157" begincolumn="20" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="rejectConflicts" variable="type" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'type' could be declared final
+</violation>
+<violation beginline="168" endline="168" begincolumn="38" endcolumn="42" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmBook" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'book' is not assigned and could be declared final
+</violation>
+<violation beginline="168" endline="168" begincolumn="55" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmBook" variable="numbers" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'numbers' is not assigned and could be declared final
+</violation>
+<violation beginline="168" endline="168" begincolumn="82" endcolumn="91" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmBook" variable="bookTypes" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'bookTypes' is not assigned and could be declared final
+</violation>
+<violation beginline="169" endline="169" begincolumn="57" endcolumn="63" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmBook" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'result' is not assigned and could be declared final
+</violation>
+<violation beginline="170" endline="170" begincolumn="20" endcolumn="27" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmBook" variable="pending" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'pending' could be declared final
+</violation>
+<violation beginline="171" endline="171" begincolumn="19" endcolumn="21" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmBook" variable="no" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'no' could be declared final
+</violation>
+<violation beginline="178" endline="178" begincolumn="13" endcolumn="22" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="confirmBook" variable="confirmed" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'confirmed' could be declared final
+</violation>
+<violation beginline="191" endline="191" begincolumn="104" endcolumn="109" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="createProfitDistributions" variable="items" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'items' is not assigned and could be declared final
+</violation>
+<violation beginline="193" endline="193" begincolumn="22" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="createProfitDistributions" variable="unreachable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'unreachable' could be declared final
+</violation>
+<violation beginline="194" endline="194" begincolumn="43" endcolumn="50" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="createProfitDistributions" variable="results" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'results' could be declared final
+</violation>
+<violation beginline="195" endline="195" begincolumn="17" endcolumn="40" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="createProfitDistributions" variable="firstFailureUnavailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like firstFailureUnavailable
+</violation>
+<violation beginline="196" endline="196" begincolumn="40" endcolumn="44" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="createProfitDistributions" variable="item" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'item' could be declared final
+</violation>
+<violation beginline="197" endline="197" begincolumn="21" endcolumn="25" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="createProfitDistributions" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'book' could be declared final
+</violation>
+<violation beginline="198" endline="198" begincolumn="41" endcolumn="47" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="createProfitDistributions" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'result' could be declared final
+</violation>
+<violation beginline="213" endline="213" begincolumn="77" endcolumn="82" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="validateProfitItems" variable="items" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'items' is not assigned and could be declared final
+</violation>
+<violation beginline="226" endline="226" begincolumn="37" endcolumn="41" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'book' is not assigned and could be declared final
+</violation>
+<violation beginline="226" endline="226" begincolumn="69" endcolumn="73" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" variable="item" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'item' is not assigned and could be declared final
+</violation>
+<violation beginline="226" endline="226" begincolumn="103" endcolumn="109" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'result' is not assigned and could be declared final
+</violation>
+<violation beginline="227" endline="227" begincolumn="42" endcolumn="53" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" variable="unreachable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'unreachable' is not assigned and could be declared final
+</violation>
+<violation beginline="229" endline="229" begincolumn="18" endcolumn="25" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" variable="sweepNo" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sweepNo' could be declared final
+</violation>
+<violation beginline="232" endline="232" begincolumn="21" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" variable="refDuplicate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'refDuplicate' could be declared final
+</violation>
+<violation beginline="233" endline="234" begincolumn="13" endcolumn="116" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="237" endline="237" begincolumn="21" endcolumn="29" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" variable="bookDown" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'bookDown' could be declared final
+</violation>
+<violation beginline="241" endline="242" begincolumn="13" endcolumn="92" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="MmfServiceImpl" method="distribute" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="247" endline="247" begincolumn="98" endcolumn="105" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="aggregate" variable="results" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'results' is not assigned and could be declared final
+</violation>
+<violation beginline="248" endline="248" begincolumn="72" endcolumn="95" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="aggregate" variable="firstFailureUnavailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like firstFailureUnavailable
+</violation>
+<violation beginline="248" endline="248" begincolumn="72" endcolumn="95" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="aggregate" variable="firstFailureUnavailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'firstFailureUnavailable' is not assigned and could be declared final
+</violation>
+<violation beginline="252" endline="252" begincolumn="16" endcolumn="25" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="aggregate" variable="duplicate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'duplicate' could be declared final
+</violation>
+<violation beginline="264" endline="264" begincolumn="39" endcolumn="43" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="insertProfit" variable="book" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'book' is not assigned and could be declared final
+</violation>
+<violation beginline="264" endline="264" begincolumn="71" endcolumn="75" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="insertProfit" variable="item" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'item' is not assigned and could be declared final
+</violation>
+<violation beginline="268" endline="268" begincolumn="13" endcolumn="28" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="insertProfit" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="273" endline="273" begincolumn="13" endcolumn="128" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="MmfServiceImpl" method="insertProfit" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="280" endline="280" begincolumn="58" endcolumn="64" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="fail" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'result' is not assigned and could be declared final
+</violation>
+<violation beginline="280" endline="280" begincolumn="76" endcolumn="80" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="fail" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'code' is not assigned and could be declared final
+</violation>
+<violation beginline="284" endline="284" begincolumn="71" endcolumn="72" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="isReferenceDuplicate" variable="e" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like e
+</violation>
+<violation beginline="284" endline="284" begincolumn="71" endcolumn="72" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="isReferenceDuplicate" variable="e" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'e' is not assigned and could be declared final
+</violation>
+<violation beginline="285" endline="285" begincolumn="16" endcolumn="23" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="isReferenceDuplicate" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'message' could be declared final
+</violation>
+<violation beginline="290" endline="290" begincolumn="53" endcolumn="59" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="isValidAmount" variable="amount" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'amount' is not assigned and could be declared final
+</violation>
+<violation beginline="292" endline="292" begincolumn="13" endcolumn="26" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="isValidAmount" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="294" endline="294" begincolumn="20" endcolumn="28" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="isValidAmount" variable="stripped" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'stripped' could be declared final
+</violation>
+<violation beginline="299" endline="299" begincolumn="66" endcolumn="75" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listCustodianCash" variable="clientIds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'clientIds' is not assigned and could be declared final
+</violation>
+<violation beginline="304" endline="304" begincolumn="72" endcolumn="80" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listCustodianPositions" variable="asOfDate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'asOfDate' is not assigned and could be declared final
+</violation>
+<violation beginline="308" endline="308" begincolumn="22" endcolumn="31" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="MmfServiceImpl" method="listCustodianPositions" variable="clientIds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'clientIds' could be declared final
+</violation>
+</file>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

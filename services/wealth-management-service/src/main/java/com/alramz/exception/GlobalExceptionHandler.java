@@ -48,6 +48,8 @@ public class GlobalExceptionHandler {
 
     private static final String INTERNAL_MSG = "Internal Server Error";
     private static final String UNAVAILABLE_MSG = "MMF data source unavailable";
+    private static final String NOT_NULL_CONSTRAINT = "NotNull";
+    private static final String SIZE_CONSTRAINT = "Size";
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<GenericResponse> handleApplication(ApplicationException ex) {
@@ -244,13 +246,13 @@ public class GlobalExceptionHandler {
     }
 
     private static Kind kindOf(String constraint) {
-        if ("NotNull".equals(constraint)) {
+        if (NOT_NULL_CONSTRAINT.equals(constraint)) {
             return Kind.MISSING;
         }
-        return "Size".equals(constraint) ? Kind.SIZE : Kind.ANY;
+        return SIZE_CONSTRAINT.equals(constraint) ? Kind.SIZE : Kind.ANY;
     }
 
-    private static String lastCode(String[] codes) {
+    private static String lastCode(String... codes) {
         return codes == null || codes.length == 0 ? null : codes[codes.length - 1];
     }
 

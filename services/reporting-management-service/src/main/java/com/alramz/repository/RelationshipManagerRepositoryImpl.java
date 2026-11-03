@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -58,10 +59,10 @@ public class RelationshipManagerRepositoryImpl implements RelationshipManagerRep
             });
         } catch (IOException e) {
             log.error("Failed to load relationship.manager.find.active query", e);
-            throw new RelationshipManagerLookupException("Unable to retrieve relationship managers");
+            throw new RelationshipManagerLookupException("Unable to retrieve relationship managers", e);
         } catch (DataAccessException e) {
             log.error("Failed to query active relationship managers", e);
-            throw new RelationshipManagerLookupException("Unable to retrieve relationship managers");
+            throw new RelationshipManagerLookupException("Unable to retrieve relationship managers", e);
         }
     }
 
@@ -89,10 +90,10 @@ public class RelationshipManagerRepositoryImpl implements RelationshipManagerRep
             });
         } catch (IOException e) {
             log.error("Failed to load relationship.manager.commissions.find query", e);
-            throw new RelationshipManagerLookupException("Unable to retrieve commission report");
+            throw new RelationshipManagerLookupException("Unable to retrieve commission report", e);
         } catch (DataAccessException e) {
             log.error("Failed to query relationship manager commissions", e);
-            throw new RelationshipManagerLookupException("Unable to retrieve commission report");
+            throw new RelationshipManagerLookupException("Unable to retrieve commission report", e);
         }
     }
 
@@ -102,9 +103,9 @@ public class RelationshipManagerRepositoryImpl implements RelationshipManagerRep
      */
     private static String inlineParams(String sql, MapSqlParameterSource params) {
         String rendered = sql;
-        for (String name : params.getParameterNames()) {
-            rendered = rendered.replaceAll(":" + name + "\\b",
-                    Matcher.quoteReplacement(toSqlLiteral(params.getValue(name))));
+        for (Map.Entry<String, Object> param : params.getValues().entrySet()) {
+            rendered = rendered.replaceAll(":" + param.getKey() + "\\b",
+                    Matcher.quoteReplacement(toSqlLiteral(param.getValue())));
         }
         return rendered;
     }

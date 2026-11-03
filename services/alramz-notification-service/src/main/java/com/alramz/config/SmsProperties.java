@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * app.sms.* (SMS gateway and SMS_TABLE dispatch job). Fail-fast checks run only when live sending or dispatch is
@@ -35,14 +36,16 @@ public record SmsProperties(
     public static final int STATUS_FAILED = 1;
     private static final String REDACTED = "***";
 
+    // Compact-constructor parameters are written to the record fields implicitly; PMD misses that.
+    @SuppressWarnings("PMD.UnusedAssignment")
     public SmsProperties {
-        connectTimeout = connectTimeout == null ? Duration.ofSeconds(5) : connectTimeout;
-        readTimeout = readTimeout == null ? Duration.ofSeconds(10) : readTimeout;
-        defaults = defaults == null ? new Defaults(null, null) : defaults;
-        etisalat = etisalat == null ? new Etisalat(null, null, null, null, null) : etisalat;
-        waselney = waselney == null ? new Waselney(null, null, null, null) : waselney;
-        veriphone = veriphone == null ? new Veriphone(null, null) : veriphone;
-        dispatch = dispatch == null ? new Dispatch(false, 50, null) : dispatch;
+        connectTimeout = Objects.requireNonNullElse(connectTimeout, Duration.ofSeconds(5));
+        readTimeout = Objects.requireNonNullElse(readTimeout, Duration.ofSeconds(10));
+        defaults = Objects.requireNonNullElseGet(defaults, () -> new Defaults(null, null));
+        etisalat = Objects.requireNonNullElseGet(etisalat, () -> new Etisalat(null, null, null, null, null));
+        waselney = Objects.requireNonNullElseGet(waselney, () -> new Waselney(null, null, null, null));
+        veriphone = Objects.requireNonNullElseGet(veriphone, () -> new Veriphone(null, null));
+        dispatch = Objects.requireNonNullElseGet(dispatch, () -> new Dispatch(false, 50, null));
 
         final List<String> problems = new ArrayList<>();
         if (liveSendEnabled) {
@@ -81,7 +84,7 @@ public record SmsProperties(
 
     private static void validateDispatch(final List<String> problems, final Dispatch dispatch) {
         final Status status = dispatch.status();
-        if (dispatch.batchSize() < 1) {
+        if (dispatch.batchSize() <= 0) {
             problems.add("app.sms.dispatch.batch-size must be positive");
         }
         requireStatus(problems, status.pending(), "app.sms.dispatch.status.pending");
@@ -113,9 +116,11 @@ public record SmsProperties(
 
     /** Request defaults; the dispatch job and the OTP feature may pass different values. */
     public record Defaults(String msgCategory, Integer expiryInSecs) {
+        // Compact-constructor parameters are written to the record fields implicitly; PMD misses that.
+        @SuppressWarnings("PMD.UnusedAssignment")
         public Defaults {
-            msgCategory = msgCategory == null ? "4.2" : msgCategory;
-            expiryInSecs = expiryInSecs == null ? 300 : expiryInSecs;
+            msgCategory = Objects.requireNonNullElse(msgCategory, "4.2");
+            expiryInSecs = Objects.requireNonNullElse(expiryInSecs, 300);
         }
     }
 
@@ -153,8 +158,10 @@ public record SmsProperties(
     }
 
     public record Dispatch(boolean enabled, int batchSize, Status status) {
+        // Compact-constructor parameters are written to the record fields implicitly; PMD misses that.
+        @SuppressWarnings("PMD.UnusedAssignment")
         public Dispatch {
-            status = status == null ? new Status(null, null, null) : status;
+            status = Objects.requireNonNullElseGet(status, () -> new Status(null, null, null));
         }
     }
 

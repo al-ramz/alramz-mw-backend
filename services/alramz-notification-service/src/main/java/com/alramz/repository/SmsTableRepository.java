@@ -24,12 +24,12 @@ import java.util.List;
 @ConditionalOnProperty(prefix = "company.datasource", name = "brok.enabled", havingValue = "true")
 public class SmsTableRepository {
 
-    public record SmsTableRow(long serialNo, String messageBody, String mobileNo, Integer sendAttempts) {
-    }
-
     private final NamedParameterJdbcTemplate jdbc;
     private final TransactionTemplate transaction;
     private final SqlQueriesManager sqlQueriesManager;
+
+    public record SmsTableRow(long serialNo, String messageBody, String mobileNo, Integer sendAttempts) {
+    }
 
     public SmsTableRepository(
             @Qualifier("brokNamedParameterJdbcTemplate") final NamedParameterJdbcTemplate jdbc,

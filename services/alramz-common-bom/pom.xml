@@ -350,6 +350,7 @@
             <skip>${spotbugs.skip}</skip>
             <effort>${spotbugs.effort}</effort>
             <threshold>${spotbugs.threshold}</threshold>
+            <excludeFilterFile>${project.basedir}/../../config/spotbugs-exclude.xml</excludeFilterFile>
             <failOnError>${spotbugs.failOnError}</failOnError>
             <xmlOutput>false</xmlOutput>
             <includeTests>false</includeTests>

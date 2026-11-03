@@ -111,8 +111,8 @@ public class SmsServiceImpl implements SmsService {
     }
 
     private int expiry(final SmsSendRequest request) {
-        final int expiry = request.getExpiryInSecs() == null
-                ? properties.defaults().expiryInSecs() : request.getExpiryInSecs();
+        final Integer requested = request.getExpiryInSecs();
+        final int expiry = requested == null ? properties.defaults().expiryInSecs() : requested;
         if (expiry < 1 || expiry > MAX_EXPIRY_SECS) {
             throw new SmsException("SMS005", "Invalid field: expiryInSecs");
         }

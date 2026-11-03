@@ -44,28 +44,28 @@ public class MmfController implements MmfApi {
     @JwtSecured(roles = ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> getMmfAccount(String accountNumber, MmfBook book) {
-        return ok(new MmfAccountResponse().account(mmfService.getAccount(accountNumber, book)));
+        return okResponse(new MmfAccountResponse().account(mmfService.getAccount(accountNumber, book)));
     }
 
     @Override
     @JwtSecured(roles = ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> listMmfSweepIns(LocalDate fromDate, LocalDate toDate) {
-        return ok(new MmfSweepInListResponse().sweepIns(mmfService.listSweeps(MmfService.SWEEP_IN, fromDate, toDate)));
+        return okResponse(new MmfSweepInListResponse().sweepIns(mmfService.listSweeps(MmfService.SWEEP_IN, fromDate, toDate)));
     }
 
     @Override
     @JwtSecured(roles = ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> listMmfSweepOuts(LocalDate fromDate, LocalDate toDate) {
-        return ok(new MmfSweepOutListResponse().sweepOuts(mmfService.listSweeps(MmfService.SWEEP_OUT, fromDate, toDate)));
+        return okResponse(new MmfSweepOutListResponse().sweepOuts(mmfService.listSweeps(MmfService.SWEEP_OUT, fromDate, toDate)));
     }
 
     @Override
     @JwtSecured(roles = ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> confirmMmfSweepIns(List<MmfSweepConfirmationItem> mmfSweepConfirmationItem) {
-        return ok(mmfService.confirmSweepIns(mmfSweepConfirmationItem));
+        return okResponse(mmfService.confirmSweepIns(mmfSweepConfirmationItem));
     }
 
     @Override
@@ -83,17 +83,17 @@ public class MmfController implements MmfApi {
     @JwtSecured(roles = ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> listMmfCustodianCash(List<String> clientId) {
-        return ok(new MmfCustodianCashListResponse().custodianCash(mmfService.listCustodianCash(clientId)));
+        return okResponse(new MmfCustodianCashListResponse().custodianCash(mmfService.listCustodianCash(clientId)));
     }
 
     @Override
     @JwtSecured(roles = ROLE)
     @Loggable
     public ResponseEntity<GenericResponse> listMmfCustodianPositions(LocalDate asOfDate) {
-        return ok(new MmfCustodianPositionListResponse().custodianPositions(mmfService.listCustodianPositions(asOfDate)));
+        return okResponse(new MmfCustodianPositionListResponse().custodianPositions(mmfService.listCustodianPositions(asOfDate)));
     }
 
-    private static ResponseEntity<GenericResponse> ok(Object payload) {
+    private static ResponseEntity<GenericResponse> okResponse(Object payload) {
         return respond(HttpStatus.OK, payload);
     }
 

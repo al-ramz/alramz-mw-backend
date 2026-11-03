@@ -78,6 +78,12 @@ public record DfmOnboardingPayload(
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record Csr(@JsonProperty("csr_countries") List<CsrCountry> countries) {
+
+        // Compact-ctor reassignment is how a record stores the defensive copy (PMD false positive); null is kept as-is.
+        @SuppressWarnings({"PMD.UnusedAssignment", "PMD.NullAssignment"})
+        public Csr {
+            countries = countries == null ? null : List.copyOf(countries);
+        }
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

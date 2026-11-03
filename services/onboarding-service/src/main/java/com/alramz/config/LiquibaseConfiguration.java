@@ -1,5 +1,8 @@
 package com.alramz.config;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.sql.DataSource;
 
 import org.springframework.boot.liquibase.autoconfigure.LiquibaseProperties;
@@ -20,8 +23,9 @@ public class LiquibaseConfiguration {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(middlewareDataSource);
         liquibase.setChangeLog(liquibaseProperties.getChangeLog());
-        if (liquibaseProperties.getContexts() != null && !liquibaseProperties.getContexts().isEmpty()) {
-            liquibase.setContexts(String.join(",", liquibaseProperties.getContexts()));
+        List<String> contexts = liquibaseProperties.getContexts();
+        if (contexts != null && !contexts.isEmpty()) {
+            liquibase.setContexts(String.join(",", contexts));
         }
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
         liquibase.setLiquibaseSchema(liquibaseProperties.getLiquibaseSchema());
@@ -31,11 +35,13 @@ public class LiquibaseConfiguration {
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
         liquibase.setClearCheckSums(liquibaseProperties.isClearChecksums());
         liquibase.setShouldRun(liquibaseProperties.isEnabled());
-        if (liquibaseProperties.getLabelFilter() != null && !liquibaseProperties.getLabelFilter().isEmpty()) {
-            liquibase.setLabelFilter(String.join(",", liquibaseProperties.getLabelFilter()));
+        List<String> labelFilter = liquibaseProperties.getLabelFilter();
+        if (labelFilter != null && !labelFilter.isEmpty()) {
+            liquibase.setLabelFilter(String.join(",", labelFilter));
         }
-        if (liquibaseProperties.getParameters() != null && !liquibaseProperties.getParameters().isEmpty()) {
-            liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
+        Map<String, String> parameters = liquibaseProperties.getParameters();
+        if (parameters != null && !parameters.isEmpty()) {
+            liquibase.setChangeLogParameters(parameters);
         }
         liquibase.setRollbackFile(liquibaseProperties.getRollbackFile());
         liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());

@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-03T12:38:02.563">
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/AlramzNotificationServiceApplication.java">
+<violation beginline="20" endline="20" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz" class="AlramzNotificationServiceApplication" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="22" endline="22" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz" class="AlramzNotificationServiceApplication" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="29" endline="29" begincolumn="23" endcolumn="29" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz" class="AlramzNotificationServiceApplication" method="runner" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'runner(Environment)'
+</violation>
+<violation beginline="31" endline="31" begincolumn="20" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="AlramzNotificationServiceApplication" method="runner" variable="port" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'port' could be declared final
+</violation>
+<violation beginline="32" endline="32" begincolumn="20" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="AlramzNotificationServiceApplication" method="runner" variable="host" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'host' could be declared final
+</violation>
+<violation beginline="33" endline="33" begincolumn="20" endcolumn="27" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="AlramzNotificationServiceApplication" method="runner" variable="appName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'appName' could be declared final
+</violation>
+<violation beginline="34" endline="34" begincolumn="22" endcolumn="36" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="AlramzNotificationServiceApplication" method="runner" variable="activeProfiles" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'activeProfiles' could be declared final
+</violation>
+<violation beginline="35" endline="35" begincolumn="20" endcolumn="27" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="AlramzNotificationServiceApplication" method="runner" variable="profile" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'profile' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/config/DatasourceConfiguration.java">
+<violation beginline="13" endline="13" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="17" endline="17" begincolumn="87" endcolumn="107" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="primaryDataSource" variable="middlewareDataSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareDataSource
+</violation>
+<violation beginline="17" endline="17" begincolumn="87" endcolumn="107" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="primaryDataSource" variable="middlewareDataSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareDataSource' is not assigned and could be declared final
+</violation>
+<violation beginline="24" endline="24" begincolumn="85" endcolumn="113" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="transactionManager" variable="middlewareTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareTransactionManager
+</violation>
+<violation beginline="24" endline="24" begincolumn="85" endcolumn="113" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="transactionManager" variable="middlewareTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareTransactionManager' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/config/EmailProperties.java">
+<violation beginline="12" endline="12" begincolumn="10" endcolumn="37" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="EmailProperties" variable="maxTotalAttachmentSizeBytes" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like maxTotalAttachmentSizeBytes
+</violation>
+<violation beginline="16" endline="16" begincolumn="26" endcolumn="90" rule="UnusedAssignment" ruleset="Best Practices" package="com.alramz.config" class="EmailProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#unusedassignment" priority="3">
+The value assigned to variable 'allowedSenders' is never used
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/config/GraphConfig.java">
+<violation beginline="32" endline="32" begincolumn="23" endcolumn="46" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="GraphConfig" variable="MAX_RETRY_AFTER_SECONDS" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like MAX_RETRY_AFTER_SECONDS
+</violation>
+<violation beginline="32" endline="32" begincolumn="23" endcolumn="46" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.config" class="GraphConfig" variable="MAX_RETRY_AFTER_SECONDS" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on field 'MAX_RETRY_AFTER_SECONDS'
+</violation>
+<violation beginline="40" endline="40" begincolumn="31" endcolumn="45" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.config" class="GraphConfig" variable="RETRY_ONLY_429" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on field 'RETRY_ONLY_429'
+</violation>
+<violation beginline="43" endline="43" begincolumn="31" endcolumn="44" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.config" class="GraphConfig" variable="RETRY_OPTIONS" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on field 'RETRY_OPTIONS'
+</violation>
+<violation beginline="89" endline="89" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.config" class="GraphConfig" method="isRetryAfterWithinCap" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="101" endline="101" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.config" class="GraphConfig" method="parseRetryAfterSeconds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="108" endline="108" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.config" class="GraphConfig" method="parseRetryAfterSeconds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/config/OtpProperties.java">
+<violation beginline="10" endline="10" begincolumn="37" endcolumn="56" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="OtpProperties" variable="fixedTestOtpEnabled" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like fixedTestOtpEnabled
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/config/RequestSizeLimitConfig.java">
+<violation beginline="24" endline="24" begincolumn="31" endcolumn="55" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="RequestSizeLimitConfig" variable="ENVELOPE_ALLOWANCE_BYTES" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like ENVELOPE_ALLOWANCE_BYTES
+</violation>
+<violation beginline="36" endline="36" begincolumn="24" endcolumn="44" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.config" class="RequestSizeLimitConfig" method="sizeLimitInterceptor" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'sizeLimitInterceptor()'
+</violation>
+<violation beginline="40" endline="40" begincolumn="24" endcolumn="52" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.config" class="RequestSizeLimitConfig" method="templateSizeLimitInterceptor" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'templateSizeLimitInterceptor()'
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/config/SmsProperties.java">
+<violation beginline="39" endline="39" begincolumn="26" endcolumn="89" rule="UnusedAssignment" ruleset="Best Practices" package="com.alramz.config" class="SmsProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#unusedassignment" priority="3">
+The value assigned to variable 'connectTimeout' is never used
+</violation>
+<violation beginline="40" endline="40" begincolumn="23" endcolumn="81" rule="UnusedAssignment" ruleset="Best Practices" package="com.alramz.config" class="SmsProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#unusedassignment" priority="3">
+The value assigned to variable 'readTimeout' is never used
+</violation>
+<violation beginline="41" endline="41" begincolumn="20" endcolumn="74" rule="UnusedAssignment" ruleset="Best Practices" package="com.alramz.config" class="SmsProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#unusedassignment" priority="3">
+The value assigned to variable 'defaults' is never used
+</violation>
+<violation beginline="84" endline="84" begincolumn="36" endcolumn="37" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.config" class="SmsProperties" method="validateDispatch" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="117" endline="117" begincolumn="27" endcolumn="68" rule="UnusedAssignment" ruleset="Best Practices" package="com.alramz.config" class="Defaults" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#unusedassignment" priority="3">
+The value assigned to variable 'msgCategory' is never used
+</violation>
+<violation beginline="118" endline="118" begincolumn="28" endcolumn="69" rule="UnusedAssignment" ruleset="Best Practices" package="com.alramz.config" class="Defaults" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#unusedassignment" priority="3">
+The value assigned to variable 'expiryInSecs' is never used
+</violation>
+<violation beginline="123" endline="123" begincolumn="41" endcolumn="61" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="Etisalat" variable="excludedCountryCodes" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like excludedCountryCodes
+</violation>
+<violation beginline="157" endline="157" begincolumn="22" endcolumn="76" rule="UnusedAssignment" ruleset="Best Practices" package="com.alramz.config" class="Dispatch" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#unusedassignment" priority="3">
+The value assigned to variable 'status' is never used
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/controllers/ApplicationController.java">
+<violation beginline="14" endline="14" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.controllers" class="ApplicationController" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="27" endline="27" begincolumn="29" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="ApplicationController" method="info" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/controllers/OtpController.java">
+<violation beginline="29" endline="29" begincolumn="81" endcolumn="99" rule="LongVariable" ruleset="Code Style" package="com.alramz.controllers" class="OtpController" method="validateOtp" variable="otpValidateRequest" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like otpValidateRequest
+</violation>
+<violation beginline="39" endline="39" begincolumn="52" endcolumn="54" rule="ShortMethodName" ruleset="Code Style" package="com.alramz.controllers" class="OtpController" method="ok" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortmethodname" priority="3">
+Avoid using short method names
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/controllers/SmsController.java">
+<violation beginline="38" endline="38" begincolumn="84" endcolumn="118" rule="LawOfDemeter" ruleset="Design" package="com.alramz.controllers" class="SmsController" method="sendSms" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Access to field `SENT` on foreign value `SmsRecipientResult.StatusEnum` (degree 1)
+</violation>
+<violation beginline="62" endline="62" begincolumn="52" endcolumn="54" rule="ShortMethodName" ruleset="Code Style" package="com.alramz.controllers" class="SmsController" method="ok" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortmethodname" priority="3">
+Avoid using short method names
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/controllers/TemplatedEmailController.java">
+<violation beginline="20" endline="20" begincolumn="41" endcolumn="62" rule="LongVariable" ruleset="Code Style" package="com.alramz.controllers" class="TemplatedEmailController" variable="templatedEmailService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like templatedEmailService
+</violation>
+<violation beginline="21" endline="21" begincolumn="38" endcolumn="56" rule="LongVariable" ruleset="Code Style" package="com.alramz.controllers" class="TemplatedEmailController" variable="httpServletRequest" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like httpServletRequest
+</violation>
+<violation beginline="26" endline="26" begincolumn="91" endcolumn="112" rule="LongVariable" ruleset="Code Style" package="com.alramz.controllers" class="TemplatedEmailController" method="sendTemplatedEmail" variable="templatedEmailRequest" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like templatedEmailRequest
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+<violation beginline="28" endline="28" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=53, ATFD=26, TCC=0.000%)
+</violation>
+<violation beginline="28" endline="160" begincolumn="37" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="51" endline="51" begincolumn="13" endcolumn="29" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleEmailService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="59" endline="59" begincolumn="44" endcolumn="64" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleTemplatedEmail" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'handleTemplatedEmail(TemplatedEmailException)' has a cyclomatic complexity of 10.
+</violation>
+<violation beginline="72" endline="72" begincolumn="44" endcolumn="53" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleSms" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'handleSms(SmsException)' has a cyclomatic complexity of 10.
+</violation>
+<violation beginline="85" endline="85" begincolumn="44" endcolumn="53" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleOtp" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'handleOtp(OtpException)' has a cyclomatic complexity of 10.
+</violation>
+<violation beginline="101" endline="102" begincolumn="21" endcolumn="109" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="125" endline="126" begincolumn="13" endcolumn="77" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.exception" class="GlobalExceptionHandler" method="codedOrLogged" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="127" endline="127" begincolumn="13" endcolumn="54" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="codedOrLogged" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="135" endline="135" begincolumn="20" endcolumn="21" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.exception" class="GlobalExceptionHandler" method="attachmentContentPosition" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="136" endline="136" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="attachmentContentPosition" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="143" endline="143" begincolumn="13" endcolumn="40" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="attachmentContentPosition" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/model/EmailLogEntry.java">
+<violation beginline="8" endline="8" begincolumn="16" endcolumn="18" rule="ShortVariable" ruleset="Code Style" package="com.alramz.model" class="EmailLogEntry" variable="to" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like to
+</violation>
+<violation beginline="9" endline="9" begincolumn="16" endcolumn="18" rule="ShortVariable" ruleset="Code Style" package="com.alramz.model" class="EmailLogEntry" variable="cc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like cc
+</violation>
+<violation beginline="16" endline="16" begincolumn="16" endcolumn="35" rule="LongVariable" ruleset="Code Style" package="com.alramz.model" class="EmailLogEntry" variable="attachmentsMetaData" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like attachmentsMetaData
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/model/EmailTemplate.java">
+<violation beginline="5" endline="5" begincolumn="16" endcolumn="18" rule="ShortVariable" ruleset="Code Style" package="com.alramz.model" class="EmailTemplate" variable="id" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like id
+</violation>
+<violation beginline="7" endline="7" begincolumn="13" endcolumn="33" rule="LongVariable" ruleset="Code Style" package="com.alramz.model" class="EmailTemplate" variable="numberOfPlaceholders" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like numberOfPlaceholders
+</violation>
+<violation beginline="14" endline="14" begincolumn="16" endcolumn="34" rule="LongVariable" ruleset="Code Style" package="com.alramz.model" class="EmailTemplate" variable="attachmentsMaxSize" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like attachmentsMaxSize
+</violation>
+<violation beginline="15" endline="15" begincolumn="17" endcolumn="36" rule="LongVariable" ruleset="Code Style" package="com.alramz.model" class="EmailTemplate" variable="numberOfAttachments" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like numberOfAttachments
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/repository/OtpRepository.java">
+<violation beginline="23" endline="145" begincolumn="28" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.repository" class="OtpRepository" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="27" endline="27" begincolumn="36" endcolumn="55" rule="LongVariable" ruleset="Code Style" package="com.alramz.repository" class="OtpConfig" variable="emailMessageEnglish" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like emailMessageEnglish
+</violation>
+<violation beginline="27" endline="27" begincolumn="64" endcolumn="82" rule="LongVariable" ruleset="Code Style" package="com.alramz.repository" class="OtpConfig" variable="emailMessageArabic" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like emailMessageArabic
+</violation>
+<violation beginline="27" endline="27" begincolumn="92" endcolumn="113" rule="LongVariable" ruleset="Code Style" package="com.alramz.repository" class="OtpConfig" variable="maxValidationAttempts" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like maxValidationAttempts
+</violation>
+<violation beginline="35" endline="35" begincolumn="37" endcolumn="39" rule="ShortVariable" ruleset="Code Style" package="com.alramz.repository" class="OtpCandidate" variable="id" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like id
+</violation>
+<violation beginline="35" endline="35" begincolumn="81" endcolumn="99" rule="LongVariable" ruleset="Code Style" package="com.alramz.repository" class="OtpCandidate" variable="validationAttempts" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like validationAttempts
+</violation>
+<violation beginline="38" endline="38" begincolumn="33" endcolumn="45" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.repository" class="OtpRepository" variable="SERVICE_NAME" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="40" endline="40" begincolumn="47" endcolumn="53" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.repository" class="OtpRepository" variable="CONFIG" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="53" endline="53" begincolumn="46" endcolumn="50" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.repository" class="OtpRepository" variable="jdbc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="54" endline="54" begincolumn="37" endcolumn="54" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.repository" class="OtpRepository" variable="sqlQueriesManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="92" endline="92" begincolumn="16" endcolumn="34" rule="LawOfDemeter" ruleset="Design" package="com.alramz.repository" class="OtpRepository" method="insertOtp" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getKey` on foreign value `keyHolder` (degree 1)
+</violation>
+<violation beginline="96" endline="96" begincolumn="79" endcolumn="84" rule="AvoidDuplicateLiterals" ruleset="Error Prone" package="com.alramz.repository" class="OtpRepository" method="markSent" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidduplicateliterals" priority="3">
+The String literal "ids" appears 4 times in this file; the first occurrence is on line 96
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/repository/SmsTableRepository.java">
+<violation beginline="30" endline="30" begincolumn="46" endcolumn="50" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.repository" class="SmsTableRepository" variable="jdbc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="31" endline="31" begincolumn="39" endcolumn="50" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.repository" class="SmsTableRepository" variable="transaction" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="32" endline="32" begincolumn="37" endcolumn="54" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.repository" class="SmsTableRepository" variable="sqlQueriesManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="36" endline="36" begincolumn="83" endcolumn="105" rule="LongVariable" ruleset="Code Style" package="com.alramz.repository" class="SmsTableRepository" method="SmsTableRepository" variable="brokTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like brokTransactionManager
+</violation>
+<violation beginline="72" endline="72" begincolumn="13" endcolumn="76" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.repository" class="SmsTableRepository" method="markResult" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/SmsDispatchJob.java">
+<violation beginline="34" endline="34" begincolumn="30" endcolumn="51" rule="LongVariable" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" variable="MAX_MESSAGE_ID_LENGTH" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like MAX_MESSAGE_ID_LENGTH
+</violation>
+<violation beginline="36" endline="36" begincolumn="54" endcolumn="72" rule="LongVariable" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" variable="repositoryProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like repositoryProvider
+</violation>
+<violation beginline="42" endline="42" begincolumn="68" endcolumn="86" rule="LongVariable" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="SmsDispatchJob" variable="repositoryProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like repositoryProvider
+</violation>
+<violation beginline="47" endline="47" begincolumn="5" endcolumn="19" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="SmsDispatchJob" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on constructor 'SmsDispatchJob(ObjectProvider&lt;SmsTableRepository&gt;, SmsService, SmsProperties, Clock)'
+</violation>
+<violation beginline="47" endline="47" begincolumn="61" endcolumn="79" rule="LongVariable" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="SmsDispatchJob" variable="repositoryProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like repositoryProvider
+</violation>
+<violation beginline="70" endline="70" begincolumn="44" endcolumn="128" rule="LawOfDemeter" ruleset="Design" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="run" variable="rows" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `claimPending` on foreign value `repository` (degree 2)
+</violation>
+<violation beginline="74" endline="74" begincolumn="30" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="run" variable="row" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'row' could be declared final
+</violation>
+<violation beginline="81" endline="82" begincolumn="13" endcolumn="54" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="run" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="84" endline="84" begincolumn="13" endcolumn="89" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="run" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="95" endline="95" begincolumn="17" endcolumn="70" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="process" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="97" endline="97" begincolumn="13" endcolumn="78" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="process" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="99" endline="99" begincolumn="13" endcolumn="122" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="process" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="119" endline="119" begincolumn="17" endcolumn="25" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="120" endline="120" begincolumn="17" endcolumn="70" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="122" endline="122" begincolumn="13" endcolumn="87" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="124" endline="124" begincolumn="13" endcolumn="87" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="127" endline="127" begincolumn="35" endcolumn="69" rule="LawOfDemeter" ruleset="Design" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Access to field `SENT` on foreign value `SmsRecipientResult.StatusEnum` (degree 1)
+</violation>
+<violation beginline="131" endline="131" begincolumn="13" endcolumn="123" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="132" endline="132" begincolumn="13" endcolumn="36" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="137" endline="138" begincolumn="9" endcolumn="31" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="145" endline="145" begincolumn="9" endcolumn="107" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="invalid" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="151" endline="151" begincolumn="114" endcolumn="115" rule="ShortVariable" ruleset="Code Style" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="unexpected" variable="e" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like e
+</violation>
+<violation beginline="152" endline="153" begincolumn="9" endcolumn="47" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="SmsDispatchJob" method="unexpected" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java">
+<violation beginline="1" endline="506" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.service" class="OtpService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 32 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="64" endline="64" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service" class="OtpService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=115, ATFD=56, TCC=5.291%)
+</violation>
+<violation beginline="66" endline="66" begincolumn="22" endcolumn="36" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="OtpService" variable="MAX_RECIPIENTS" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on field 'MAX_RECIPIENTS'
+</violation>
+<violation beginline="67" endline="67" begincolumn="25" endcolumn="41" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="OtpService" variable="SMS_MSG_CATEGORY" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on field 'SMS_MSG_CATEGORY'
+</violation>
+<violation beginline="68" endline="68" begincolumn="22" endcolumn="53" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="OtpService" variable="DEFAULT_MAX_VALIDATION_ATTEMPTS" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like DEFAULT_MAX_VALIDATION_ATTEMPTS
+</violation>
+<violation beginline="68" endline="68" begincolumn="22" endcolumn="53" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="OtpService" variable="DEFAULT_MAX_VALIDATION_ATTEMPTS" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on field 'DEFAULT_MAX_VALIDATION_ATTEMPTS'
+</violation>
+<violation beginline="74" endline="74" begincolumn="33" endcolumn="55" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="OtpService" variable="SUBJECT_BODY_DELIMITER" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like SUBJECT_BODY_DELIMITER
+</violation>
+<violation beginline="87" endline="87" begincolumn="46" endcolumn="64" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="OtpService" variable="jwtContextProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like jwtContextProvider
+</violation>
+<violation beginline="92" endline="92" begincolumn="22" endcolumn="25" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="Recipients" method="all" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'all()'
+</violation>
+<violation beginline="101" endline="101" begincolumn="99" endcolumn="117" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="OtpService" variable="transactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like transactionManager
+</violation>
+<violation beginline="102" endline="102" begincolumn="87" endcolumn="105" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="OtpService" variable="jwtContextProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like jwtContextProvider
+</violation>
+<violation beginline="108" endline="108" begincolumn="5" endcolumn="15" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="OtpService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on constructor 'OtpService(OtpRepository, SmsService, EmailService, OtpProperties, EmailProperties, PlatformTransactionManager, Environment, ObjectProvider&lt;JwtContext&gt;, Clock)'
+</violation>
+<violation beginline="110" endline="110" begincolumn="49" endcolumn="67" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="OtpService" variable="transactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like transactionManager
+</violation>
+<violation beginline="111" endline="111" begincolumn="49" endcolumn="67" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="OtpService" variable="jwtContextProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like jwtContextProvider
+</violation>
+<violation beginline="180" endline="183" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="OtpService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 151 is caught in this block.
+</violation>
+<violation beginline="180" endline="183" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="OtpService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 176 is caught in this block.
+</violation>
+<violation beginline="184" endline="188" begincolumn="13" endcolumn="81" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="OtpService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="216" endline="219" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="OtpService" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 212 is caught in this block.
+</violation>
+<violation beginline="220" endline="221" begincolumn="13" endcolumn="121" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="OtpService" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="255" endline="255" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="check" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="268" endline="268" begincolumn="25" endcolumn="34" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="insertPending" variable="recipient" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'recipient' could be declared final
+</violation>
+<violation beginline="297" endline="297" begincolumn="13" endcolumn="115" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="OtpService" method="finish" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="305" endline="310" begincolumn="13" endcolumn="50" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="sendSms" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="308" endline="308" begincolumn="51" endcolumn="85" rule="LawOfDemeter" ruleset="Design" package="com.alramz.service" class="OtpService" method="sendSms" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Access to field `SENT` on foreign value `SmsRecipientResult.StatusEnum` (degree 1)
+</violation>
+<violation beginline="312" endline="313" begincolumn="13" endcolumn="114" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="OtpService" method="sendSms" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="313" endline="313" begincolumn="21" endcolumn="22" rule="AvoidInstanceofChecksInCatchClause" ruleset="Error Prone" package="com.alramz.service" class="OtpService" method="sendSms" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidinstanceofchecksincatchclause" priority="3">
+An instanceof check is being performed on the caught exception.  Create a separate catch clause for this exception type.
+</violation>
+<violation beginline="322" endline="322" begincolumn="21" endcolumn="28" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="sendEmails" variable="address" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'address' could be declared final
+</violation>
+<violation beginline="327" endline="327" begincolumn="17" endcolumn="105" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="OtpService" method="sendEmails" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="329" endline="331" begincolumn="17" endcolumn="40" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="OtpService" method="sendEmails" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="330" endline="330" begincolumn="25" endcolumn="26" rule="AvoidInstanceofChecksInCatchClause" ruleset="Error Prone" package="com.alramz.service" class="OtpService" method="sendEmails" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidinstanceofchecksincatchclause" priority="3">
+An instanceof check is being performed on the caught exception.  Create a separate catch clause for this exception type.
+</violation>
+<violation beginline="351" endline="351" begincolumn="19" endcolumn="51" rule="LawOfDemeter" ruleset="Design" package="com.alramz.service" class="OtpService" method="channel" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Access to field `SENT` on foreign value `OtpChannelResult.StatusEnum` (degree 1)
+</violation>
+<violation beginline="351" endline="351" begincolumn="54" endcolumn="88" rule="LawOfDemeter" ruleset="Design" package="com.alramz.service" class="OtpService" method="channel" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Access to field `FAILED` on foreign value `OtpChannelResult.StatusEnum` (degree 1)
+</violation>
+<violation beginline="414" endline="414" begincolumn="21" endcolumn="26" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="splitRecipients" variable="token" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'token' could be declared final
+</violation>
+<violation beginline="467" endline="467" begincolumn="13" endcolumn="75" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="OtpService" method="otp" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="497" endline="497" begincolumn="36" endcolumn="71" rule="LawOfDemeter" ruleset="Design" package="com.alramz.service" class="OtpService" method="invoker" variable="context" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getIfAvailable` on foreign value `jwtContextProvider` (degree 1)
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/SmsService.java">
+<violation beginline="24" endline="24" begincolumn="50" endcolumn="69" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="Outcome" variable="anyProviderRejected" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like anyProviderRejected
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java">
+<violation beginline="1" endline="352" begincolumn="1" endcolumn="3" rule="ExcessiveImports" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessiveimports" priority="3">
+A high number of imports can indicate a high degree of coupling within an object.
+</violation>
+<violation beginline="48" endline="48" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=109, ATFD=47, TCC=1.449%)
+</violation>
+<violation beginline="51" endline="51" begincolumn="26" endcolumn="31" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" variable="EMAIL" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on field 'EMAIL'
+</violation>
+<violation beginline="61" endline="61" begincolumn="34" endcolumn="42" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.service" class="TemplatedEmailService" variable="LOGGABLE" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field LOGGABLE has the same name as a method
+</violation>
+<violation beginline="65" endline="65" begincolumn="46" endcolumn="64" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" variable="jwtContextProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like jwtContextProvider
+</violation>
+<violation beginline="70" endline="70" begincolumn="67" endcolumn="85" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="TemplatedEmailService" variable="jwtContextProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like jwtContextProvider
+</violation>
+<violation beginline="74" endline="74" begincolumn="5" endcolumn="26" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="TemplatedEmailService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on constructor 'TemplatedEmailService(EmailService, EmailTemplateRepository, ObjectProvider&lt;JwtContext&gt;, Clock)'
+</violation>
+<violation beginline="75" endline="75" begincolumn="60" endcolumn="78" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="TemplatedEmailService" variable="jwtContextProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like jwtContextProvider
+</violation>
+<violation beginline="86" endline="86" begincolumn="28" endcolumn="30" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="send" variable="to" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like to
+</violation>
+<violation beginline="87" endline="87" begincolumn="28" endcolumn="30" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="send" variable="cc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like cc
+</violation>
+<violation beginline="129" endline="132" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 108 is caught in this block.
+</violation>
+<violation beginline="129" endline="132" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 98 is caught in this block.
+</violation>
+<violation beginline="133" endline="136" begincolumn="13" endcolumn="58" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="140" endline="140" begincolumn="25" endcolumn="36" rule="NPathComplexity" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" method="checkFields" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#npathcomplexity" priority="3">
+The method 'checkFields(TemplatedEmailRequest, List&lt;String&gt;, List&lt;String&gt;, List&lt;String&gt;, List&lt;TemplateAttachment&gt;)' has an NPath complexity of 288, current threshold is 200
+</violation>
+<violation beginline="140" endline="140" begincolumn="93" endcolumn="95" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="checkFields" variable="to" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like to
+</violation>
+<violation beginline="140" endline="140" begincolumn="116" endcolumn="118" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="checkFields" variable="cc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like cc
+</violation>
+<violation beginline="158" endline="158" begincolumn="87" endcolumn="108" rule="LawOfDemeter" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" method="checkFields" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Access to field `length` on foreign value `a.getContent()` (degree 1)
+</violation>
+<violation beginline="175" endline="175" begincolumn="33" endcolumn="43" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="checkAttachments" variable="attachment" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'attachment' could be declared final
+</violation>
+<violation beginline="180" endline="180" begincolumn="13" endcolumn="22" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="checkAttachments" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="207" endline="207" begincolumn="19" endcolumn="82" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="attachmentsMaxSize" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="245" endline="245" begincolumn="19" endcolumn="95" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="248" endline="248" begincolumn="43" endcolumn="115" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="249" endline="250" begincolumn="43" endcolumn="88" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="251" endline="251" begincolumn="34" endcolumn="115" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="260" endline="261" begincolumn="13" endcolumn="71" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="audit" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="266" endline="266" begincolumn="9" endcolumn="89" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="misconfigured" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="274" endline="274" begincolumn="19" endcolumn="23" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="mime" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'mime(String, String)'
+</violation>
+<violation beginline="288" endline="288" begincolumn="19" endcolumn="28" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="sha256Hex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'sha256Hex(String)'
+</violation>
+<violation beginline="299" endline="299" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="metadata" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="330" endline="330" begincolumn="19" endcolumn="27" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="loggable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'loggable(String)'
+</violation>
+<violation beginline="338" endline="338" begincolumn="49" endcolumn="51" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service" class="TemplatedEmailService" method="truncate" variable="ip" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ip
+</violation>
+<violation beginline="343" endline="343" begincolumn="36" endcolumn="71" rule="LawOfDemeter" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" method="invoker" variable="context" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getIfAvailable` on foreign value `jwtContextProvider` (degree 1)
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java">
+<violation beginline="1" endline="349" begincolumn="1" endcolumn="3" rule="ExcessiveImports" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessiveimports" priority="3">
+A high number of imports can indicate a high degree of coupling within an object.
+</violation>
+<violation beginline="1" endline="349" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 25 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="46" endline="46" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=78, ATFD=57, TCC=0.735%)
+</violation>
+<violation beginline="53" endline="53" begincolumn="57" endcolumn="76" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" variable="graphClientProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like graphClientProvider
+</violation>
+<violation beginline="55" endline="55" begincolumn="46" endcolumn="64" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" variable="jwtContextProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like jwtContextProvider
+</violation>
+<violation beginline="59" endline="59" begincolumn="90" endcolumn="109" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="EmailServiceImpl" variable="graphClientProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like graphClientProvider
+</violation>
+<violation beginline="61" endline="61" begincolumn="46" endcolumn="64" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="EmailServiceImpl" variable="jwtContextProvider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like jwtContextProvider
+</violation>
+<violation beginline="70" endline="70" begincolumn="87" endcolumn="89" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="SendContext" variable="to" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like to
+</violation>
+<violation beginline="70" endline="70" begincolumn="95" endcolumn="97" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="SendContext" variable="cc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like cc
+</violation>
+<violation beginline="82" endline="82" begincolumn="32" endcolumn="34" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="sendEmail" variable="to" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like to
+</violation>
+<violation beginline="83" endline="83" begincolumn="32" endcolumn="34" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="sendEmail" variable="cc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like cc
+</violation>
+<violation beginline="94" endline="94" begincolumn="13" endcolumn="114" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="EmailServiceImpl" method="sendEmail" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="127" endline="128" begincolumn="13" endcolumn="73" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="EmailServiceImpl" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="141" endline="141" begincolumn="44" endcolumn="47" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.service.impl" class="EmailServiceImpl" method="postWithAuthRetry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="144" endline="144" begincolumn="13" endcolumn="93" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="EmailServiceImpl" method="postWithAuthRetry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="156" endline="156" begincolumn="50" endcolumn="64" rule="LawOfDemeter" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" method="mapGraphFailure" variable="errorResponse" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Call to `getError` on foreign value `gse` (degree 1)
+</violation>
+<violation beginline="159" endline="159" begincolumn="23" endcolumn="26" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.service.impl" class="EmailServiceImpl" method="mapGraphFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="161" endline="161" begincolumn="13" endcolumn="99" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="mapGraphFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="163" endline="163" begincolumn="23" endcolumn="26" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.service.impl" class="EmailServiceImpl" method="mapGraphFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="166" endline="166" begincolumn="13" endcolumn="117" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="EmailServiceImpl" method="mapGraphFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="167" endline="167" begincolumn="13" endcolumn="123" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="mapGraphFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="174" endline="174" begincolumn="19" endcolumn="29" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="retryAfter" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'retryAfter(List&lt;String&gt;)'
+</violation>
+<violation beginline="176" endline="176" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="retryAfter" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="182" endline="182" begincolumn="17" endcolumn="73" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="retryAfter" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="203" endline="203" begincolumn="18" endcolumn="26" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'validate(EmailRequest, String, List&lt;String&gt;, List&lt;String&gt;, List&lt;String&gt;, List&lt;EmailAttachment&gt;)' has a cyclomatic complexity of 15.
+</violation>
+<violation beginline="203" endline="203" begincolumn="18" endcolumn="26" rule="NPathComplexity" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#npathcomplexity" priority="3">
+The method 'validate(EmailRequest, String, List&lt;String&gt;, List&lt;String&gt;, List&lt;String&gt;, List&lt;EmailAttachment&gt;)' has an NPath complexity of 512, current threshold is 200
+</violation>
+<violation beginline="203" endline="203" begincolumn="93" endcolumn="95" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="validate" variable="to" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like to
+</violation>
+<violation beginline="203" endline="203" begincolumn="116" endcolumn="118" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="validate" variable="cc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like cc
+</violation>
+<violation beginline="247" endline="247" begincolumn="18" endcolumn="37" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" method="validateAttachments" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'validateAttachments(List&lt;EmailAttachment&gt;)' has a cyclomatic complexity of 12.
+</violation>
+<violation beginline="258" endline="258" begincolumn="52" endcolumn="82" rule="LawOfDemeter" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" method="validateAttachments" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#lawofdemeter" priority="3">
+Access to field `length` on foreign value `attachment.getContent()` (degree 1)
+</violation>
+<violation beginline="277" endline="277" begincolumn="81" endcolumn="83" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="buildMessage" variable="to" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like to
+</violation>
+<violation beginline="277" endline="277" begincolumn="104" endcolumn="106" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="buildMessage" variable="cc" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like cc
+</violation>
+<violation beginline="326" endline="326" begincolumn="13" endcolumn="30" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="split" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="340" endline="340" begincolumn="22" endcolumn="24" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EmailServiceImpl" method="correlationId" variable="id" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like id
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EtisalatSmsClient.java">
+<violation beginline="34" endline="34" begincolumn="31" endcolumn="53" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" variable="REFRESH_MARGIN_SECONDS" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like REFRESH_MARGIN_SECONDS
+</violation>
+<violation beginline="35" endline="35" begincolumn="31" endcolumn="53" rule="LongVariable" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" variable="EPOCH_MILLIS_THRESHOLD" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like EPOCH_MILLIS_THRESHOLD
+</violation>
+<violation beginline="40" endline="40" begincolumn="42" endcolumn="48" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" variable="config" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="41" endline="41" begincolumn="30" endcolumn="40" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" variable="restClient" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="42" endline="42" begincolumn="25" endcolumn="30" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" variable="clock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="43" endline="43" begincolumn="19" endcolumn="24" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.service.impl" class="EtisalatSmsClient" variable="token" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field token has the same name as a method
+</violation>
+<violation beginline="43" endline="43" begincolumn="19" endcolumn="24" rule="FieldDeclarationsShouldBeAtStartOfClass" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" variable="token" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass" priority="3">
+Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+</violation>
+<violation beginline="50" endline="50" begincolumn="5" endcolumn="22" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" method="EtisalatSmsClient" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on constructor 'EtisalatSmsClient(SmsProperties, Builder, Clock)'
+</violation>
+<violation beginline="57" endline="57" begincolumn="19" endcolumn="23" rule="UseObjectForClearerAPI" ruleset="Design" package="com.alramz.service.impl" class="EtisalatSmsClient" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#useobjectforclearerapi" priority="3">
+Rather than using a lot of String arguments, consider using a container object for those values.
+</violation>
+<violation beginline="69" endline="69" begincolumn="13" endcolumn="55" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="75" endline="75" begincolumn="23" endcolumn="70" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="EtisalatSmsClient" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="101" endline="101" begincolumn="33" endcolumn="38" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="EtisalatSmsClient" method="token" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'token(boolean)' has a cyclomatic complexity of 10.
+</violation>
+<violation beginline="104" endline="104" begincolumn="13" endcolumn="34" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" method="token" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="131" endline="131" begincolumn="20" endcolumn="31" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" method="parseExpiry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'parseExpiry(Object)'
+</violation>
+<violation beginline="134" endline="134" begincolumn="13" endcolumn="112" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" method="parseExpiry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="139" endline="139" begincolumn="17" endcolumn="44" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" method="parseExpiry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="142" endline="142" begincolumn="21" endcolumn="80" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="EtisalatSmsClient" method="parseExpiry" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java">
+<violation beginline="35" endline="35" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service.impl" class="SmsServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=53, ATFD=29, TCC=15.385%)
+</violation>
+<violation beginline="69" endline="69" begincolumn="34" endcolumn="42" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="sendWithOutcome" variable="provider" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'provider' could be declared final
+</violation>
+<violation beginline="70" endline="70" begincolumn="37" endcolumn="43" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="sendWithOutcome" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'result' could be declared final
+</violation>
+<violation beginline="129" endline="130" begincolumn="13" endcolumn="36" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="SmsServiceImpl" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="131" endline="131" begincolumn="13" endcolumn="26" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="138" endline="139" begincolumn="13" endcolumn="36" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="SmsServiceImpl" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="140" endline="140" begincolumn="13" endcolumn="26" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="143" endline="144" begincolumn="13" endcolumn="63" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="SmsServiceImpl" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="151" endline="151" begincolumn="13" endcolumn="49" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="route" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="155" endline="155" begincolumn="13" endcolumn="49" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="route" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="168" endline="168" begincolumn="13" endcolumn="28" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="numbersWithEntryIndex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="174" endline="174" begincolumn="25" endcolumn="30" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="numbersWithEntryIndex" variable="token" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'token' could be declared final
+</violation>
+<violation beginline="201" endline="201" begincolumn="31" endcolumn="48" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="restClientBuilder" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'restClientBuilder(SmsProperties)'
+</violation>
+<violation beginline="213" endline="213" begincolumn="19" endcolumn="31" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="providerCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'providerCode(Object)'
+</violation>
+<violation beginline="216" endline="216" begincolumn="13" endcolumn="28" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="providerCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="225" endline="225" begincolumn="25" endcolumn="40" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="providerFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'providerFailure(String, RestClientException)'
+</violation>
+<violation beginline="225" endline="225" begincolumn="90" endcolumn="91" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="providerFailure" variable="e" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like e
+</violation>
+<violation beginline="229" endline="229" begincolumn="13" endcolumn="108" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="providerFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="234" endline="234" begincolumn="13" endcolumn="100" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="SmsServiceImpl" method="providerFailure" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/VeriPhoneClient.java">
+<violation beginline="27" endline="27" begincolumn="5" endcolumn="20" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="VeriPhoneClient" method="VeriPhoneClient" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on constructor 'VeriPhoneClient(SmsProperties, Builder)'
+</violation>
+<violation beginline="45" endline="45" begincolumn="13" endcolumn="120" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service.impl" class="VeriPhoneClient" method="countryCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="47" endline="47" begincolumn="13" endcolumn="111" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="VeriPhoneClient" method="countryCode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/WaselneySmsClient.java">
+<violation beginline="53" endline="53" begincolumn="5" endcolumn="22" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="WaselneySmsClient" method="WaselneySmsClient" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on constructor 'WaselneySmsClient(SmsProperties, Builder)'
+</violation>
+<violation beginline="113" endline="113" begincolumn="19" endcolumn="25" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz.service.impl" class="WaselneySmsClient" method="encode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'encode(String)'
+</violation>
+<violation beginline="131" endline="131" begincolumn="13" endcolumn="118" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service.impl" class="WaselneySmsClient" method="parse" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="132" endline="132" begincolumn="19" endcolumn="106" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="WaselneySmsClient" method="parse" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="135" endline="135" begincolumn="22" endcolumn="27" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="WaselneySmsClient" method="parse" variable="outer" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'outer' could be declared final
+</violation>
+<violation beginline="136" endline="136" begincolumn="26" endcolumn="32" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="WaselneySmsClient" method="parse" variable="report" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'report' could be declared final
+</violation>
+<violation beginline="142" endline="142" begincolumn="30" endcolumn="35" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service.impl" class="WaselneySmsClient" method="parse" variable="field" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'field' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/utils/StringUtils.java">
+<violation beginline="8" endline="8" begincolumn="49" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.utils" class="StringUtils" method="requireNonBlank" variable="value" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'value' is not assigned and could be declared final
+</violation>
+<violation beginline="8" endline="8" begincolumn="63" endcolumn="71" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.utils" class="StringUtils" method="requireNonBlank" variable="property" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'property' is not assigned and could be declared final
+</violation>
+</file>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailConfigurationException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailServiceException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailValidationException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/OtpException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/SmsException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/TemplatedEmailException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Each class should declare at least one constructor" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/config/GraphConfig.java" suppressiontype="@suppresswarnings" msg="Each class should declare at least one constructor" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java" suppressiontype="@suppresswarnings" msg="Avoid variables with short names like ex" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/SmsDispatchJob.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException: a scheduled run must never throw
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/SmsDispatchJob.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException: e.g. brok down during markResult
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/SmsDispatchJob.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException: one bad row must not stop the batch
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java" suppressiontype="@suppresswarnings" msg="The method 'validateBodyAndNumbers(SmsSendRequest, Map&lt;String, Integer&gt;)' has a cyclomatic complexity of 10." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java" suppressiontype="@suppresswarnings" msg="This class has too many methods, consider refactoring it." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException: the mail is sent; the response must not change
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `body` on foreign value `message` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The method 'mime(String, String)' has a cyclomatic complexity of 10." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The method 'checkAttachment(TemplateAttachment, List&lt;String&gt;)' has a cyclomatic complexity of 13." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The method 'checkFields(TemplatedEmailRequest, List&lt;String&gt;, List&lt;String&gt;, List&lt;String&gt;, List&lt;TemplateAttachment&gt;)' has a cyclomatic complexity of 11." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The method 'send(TemplatedEmailRequest, String)' has a cyclomatic complexity of 13." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `contentType` on foreign value `body` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `body` on foreign value `message` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The class 'TemplatedEmailService' has a total cyclomatic complexity of 109 (highest 13)." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `toRecipients` on foreign value `message` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `ccRecipients` on foreign value `message` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `bccRecipients` on foreign value `message` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `contentBytes` on foreign value `fileAttachment` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `attachments` on foreign value `message` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Access to field `emailAddress` on foreign value `recipient` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Call to `getIfAvailable` on foreign value `jwtContextProvider` (degree 1)" usermsg=" LawOfDemeter
+"></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="@suppresswarnings" msg="This class has too many methods, consider refactoring it." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="This class has too many methods, consider refactoring it." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="The method 'send(OtpSendRequest)' has a cyclomatic complexity of 12." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="The class 'OtpService' has a total cyclomatic complexity of 115 (highest 12)." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="A high number of imports can indicate a high degree of coupling within an object." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="This class has too many methods, consider refactoring it." usermsg=""></suppressedviolation>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

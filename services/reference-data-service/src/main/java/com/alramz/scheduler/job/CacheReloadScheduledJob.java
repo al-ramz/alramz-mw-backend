@@ -25,6 +25,8 @@ public class CacheReloadScheduledJob implements Schedulable {
     }
 
     @Override
+    // reason: scheduler job boundary; any reload failure is logged so the scheduler thread never dies
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void run(ScheduleInfoBean scheduleInfoBean) {
         if (log.isInfoEnabled()) {
             log.info("Executing scheduled cache reload job: scheduleId={}, cronExpr={}, jobParameter={}",

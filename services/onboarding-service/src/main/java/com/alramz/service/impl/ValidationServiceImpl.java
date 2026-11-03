@@ -18,6 +18,7 @@ import com.alramz.service.ValidationResponseMapper;
 import com.alramz.service.ValidationResponseMapperRegistry;
 import com.alramz.service.ValidationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -84,7 +85,7 @@ public class ValidationServiceImpl implements ValidationService {
                     ETradeResponse.class
             );
         } catch (ApiCallFailedException e) {
-            if (e.getResponseCode() == 401) {
+            if (e.getResponseCode() == HttpStatus.UNAUTHORIZED.value()) {
                 log.warn("Received 401 from eTrade, invalidating token and retrying once");
                 etradeTokenProvider.invalidate();
                 String freshToken = etradeTokenProvider.getToken()
@@ -97,7 +98,7 @@ public class ValidationServiceImpl implements ValidationService {
                         ETradeResponse.class
                 );
             }
-            throw new ExternalSystemException("eTrade validation service unavailable");
+            throw new ExternalSystemException("eTrade validation service unavailable", e);
         }
     }
 

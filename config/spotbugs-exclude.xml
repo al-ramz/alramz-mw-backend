@@ -20,4 +20,25 @@
         <Class name="~.*Generated.*"/>
     </Match>
 
+    <!-- EI_EXPOSE_REP*: accepted where exposure is by design (static-analysis-scan 03-11-2026). -->
+    <!-- OpenAPI-generated DTOs/interfaces (target/generated-sources), regenerated every build, not editable. -->
+    <Match>
+        <Or>
+            <Package name="com.alramz.model"/>
+            <Package name="com.alramz.api"/>
+        </Or>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,NM_CONFUSING,SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+    </Match>
+    <!-- Spring beans storing constructor-injected collaborators (singletons, shared on purpose). -->
+    <Match>
+        <Class name="~.*(Repository|RepositoryImpl|Service|ServiceImpl|Client|Provider|Controller|Job|Config|Configuration|Mapper)$"/>
+        <Method name="&lt;init&gt;"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <!-- @ConfigurationProperties: Spring binds through these accessors; copying breaks binding. -->
+    <Match>
+        <Class name="~.*Properties(\$.*)?"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+
 </FindBugsFilter>

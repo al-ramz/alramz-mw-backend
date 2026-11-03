@@ -38,9 +38,7 @@ public class ETradeTokenProvider {
         if (cachedToken != null && cachedAt != null) {
             long elapsed = Instant.now().getEpochSecond() - cachedAt.getEpochSecond();
             if (elapsed < tokenTtlSeconds) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Returning cached eTrade token (age={}s)", elapsed);
-                }
+                log.debug("Returning cached eTrade token (age={}s)", elapsed);
                 return Optional.of(cachedToken);
             }
             if (log.isInfoEnabled()) {
@@ -81,7 +79,7 @@ public class ETradeTokenProvider {
                     .bodyToMono(JsonNode.class)
                     .block();
 
-            if (!"0".equals(response.path("Error_code").asText())) {
+            if (response == null || !"0".equals(response.path("Error_code").asText())) {
                 String errorCode = response != null ? response.path("Error_code").asText("null") : "null response";
                 if (log.isWarnEnabled()) {
                     log.warn("Failed to fetch eTrade token: Error_code={}", errorCode);

@@ -2,6 +2,7 @@ package com.alramz.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -33,7 +34,7 @@ public class CacheAuditService {
 
         try {
             middlewareNamedParameterJdbcTemplate.update(sql, params);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Failed to insert cache audit log: {}", e.getMessage(), e);
         }
     }

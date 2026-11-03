@@ -85,9 +85,12 @@ public enum ErrorCode {
     private static final String CLIENT_ID = "clientId";
     private static final String RANGE_INVALID_MSG = "Date range must not exceed 93 days and fromDate must not be after toDate";
 
-    private record Rule(ErrorCode code, String message) { }
-
     private static final Map<String, Rule> RULES = new HashMap<>();
+
+    private final String code;
+    private final String defaultMessage;
+
+    private record Rule(ErrorCode code, String message) { }
 
     static {
         rule(OP_ACCOUNT, "accountNumber", Kind.ANY, ACCOUNT_NUMBER_INVALID, null);
@@ -125,9 +128,6 @@ public enum ErrorCode {
         rule(OP_POSITIONS, "asOfDate", Kind.ANY, POSITIONS_AS_OF_DATE_INVALID, null);
         backend(OP_POSITIONS, POSITIONS_INTERNAL_ERROR, POSITIONS_UNAVAILABLE);
     }
-
-    private final String code;
-    private final String defaultMessage;
 
     ErrorCode(String code, String defaultMessage) {
         this.code = code;

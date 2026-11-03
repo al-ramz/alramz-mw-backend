@@ -60,8 +60,9 @@ public class FinouxClient extends AbstractRestClient {
         params.add(new FinouxParam("p_user_name", request.getUsername()));
         params.add(new FinouxParam("p_posted_by", request.getPostedBy()));
         params.add(new FinouxParam("p_post_desc", sanitizedDesc));
-        if (request.getTagSymbol() != null && !request.getTagSymbol().isBlank()) {
-            params.add(new FinouxParam("p_tag_sc_comp_id", request.getTagSymbol()));
+        String tagSymbol = request.getTagSymbol();
+        if (tagSymbol != null && !tagSymbol.isBlank()) {
+            params.add(new FinouxParam("p_tag_sc_comp_id", tagSymbol));
         }
         FinouxProperties.Post post = finouxProperties.getPost();
         params.add(new FinouxParam("p_posted_user_flag", post.getPostedUserFlag()));

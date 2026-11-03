@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-03T12:38:14.998">
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/ReferenceDataServiceApplication.java">
+<violation beginline="16" endline="16" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="18" endline="18" begincolumn="30" endcolumn="33" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="20" endline="20" begincolumn="35" endcolumn="39" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" method="main" variable="args" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'args' is not assigned and could be declared final
+</violation>
+<violation beginline="25" endline="25" begincolumn="20" endcolumn="26" rule="CommentDefaultAccessModifier" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" method="runner" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier" priority="3">
+Missing commented default access modifier on method 'runner(Environment)'
+</violation>
+<violation beginline="25" endline="25" begincolumn="39" endcolumn="42" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" method="runner" variable="env" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'env' is not assigned and could be declared final
+</violation>
+<violation beginline="27" endline="27" begincolumn="11" endcolumn="15" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" method="runner" variable="port" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'port' could be declared final
+</violation>
+<violation beginline="28" endline="28" begincolumn="11" endcolumn="15" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" method="runner" variable="host" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'host' could be declared final
+</violation>
+<violation beginline="29" endline="29" begincolumn="11" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" method="runner" variable="appName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'appName' could be declared final
+</violation>
+<violation beginline="30" endline="30" begincolumn="13" endcolumn="27" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" method="runner" variable="activeProfiles" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'activeProfiles' could be declared final
+</violation>
+<violation beginline="31" endline="31" begincolumn="11" endcolumn="18" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz" class="ReferenceDataServiceApplication" method="runner" variable="profile" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'profile' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/config/AsyncConfig.java">
+<violation beginline="11" endline="11" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="AsyncConfig" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="15" endline="15" begincolumn="32" endcolumn="40" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="AsyncConfig" method="cacheAuditExecutor" variable="executor" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'executor' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/config/CacheMappingProperties.java">
+<violation beginline="10" endline="10" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="CacheMappingProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="18" endline="18" begincolumn="55" endcolumn="63" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMappingProperties" method="setMappings" variable="mappings" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappings' is not assigned and could be declared final
+</violation>
+<violation beginline="22" endline="22" begincolumn="19" endcolumn="24" rule="DataClass" ruleset="Design" package="com.alramz.config" class="CacheMapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#dataclass" priority="3">
+The class 'CacheMapping' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=10, WMC=10)
+</violation>
+<violation beginline="33" endline="33" begincolumn="37" endcolumn="42" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setTable" variable="table" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'table' is not assigned and could be declared final
+</violation>
+<violation beginline="41" endline="41" begincolumn="40" endcolumn="48" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setCacheKey" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="49" endline="49" begincolumn="46" endcolumn="60" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setReloadStrategy" variable="reloadStrategy" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'reloadStrategy' is not assigned and could be declared final
+</violation>
+<violation beginline="57" endline="57" begincolumn="35" endcolumn="38" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setTtl" variable="ttl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ttl' is not assigned and could be declared final
+</violation>
+<violation beginline="65" endline="65" begincolumn="40" endcolumn="47" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setEnabled" variable="enabled" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'enabled' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/config/CacheWarmupRunner.java">
+<violation beginline="11" endline="11" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="CacheWarmupRunner" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="13" endline="13" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.config" class="CacheWarmupRunner" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="16" endline="16" begincolumn="61" endcolumn="78" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheWarmupRunner" method="warmupRunner" variable="redisCacheService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'redisCacheService' is not assigned and could be declared final
+</violation>
+<violation beginline="17" endline="17" begincolumn="72" endcolumn="94" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="CacheWarmupRunner" method="warmupRunner" variable="companyRedisProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like companyRedisProperties
+</violation>
+<violation beginline="17" endline="17" begincolumn="72" endcolumn="94" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheWarmupRunner" method="warmupRunner" variable="companyRedisProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'companyRedisProperties' is not assigned and could be declared final
+</violation>
+<violation beginline="36" endline="36" begincolumn="26" endcolumn="35" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.config" class="CacheWarmupRunner" method="warmupRunner" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="37" endline="37" begincolumn="21" endcolumn="99" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.config" class="CacheWarmupRunner" method="warmupRunner" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/config/CompanyRedisProperties.java">
+<violation beginline="10" endline="10" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="CompanyRedisProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="10" endline="10" begincolumn="8" endcolumn="13" rule="DataClass" ruleset="Design" package="com.alramz.config" class="CompanyRedisProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#dataclass" priority="3">
+The class 'CompanyRedisProperties' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=6, WMC=6)
+</violation>
+<violation beginline="20" endline="20" begincolumn="42" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CompanyRedisProperties" method="setDeployment" variable="deployment" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'deployment' is not assigned and could be declared final
+</violation>
+<violation beginline="28" endline="28" begincolumn="42" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CompanyRedisProperties" method="setConnection" variable="connection" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'connection' is not assigned and could be declared final
+</violation>
+<violation beginline="36" endline="36" begincolumn="32" endcolumn="37" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CompanyRedisProperties" method="setCache" variable="cache" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cache' is not assigned and could be declared final
+</violation>
+<violation beginline="47" endline="47" begincolumn="36" endcolumn="40" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Deployment" method="setMode" variable="mode" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mode' is not assigned and could be declared final
+</violation>
+<violation beginline="52" endline="52" begincolumn="19" endcolumn="24" rule="DataClass" ruleset="Design" package="com.alramz.config" class="Connection" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#dataclass" priority="3">
+The class 'Connection' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=10, WMC=10)
+</violation>
+<violation beginline="63" endline="63" begincolumn="36" endcolumn="40" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Connection" method="setHost" variable="host" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'host' is not assigned and could be declared final
+</violation>
+<violation beginline="71" endline="71" begincolumn="33" endcolumn="37" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Connection" method="setPort" variable="port" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'port' is not assigned and could be declared final
+</violation>
+<violation beginline="79" endline="79" begincolumn="40" endcolumn="48" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Connection" method="setPassword" variable="password" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'password' is not assigned and could be declared final
+</violation>
+<violation beginline="87" endline="87" begincolumn="32" endcolumn="35" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Connection" method="setSsl" variable="ssl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ssl' is not assigned and could be declared final
+</violation>
+<violation beginline="95" endline="95" begincolumn="39" endcolumn="46" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Connection" method="setTimeout" variable="timeout" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'timeout' is not assigned and could be declared final
+</violation>
+<violation beginline="99" endline="99" begincolumn="23" endcolumn="28" rule="ShortClassName" ruleset="Code Style" package="com.alramz.config" class="Ssl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortclassname" priority="4">
+Avoid short class names like Ssl
+</violation>
+<violation beginline="106" endline="106" begincolumn="44" endcolumn="51" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Ssl" method="setEnabled" variable="enabled" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'enabled' is not assigned and could be declared final
+</violation>
+<violation beginline="119" endline="119" begincolumn="59" endcolumn="67" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Cache" method="setMappings" variable="mappings" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappings' is not assigned and could be declared final
+</violation>
+<violation beginline="123" endline="123" begincolumn="23" endcolumn="28" rule="DataClass" ruleset="Design" package="com.alramz.config" class="CacheMapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#dataclass" priority="3">
+The class 'CacheMapping' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=10, WMC=10)
+</violation>
+<violation beginline="134" endline="134" begincolumn="41" endcolumn="46" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setTable" variable="table" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'table' is not assigned and could be declared final
+</violation>
+<violation beginline="142" endline="142" begincolumn="44" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setCacheKey" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="150" endline="150" begincolumn="50" endcolumn="64" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setReloadStrategy" variable="reloadStrategy" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'reloadStrategy' is not assigned and could be declared final
+</violation>
+<violation beginline="158" endline="158" begincolumn="39" endcolumn="42" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setTtl" variable="ttl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ttl' is not assigned and could be declared final
+</violation>
+<violation beginline="166" endline="166" begincolumn="44" endcolumn="51" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="CacheMapping" method="setEnabled" variable="enabled" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'enabled' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/config/DatasourceConfiguration.java">
+<violation beginline="12" endline="12" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="16" endline="16" begincolumn="87" endcolumn="107" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="primaryDataSource" variable="middlewareDataSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareDataSource
+</violation>
+<violation beginline="16" endline="16" begincolumn="87" endcolumn="107" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="primaryDataSource" variable="middlewareDataSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareDataSource' is not assigned and could be declared final
+</violation>
+<violation beginline="23" endline="23" begincolumn="83" endcolumn="111" rule="LongVariable" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="transactionManager" variable="middlewareTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareTransactionManager
+</violation>
+<violation beginline="23" endline="23" begincolumn="83" endcolumn="111" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="DatasourceConfiguration" method="transactionManager" variable="middlewareTransactionManager" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareTransactionManager' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/config/JacksonConfig.java">
+<violation beginline="10" endline="10" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="JacksonConfig" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/config/MiddlewareDataSourceProperties.java">
+<violation beginline="11" endline="11" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="11" endline="11" begincolumn="8" endcolumn="13" rule="DataClass" ruleset="Design" package="com.alramz.config" class="MiddlewareDataSourceProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#dataclass" priority="3">
+The class 'MiddlewareDataSourceProperties' is suspected to be a Data Class (WOC=5.882%, NOPA=0, NOAM=16, WMC=17)
+</violation>
+<violation beginline="26" endline="26" begincolumn="36" endcolumn="43" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="setEnabled" variable="enabled" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'enabled' is not assigned and could be declared final
+</violation>
+<violation beginline="34" endline="34" begincolumn="31" endcolumn="34" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="setUrl" variable="url" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'url' is not assigned and could be declared final
+</violation>
+<violation beginline="42" endline="42" begincolumn="36" endcolumn="44" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="setUsername" variable="username" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'username' is not assigned and could be declared final
+</violation>
+<violation beginline="50" endline="50" begincolumn="41" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="setPlainPassword" variable="plainPassword" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'plainPassword' is not assigned and could be declared final
+</violation>
+<violation beginline="58" endline="58" begincolumn="43" endcolumn="58" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="setDriverClassName" variable="driverClassName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'driverClassName' is not assigned and could be declared final
+</violation>
+<violation beginline="66" endline="66" begincolumn="56" endcolumn="73" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="setStartupValidation" variable="startupValidation" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'startupValidation' is not assigned and could be declared final
+</violation>
+<violation beginline="74" endline="74" begincolumn="30" endcolumn="34" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="setPool" variable="pool" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'pool' is not assigned and could be declared final
+</violation>
+<violation beginline="82" endline="82" begincolumn="42" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="setSqlLogging" variable="sqlLogging" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'sqlLogging' is not assigned and could be declared final
+</violation>
+<violation beginline="87" endline="87" begincolumn="26" endcolumn="36" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="MiddlewareDataSourceProperties" method="createDataSource" variable="dataSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'dataSource' could be declared final
+</violation>
+<violation beginline="104" endline="104" begincolumn="40" endcolumn="47" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="StartupValidation" method="setEnabled" variable="enabled" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'enabled' is not assigned and could be declared final
+</violation>
+<violation beginline="109" endline="109" begincolumn="19" endcolumn="24" rule="ShortClassName" ruleset="Code Style" package="com.alramz.config" class="Pool" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortclassname" priority="4">
+Avoid short class names like Pool
+</violation>
+<violation beginline="109" endline="109" begincolumn="19" endcolumn="24" rule="DataClass" ruleset="Design" package="com.alramz.config" class="Pool" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#dataclass" priority="3">
+The class 'Pool' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=4, WMC=4)
+</violation>
+<violation beginline="117" endline="117" begincolumn="44" endcolumn="59" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Pool" method="setMaximumPoolSize" variable="maximumPoolSize" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'maximumPoolSize' is not assigned and could be declared final
+</violation>
+<violation beginline="125" endline="125" begincolumn="40" endcolumn="51" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="Pool" method="setMinimumIdle" variable="minimumIdle" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'minimumIdle' is not assigned and could be declared final
+</violation>
+<violation beginline="137" endline="137" begincolumn="40" endcolumn="47" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="SqlLogging" method="setEnabled" variable="enabled" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'enabled' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/config/RedisConfig.java">
+<violation beginline="23" endline="23" begincolumn="47" endcolumn="57" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="RedisConfig" variable="properties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'properties' is not assigned and could be declared final
+</violation>
+<violation beginline="29" endline="29" begincolumn="13" endcolumn="20" rule="AvoidLiteralsInIfCondition" ruleset="Error Prone" package="com.alramz.config" class="RedisConfig" method="redisConnectionFactory" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidliteralsinifcondition" priority="3">
+Avoid using literals in if statements
+</violation>
+<violation beginline="30" endline="30" begincolumn="13" endcolumn="56" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="redisConnectionFactory" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="36" endline="36" begincolumn="43" endcolumn="53" rule="CloseResource" ruleset="Error Prone" package="com.alramz.config" class="RedisConfig" method="createLocalRedisConnectionFactory" variable="connection" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#closeresource" priority="3">
+Ensure that resources like this Connection object are closed after use
+</violation>
+<violation beginline="36" endline="36" begincolumn="43" endcolumn="53" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="createLocalRedisConnectionFactory" variable="connection" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'connection' could be declared final
+</violation>
+<violation beginline="37" endline="37" begincolumn="38" endcolumn="44" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="createLocalRedisConnectionFactory" variable="config" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'config' could be declared final
+</violation>
+<violation beginline="44" endline="44" begincolumn="34" endcolumn="41" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="createLocalRedisConnectionFactory" variable="factory" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'factory' could be declared final
+</violation>
+<violation beginline="51" endline="51" begincolumn="43" endcolumn="53" rule="CloseResource" ruleset="Error Prone" package="com.alramz.config" class="RedisConfig" method="createAzureRedisConnectionFactory" variable="connection" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#closeresource" priority="3">
+Ensure that resources like this Connection object are closed after use
+</violation>
+<violation beginline="51" endline="51" begincolumn="43" endcolumn="53" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="createAzureRedisConnectionFactory" variable="connection" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'connection' could be declared final
+</violation>
+<violation beginline="52" endline="52" begincolumn="36" endcolumn="48" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="createAzureRedisConnectionFactory" variable="clientConfig" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'clientConfig' could be declared final
+</violation>
+<violation beginline="56" endline="56" begincolumn="34" endcolumn="41" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="createAzureRedisConnectionFactory" variable="factory" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'factory' could be declared final
+</violation>
+<violation beginline="71" endline="71" begincolumn="36" endcolumn="46" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="resolveAzureAccessToken" variable="credential" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'credential' could be declared final
+</violation>
+<violation beginline="76" endline="76" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.config" class="RedisConfig" method="resolveAzureAccessToken" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="81" endline="81" begincolumn="56" endcolumn="63" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="applyTimeout" variable="factory" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'factory' is not assigned and could be declared final
+</violation>
+<violation beginline="81" endline="81" begincolumn="72" endcolumn="79" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="applyTimeout" variable="timeout" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'timeout' is not assigned and could be declared final
+</violation>
+<violation beginline="82" endline="82" begincolumn="18" endcolumn="19" rule="ShortVariable" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="applyTimeout" variable="d" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like d
+</violation>
+<violation beginline="82" endline="82" begincolumn="18" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="applyTimeout" variable="d" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'd' could be declared final
+</violation>
+<violation beginline="87" endline="87" begincolumn="43" endcolumn="50" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="parseDuration" variable="timeout" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'timeout' is not assigned and could be declared final
+</violation>
+<violation beginline="87" endline="87" begincolumn="61" endcolumn="76" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="parseDuration" variable="defaultDuration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'defaultDuration' is not assigned and could be declared final
+</violation>
+<violation beginline="89" endline="89" begincolumn="13" endcolumn="44" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="parseDuration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="90" endline="90" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.config" class="RedisConfig" method="parseDuration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="96" endline="96" begincolumn="79" endcolumn="96" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="redisTemplate" variable="connectionFactory" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'connectionFactory' is not assigned and could be declared final
+</violation>
+<violation beginline="97" endline="97" begincolumn="39" endcolumn="47" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.config" class="RedisConfig" method="redisTemplate" variable="template" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'template' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/controllers/ApplicationController.java">
+<violation beginline="15" endline="15" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.controllers" class="ApplicationController" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="28" endline="28" begincolumn="29" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="ApplicationController" method="info" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/controllers/RedisCacheController.java">
+<violation beginline="24" endline="24" begincolumn="51" endcolumn="68" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="RedisCacheController" variable="redisCacheService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'redisCacheService' is not assigned and could be declared final
+</violation>
+<violation beginline="29" endline="29" begincolumn="25" endcolumn="45" rule="AvoidDuplicateLiterals" ruleset="Error Prone" package="com.alramz.controllers" class="RedisCacheController" method="flushCache" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidduplicateliterals" priority="3">
+The String literal "APP_REFERENCE_DATA" appears 5 times in this file; the first occurrence is on line 29
+</violation>
+<violation beginline="31" endline="31" begincolumn="62" endcolumn="70" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="flushCache" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="32" endline="32" begincolumn="16" endcolumn="22" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="flushCache" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'result' could be declared final
+</violation>
+<violation beginline="33" endline="33" begincolumn="25" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="flushCache" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+<violation beginline="34" endline="34" begincolumn="34" endcolumn="39" rule="AvoidDuplicateLiterals" ruleset="Error Prone" package="com.alramz.controllers" class="RedisCacheController" method="flushCache" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidduplicateliterals" priority="3">
+The String literal "200" appears 5 times in this file; the first occurrence is on line 34
+</violation>
+<violation beginline="43" endline="43" begincolumn="72" endcolumn="80" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="getCacheEntriesByKey" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="44" endline="44" begincolumn="35" endcolumn="42" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="getCacheEntriesByKey" variable="entries" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'entries' could be declared final
+</violation>
+<violation beginline="45" endline="45" begincolumn="25" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="getCacheEntriesByKey" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+<violation beginline="55" endline="55" begincolumn="66" endcolumn="74" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="getCacheStatus" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="56" endline="56" begincolumn="29" endcolumn="35" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="getCacheStatus" variable="status" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'status' could be declared final
+</violation>
+<violation beginline="58" endline="58" begincolumn="25" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="getCacheStatus" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+<violation beginline="68" endline="68" begincolumn="63" endcolumn="71" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="reloadCache" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="69" endline="69" begincolumn="16" endcolumn="22" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="reloadCache" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'result' could be declared final
+</violation>
+<violation beginline="70" endline="70" begincolumn="35" endcolumn="42" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="reloadCache" variable="entries" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'entries' could be declared final
+</violation>
+<violation beginline="71" endline="71" begincolumn="25" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="reloadCache" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+<violation beginline="82" endline="82" begincolumn="29" endcolumn="35" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="checkDeepHealth" variable="health" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'health' could be declared final
+</violation>
+<violation beginline="84" endline="84" begincolumn="25" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.controllers" class="RedisCacheController" method="checkDeepHealth" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+<violation beginline="26" endline="26" begincolumn="8" endcolumn="13" rule="AtLeastOneConstructor" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#atleastoneconstructor" priority="3">
+Each class should declare at least one constructor
+</violation>
+<violation beginline="29" endline="29" begincolumn="93" endcolumn="95" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleValidation" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="29" endline="29" begincolumn="93" endcolumn="95" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleValidation" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ex' is not assigned and could be declared final
+</violation>
+<violation beginline="30" endline="30" begincolumn="16" endcolumn="23" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleValidation" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'message' could be declared final
+</violation>
+<violation beginline="34" endline="34" begincolumn="25" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleValidation" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+<violation beginline="42" endline="42" begincolumn="94" endcolumn="96" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="43" endline="43" begincolumn="25" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleNotReadable" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+<violation beginline="51" endline="51" begincolumn="68" endcolumn="70" rule="ShortVariable" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleGeneric" variable="ex" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like ex
+</violation>
+<violation beginline="51" endline="51" begincolumn="91" endcolumn="98" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleGeneric" variable="request" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'request' is not assigned and could be declared final
+</violation>
+<violation beginline="52" endline="52" begincolumn="25" endcolumn="33" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleGeneric" variable="response" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'response' could be declared final
+</violation>
+<violation beginline="60" endline="60" begincolumn="58" endcolumn="65" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.exception" class="GlobalExceptionHandler" method="extractCorrelationId" variable="request" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'request' is not assigned and could be declared final
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/scheduler/job/CacheReloadScheduledJob.java">
+<violation beginline="17" endline="17" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="19" endline="19" begincolumn="40" endcolumn="60" rule="LongVariable" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" variable="schedulerLockService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like schedulerLockService
+</violation>
+<violation beginline="21" endline="21" begincolumn="54" endcolumn="71" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="CacheReloadScheduledJob" variable="redisCacheService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'redisCacheService' is not assigned and could be declared final
+</violation>
+<violation beginline="22" endline="22" begincolumn="57" endcolumn="77" rule="LongVariable" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="CacheReloadScheduledJob" variable="schedulerLockService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like schedulerLockService
+</violation>
+<violation beginline="22" endline="22" begincolumn="57" endcolumn="77" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="CacheReloadScheduledJob" variable="schedulerLockService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'schedulerLockService' is not assigned and could be declared final
+</violation>
+<violation beginline="28" endline="28" begincolumn="38" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="run" variable="scheduleInfoBean" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'scheduleInfoBean' is not assigned and could be declared final
+</violation>
+<violation beginline="36" endline="36" begincolumn="16" endcolumn="27" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="run" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'mappingName' could be declared final
+</violation>
+<violation beginline="38" endline="38" begincolumn="13" endcolumn="137" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="run" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="39" endline="39" begincolumn="13" endcolumn="20" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="run" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="42" endline="42" begincolumn="16" endcolumn="23" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="run" variable="lockKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'lockKey' could be declared final
+</violation>
+<violation beginline="51" endline="51" begincolumn="20" endcolumn="26" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="run" variable="result" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'result' could be declared final
+</violation>
+<violation beginline="53" endline="53" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="run" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="54" endline="54" begincolumn="13" endcolumn="97" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.scheduler.job" class="CacheReloadScheduledJob" method="run" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/service/CacheAuditService.java">
+<violation beginline="14" endline="14" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="15" endline="15" begincolumn="46" endcolumn="82" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareNamedParameterJdbcTemplate
+</violation>
+<violation beginline="17" endline="17" begincolumn="57" endcolumn="93" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="CacheAuditService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareNamedParameterJdbcTemplate
+</violation>
+<violation beginline="17" endline="17" begincolumn="57" endcolumn="93" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="CacheAuditService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareNamedParameterJdbcTemplate' is not assigned and could be declared final
+</violation>
+<violation beginline="22" endline="22" begincolumn="17" endcolumn="30" rule="UseObjectForClearerAPI" ruleset="Design" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#useobjectforclearerapi" priority="3">
+Rather than using a lot of String arguments, consider using a container object for those values.
+</violation>
+<violation beginline="22" endline="22" begincolumn="38" endcolumn="49" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="22" endline="22" begincolumn="58" endcolumn="66" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="22" endline="22" begincolumn="75" endcolumn="84" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" variable="eventType" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'eventType' is not assigned and could be declared final
+</violation>
+<violation beginline="22" endline="22" begincolumn="93" endcolumn="104" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" variable="triggeredBy" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'triggeredBy' is not assigned and could be declared final
+</violation>
+<violation beginline="22" endline="22" begincolumn="113" endcolumn="126" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" variable="triggerSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'triggerSource' is not assigned and could be declared final
+</violation>
+<violation beginline="23" endline="23" begincolumn="16" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="26" endline="26" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="36" endline="36" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="37" endline="37" begincolumn="13" endcolumn="82" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="CacheAuditService" method="logAuditAsync" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java">
+<violation beginline="24" endline="348" begincolumn="32" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.service" class="RedisCacheService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="26" endline="26" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="33" endline="33" begincolumn="42" endcolumn="64" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" variable="companyRedisProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like companyRedisProperties
+</violation>
+<violation beginline="34" endline="34" begincolumn="46" endcolumn="82" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareNamedParameterJdbcTemplate
+</violation>
+<violation beginline="38" endline="38" begincolumn="43" endcolumn="56" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="RedisCacheService" variable="redisTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'redisTemplate' is not assigned and could be declared final
+</violation>
+<violation beginline="39" endline="39" begincolumn="26" endcolumn="38" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="RedisCacheService" variable="objectMapper" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'objectMapper' is not assigned and could be declared final
+</violation>
+<violation beginline="40" endline="40" begincolumn="36" endcolumn="58" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="RedisCacheService" variable="companyRedisProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like companyRedisProperties
+</violation>
+<violation beginline="40" endline="40" begincolumn="36" endcolumn="58" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="RedisCacheService" variable="companyRedisProperties" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'companyRedisProperties' is not assigned and could be declared final
+</violation>
+<violation beginline="41" endline="41" begincolumn="40" endcolumn="76" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="RedisCacheService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareNamedParameterJdbcTemplate
+</violation>
+<violation beginline="41" endline="41" begincolumn="40" endcolumn="76" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="RedisCacheService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareNamedParameterJdbcTemplate' is not assigned and could be declared final
+</violation>
+<violation beginline="42" endline="42" begincolumn="31" endcolumn="48" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="RedisCacheService" variable="cacheAuditService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheAuditService' is not assigned and could be declared final
+</violation>
+<violation beginline="50" endline="50" begincolumn="59" endcolumn="70" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getAllEntries" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="51" endline="51" begincolumn="51" endcolumn="58" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getAllEntries" variable="mapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'mapping' could be declared final
+</violation>
+<violation beginline="52" endline="52" begincolumn="16" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getAllEntries" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'cacheKey' could be declared final
+</violation>
+<violation beginline="55" endline="55" begincolumn="20" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getAllEntries" variable="json" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'json' could be declared final
+</violation>
+<violation beginline="57" endline="57" begincolumn="17" endcolumn="46" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getAllEntries" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="59" endline="59" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="getAllEntries" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="60" endline="60" begincolumn="13" endcolumn="97" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="getAllEntries" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="66" endline="66" begincolumn="37" endcolumn="48" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="flushCache" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="67" endline="67" begincolumn="51" endcolumn="58" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="flushCache" variable="mapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'mapping' could be declared final
+</violation>
+<violation beginline="68" endline="68" begincolumn="16" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="flushCache" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'cacheKey' could be declared final
+</violation>
+<violation beginline="73" endline="73" begincolumn="13" endcolumn="49" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="flushCache" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="74" endline="74" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="flushCache" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="75" endline="75" begincolumn="13" endcolumn="92" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="flushCache" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="80" endline="80" begincolumn="45" endcolumn="56" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="81" endline="81" begincolumn="51" endcolumn="58" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" variable="mapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'mapping' could be declared final
+</violation>
+<violation beginline="82" endline="82" begincolumn="16" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'cacheKey' could be declared final
+</violation>
+<violation beginline="87" endline="87" begincolumn="13" endcolumn="77" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="91" endline="91" begincolumn="39" endcolumn="47" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" variable="settings" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'settings' could be declared final
+</violation>
+<violation beginline="92" endline="92" begincolumn="20" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" variable="json" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'json' could be declared final
+</violation>
+<violation beginline="100" endline="100" begincolumn="13" endcolumn="87" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="101" endline="101" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="103" endline="103" begincolumn="13" endcolumn="100" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="reloadGlobalConfig" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="108" endline="108" begincolumn="54" endcolumn="65" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="109" endline="109" begincolumn="51" endcolumn="58" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" variable="mapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'mapping' could be declared final
+</violation>
+<violation beginline="110" endline="110" begincolumn="16" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'cacheKey' could be declared final
+</violation>
+<violation beginline="112" endline="112" begincolumn="17" endcolumn="31" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" variable="redisAvailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'redisAvailable' could be declared final
+</violation>
+<violation beginline="121" endline="121" begincolumn="28" endcolumn="32" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" variable="json" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'json' could be declared final
+</violation>
+<violation beginline="122" endline="126" begincolumn="21" endcolumn="22" rule="AvoidDeeplyNestedIfStmts" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoiddeeplynestedifstmts" priority="3">
+Deeply nested if..then statements are hard to read
+</violation>
+<violation beginline="123" endline="123" begincolumn="51" endcolumn="59" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" variable="settings" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'settings' could be declared final
+</violation>
+<violation beginline="128" endline="128" begincolumn="22" endcolumn="31" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="129" endline="129" begincolumn="17" endcolumn="98" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="133" endline="133" begincolumn="29" endcolumn="35" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="getCacheStatus" variable="status" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'status' could be declared final
+</violation>
+<violation beginline="145" endline="145" begincolumn="17" endcolumn="28" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="checkDeepHealth" variable="dbAvailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'dbAvailable' could be declared final
+</violation>
+<violation beginline="146" endline="146" begincolumn="17" endcolumn="31" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="checkDeepHealth" variable="redisAvailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'redisAvailable' could be declared final
+</violation>
+<violation beginline="147" endline="147" begincolumn="16" endcolumn="29" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="checkDeepHealth" variable="overallStatus" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'overallStatus' could be declared final
+</violation>
+<violation beginline="149" endline="149" begincolumn="29" endcolumn="36" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="checkDeepHealth" variable="details" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'details' could be declared final
+</violation>
+<violation beginline="163" endline="163" begincolumn="76" endcolumn="87" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadFromDatabaseAndRepopulate" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="164" endline="164" begincolumn="55" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadFromDatabaseAndRepopulate" variable="mapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mapping' is not assigned and could be declared final
+</violation>
+<violation beginline="164" endline="164" begincolumn="71" endcolumn="84" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadFromDatabaseAndRepopulate" variable="triggerSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'triggerSource' is not assigned and could be declared final
+</violation>
+<violation beginline="166" endline="166" begincolumn="39" endcolumn="47" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadFromDatabaseAndRepopulate" variable="settings" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'settings' could be declared final
+</violation>
+<violation beginline="167" endline="167" begincolumn="20" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadFromDatabaseAndRepopulate" variable="json" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'json' could be declared final
+</violation>
+<violation beginline="168" endline="168" begincolumn="20" endcolumn="28" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadFromDatabaseAndRepopulate" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'cacheKey' could be declared final
+</violation>
+<violation beginline="173" endline="173" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="loadFromDatabaseAndRepopulate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="174" endline="174" begincolumn="13" endcolumn="102" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="loadFromDatabaseAndRepopulate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="180" endline="180" begincolumn="44" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="writeViaStagingKey" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="180" endline="180" begincolumn="61" endcolumn="65" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="writeViaStagingKey" variable="json" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'json' is not assigned and could be declared final
+</violation>
+<violation beginline="180" endline="180" begincolumn="74" endcolumn="82" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="writeViaStagingKey" variable="ttlValue" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ttlValue' is not assigned and could be declared final
+</violation>
+<violation beginline="181" endline="181" begincolumn="16" endcolumn="26" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="writeViaStagingKey" variable="stagingKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'stagingKey' could be declared final
+</violation>
+<violation beginline="185" endline="185" begincolumn="18" endcolumn="34" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="writeViaStagingKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="192" endline="192" begincolumn="41" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="repopulateCache" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="192" endline="192" begincolumn="61" endcolumn="69" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="repopulateCache" variable="cacheKey" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'cacheKey' is not assigned and could be declared final
+</violation>
+<violation beginline="192" endline="192" begincolumn="78" endcolumn="82" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="repopulateCache" variable="json" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'json' is not assigned and could be declared final
+</violation>
+<violation beginline="192" endline="192" begincolumn="91" endcolumn="99" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="repopulateCache" variable="ttlValue" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ttlValue' is not assigned and could be declared final
+</violation>
+<violation beginline="192" endline="192" begincolumn="108" endcolumn="121" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="repopulateCache" variable="triggerSource" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'triggerSource' is not assigned and could be declared final
+</violation>
+<violation beginline="197" endline="197" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="repopulateCache" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="198" endline="198" begincolumn="13" endcolumn="93" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="repopulateCache" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="202" endline="202" begincolumn="38" endcolumn="41" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="writeWithTtl" variable="key" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'key' is not assigned and could be declared final
+</violation>
+<violation beginline="202" endline="202" begincolumn="50" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="writeWithTtl" variable="json" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'json' is not assigned and could be declared final
+</violation>
+<violation beginline="202" endline="202" begincolumn="63" endcolumn="71" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="writeWithTtl" variable="ttlValue" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ttlValue' is not assigned and could be declared final
+</violation>
+<violation beginline="203" endline="203" begincolumn="18" endcolumn="21" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="writeWithTtl" variable="ttl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'ttl' could be declared final
+</violation>
+<violation beginline="211" endline="211" begincolumn="66" endcolumn="77" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadAllFromDatabase" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="212" endline="212" begincolumn="51" endcolumn="58" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadAllFromDatabase" variable="mapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'mapping' could be declared final
+</violation>
+<violation beginline="213" endline="213" begincolumn="16" endcolumn="25" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadAllFromDatabase" variable="tableName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'tableName' could be declared final
+</violation>
+<violation beginline="219" endline="219" begincolumn="16" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadAllFromDatabase" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="221" endline="221" begincolumn="33" endcolumn="36" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="loadAllFromDatabase" variable="row" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'row' could be declared final
+</violation>
+<violation beginline="229" endline="229" begincolumn="77" endcolumn="88" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="resolveMapping" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="230" endline="230" begincolumn="51" endcolumn="58" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="resolveMapping" variable="mapping" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'mapping' could be declared final
+</violation>
+<violation beginline="240" endline="240" begincolumn="43" endcolumn="54" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="tryAcquireLock" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="240" endline="240" begincolumn="65" endcolumn="78" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="tryAcquireLock" variable="leaseDuration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'leaseDuration' is not assigned and could be declared final
+</violation>
+<violation beginline="241" endline="241" begincolumn="16" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="tryAcquireLock" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="248" endline="248" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="tryAcquireLock" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="254" endline="254" begincolumn="17" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="tryAcquireLock" variable="updated" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'updated' could be declared final
+</violation>
+<violation beginline="255" endline="255" begincolumn="13" endcolumn="32" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="tryAcquireLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="256" endline="256" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="tryAcquireLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="257" endline="257" begincolumn="13" endcolumn="107" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="tryAcquireLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="262" endline="262" begincolumn="37" endcolumn="48" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="releaseLock" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="262" endline="262" begincolumn="57" endcolumn="63" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="releaseLock" variable="status" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'status' is not assigned and could be declared final
+</violation>
+<violation beginline="263" endline="263" begincolumn="16" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="releaseLock" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="266" endline="266" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="releaseLock" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="273" endline="273" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="releaseLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="274" endline="274" begincolumn="13" endcolumn="107" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="releaseLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="278" endline="278" begincolumn="41" endcolumn="52" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="cleanStaleLocks" variable="mappingName" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'mappingName' is not assigned and could be declared final
+</violation>
+<violation beginline="279" endline="279" begincolumn="16" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="cleanStaleLocks" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="281" endline="281" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="cleanStaleLocks" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="286" endline="286" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="cleanStaleLocks" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="287" endline="287" begincolumn="13" endcolumn="104" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="RedisCacheService" method="cleanStaleLocks" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="294" endline="294" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="isRedisAvailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="295" endline="295" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="isRedisAvailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="303" endline="303" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="isDatabaseAvailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="304" endline="304" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="isDatabaseAvailable" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="309" endline="309" begincolumn="60" endcolumn="64" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="serializeList" variable="data" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'data' is not assigned and could be declared final
+</violation>
+<violation beginline="317" endline="317" begincolumn="62" endcolumn="66" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="deserializeList" variable="json" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'json' is not assigned and could be declared final
+</violation>
+<violation beginline="319" endline="319" begincolumn="66" endcolumn="93" rule="UseDiamondOperator" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="deserializeList" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#usediamondoperator" priority="3">
+Explicit type arguments can be replaced by a diamond: `new TypeReference&lt;&gt;()`
+</violation>
+<violation beginline="325" endline="325" begincolumn="38" endcolumn="41" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="parseTtl" variable="ttl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ttl' is not assigned and could be declared final
+</violation>
+<violation beginline="327" endline="327" begincolumn="13" endcolumn="25" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="parseTtl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="330" endline="330" begincolumn="13" endcolumn="76" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="parseTtl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="331" endline="331" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="parseTtl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="337" endline="337" begincolumn="41" endcolumn="44" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="parseTtlSeconds" variable="ttl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'ttl' is not assigned and could be declared final
+</violation>
+<violation beginline="339" endline="339" begincolumn="13" endcolumn="22" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="parseTtlSeconds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="342" endline="342" begincolumn="22" endcolumn="23" rule="ShortVariable" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="parseTtlSeconds" variable="d" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortvariable" priority="3">
+Avoid variables with short names like d
+</violation>
+<violation beginline="342" endline="342" begincolumn="22" endcolumn="23" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="parseTtlSeconds" variable="d" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'd' could be declared final
+</violation>
+<violation beginline="343" endline="343" begincolumn="13" endcolumn="51" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="RedisCacheService" method="parseTtlSeconds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="344" endline="344" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="RedisCacheService" method="parseTtlSeconds" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+</file>
+<file name="/Users/gtalele/Library/CloudStorage/OneDrive-AlRamz/Desktop/workspace/alramz-mw-backend/services/reference-data-service/src/main/java/com/alramz/service/SchedulerLockService.java">
+<violation beginline="17" endline="17" begincolumn="33" endcolumn="36" rule="FieldNamingConventions" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" variable="log" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#fieldnamingconventions" priority="1">
+The constant name 'log' doesn't match '[A-Z][A-Z_0-9]*'
+</violation>
+<violation beginline="22" endline="22" begincolumn="46" endcolumn="82" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareNamedParameterJdbcTemplate
+</violation>
+<violation beginline="24" endline="24" begincolumn="60" endcolumn="96" rule="LongVariable" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="SchedulerLockService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#longvariable" priority="3">
+Avoid excessively long variable names like middlewareNamedParameterJdbcTemplate
+</violation>
+<violation beginline="24" endline="24" begincolumn="60" endcolumn="96" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="SchedulerLockService" variable="middlewareNamedParameterJdbcTemplate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'middlewareNamedParameterJdbcTemplate' is not assigned and could be declared final
+</violation>
+<violation beginline="28" endline="28" begincolumn="42" endcolumn="47" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="tryAcquireLock" variable="jobId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'jobId' is not assigned and could be declared final
+</violation>
+<violation beginline="28" endline="28" begincolumn="58" endcolumn="71" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="tryAcquireLock" variable="leaseDuration" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'leaseDuration' is not assigned and could be declared final
+</violation>
+<violation beginline="29" endline="29" begincolumn="16" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="tryAcquireLock" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="36" endline="36" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="tryAcquireLock" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="48" endline="48" begincolumn="17" endcolumn="24" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="tryAcquireLock" variable="updated" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'updated' could be declared final
+</violation>
+<violation beginline="49" endline="49" begincolumn="13" endcolumn="32" rule="OnlyOneReturn" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="tryAcquireLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#onlyonereturn" priority="3">
+A method should have only one exit point, and that should be the last statement in the method
+</violation>
+<violation beginline="50" endline="50" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="SchedulerLockService" method="tryAcquireLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="51" endline="51" begincolumn="13" endcolumn="100" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="SchedulerLockService" method="tryAcquireLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="56" endline="56" begincolumn="36" endcolumn="41" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="releaseLock" variable="jobId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'jobId' is not assigned and could be declared final
+</violation>
+<violation beginline="57" endline="57" begincolumn="16" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="releaseLock" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="59" endline="59" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="releaseLock" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="69" endline="69" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="SchedulerLockService" method="releaseLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="70" endline="70" begincolumn="13" endcolumn="100" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="SchedulerLockService" method="releaseLock" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="74" endline="74" begincolumn="40" endcolumn="45" rule="MethodArgumentCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="cleanStaleLocks" variable="jobId" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#methodargumentcouldbefinal" priority="3">
+Parameter 'jobId' is not assigned and could be declared final
+</violation>
+<violation beginline="75" endline="75" begincolumn="16" endcolumn="19" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="cleanStaleLocks" variable="sql" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'sql' could be declared final
+</violation>
+<violation beginline="77" endline="77" begincolumn="31" endcolumn="37" rule="LocalVariableCouldBeFinal" ruleset="Code Style" package="com.alramz.service" class="SchedulerLockService" method="cleanStaleLocks" variable="params" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#localvariablecouldbefinal" priority="3">
+Local variable 'params' could be declared final
+</violation>
+<violation beginline="86" endline="86" begincolumn="18" endcolumn="27" rule="AvoidCatchingGenericException" ruleset="Design" package="com.alramz.service" class="SchedulerLockService" method="cleanStaleLocks" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#avoidcatchinggenericexception" priority="3">
+Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+</violation>
+<violation beginline="87" endline="87" begincolumn="13" endcolumn="104" rule="GuardLogStatement" ruleset="Best Practices" package="com.alramz.service" class="SchedulerLockService" method="cleanStaleLocks" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+</file>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

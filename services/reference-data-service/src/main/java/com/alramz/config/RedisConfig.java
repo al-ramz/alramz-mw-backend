@@ -14,9 +14,13 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.time.format.DateTimeParseException;
+import java.util.Objects;
 
 @Configuration
 public class RedisConfig {
+
+    private static final String AZURE_MODE = "azure";
 
     private final CompanyRedisProperties properties;
 
@@ -26,12 +30,14 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        if ("azure".equalsIgnoreCase(properties.getDeployment().getMode())) {
+        if (AZURE_MODE.equalsIgnoreCase(properties.getDeployment().getMode())) {
             return createAzureRedisConnectionFactory();
         }
         return createLocalRedisConnectionFactory();
     }
 
+    // reason: false positive - Connection is the CompanyRedisProperties.Connection config bean, not a closeable resource
+    @SuppressWarnings("PMD.CloseResource")
     private RedisConnectionFactory createLocalRedisConnectionFactory() {
         CompanyRedisProperties.Connection connection = properties.getConnection();
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
@@ -47,6 +53,8 @@ public class RedisConfig {
         return factory;
     }
 
+    // reason: false positive - Connection is the CompanyRedisProperties.Connection config bean, not a closeable resource
+    @SuppressWarnings("PMD.CloseResource")
     private RedisConnectionFactory createAzureRedisConnectionFactory() {
         CompanyRedisProperties.Connection connection = properties.getConnection();
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
@@ -66,13 +74,15 @@ public class RedisConfig {
         return factory;
     }
 
+    // reason: boundary - any Azure identity/reactor failure is rethrown as one IllegalStateException with context
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private String resolveAzureAccessToken() {
         try {
             DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
-            return credential.getToken(
+            return Objects.requireNonNull(credential.getToken(
                     new com.azure.core.credential.TokenRequestContext()
                             .addScopes("https://redis.azure.com/.default")
-            ).block().getToken();
+            ).block(), "Azure token request returned no token").getToken();
         } catch (Exception e) {
             throw new IllegalStateException("Failed to obtain Azure managed identity token for Redis", e);
         }
@@ -85,9 +95,12 @@ public class RedisConfig {
     }
 
     private Duration parseDuration(String timeout, Duration defaultDuration) {
+        if (timeout == null) {
+            return defaultDuration;
+        }
         try {
             return Duration.parse(timeout);
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
             return defaultDuration;
         }
     }

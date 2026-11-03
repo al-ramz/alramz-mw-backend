@@ -8,6 +8,7 @@ import com.alramz.logging.aspect.Loggable;
 import com.alramz.model.ETradeResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -40,7 +41,7 @@ public class DuplicateCheckHelper {
             return ninService.checkIfNinOrTradingNumberExists("DFM", nin, null);
         } catch (Exception e) { // NOPMD AvoidCatchingGenericException
             log.error("NIN duplicate check failed for nin={}", nin, e);
-            throw new ExternalSystemException("NIN duplicate check failed: " + e.getMessage());
+            throw new ExternalSystemException("NIN duplicate check failed: " + e.getMessage(), e);
         }
     }
 
@@ -97,7 +98,7 @@ public class DuplicateCheckHelper {
             );
             return evaluateResponse(response);
         } catch (ApiCallFailedException e) {
-            if (e.getResponseCode() == 401) {
+            if (e.getResponseCode() == HttpStatus.UNAUTHORIZED.value()) {
                 log.warn("Received 401 from eTrade during duplicate check, invalidating token and retrying once");
                 etradeTokenProvider.invalidate();
                 String freshToken = etradeTokenProvider.getToken()
@@ -111,7 +112,7 @@ public class DuplicateCheckHelper {
                 );
                 return evaluateResponse(response);
             }
-            throw new ExternalSystemException("eTrade duplicate check service unavailable");
+            throw new ExternalSystemException("eTrade duplicate check service unavailable", e);
         }
     }
 

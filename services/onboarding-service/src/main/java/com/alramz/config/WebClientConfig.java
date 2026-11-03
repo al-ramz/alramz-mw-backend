@@ -15,7 +15,7 @@ public class WebClientConfig {
     @Bean
     public WebClient webClient(WebClient.Builder builder, ObjectMapper objectMapper, ExchangeFilterFunction alramzWebClientLoggingFilterFunction) {
 
-        var decoder = new Jackson2JsonDecoder(objectMapper);
+        Jackson2JsonDecoder decoder = new Jackson2JsonDecoder(objectMapper);
 
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().jackson2JsonDecoder(decoder))

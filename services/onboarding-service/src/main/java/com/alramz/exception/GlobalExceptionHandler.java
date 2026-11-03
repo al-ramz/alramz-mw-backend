@@ -28,13 +28,18 @@ public class GlobalExceptionHandler {
     private static final String ONBOARDING_PATH = "/api/v1/dfm/onboarding";
     private static final String DEFAULT_INTERNAL_ERROR_CODE = "ONB011";
     private static final String ERRORS_KEY = "errors";
+    private static final String CODE_KEY = "code";
+    private static final String BAD_REQUEST_CODE = "400";
+    private static final String SERVICE_UNAVAILABLE_CODE = "503";
     private static final String MESSAGE_KEY = "message";
     private static final String INVALID_REQUEST_MESSAGE = "Invalid request";
     private static final String MALFORMED_JSON_MESSAGE = "Malformed JSON request";
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Internal server error";
 
     private String friendlyMessage(String field, String defaultMessage) {
-        if (field == null) return defaultMessage;
+        if (field == null) {
+            return defaultMessage;
+        }
         String normalized = field.contains(".") ? field.substring(field.lastIndexOf('.') + 1) : field;
         return switch (normalized) {
             case "custMobile", "cust_mobile" -> "Mobile Number (cust_mobile) is missing";
@@ -47,7 +52,9 @@ public class GlobalExceptionHandler {
     }
 
     private String mapFieldToInternalErrorCode(String field) {
-        if (field == null) return DEFAULT_INTERNAL_ERROR_CODE;
+        if (field == null) {
+            return DEFAULT_INTERNAL_ERROR_CODE;
+        }
         String normalized = field.contains(".") ? field.substring(field.lastIndexOf('.') + 1) : field;
         return switch (normalized) {
             case "custMobile", "cust_mobile" -> "ONB001";
@@ -66,7 +73,7 @@ public class GlobalExceptionHandler {
 
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
-            apiResponse.setResponseCode("400");
+            apiResponse.setResponseCode(BAD_REQUEST_CODE);
             apiResponse.setResponseMessage(message);
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
@@ -76,7 +83,7 @@ public class GlobalExceptionHandler {
 
         if (isOnboardingRequest(request)) {
             OnboardingResponse response = new OnboardingResponse();
-            response.setResponseCode("400");
+            response.setResponseCode(BAD_REQUEST_CODE);
             String friendly = ex.getBindingResult().getFieldErrors().stream()
                     .map(fe -> friendlyMessage(fe.getField(), fe.getDefaultMessage()))
                     .collect(Collectors.joining("; "));
@@ -93,11 +100,11 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "400", MESSAGE_KEY, message))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, BAD_REQUEST_CODE, MESSAGE_KEY, message))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("400");
+        apiResponse.setResponseCode(BAD_REQUEST_CODE);
         apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
@@ -112,7 +119,7 @@ public class GlobalExceptionHandler {
 
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
-            apiResponse.setResponseCode("400");
+            apiResponse.setResponseCode(BAD_REQUEST_CODE);
             apiResponse.setResponseMessage(message);
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
@@ -122,7 +129,7 @@ public class GlobalExceptionHandler {
 
         if (isOnboardingRequest(request)) {
             OnboardingResponse response = new OnboardingResponse();
-            response.setResponseCode("400");
+            response.setResponseCode(BAD_REQUEST_CODE);
             String friendly = ex.getConstraintViolations().stream()
                     .map(cv -> friendlyMessage(cv.getPropertyPath().toString(), cv.getMessage()))
                     .collect(Collectors.joining("; "));
@@ -139,11 +146,11 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "400", MESSAGE_KEY, message))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, BAD_REQUEST_CODE, MESSAGE_KEY, message))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("400");
+        apiResponse.setResponseCode(BAD_REQUEST_CODE);
         apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
@@ -154,7 +161,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
-            apiResponse.setResponseCode("400");
+            apiResponse.setResponseCode(BAD_REQUEST_CODE);
             apiResponse.setResponseMessage(MALFORMED_JSON_MESSAGE);
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
@@ -164,7 +171,7 @@ public class GlobalExceptionHandler {
 
         if (isOnboardingRequest(request)) {
             OnboardingResponse response = new OnboardingResponse();
-            response.setResponseCode("400");
+            response.setResponseCode(BAD_REQUEST_CODE);
             response.setResponseMessage(MALFORMED_JSON_MESSAGE);
             response.setMemberReferenceNumber(extractCorrelationId(request));
             response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
@@ -173,11 +180,11 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "400", MESSAGE_KEY, MALFORMED_JSON_MESSAGE))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, BAD_REQUEST_CODE, MESSAGE_KEY, MALFORMED_JSON_MESSAGE))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("400");
+        apiResponse.setResponseCode(BAD_REQUEST_CODE);
         apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
@@ -187,11 +194,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IbanValidationException.class)
     public ResponseEntity<GenericResponse> handleIbanValidation(IbanValidationException ex) {
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", ex.getCode(), MESSAGE_KEY, ex.getMessage()))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, ex.getCode(), MESSAGE_KEY, ex.getMessage()))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("400");
+        apiResponse.setResponseCode(BAD_REQUEST_CODE);
         apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
@@ -202,7 +209,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleExternalSystem(ExternalSystemException ex, HttpServletRequest request) {
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
-            apiResponse.setResponseCode("503");
+            apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
             apiResponse.setResponseMessage(ex.getMessage());
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
@@ -212,7 +219,7 @@ public class GlobalExceptionHandler {
 
         if (isOnboardingRequest(request)) {
             OnboardingResponse response = new OnboardingResponse();
-            response.setResponseCode("503");
+            response.setResponseCode(SERVICE_UNAVAILABLE_CODE);
             response.setResponseMessage(ex.getMessage());
             response.setMemberReferenceNumber(extractCorrelationId(request));
             response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
@@ -221,11 +228,11 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, ex.getMessage()))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, SERVICE_UNAVAILABLE_CODE, MESSAGE_KEY, ex.getMessage()))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("503");
+        apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
         apiResponse.setResponseMessage(ex.getMessage());
         apiResponse.setResponse(response);
 
@@ -236,7 +243,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleTechnical(TechnicalException ex, HttpServletRequest request) {
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
-            apiResponse.setResponseCode("503");
+            apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
             apiResponse.setResponseMessage(ex.getMessage());
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
@@ -246,7 +253,7 @@ public class GlobalExceptionHandler {
 
         if (isOnboardingRequest(request)) {
             OnboardingResponse response = new OnboardingResponse();
-            response.setResponseCode("503");
+            response.setResponseCode(SERVICE_UNAVAILABLE_CODE);
             response.setResponseMessage(ex.getMessage());
             response.setMemberReferenceNumber(extractCorrelationId(request));
             response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
@@ -255,11 +262,11 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, ex.getMessage()))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, SERVICE_UNAVAILABLE_CODE, MESSAGE_KEY, ex.getMessage()))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("503");
+        apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
         apiResponse.setResponseMessage(ex.getMessage());
         apiResponse.setResponse(response);
 
@@ -274,7 +281,7 @@ public class GlobalExceptionHandler {
 
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
-            apiResponse.setResponseCode("400");
+            apiResponse.setResponseCode(BAD_REQUEST_CODE);
             apiResponse.setResponseMessage(message);
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
@@ -284,7 +291,7 @@ public class GlobalExceptionHandler {
 
         if (isOnboardingRequest(request)) {
             OnboardingResponse response = new OnboardingResponse();
-            response.setResponseCode("400");
+            response.setResponseCode(BAD_REQUEST_CODE);
             response.setResponseMessage(message);
             response.setMemberReferenceNumber(extractCorrelationId(request));
             response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
@@ -293,11 +300,11 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "400", MESSAGE_KEY, message))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, BAD_REQUEST_CODE, MESSAGE_KEY, message))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("400");
+        apiResponse.setResponseCode(BAD_REQUEST_CODE);
         apiResponse.setResponseMessage(INVALID_REQUEST_MESSAGE);
         apiResponse.setResponse(response);
 
@@ -307,11 +314,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiCallFailedException.class)
     public ResponseEntity<GenericResponse> handleApiCallFailed(ApiCallFailedException ex) {
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, "IBAN validation service unavailable"))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, SERVICE_UNAVAILABLE_CODE, MESSAGE_KEY, "IBAN validation service unavailable"))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("503");
+        apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
         apiResponse.setResponseMessage("IBAN validation service unavailable");
         apiResponse.setResponse(response);
 
@@ -322,7 +329,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleInvalidHttpRequest(InvalidHttpRequestException ex, HttpServletRequest request) {
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
-            apiResponse.setResponseCode("503");
+            apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
             apiResponse.setResponseMessage(ex.getMessage());
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
@@ -332,7 +339,7 @@ public class GlobalExceptionHandler {
 
         if (isOnboardingRequest(request)) {
             OnboardingResponse response = new OnboardingResponse();
-            response.setResponseCode("503");
+            response.setResponseCode(SERVICE_UNAVAILABLE_CODE);
             response.setResponseMessage(ex.getMessage());
             response.setMemberReferenceNumber(extractCorrelationId(request));
             response.setInternalErrorCode(DEFAULT_INTERNAL_ERROR_CODE);
@@ -341,11 +348,11 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, ex.getMessage()))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, SERVICE_UNAVAILABLE_CODE, MESSAGE_KEY, ex.getMessage()))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("503");
+        apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
         apiResponse.setResponseMessage(ex.getMessage());
         apiResponse.setResponse(response);
 
@@ -356,7 +363,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleGeneric(Exception ex, HttpServletRequest request) {
         if (isValidationRequest(request)) {
             GenericResponse apiResponse = new GenericResponse();
-            apiResponse.setResponseCode("503");
+            apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
             apiResponse.setResponseMessage(INTERNAL_SERVER_ERROR_MESSAGE);
             apiResponse.setResponse(null);
             apiResponse.setCorrelationId(extractCorrelationId(request));
@@ -375,11 +382,11 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> response = Map.of(
-                ERRORS_KEY, List.of(Map.of("code", "503", MESSAGE_KEY, INTERNAL_SERVER_ERROR_MESSAGE))
+                ERRORS_KEY, List.of(Map.of(CODE_KEY, SERVICE_UNAVAILABLE_CODE, MESSAGE_KEY, INTERNAL_SERVER_ERROR_MESSAGE))
         );
 
         GenericResponse apiResponse = new GenericResponse();
-        apiResponse.setResponseCode("503");
+        apiResponse.setResponseCode(SERVICE_UNAVAILABLE_CODE);
         apiResponse.setResponseMessage(INTERNAL_SERVER_ERROR_MESSAGE);
         apiResponse.setResponse(response);
 

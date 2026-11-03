@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +58,7 @@ public class RedisCacheService {
             if (json != null) {
                 return deserializeList(json);
             }
-        } catch (Exception e) {
+        } catch (DataAccessException | IllegalStateException e) {
             log.warn("Redis unavailable or error reading key {}: {}", cacheKey, e.getMessage());
         }
 
@@ -71,7 +73,7 @@ public class RedisCacheService {
             redisTemplate.delete(cacheKey);
             cacheAuditService.logAuditAsync(mappingName, cacheKey, "FLUSH", "API", "Cache flushed via API");
             return "Cache flushed successfully";
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Failed to flush cache for key {}: {}", cacheKey, e.getMessage(), e);
             return "Cache flush failed: " + e.getMessage();
         }
@@ -98,7 +100,7 @@ public class RedisCacheService {
                     "Reloaded " + settings.size() + " entries");
 
             return "Cache reloaded successfully with " + settings.size() + " entries";
-        } catch (Exception e) {
+        } catch (DataAccessException | IllegalStateException e) {
             releaseLock(mappingName, "FAILED");
             log.error("Failed to reload cache for mapping {}: {}", mappingName, e.getMessage(), e);
             return "Cache reload failed: " + e.getMessage();
@@ -117,15 +119,13 @@ public class RedisCacheService {
         if (redisAvailable) {
             try {
                 exists = Boolean.TRUE.equals(redisTemplate.hasKey(cacheKey));
-                if (exists) {
-                    String json = redisTemplate.opsForValue().get(cacheKey);
-                    if (json != null) {
-                        List<Map<String, Object>> settings = deserializeList(json);
-                        entryCount = (long) settings.size();
-                        cacheSizeBytes = (long) json.getBytes().length;
-                    }
+                String json = exists ? redisTemplate.opsForValue().get(cacheKey) : null;
+                if (json != null) {
+                    List<Map<String, Object>> settings = deserializeList(json);
+                    entryCount = (long) settings.size();
+                    cacheSizeBytes = (long) json.getBytes().length;
                 }
-            } catch (Exception e) {
+            } catch (DataAccessException | IllegalStateException e) {
                 log.warn("Error checking cache status for key {}: {}", cacheKey, e.getMessage());
             }
         }
@@ -160,6 +160,8 @@ public class RedisCacheService {
         );
     }
 
+    // reason: separate catches keep a precise rethrow type; a multi-catch rethrows as RuntimeException (SpotBugs THROWS_*)
+    @SuppressWarnings("PMD.IdenticalCatchBranches")
     private List<Map<String, Object>> loadFromDatabaseAndRepopulate(String mappingName,
             CompanyRedisProperties.Cache.CacheMapping mapping, String triggerSource) {
         try {
@@ -170,7 +172,10 @@ public class RedisCacheService {
             repopulateCache(mappingName, cacheKey, json, mapping.getTtl(), triggerSource);
 
             return settings;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
+            log.error("Database fallback failed for mapping {}: {}", mappingName, e.getMessage(), e);
+            throw e;
+        } catch (IllegalStateException e) {
             log.error("Database fallback failed for mapping {}: {}", mappingName, e.getMessage(), e);
             throw e;
         }
@@ -182,7 +187,7 @@ public class RedisCacheService {
         try {
             writeWithTtl(stagingKey, json, ttlValue);
             redisTemplate.rename(stagingKey, cacheKey);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             redisTemplate.delete(stagingKey);
             throw e;
         }
@@ -194,7 +199,7 @@ public class RedisCacheService {
             writeWithTtl(cacheKey, json, ttlValue);
             cacheAuditService.logAuditAsync(mappingName, cacheKey, "EVICTED", triggerSource,
                     "Auto-repopulated from DB after miss");
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.warn("Failed to repopulate cache for key {}: {}", cacheKey, e.getMessage());
         }
     }
@@ -253,7 +258,7 @@ public class RedisCacheService {
         try {
             int updated = middlewareNamedParameterJdbcTemplate.update(sql, params);
             return updated > 0;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Failed to acquire reload lock for mapping {}: {}", mappingName, e.getMessage(), e);
             return false;
         }
@@ -270,7 +275,7 @@ public class RedisCacheService {
 
         try {
             middlewareNamedParameterJdbcTemplate.update(sql, params);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Failed to release reload lock for mapping {}: {}", mappingName, e.getMessage(), e);
         }
     }
@@ -283,7 +288,7 @@ public class RedisCacheService {
 
         try {
             middlewareNamedParameterJdbcTemplate.update(sql, params);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.warn("Failed to clean stale locks for mapping {}: {}", mappingName, e.getMessage(), e);
         }
     }
@@ -292,7 +297,7 @@ public class RedisCacheService {
         try {
             redisTemplate.opsForValue().get("__health_check__");
             return true;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             return false;
         }
     }
@@ -301,7 +306,7 @@ public class RedisCacheService {
         try {
             middlewareNamedParameterJdbcTemplate.queryForObject("SELECT 1", Map.of(), Integer.class);
             return true;
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             return false;
         }
     }
@@ -316,7 +321,7 @@ public class RedisCacheService {
 
     private List<Map<String, Object>> deserializeList(String json) {
         try {
-            return objectMapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {});
+            return objectMapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Failed to deserialize cached data", e);
         }
@@ -328,7 +333,7 @@ public class RedisCacheService {
         }
         try {
             return Duration.parse(ttl.startsWith("PT") ? ttl : "PT" + ttl);
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
             log.warn("Invalid TTL value: {}, disabling TTL", ttl);
             return null;
         }
@@ -338,11 +343,7 @@ public class RedisCacheService {
         if (ttl == null || ttl.isBlank() || "0".equals(ttl.trim())) {
             return 0;
         }
-        try {
-            Duration d = parseTtl(ttl);
-            return d != null ? d.getSeconds() : 0;
-        } catch (Exception e) {
-            return 0;
-        }
+        Duration d = parseTtl(ttl);
+        return d != null ? d.getSeconds() : 0;
     }
 }

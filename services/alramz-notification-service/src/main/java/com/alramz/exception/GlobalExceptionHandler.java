@@ -27,6 +27,9 @@ import java.util.UUID;
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.ShortVariable"})
 public class GlobalExceptionHandler {
 
+    /** attachments, [n], content: the tail of a Jackson path that points at an attachment's content. */
+    private static final int ATTACHMENT_CONTENT_PATH_DEPTH = 3;
+
     // PAYLOAD_TOO_LARGE (not CONTENT_TOO_LARGE) keeps the contract's "Payload Too Large" reason phrase.
     @SuppressWarnings("deprecation")
     @ExceptionHandler(EmailValidationException.class)
@@ -132,7 +135,7 @@ public class GlobalExceptionHandler {
     /** 1-based attachment position when the path is attachments[n].content, else null. */
     private static Integer attachmentContentPosition(final List<JacksonException.Reference> path) {
         final int size = path.size();
-        if (size < 3) {
+        if (size < ATTACHMENT_CONTENT_PATH_DEPTH) {
             return null;
         }
         final JacksonException.Reference list = path.get(size - 3);
