@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-04T17:05:55.730">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/controllers/ApplicationController.java">
+<violation beginline="25" endline="25" begincolumn="39" endcolumn="55" rule="SignatureDeclareThrowsException" ruleset="Design" package="com.alramz.controllers" class="ApplicationController" method="info" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#signaturedeclarethrowsexception" priority="3">
+A method/constructor should not explicitly throw java.lang.Exception
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceController.java">
+<violation beginline="38" endline="38" begincolumn="52" endcolumn="54" rule="ShortMethodName" ruleset="Code Style" package="com.alramz.controllers" class="RiskComplianceController" method="ok" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortmethodname" priority="3">
+Avoid using short method names
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/exception/ErrorCode.java">
+<violation beginline="22" endline="22" begincolumn="30" endcolumn="36" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.exception" class="ErrorCode" variable="status" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field status has the same name as a method
+</violation>
+<violation beginline="23" endline="23" begincolumn="26" endcolumn="33" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.exception" class="ErrorCode" variable="message" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field message has the same name as a method
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryClient.java">
+<violation beginline="74" endline="74" begincolumn="42" endcolumn="50" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.knowyourcountry" class="KnowYourCountryClient" method="classify" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'classify(RuntimeException)' has a cyclomatic complexity of 10.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/knowyourcountry/RiskBand.java">
+<violation beginline="11" endline="11" begincolumn="23" endcolumn="29" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.knowyourcountry" class="RiskBand" variable="rating" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field rating has the same name as a method
+</violation>
+<violation beginline="12" endline="12" begincolumn="26" endcolumn="30" rule="AvoidFieldNameMatchingMethodName" ruleset="Error Prone" package="com.alramz.knowyourcountry" class="RiskBand" variable="code" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingmethodname" priority="3">
+Field code has the same name as a method
+</violation>
+</file>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceLegacyController.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException - legacy contract: every failure is an HTTP 200 envelope
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceLegacyController.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException - legacy contract: every failure is an HTTP 200 envelope
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryClient.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException - block() rethrows every failure unchecked; classified below
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/service/RiskComplianceService.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException - any unexpected client failure is xxx004 by contract
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/risk-management-service/src/main/java/com/alramz/service/RiskComplianceService.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException - a mapping bug is xxx004 by contract
+"></suppressedviolation>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

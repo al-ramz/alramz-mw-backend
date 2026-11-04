@@ -1,0 +1,60 @@
+@baseUrl=http://localhost:8086
+
+### Get a token first by registering + logging in below, then paste it here.
+@authToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaXNrX21hbmFnZW1lbnRfc2VydmljZV9hcHAiLCJpYXQiOjE3OTM3ODg4NjgsImV4cCI6MTc5Mzg3NTI2OCwicm9sZXMiOlsiQVBQX1JJU0tfTUFOQUdFTUVOVCJdLCJhcHBsaWNhdGlvbiI6InJpc2stbWFuYWdlbWVudC1zZXJ2aWNlIiwiZW52aXJvbm1lbnQiOiJsb2NhbCJ9.vyorB7DWBzxWH7AnaTJTSUVI7dDJwzvmA1ytzINWeqU
+
+###
+GET {{baseUrl}}/api/v1/info
+
+###
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+    "authType": "JWT",
+    "consumer": "risk_management_service_app",
+    "email": "risk-management-service@alramz.ae",
+    "consumerPassword": "password123",
+    "roles": ["APP_RISK_MANAGEMENT"],
+    "application": "risk-management-service",
+    "environment": "local"
+}
+
+###
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "consumer": "risk_management_service_app",
+    "consumerPassword": "password123"
+}
+
+###
+### Get countries
+GET {{baseUrl}}/api/v1/countries
+Authorization: Bearer {{authToken}}
+
+### Get countries -ve test case (unsupported verb: expect HTTP 405 GenericResponse, not 500)
+PUT {{baseUrl}}/api/v1/countries
+Authorization: Bearer {{authToken}}
+
+### Get country ratings
+GET {{baseUrl}}/api/v1/country-ratings
+Authorization: Bearer {{authToken}}
+
+### Get countries (legacy)
+POST {{baseUrl}}/api/v1/countries
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "correlationID": "test-corr-001"
+}
+
+
+### Get country ratings (legacy)
+POST {{baseUrl}}/api/v1/countryRatings
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###

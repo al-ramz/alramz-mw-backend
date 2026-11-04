@@ -1,0 +1,309 @@
+{
+  "feature_slug": "risk-compliance-endpoints",
+  "spec_path": ".claude/modules/features/risk-compliance-endpoints/spec.md",
+  "howtos_consulted": [
+    ".claude/howtos/new-endpoint-elicitation-checklist.md",
+    ".claude/howtos/openapi-contract-first-controllers.md",
+    ".claude/howtos/api-collection-http-requests.md",
+    ".claude/howtos/configuration-properties.md",
+    ".claude/howtos/jwt-security-and-public-endpoints.md",
+    ".claude/howtos/exception-handling.md",
+    ".claude/howtos/request-response-and-db-audit-logging.md",
+    ".claude/howtos/testing-patterns.md"
+  ],
+  "target_services": ["risk-management-service"],
+  "target_files": [
+    {
+      "path": "services/risk-management-service/specs/apiSpecs.yaml",
+      "status": "modified",
+      "change_summary": "Amend, do not replace. Leave the existing `/api/v1/info` path and `security: - BearerAuth: []` root untouched. (1) Extend `components.schemas.GenericResponse` with `correlationId {type: string, format: uuid}`, `errorCode {type: string, nullable: true}`, `errorMsg {type: string, nullable: true}` (shape copied from services/utility-service/specs/apiSpecs.yaml). (2) Add schemas `Country`, `CountryListResponse`, `CountryRating` (rating: integer/int32, NO enum; riskLevel: string enum [H,M,L]), `CountryRatingResponse`, `LegacyRiskComplianceRequest {correlationID: string}`, `LegacyCountryRating` (rating: string, riskLevel enum [H,M,L]), `LegacyCountryListEnvelope {correlationID, responseCode, responseMessage, response: {countryList: Country[]}}`, `LegacyCountryRatingEnvelope {correlationID, responseCode, responseMessage, response: {countryRating: LegacyCountryRating[]}}`; both legacy envelopes carry `x-class-extra-annotation: \"@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)\"`. (3) Bare paths: `/countries` get (tag RiskCompliance, operationId getCountries) + post (tag RiskComplianceLegacy, operationId getCountriesLegacy, deprecated: true, requestBody.required: false, application/json); `/country-ratings` get (tag RiskCompliance, getCountryRatings); `/countryRatings` post (tag RiskComplianceLegacy, getCountryRatingsLegacy, deprecated: true, optional body). (4) GET responses: filled examples for 200 (incl. empty-array example), 403, 500 (CLS004/CRT004), 502 x2 (xxx001 'Country data provider returned an error', xxx002 'Country data provider returned an invalid response'), 503 (xxx003), plus 401 description. POST responses: 200 with named examples success / empty (response omitted) / 1018 ('Failed to get countrylist' | 'Failed to get countryRating') / 500 ('Internal Server Error'), plus 401/403 descriptions noting they use the starter/GenericResponse shape, not the legacy shape (C2). Listed first: the controllers compile against the interfaces it generates."
+    },
+    {
+      "path": "services/risk-management-service/apiCollection.http",
+      "status": "modified",
+      "change_summary": "Conflict C3: change the register block's `roles` from `APP_RISK_MANAGEMENT_SERVICE_USER` to `APP_RISK_MANAGEMENT` (consumer/application/environment are already correct for this service). `@authToken` is already declared (empty placeholder): keep it empty, do not commit a token. After the login block, in apiSpecs.yaml order, add `### Get countries` (GET {{baseUrl}}/api/v1/countries), `### Get country ratings` (GET {{baseUrl}}/api/v1/country-ratings), `### Get countries (legacy)` (POST {{baseUrl}}/api/v1/countries, body {\"correlationID\": \"test-corr-001\"}), `### Get country ratings (legacy)` (POST {{baseUrl}}/api/v1/countryRatings, empty body), each with `Authorization: Bearer {{authToken}}`, and the POSTs with `Content-Type: application/json`. Add one edge-case pair `### Get countries (legacy) -ve test case` with malformed JSON (expects HTTP 200 + legacy responseCode \"500\"), plus `### Get countries -ve test case` as `PUT {{baseUrl}}/api/v1/countries` (expects 405)."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/config/KnowYourCountryProperties.java",
+      "status": "new",
+      "change_summary": "Lombok @Getter @Setter @Validated @ConfigurationProperties(prefix = PREFIX), `public static final String PREFIX = \"knowyourcountry\"` (configuration-properties.md convention; FinouxProperties shape). Fields: @NotBlank String baseUrl, @NotBlank String apiKey, Duration requestTimeout = Duration.ofSeconds(30). No @Component; bound by KnowYourCountryConfig."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/config/KnowYourCountryConfig.java",
+      "status": "new",
+      "change_summary": "@Configuration @EnableConfigurationProperties(KnowYourCountryProperties.class) @RequiredArgsConstructor, modelled on utility-service ExternalFinouxServiceConfig with RESILIENCE_ID = \"knowyourcountry\". Beans: `@Bean(\"knowYourCountryWebClient\") WebClient knowYourCountryWebClient(WebClient.Builder, ExchangeFilterFunction alramzWebClientLoggingFilterFunction)`, which sets baseUrl and Accept: application/json, then `.filter(apiKeyFilter())` FIRST, where the filter does ClientRequest.from(req).headers(h -> h.set(AUTHORIZATION, \"ApiKey \" + key)) and so replaces the inbound bearer that AbstractRestClient adds outside the `local` profile, then `.filter(alramzWebClientLoggingFilterFunction)`. `knowYourCountryCircuitBreaker` (registry.circuitBreaker(RESILIENCE_ID)). `knowYourCountryRetry` (RetryConfig maxAttempts(2), retryOnException: WebClientRequestException, or ApiCallFailedException with getResponseCode() >= 500; never DecodingException or 4xx). `knowYourCountryTimeLimiter` (timeoutDuration = properties.getRequestTimeout()). Keep the apiKey filter as a package-visible/static method so tests can build the WebClient through the same code path."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryRecord.java",
+      "status": "new",
+      "change_summary": "@JsonIgnoreProperties(ignoreUnknown = true) record(@JsonProperty(\"name\") String name, @JsonProperty(\"iso_alpha2\") String isoAlpha2, @JsonProperty(\"iso_alpha3\") String isoAlpha3, @JsonProperty(\"risk_level\") String riskLevel). com.fasterxml.jackson.annotation annotations, which Boot 4.1.2's Jackson 3 codecs also honour. Unused vendor fields are ignored (out of scope)."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryResult.java",
+      "status": "new",
+      "change_summary": "sealed interface with records Success(List<KnowYourCountryRecord> rows) (defensive List.copyOf), Rejected(int httpStatus), Malformed(String detail), Unavailable(Throwable cause). Mirrors utility-service FinouxResult."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryClient.java",
+      "status": "new",
+      "change_summary": "@Component extends AbstractRestClient. Constructor takes @Qualifier(\"knowYourCountryWebClient\"|\"knowYourCountryCircuitBreaker\"|\"knowYourCountryRetry\"|\"knowYourCountryTimeLimiter\"), Environment and the Jackson 2 ObjectMapper (as FinouxClient does). Methods `fetchCountries()` -> GET /api/v3/countries_list and `fetchCountryRatings()` -> GET /api/v3/country_ratings, both via `call(HttpMethod.GET, path, Void.class, null, KnowYourCountryRecord[].class, null, null).block()`. Do NOT pass the API key as a per-call header; the WebClient filter owns it. Classify `reactor.core.Exceptions.unwrap(e)`: ApiCallFailedException -> Rejected(status); DecodingException/CodecException, UnsupportedMediaTypeException (vendor 200 with text/html etc., see technical_gaps) or null array -> Malformed; TimeoutException, WebClientRequestException or CallNotPermittedException -> Unavailable; anything else is rethrown. Drop null array elements with a WARN (count only, never the body: F-06). Catch blocks carry `// NOPMD` where PMD flags generic catches, per FinouxClient precedent."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/RiskBand.java",
+      "status": "new",
+      "change_summary": "enum HIGH(20, \"H\"), MEDIUM(9, \"M\"), LOW(1, \"L\") with int rating() and String code(); `static Optional<RiskBand> fromVendorLabel(String label)`: a null guard, then a switch on the exact literals 'Higher Risk', 'Medium-High Risk' -> HIGH; 'Medium Risk', 'Medium-Low Risk' -> MEDIUM; 'Lower Risk' -> LOW; default -> Optional.empty(). No trim and no case folding (D4)."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/exception/ErrorCode.java",
+      "status": "new",
+      "change_summary": "enum CLS001..CLS004, CRT001..CRT004, each with code(), HttpStatus status() (001/002 -> BAD_GATEWAY, 003 -> SERVICE_UNAVAILABLE, 004 -> INTERNAL_SERVER_ERROR) and message() ('Country data provider returned an error' / '... returned an invalid response' / 'Country data provider unavailable' / 'Internal Server Error'), per spec §3.2. Optionally `boolean isVendorRejection()` (code ends in 001) for the legacy 1018 branch."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/exception/RiskComplianceException.java",
+      "status": "new",
+      "change_summary": "extends RuntimeException, final ErrorCode errorCode plus an optional cause; getErrorCode(). The service's only typed failure."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+      "status": "new",
+      "change_summary": "Copy of utility-service GlobalExceptionHandler: @RestControllerAdvice(basePackages = \"com.alramz.controllers\") @Order(0), private buildResponse(HttpStatus/HttpStatusCode, String errorCode, String errorMsg) setting responseCode, the reason phrase, errorCode, errorMsg and correlationId = MDCUtil.getCorrelationIdAsUuid(). Handlers: RiskComplianceException -> code.status()/code.code()/code.message(); AccessDeniedException -> 403, null errorCode, 'Access denied'; catch-all Exception: if `ex instanceof org.springframework.web.ErrorResponse er`, return er.getStatusCode() with its reason phrase and a null errorCode (this keeps a handler-resolved 405/415/400 from becoming 500), otherwise 500, null errorCode, 'Internal Server Error'. Never echo ex.getMessage(). Do NOT copy the ApplicationException, MethodArgumentNotValid or Finoux handlers. CORRECTION vs spec §6: `ErrorResponse` is an interface, not a Throwable, so it cannot be an @ExceptionHandler type; it is handled by the instanceof check instead."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/exception/FrameworkExceptionHandler.java",
+      "status": "new",
+      "change_summary": "NOT in spec §3.4; added because the spec's design cannot meet AC 'PUT /api/v1/countries returns 405, not 500' (see technical_gaps[0]). Unscoped @RestControllerAdvice @Order(1), so it runs after GlobalExceptionHandler(0) and before the starter LoggingExceptionHandler(LOWEST_PRECEDENCE). @ExceptionHandler({HttpRequestMethodNotSupportedException, HttpMediaTypeNotSupportedException, HttpMediaTypeNotAcceptableException, NoResourceFoundException}) only, with NO catch-all, so every other exception still reaches the starter safety net unchanged. Behaviour: if request is POST to /api/v1/countries or /api/v1/countryRatings -> HTTP 200 + legacy envelope responseCode \"500\"/\"Internal Server Error\" (reuse the legacy controller's public static builder; covers E14 when Content-Type mismatch is rejected at handler-mapping time); otherwise -> GenericResponse with ex's status code + reason phrase, null errorCode, correlationId from MDCUtil.getCorrelationIdAsUuid()."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/service/RiskComplianceService.java",
+      "status": "new",
+      "change_summary": "@Service @Slf4j concrete class with no interface (a single implementation needs none). Constructor takes (KnowYourCountryClient, MeterRegistry); registers Counter `risk.compliance.country.rating.unmapped` once, with no tags (A7). `List<Country> getCountries()` and `List<CountryRating> getCountryRatings()` (generated com.alramz.model types): a switch on the sealed result; Success -> map name/isoAlpha2->iso2/isoAlpha3->iso3 in vendor order; ratings also map RiskBand.fromVendorLabel, and an empty band means log.warn(\"Unmapped KnowYourCountry risk_level '{}' for iso2 '{}'; country omitted\", label, iso2) + counter.increment() + skip; Rejected -> throw RiskComplianceException(CLS001|CRT001); Malformed -> xxx002; Unavailable -> xxx003 (with cause); any other RuntimeException from the client or mapping -> wrap as xxx004. One INFO line per call with the result count; never log the vendor body."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceController.java",
+      "status": "new",
+      "change_summary": "@RestController @RequestMapping(\"/api/v1\") @RequiredArgsConstructor implements generated com.alramz.api.RiskComplianceApi. getCountries()/getCountryRatings(): @Override @JwtSecured(roles = \"APP_RISK_MANAGEMENT\") @Loggable; build GenericResponse responseCode \"200\", responseMessage \"OK\", errorCode/errorMsg null, correlationId = MDCUtil.getCorrelationIdAsUuid(), response = new CountryListResponse().countryList(list) / new CountryRatingResponse().countryRating(list); ResponseEntity.ok(body). Failures propagate as RiskComplianceException to GlobalExceptionHandler. No try/catch."
+    },
+    {
+      "path": "services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceLegacyController.java",
+      "status": "new",
+      "change_summary": "@RestController @RequestMapping(\"/api/v1\") @RequiredArgsConstructor implements generated com.alramz.api.RiskComplianceLegacyApi. getCountriesLegacy(LegacyRiskComplianceRequest)/getCountryRatingsLegacy(...): @Override @JwtSecured(roles = \"APP_RISK_MANAGEMENT\") @Loggable. Correlation rule: if the body's correlationID matches /[^ ]/, use it verbatim + MDCUtil.putCorrelationId(it), else MDCUtil.getCorrelationId() (fall back to UUID.randomUUID().toString() if null). Always HTTP 200. Success with >=1 row -> \"200\"/\"success\" + response wrapper (ratings: rating = String.valueOf(int), riskLevel mapped); 0 rows -> \"200\"/\"success\" with response left null (NON_NULL omits it); RiskComplianceException with xxx001 -> \"1018\" + 'Failed to get countrylist' | 'Failed to get countryRating'; any other RiskComplianceException or RuntimeException -> \"500\"/\"Internal Server Error\" (catch RuntimeException deliberately as a legacy-shape boundary, with `// NOPMD AvoidCatchingGenericException` + a reason comment). Controller-local @ExceptionHandler({HttpMessageNotReadableException, HttpMediaTypeNotSupportedException}) returns HTTP 200 + legacy \"500\" body for the matching route (decided by request URI). Exposes `public static` builders for the legacy 500 envelope (by path), reused by FrameworkExceptionHandler."
+    },
+    {
+      "path": "services/risk-management-service/src/main/resources/application-dev.yml",
+      "status": "modified",
+      "change_summary": "Append top-level block `knowyourcountry: { base-url: ${KNOWYOURCOUNTRY_BASE_URL:https://api.knowyourcountry.com}, api-key: ${KNOWYOURCOUNTRY_API_KEY}, request-timeout: 30s }`. The key has NO default. permit-all-urls unchanged."
+    },
+    {
+      "path": "services/risk-management-service/src/main/resources/application-docker.yml",
+      "status": "modified",
+      "change_summary": "Same `knowyourcountry` block as dev (env placeholders, no key default). permit-all-urls unchanged."
+    },
+    {
+      "path": "services/risk-management-service/src/main/resources/application-preprod.yml",
+      "status": "modified",
+      "change_summary": "Same `knowyourcountry` block as dev. permit-all-urls unchanged."
+    },
+    {
+      "path": "services/risk-management-service/src/main/resources/application-prod.yml",
+      "status": "modified",
+      "change_summary": "Same `knowyourcountry` block as dev. permit-all-urls unchanged."
+    },
+    {
+      "path": "services/risk-management-service/src/main/resources/application-test.yml",
+      "status": "modified",
+      "change_summary": "Append `knowyourcountry: { base-url: https://knowyourcountry-test.example.invalid, api-key: test-api-key, request-timeout: 2s }` (non-secret literals, same convention as utility-service application-test.yml adapter.finoux). permit-all-urls unchanged."
+    },
+    {
+      "path": "services/risk-management-service/src/test/resources/application.yml",
+      "status": "modified",
+      "change_summary": "Append the same test `knowyourcountry` block. This file shadows src/main application.yml for @SpringBootTest, which activates no profile, so without it the existing contextLoads fails on @NotBlank."
+    }
+  ],
+  "test_files": [
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/knowyourcountry/RiskBandTest.java",
+      "status": "new",
+      "covers": "AC band table: HIGH for 'Higher Risk'/'Medium-High Risk', MEDIUM for 'Medium Risk'/'Medium-Low Risk', LOW for 'Lower Risk'; empty for null, \"\", 'higher risk', 'Higher Risk ' and 'Low Risk' (E7)."
+    },
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/knowyourcountry/KnowYourCountryClientTest.java",
+      "status": "new",
+      "covers": "FinouxClientTest style: a real WebClient over a stub ExchangeFunction (counts calls, captures ClientRequest), built through KnowYourCountryConfig's own webClient/retry bean methods (no-op logging filter) so the real auth filter and retry predicate are exercised. Cases: vendor 200 array -> Success in order with field mapping; [] -> Success([]) (E6); null element dropped (E9); 4xx -> Rejected, exactly 1 call (E1, no retry); 5xx -> Rejected after 2 calls; invalid JSON / JSON object / empty 200 body / text/html 200 -> Malformed, 1 call (E2); WebClientRequestException -> Unavailable after exactly 2 calls (E3, 'retried exactly once'); Mono.never() with a short TimeLimiter -> Unavailable (E3); forced-open CircuitBreaker -> Unavailable (E4). Header AC: with a Jwt principal in SecurityContextHolder and a non-local MockEnvironment, the sent request has exactly one Authorization value, equal to 'ApiKey test-api-key' (no inbound bearer forwarded); path is /api/v3/countries_list or /api/v3/country_ratings."
+    },
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/config/KnowYourCountryPropertiesTest.java",
+      "status": "new",
+      "covers": "E16 / AC 'context fails to start when api-key is blank': ApplicationContextRunner with @EnableConfigurationProperties(KnowYourCountryProperties.class); blank api-key or base-url -> context has failed; valid values -> requestTimeout binds (2s) and defaults to 30s when absent."
+    },
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/service/RiskComplianceServiceTest.java",
+      "status": "new",
+      "covers": "@ExtendWith(MockitoExtension) with a @Mock KnowYourCountryClient and a real SimpleMeterRegistry. Countries/ratings mapping + vendor order; rating int + riskLevel per band; unmapped/null/wrong-case label row omitted and counter +1 per row (E7) with WARN; all rows unmapped -> empty list (E8); non-ISO values passed through (E10); Rejected/Malformed/Unavailable -> RiskComplianceException CLS/CRT 001/002/003 (assertThatThrownBy + hasFieldOrPropertyWithValue(\"errorCode\", ...)); client throwing IllegalStateException -> xxx004 (E5)."
+    },
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/controllers/RiskComplianceControllerTest.java",
+      "status": "new",
+      "covers": "Direct construction (no @WebMvcTest/MockMvc). GET countries/ratings -> 200, responseCode \"200\", responseMessage \"OK\", null errorCode/errorMsg, non-null UUID correlationId (MDC set to a UUID and to a non-UUID: E17), response.countryList/countryRating content; empty list -> empty array, not null (E6/E8); a RiskComplianceException from the service propagates unchanged."
+    },
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/controllers/RiskComplianceLegacyControllerTest.java",
+      "status": "new",
+      "covers": "Direct construction, MDC set/cleared per test. Success -> HTTP 200, \"200\"/\"success\", rating as String \"20\"/\"9\"/\"1\"; zero rows -> response null; CLS001/CRT001 -> \"1018\" + 'Failed to get countrylist' / 'Failed to get countryRating', response null; xxx002/003/004 and a raw RuntimeException -> \"500\"/\"Internal Server Error\"; correlationID: body 'abc-123' echoed and put in MDC, null body / \"\" / \"   \" -> MDC value (E15); local handlers for HttpMessageNotReadableException and HttpMediaTypeNotSupportedException -> HTTP 200 + legacy \"500\" (E14)."
+    },
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/model/LegacyEnvelopeContractTest.java",
+      "status": "new",
+      "covers": "Wire-shape ACs that a direct controller call cannot see. Serialize generated LegacyCountryListEnvelope/LegacyCountryRatingEnvelope with a plain Jackson 3 JsonMapper (Boot 4 HTTP mapper family): property is 'correlationID', 'response' key absent (not null) when unset (verifies A3: x-class-extra-annotation honoured), no errorCode/errorMsg keys, rating serialized as a JSON string. Reflection: neither envelope has setCorrelationId(String) or setCorrelationId(UUID). Call starter CorrelationIdResponseBodyAdvice.beforeBodyWrite directly with MDC set to a different value and assert correlationID is unchanged."
+    },
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/exception/GlobalExceptionHandlerTest.java",
+      "status": "new",
+      "covers": "Plain `new GlobalExceptionHandler()` (utility-service test shape). Each of the 8 ErrorCodes -> status 502/502/503/500, errorCode, errorMsg, response null, UUID correlationId; AccessDeniedException -> 403 'Access denied', null errorCode (E12); HttpRequestMethodNotSupportedException via catch-all -> 405 not 500 (E13, handler-resolved path); unexpected Exception -> 500 'Internal Server Error', message not leaked."
+    },
+    {
+      "path": "services/risk-management-service/src/test/java/com/alramz/exception/FrameworkExceptionHandlerTest.java",
+      "status": "new",
+      "covers": "Plain instantiation with mock(HttpServletRequest) stubbing only getMethod()/getRequestURI(). PUT /api/v1/countries + HttpRequestMethodNotSupportedException -> 405 GenericResponse (AC 'PUT returns 405, not 500', mapping-time path); POST /api/v1/countries or /api/v1/countryRatings + HttpMediaTypeNotSupportedException -> HTTP 200 + legacy \"500\" envelope of the right type (E14 at mapping time); NoResourceFoundException -> 404 GenericResponse."
+    }
+  ],
+  "liquibase_changeset": {
+    "applicable": false,
+    "next_changeset_file": null,
+    "profile_folders": []
+  },
+  "config_changes": {
+    "permit_all_urls": [],
+    "new_properties": [
+      { "key": "knowyourcountry.base-url", "profiles": "dev, docker, preprod, prod", "value": "${KNOWYOURCOUNTRY_BASE_URL:https://api.knowyourcountry.com}" },
+      { "key": "knowyourcountry.api-key", "profiles": "dev, docker, preprod, prod", "value": "${KNOWYOURCOUNTRY_API_KEY} (no default: fail fast)" },
+      { "key": "knowyourcountry.request-timeout", "profiles": "dev, docker, preprod, prod", "value": "30s" },
+      { "key": "knowyourcountry.*", "profiles": "application-test.yml (main) + src/test/resources/application.yml", "value": "base-url https://knowyourcountry-test.example.invalid, api-key test-api-key, request-timeout 2s" }
+    ],
+    "masking_keys_to_add": []
+  },
+  "execution_steps": [
+    "Step 1: Amend services/risk-management-service/specs/apiSpecs.yaml (GenericResponse extension, 8 new schemas, 4 operations with all examples, legacy NON_NULL x-class-extra-annotation). Run `mvn -pl services/risk-management-service -am clean test-compile`, then open target/generated-sources/openapi/.../api/RiskComplianceApi.java, RiskComplianceLegacyApi.java and model/LegacyCountry*Envelope.java to confirm exact method signatures, the `setCorrelationID` setter name and the @JsonInclude(NON_NULL) annotation. If the annotation is missing (A3), drop it from the YAML, keep the schemas for docs, and hand-write the two envelopes as records in com.alramz.controllers with @JsonInclude(NON_NULL) (the spec's fallback). The generated interface return type then has to be bridged; record this if it happens.",
+    "Step 2: Add the `knowyourcountry` block to application-{dev,docker,preprod,prod}.yml (env placeholders, no api-key default), application-test.yml and src/test/resources/application.yml (dummy literals). Create KnowYourCountryProperties.",
+    "Step 3: Create KnowYourCountryConfig (WebClient with the ApiKey-setting filter registered BEFORE alramzWebClientLoggingFilterFunction, CircuitBreaker, Retry maxAttempts(2) with the WebClientRequestException / ApiCallFailedException>=500 predicate, TimeLimiter from request-timeout).",
+    "Step 4: Create com.alramz.knowyourcountry: KnowYourCountryRecord, KnowYourCountryResult, RiskBand, KnowYourCountryClient (exception classification incl. UnsupportedMediaTypeException -> Malformed; null elements dropped with WARN).",
+    "Step 5: Create com.alramz.exception: ErrorCode, RiskComplianceException, GlobalExceptionHandler (basePackages-scoped, @Order(0), catch-all with an `instanceof ErrorResponse` status pass-through), FrameworkExceptionHandler (unscoped, @Order(1), mapping-time framework exceptions only, legacy-path branch).",
+    "Step 6: Create com.alramz.service.RiskComplianceService (sealed-result switch, D1 WARN + counter, xxx004 wrapping, INFO count log).",
+    "Step 7: Create RiskComplianceController and RiskComplianceLegacyController (both @RequestMapping(\"/api/v1\"), @JwtSecured(roles = \"APP_RISK_MANAGEMENT\") + @Loggable on each @Override). The legacy controller exposes public static legacy-500 builders used by FrameworkExceptionHandler.",
+    "Step 8: Update apiCollection.http (role fix to APP_RISK_MANAGEMENT, 4 request blocks + legacy malformed-JSON and PUT 405 edge cases, no token committed).",
+    "Step 9: Add unit tests (Mockito-first, direct construction, AssertJ; no @WebMvcTest/MockMvc): RiskBandTest, KnowYourCountryClientTest, KnowYourCountryPropertiesTest, RiskComplianceServiceTest, RiskComplianceControllerTest, RiskComplianceLegacyControllerTest, LegacyEnvelopeContractTest, GlobalExceptionHandlerTest, FrameworkExceptionHandlerTest. Leave RiskManagementServiceApplicationTests unchanged.",
+    "Step 10: Verify: `mvn -pl services/risk-management-service -am clean test-compile`, then `mvn -pl services/risk-management-service -am test` (PMD/SpotBugs are enabled in this pom; resolve findings with targeted NOPMD reasons only where the spec mandates the pattern). Manually exercise apiCollection.http against a local run (needs KNOWYOURCOUNTRY_API_KEY exported) to observe the real 401 vs 403 behaviour for a missing JWT (technical_gaps[1])."
+  ],
+  "technical_gaps": [
+    {
+      "area": "other",
+      "description": "Spec §6/E13 design cannot meet AC 'PUT /api/v1/countries returns 405, not 500'. HttpRequestMethodNotSupportedException (and a Content-Type mismatch rejected by the generated `consumes = application/json`) is thrown during handler mapping with handler == null. Spring's HandlerTypePredicate then skips every basePackages-scoped advice, so the spec's GlobalExceptionHandler never sees it. The only unscoped advice is the starter's LoggingExceptionHandler (@Order(LOWEST_PRECEDENCE), catch-all Exception -> HTTP 500 map body). Also, `org.springframework.web.ErrorResponse` is an interface, not a Throwable, so it cannot be used as an @ExceptionHandler type as spec §6 literally says.",
+      "recommendation_or_open_question": "Planned in-service fix, no starter change: (a) GlobalExceptionHandler's catch-all checks `instanceof ErrorResponse` for handler-resolved framework errors; (b) a new unscoped FrameworkExceptionHandler @Order(1) handles only HttpRequestMethodNotSupported/HttpMediaTypeNotSupported/HttpMediaTypeNotAcceptable/NoResourceFound, with a legacy-path branch so E14 at mapping time still returns HTTP 200 + legacy \"500\". Blast radius: these four framework errors on the starter's own /api/auth/* routes and unknown paths in this service become GenericResponse 4xx instead of the starter's HTTP 500 map. The root-cause fix (LoggingExceptionHandler preserving ErrorResponse status for every service) is a starter change and is out of scope; recommend it as a separate starter ticket."
+    },
+    {
+      "area": "other",
+      "description": "AC 'a request without a JWT gets 401' depends on starter behaviour this plan cannot change. JwtAutoConfiguration's SecurityFilterChain configures no authenticationEntryPoint and no httpBasic/formLogin, so Spring Security's default Http403ForbiddenEntryPoint likely answers 403 (empty body), not 401, for a missing or invalid token. This affects all 4 routes, and on the legacy routes it adds to C2.",
+      "recommendation_or_open_question": "No automated test planned (it would need a full filter-chain MockMvc test, against testing-patterns.md). Verify manually in Step 10. If it is 403, correct the 401 descriptions in apiSpecs.yaml to the observed behaviour and raise a starter ticket. Not blocking: no target_files change either way."
+    },
+    {
+      "area": "compatibility",
+      "description": "Spec §3.3 says a legacy POST body with no Content-Type is 'accepted'. With the generated `consumes = application/json` and an optional @RequestBody, Spring matches a request only when there is no body. A non-empty body without Content-Type (treated as application/octet-stream) is rejected at mapping time with 415, so under this plan it returns HTTP 200 + legacy \"500\" (via FrameworkExceptionHandler), not a success. The legacy controller's own HttpMediaTypeNotSupportedException handler is therefore effectively unreachable while consumes is application/json.",
+      "recommendation_or_open_question": "Kept as planned, because it is consistent with E14's legacy-500 outcome. If captured crm/Middleware traffic shows JSON bodies sent without Content-Type, change the legacy requestBody media type to '*/*' (YAML-only, cheap). Fold into the A1/A2 legacy-fidelity check before cutover."
+    },
+    {
+      "area": "other",
+      "description": "Vendor 200 with a non-JSON Content-Type (e.g. an HTML proxy/error page) raises WebClient UnsupportedMediaTypeException, not DecodingException. Under spec §3.4's literal classification it would be rethrown and surface as 500 CLS004/CRT004 instead of E2's 502 xxx002.",
+      "recommendation_or_open_question": "Plan classifies UnsupportedMediaTypeException (and CodecException generally) as Malformed. This stays within E2's 'unparsable body' intent and is easy to reverse."
+    },
+    {
+      "area": "compatibility",
+      "description": "Spec A1: the legacy correlation ID is modelled as an optional JSON body field `correlationID` with an X-Correlation-ID fallback. When the body value is used, the X-Correlation-ID response header (set earlier by CorrelationIdFilter) and the api_audit_log row keep the header/generated value. The body value is also put in MDC, so the starter WebClientLoggingFilter forwards it to KnowYourCountry as the outbound X-Correlation-ID.",
+      "recommendation_or_open_question": "Carried as-is (spec decision). Confirm against captured legacy traffic before cutover."
+    },
+    {
+      "area": "compatibility",
+      "description": "Spec A2: on the legacy routes, 'no data' omits the whole `response` property instead of returning `response: {}`. This is inferred from IS behaviour, not observed.",
+      "recommendation_or_open_question": "Carried as-is. Covered by RiskComplianceLegacyControllerTest + LegacyEnvelopeContractTest. Diff against captured legacy responses before cutover."
+    },
+    {
+      "area": "other",
+      "description": "Spec A3: the plan relies on openapi-generator 7.23.0 (spring) honouring `x-class-extra-annotation` to put @JsonInclude(NON_NULL) on the legacy envelopes.",
+      "recommendation_or_open_question": "Step 1 inspects the generated class. LegacyEnvelopeContractTest fails if the annotation is missing. Fallback: hand-written records (spec §3.3)."
+    },
+    {
+      "area": "compatibility",
+      "description": "Spec A4: AbstractRestClient.call does not expose the status of a non-error response, so a vendor 2xx/3xx other than 200 that decodes to nothing is classified Malformed (GET 502 xxx002 / legacy \"500\"). Legacy would have returned 1018.",
+      "recommendation_or_open_question": "Carried as-is. Exposing the status would need a starter change (out of scope)."
+    },
+    {
+      "area": "compatibility",
+      "description": "Spec A5: for a non-array 200 body the legacy route returns \"500\", not legacy F-04 ('200'/'success' with no data).",
+      "recommendation_or_open_question": "Carried as-is (deliberate fix of F-04)."
+    },
+    {
+      "area": "concurrency",
+      "description": "Spec A6: a single TimeLimiter (`request-timeout`, 30s) wraps Retry, which wraps CircuitBreaker, in AbstractRestClient's operator order (verified at AbstractRestClient.java:76-78). A timed-out first attempt is therefore never retried, and the 30s budget covers both attempts; the doc's separate 5s connect / 30s read timeouts are not modelled. The CircuitBreaker also records vendor 4xx (e.g. a revoked key) as failures, so repeated 401s from the vendor can open the circuit and turn 502 CLS001 into 503 CLS003.",
+      "recommendation_or_open_question": "Carried as-is (Finoux precedent). Revisit with an ignoreExceptions predicate for 4xx if ops sees the circuit opening on auth errors."
+    },
+    {
+      "area": "other",
+      "description": "Spec A7: the `risk.compliance.country.rating.unmapped` counter has no label tag (cardinality). The unmapped label appears only in the WARN line.",
+      "recommendation_or_open_question": "Carried as-is."
+    },
+    {
+      "area": "other",
+      "description": "Spec C1: CorrelationIdFilter accepts any non-blank X-Correlation-ID. For a non-UUID header on GET, MDCUtil.getCorrelationIdAsUuid() puts a fresh UUID in the body, which differs from the response header and the logs (E17). The legacy body value is echoed verbatim.",
+      "recommendation_or_open_question": "Not fixed here: UUID validation is a starter-wide CorrelationIdFilter change, out of scope by the user's instruction."
+    },
+    {
+      "area": "compatibility",
+      "description": "Spec C2: the legacy POST routes are JWT-secured (D3), but today's crm/Middleware callers authenticate only with x-Gateway-APIKey at APIM. 401/403 on these routes use the starter/GenericResponse shape, not the always-200 legacy shape.",
+      "recommendation_or_open_question": "APIM must mint/forward a JWT with role APP_RISK_MANAGEMENT before cutover (ops, outside this repo). This is the second-biggest cutover risk after legacy wire fidelity."
+    },
+    {
+      "area": "other",
+      "description": "Spec C3: apiCollection.http registers APP_RISK_MANAGEMENT_SERVICE_USER, but JwtSecuredAspect matches ROLE_<role> exactly.",
+      "recommendation_or_open_question": "Resolved in plan: apiCollection.http role changed to APP_RISK_MANAGEMENT. Any already-registered local/dev consumer must re-register with the new role."
+    },
+    {
+      "area": "other",
+      "description": "Spec N1: service.yaml has `ingress.external: true`, while the doc's target is 'reachable only from APIM'.",
+      "recommendation_or_open_question": "Not changed (spec scope). For ops/infra review."
+    },
+    {
+      "area": "sizing",
+      "description": "Spec N2 + plan check: service.yaml (0.5 CPU / 1Gi, 1-5 replicas) is adequate for two light, uncached proxy GETs, but every call reaches the vendor and the vendor rate limits are unknown (Open item 7).",
+      "recommendation_or_open_question": "No service.yaml change. Revisit caching (Open item 5) if vendor quota becomes a problem."
+    },
+    {
+      "area": "other",
+      "description": "Spec N3: database-logging include-response-payload is true, so the full country list lands in api_audit_log on every inbound call, and also through the starter WebClient audit filter for the outbound call.",
+      "recommendation_or_open_question": "Not changed (spec). If the table grows, add the four routes to company.logging.database-logging.excluded-paths."
+    },
+    {
+      "area": "other",
+      "description": "Deployment ordering: `knowyourcountry.api-key: ${KNOWYOURCOUNTRY_API_KEY}` has no default in dev/docker/preprod/prod. Any environment (and any local `spring-boot:run` on the default dev profile) without that env var fails at startup. k8s secret/env wiring and Key Vault provisioning are out of scope. F-01 (rotate the leaked legacy key) is a go-live prerequisite.",
+      "recommendation_or_open_question": "Ops must provision KNOWYOURCOUNTRY_API_KEY in every environment before this merges to a deploying branch, or the service will crash-loop."
+    },
+    {
+      "area": "other",
+      "description": "Minor deviations from howtos, made deliberately: (1) ErrorCode carries HttpStatus (spec §3.4). exception-handling.md forbids status on exception classes, not on an error-code enum, so this is allowed. (2) The legacy controller catches RuntimeException as a legacy-shape boundary (spec-mandated), with a NOPMD reason as in FinouxClient. (3) RiskComplianceService is a concrete class without an interface/impl split (utility uses CommunityPostService + impl). (4) The existing `/api/v1/info` YAML entry still generates an unimplemented InfoApi (the openapi howto's dead-interface pitfall). It is left unchanged per the spec and is not copied.",
+      "recommendation_or_open_question": "None required. Noted for reviewer visibility."
+    },
+    {
+      "area": "other",
+      "description": "Starter/BOM impact check: no change to alramz-api-starter or alramz-common-bom is planned. resilience4j, WebClient.Builder, alramzWebClientLoggingFilterFunction, MeterRegistry (actuator) and ApplicationContextRunner/Mockito/AssertJ (starter-webmvc-test) are already on the classpath, matching utility-service. pom.xml is unchanged.",
+      "recommendation_or_open_question": "Two optional starter follow-ups are recommended separately and are NOT in this plan: LoggingExceptionHandler should preserve ErrorResponse status (gap 1), and the JWT chain should return 401 for missing/invalid tokens (gap 2)."
+    }
+  ],
+  "plan_critique": {
+    "acceptance_criteria_coverage": "full in plan, with two caveats: (1) 'PUT returns 405' is only achievable through the added FrameworkExceptionHandler, not the spec's stated mechanism (technical_gaps[0]); (2) 'request without a JWT gets 401' is starter-owned, likely 403 today, and verified manually only (technical_gaps[1]). Every other §8 criterion maps to a target file and a named test: contract/codegen -> apiSpecs.yaml + Step 1 + LegacyEnvelopeContractTest; security -> both controllers + GlobalExceptionHandlerTest (403) + apiCollection.http; behaviour -> RiskBandTest, KnowYourCountryClientTest (auth header, retry-once, classification), RiskComplianceServiceTest (D1 counter), both controller tests, FrameworkExceptionHandlerTest; config -> 6 yml files + KnowYourCountryPropertiesTest + unchanged contextLoads.",
+    "blast_radius_concerns": [
+      "FrameworkExceptionHandler is unscoped: within risk-management-service it also changes 404/405/406/415 responses for the starter's /api/auth/* routes, actuator/swagger and unknown paths from the starter's HTTP 500 map to GenericResponse with the correct status. This is service-local and an improvement, but it is behaviour outside the 4 new routes.",
+      "GenericResponse schema gains 3 fields. Its only current consumer is the unimplemented /api/v1/info contract, so there is no deployed-consumer break.",
+      "Removing the role name APP_RISK_MANAGEMENT_SERVICE_USER from apiCollection.http invalidates any locally registered consumer with the old role."
+    ],
+    "confidence": "medium",
+    "notes": "The weakest part is the error-routing and wire-fidelity edge. The spec assumed a basePackages-scoped ErrorResponse handler would turn a PUT into 405, but Spring skips scoped advice when no handler was matched, so the plan adds an unscoped FrameworkExceptionHandler. That fix is reasoned from Spring's resolver behaviour and verified only by unit tests that call the handler directly, not by an end-to-end dispatch test. Underneath it, the legacy POST fidelity assumptions A1/A2/A4/A5 and the JWT requirement on legacy callers (C2) rest on inferred webMethods behaviour and APIM work outside this repo. The GET contract, vendor client, band logic and config are high-confidence and directly modelled on verified utility-service code.",
+    "user_decisions": []
+  }
+}

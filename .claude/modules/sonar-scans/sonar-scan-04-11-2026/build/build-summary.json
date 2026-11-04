@@ -1,0 +1,144 @@
+{
+  "buildSuccess": true,
+  "modules": [
+    {
+      "bootJar": false,
+      "errors": 0,
+      "failures": 0,
+      "jars": [
+        "alramz-api-starter-1.0-SNAPSHOT.jar"
+      ],
+      "module": "alramz-api-starter",
+      "skipped": 0,
+      "tests": 252
+    },
+    {
+      "bootJar": false,
+      "errors": 0,
+      "failures": 0,
+      "jars": [],
+      "module": "alramz-common-bom",
+      "skipped": 0,
+      "tests": 0
+    },
+    {
+      "bootJar": true,
+      "errors": 0,
+      "failures": 0,
+      "jars": [
+        "alramz-notification-service-0.0.1-SNAPSHOT.jar"
+      ],
+      "module": "alramz-notification-service",
+      "skipped": 0,
+      "tests": 260
+    },
+    {
+      "bootJar": true,
+      "errors": 0,
+      "failures": 0,
+      "jars": [
+        "onboarding-service-0.0.1-SNAPSHOT.jar"
+      ],
+      "module": "onboarding-service",
+      "skipped": 1,
+      "tests": 259
+    },
+    {
+      "bootJar": true,
+      "errors": 0,
+      "failures": 0,
+      "jars": [
+        "reference-data-service-0.0.1-SNAPSHOT.jar"
+      ],
+      "module": "reference-data-service",
+      "skipped": 0,
+      "tests": 59
+    },
+    {
+      "bootJar": true,
+      "errors": 0,
+      "failures": 0,
+      "jars": [
+        "reporting-management-service-0.0.1-SNAPSHOT.jar"
+      ],
+      "module": "reporting-management-service",
+      "skipped": 0,
+      "tests": 33
+    },
+    {
+      "bootJar": true,
+      "errors": 0,
+      "failures": 0,
+      "jars": [
+        "risk-management-service-0.0.1-SNAPSHOT.jar"
+      ],
+      "module": "risk-management-service",
+      "skipped": 0,
+      "tests": 101
+    },
+    {
+      "bootJar": true,
+      "errors": 0,
+      "failures": 0,
+      "jars": [
+        "utility-service-0.0.1-SNAPSHOT.jar"
+      ],
+      "module": "utility-service",
+      "skipped": 0,
+      "tests": 36
+    },
+    {
+      "bootJar": true,
+      "errors": 0,
+      "failures": 0,
+      "jars": [
+        "wealth-management-service-0.0.1-SNAPSHOT.jar"
+      ],
+      "module": "wealth-management-service",
+      "skipped": 0,
+      "tests": 191
+    }
+  ],
+  "reactor": [
+    {
+      "name": "alramz-common-bom 1.0-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "alramz-api-starter 1.0-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "onboarding-service 0.0.1-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "alramz-notification-service 0.0.1-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "reference-data-service 0.0.1-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "utility-service 0.0.1-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "reporting-management-service 0.0.1-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "wealth-management-service 0.0.1-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "risk-management-service 0.0.1-SNAPSHOT",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "alramz-mw-oss 1.0-SNAPSHOT",
+      "result": "SUCCESS"
+    }
+  ]
+}

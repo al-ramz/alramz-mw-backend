@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 https://pmd.github.io/schema/report_2_0_0.xsd" version="7.10.0" timestamp="2026-11-04T17:05:30.871">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/controllers/OtpController.java">
+<violation beginline="39" endline="39" begincolumn="52" endcolumn="54" rule="ShortMethodName" ruleset="Code Style" package="com.alramz.controllers" class="OtpController" method="ok" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortmethodname" priority="3">
+Avoid using short method names
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/controllers/SmsController.java">
+<violation beginline="62" endline="62" begincolumn="52" endcolumn="54" rule="ShortMethodName" ruleset="Code Style" package="com.alramz.controllers" class="SmsController" method="ok" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_codestyle.html#shortmethodname" priority="3">
+Avoid using short method names
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+<violation beginline="28" endline="28" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=53, ATFD=26, TCC=0.000%)
+</violation>
+<violation beginline="28" endline="163" begincolumn="37" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+<violation beginline="62" endline="62" begincolumn="44" endcolumn="64" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleTemplatedEmail" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'handleTemplatedEmail(TemplatedEmailException)' has a cyclomatic complexity of 10.
+</violation>
+<violation beginline="75" endline="75" begincolumn="44" endcolumn="53" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleSms" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'handleSms(SmsException)' has a cyclomatic complexity of 10.
+</violation>
+<violation beginline="88" endline="88" begincolumn="44" endcolumn="53" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.exception" class="GlobalExceptionHandler" method="handleOtp" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'handleOtp(OtpException)' has a cyclomatic complexity of 10.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/repository/OtpRepository.java">
+<violation beginline="24" endline="148" begincolumn="28" endcolumn="2" rule="TooManyMethods" ruleset="Design" package="com.alramz.repository" class="OtpRepository" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#toomanymethods" priority="3">
+This class has too many methods, consider refactoring it.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java">
+<violation beginline="1" endline="508" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.service" class="OtpService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 32 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="64" endline="64" begincolumn="14" endcolumn="19" rule="GodClass" ruleset="Design" package="com.alramz.service" class="OtpService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=115, ATFD=56, TCC=5.291%)
+</violation>
+<violation beginline="180" endline="183" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="OtpService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 151 is caught in this block.
+</violation>
+<violation beginline="180" endline="183" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="OtpService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 176 is caught in this block.
+</violation>
+<violation beginline="216" endline="219" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="OtpService" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 212 is caught in this block.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java">
+<violation beginline="1" endline="352" begincolumn="1" endcolumn="3" rule="ExcessiveImports" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessiveimports" priority="3">
+A high number of imports can indicate a high degree of coupling within an object.
+</violation>
+<violation beginline="48" endline="48" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=109, ATFD=47, TCC=1.449%)
+</violation>
+<violation beginline="129" endline="132" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 108 is caught in this block.
+</violation>
+<violation beginline="129" endline="132" begincolumn="11" endcolumn="10" rule="ExceptionAsFlowControl" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#exceptionasflowcontrol" priority="3">
+Exception thrown at line 98 is caught in this block.
+</violation>
+<violation beginline="140" endline="140" begincolumn="25" endcolumn="36" rule="NPathComplexity" ruleset="Design" package="com.alramz.service" class="TemplatedEmailService" method="checkFields" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#npathcomplexity" priority="3">
+The method 'checkFields(TemplatedEmailRequest, List&lt;String&gt;, List&lt;String&gt;, List&lt;String&gt;, List&lt;TemplateAttachment&gt;)' has an NPath complexity of 288, current threshold is 200
+</violation>
+<violation beginline="207" endline="207" begincolumn="19" endcolumn="82" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="attachmentsMaxSize" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="245" endline="245" begincolumn="19" endcolumn="95" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="248" endline="248" begincolumn="43" endcolumn="115" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="249" endline="250" begincolumn="43" endcolumn="88" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+<violation beginline="251" endline="251" begincolumn="34" endcolumn="115" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service" class="TemplatedEmailService" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java">
+<violation beginline="1" endline="351" begincolumn="1" endcolumn="3" rule="ExcessiveImports" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#excessiveimports" priority="3">
+A high number of imports can indicate a high degree of coupling within an object.
+</violation>
+<violation beginline="1" endline="351" begincolumn="1" endcolumn="3" rule="CouplingBetweenObjects" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#couplingbetweenobjects" priority="3">
+A value of 25 may denote a high amount of coupling within the class (threshold: 20)
+</violation>
+<violation beginline="46" endline="46" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=78, ATFD=57, TCC=1.471%)
+</violation>
+<violation beginline="205" endline="205" begincolumn="18" endcolumn="26" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'validate(EmailRequest, String, List&lt;String&gt;, List&lt;String&gt;, List&lt;String&gt;, List&lt;EmailAttachment&gt;)' has a cyclomatic complexity of 15.
+</violation>
+<violation beginline="205" endline="205" begincolumn="18" endcolumn="26" rule="NPathComplexity" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" method="validate" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#npathcomplexity" priority="3">
+The method 'validate(EmailRequest, String, List&lt;String&gt;, List&lt;String&gt;, List&lt;String&gt;, List&lt;EmailAttachment&gt;)' has an NPath complexity of 512, current threshold is 200
+</violation>
+<violation beginline="249" endline="249" begincolumn="18" endcolumn="37" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="EmailServiceImpl" method="validateAttachments" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'validateAttachments(List&lt;EmailAttachment&gt;)' has a cyclomatic complexity of 12.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EtisalatSmsClient.java">
+<violation beginline="57" endline="57" begincolumn="19" endcolumn="23" rule="UseObjectForClearerAPI" ruleset="Design" package="com.alramz.service.impl" class="EtisalatSmsClient" method="send" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#useobjectforclearerapi" priority="3">
+Rather than using a lot of String arguments, consider using a container object for those values.
+</violation>
+<violation beginline="101" endline="101" begincolumn="33" endcolumn="38" rule="CyclomaticComplexity" ruleset="Design" package="com.alramz.service.impl" class="EtisalatSmsClient" method="token" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'token(boolean)' has a cyclomatic complexity of 10.
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java">
+<violation beginline="35" endline="35" begincolumn="8" endcolumn="13" rule="GodClass" ruleset="Design" package="com.alramz.service.impl" class="SmsServiceImpl" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_design.html#godclass" priority="3">
+Possible God Class (WMC=53, ATFD=28, TCC=15.385%)
+</violation>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/impl/WaselneySmsClient.java">
+<violation beginline="132" endline="132" begincolumn="19" endcolumn="106" rule="PreserveStackTrace" ruleset="Best Practices" package="com.alramz.service.impl" class="WaselneySmsClient" method="parse" externalInfoUrl="https://docs.pmd-code.org/pmd-doc-7.10.0/pmd_rules_java_bestpractices.html#preservestacktrace" priority="3">
+Thrown exception does not preserve the stack trace of exception 'e' on all code paths
+</violation>
+</file>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/config/EmailProperties.java" suppressiontype="@suppresswarnings" msg="The value assigned to variable 'allowedSenders' is never used" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailConfigurationException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailServiceException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/exception/EmailValidationException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/exception/OtpException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/exception/TemplatedEmailException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/exception/SmsException.java" suppressiontype="@suppresswarnings" msg="Classes implementing Serializable should set a serialVersionUID" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/SmsDispatchJob.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException: a scheduled run must never throw
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/SmsDispatchJob.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException: e.g. brok down during markResult
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/scheduler/job/SmsDispatchJob.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException: one bad row must not stop the batch
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java" suppressiontype="@suppresswarnings" msg="The method 'validateBodyAndNumbers(SmsSendRequest, Map&lt;String, Integer&gt;)' has a cyclomatic complexity of 10." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java" suppressiontype="@suppresswarnings" msg="This class has too many methods, consider refactoring it." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException: the mail is sent; the response must not change
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="//nopmd" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=" AvoidCatchingGenericException
+"></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The method 'send(TemplatedEmailRequest, String)' has a cyclomatic complexity of 13." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The method 'mime(String, String)' has a cyclomatic complexity of 10." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The method 'checkFields(TemplatedEmailRequest, List&lt;String&gt;, List&lt;String&gt;, List&lt;String&gt;, List&lt;TemplateAttachment&gt;)' has a cyclomatic complexity of 11." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The method 'checkAttachment(TemplateAttachment, List&lt;String&gt;)' has a cyclomatic complexity of 13." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="The class 'TemplatedEmailService' has a total cyclomatic complexity of 109 (highest 13)." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java" suppressiontype="@suppresswarnings" msg="This class has too many methods, consider refactoring it." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java" suppressiontype="@suppresswarnings" msg="This class has too many methods, consider refactoring it." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block" usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="The method 'send(OtpSendRequest)' has a cyclomatic complexity of 12." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="The class 'OtpService' has a total cyclomatic complexity of 115 (highest 12)." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="A high number of imports can indicate a high degree of coupling within an object." usermsg=""></suppressedviolation>
+<suppressedviolation filename="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java" suppressiontype="@suppresswarnings" msg="This class has too many methods, consider refactoring it." usermsg=""></suppressedviolation>
+<configerror rule="LoosePackageCoupling" msg="No packages or classes specified"/>
+</pmd>

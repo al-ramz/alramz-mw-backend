@@ -6,6 +6,7 @@ terminal with [Newman](https://github.com/postmanlabs/newman), Postman's command
 | File | Purpose |
 |------|---------|
 | `AlramzMWCollection.postman_collection.json` | Folders `onboarding-apis` (login, IBAN, veriphone, DFM onboarding) and `reference-data-apis` (health, global-config cache, relationship managers) |
+| `risk-management-service.postman_collection.json` | Folder `risk-management-apis`: info, login, countries / country ratings (new + legacy routes), 403 and 405 negative cases |
 | `dev.postman_environment.json` | Environment variables — values are blank on purpose; pass them with `--env-var` |
 
 ## 1. Install Newman
@@ -35,6 +36,8 @@ with the `dev` profile: `onboarding-service` → `8080`, `reference-data-service
 | `v_onboarding_consumer` | — | `onboarding-apis/01_login` |
 | `v_consumer` / `v_consumerPassword` | — | pre-request login of `onboarding-apis/02–04` |
 | `v_reference_data_consumer` / `v_consumer_password` | — | pre-request login of `reference-data-apis` |
+| `risk-management-service-port` | `8086` | `risk-management-apis` |
+| `v_risk_management_consumer` / `v_consumer_password` | — | login and pre-request login of `risk-management-apis` |
 
 `v_access_token` is set automatically by each request's pre-request script. Keep credentials in
 shell variables — don't write them into the environment JSON or commit them.
@@ -83,7 +86,18 @@ newman run e2e/AlramzMWCollection.postman_collection.json \
   --env-var "reference-data-service-port=8081" \
   --env-var "v_reference_data_consumer=$E2E_CONSUMER" \
   --env-var "v_consumer_password=$E2E_PASSWORD"
+
+# risk-management-service (its own collection file)
+newman run e2e/risk-management-service.postman_collection.json \
+  -e e2e/dev.postman_environment.json \
+  --env-var "baseurl=http://localhost" \
+  --env-var "risk-management-service-port=8086" \
+  --env-var "v_risk_management_consumer=$E2E_CONSUMER" \
+  --env-var "v_consumer_password=$E2E_PASSWORD"
 ```
+
+The risk-management consumer must exist and carry role `APP_RISK_MANAGEMENT`; in the dev profile
+create it with the `POST /api/auth/register` request in `services/risk-management-service/apiCollection.http`.
 
 **Useful flags:**
 

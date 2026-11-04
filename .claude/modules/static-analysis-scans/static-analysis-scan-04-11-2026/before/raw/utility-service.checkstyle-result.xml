@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.21.0">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/finoux/FinouxParam.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/finoux/FinouxInsertPostDataRequest.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/finoux/FinouxClient.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/finoux/FinouxInsertPostDataResponse.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/finoux/FinouxData.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/finoux/FinouxResult.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/config/JacksonConfig.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/config/FinouxProperties.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/config/ExternalFinouxServiceConfig.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/config/DatasourceConfiguration.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/UtilityServiceApplication.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/service/impl/CommunityPostServiceImpl.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/service/CommunityPostService.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/controllers/CommunityPostController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/controllers/ApplicationController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/exception/ErrorCode.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/exception/ApplicationException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/exception/FinouxIntegrationException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/utility-service/src/main/java/com/alramz/exception/FinouxUnavailableException.java">
+</file>
+</checkstyle>

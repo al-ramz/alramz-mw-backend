@@ -1,0 +1,11 @@
+# Startup check (profile: dev)
+
+| Service | Port | Result | Health | Seconds | Detail |
+|---|---|---|---|---|---|
+| alramz-notification-service | 18080 | STARTED_BUT_HEALTHCHECK_FAILED | HTTP 403  | 14 | STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured) |
+| onboarding-service | 18080 | BLOCKED_BY_DEPENDENCY | n/a | 23 | STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=U08BBTgLRumVVyWyMHlFMA==) |
+| reference-data-service | 18080 | BLOCKED_BY_DEPENDENCY | n/a | 27 | STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=ic2zgcYATiKuhlyWa+30zQ==) |
+| reporting-management-service | 18080 | BLOCKED_BY_DEPENDENCY | n/a | 23 | STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=PY7xSP/ESPG4iC0c3PQ75g==) |
+| risk-management-service | 18080 | STARTED_BUT_HEALTHCHECK_FAILED | HTTP 403  | 12 | STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured) |
+| utility-service | 18080 | STARTED_BUT_HEALTHCHECK_FAILED | HTTP 403  | 12 | STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured) |
+| wealth-management-service | 18080 | BLOCKED_BY_DEPENDENCY | n/a | 23 | STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=7H3kIHv1TQiys0WcCHiqCw==) |

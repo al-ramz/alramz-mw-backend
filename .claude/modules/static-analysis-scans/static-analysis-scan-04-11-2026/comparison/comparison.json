@@ -1,0 +1,75 @@
+{
+ "totals": {
+  "checkstyle": {
+   "before": 30,
+   "after": 10
+  },
+  "pmd": {
+   "before": 85,
+   "after": 83
+  },
+  "spotbugs": {
+   "before": 16,
+   "after": 14
+  }
+ },
+ "fixed": [
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 35,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character.",
+   "count": 20
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/controllers/ApplicationController.java",
+   "line": 25,
+   "rule": "SignatureDeclareThrowsException",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A method/constructor should not explicitly throw java.lang.Exception",
+   "count": 1
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceController.java",
+   "line": 38,
+   "rule": "ShortMethodName",
+   "category": "Code Style",
+   "severity": "MEDIUM",
+   "message": "Avoid using short method names",
+   "count": 1
+  },
+  {
+   "tool": "spotbugs",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/controllers/ApplicationController.java",
+   "line": 27,
+   "rule": "THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION",
+   "category": "BAD_PRACTICE",
+   "severity": "LOW",
+   "rank": 19,
+   "message": "Method lists Exception in its throws clause, but it could be more specific.",
+   "count": 1
+  },
+  {
+   "tool": "spotbugs",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceLegacyController.java",
+   "line": 129,
+   "rule": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+   "category": "STYLE",
+   "severity": "MEDIUM",
+   "rank": 13,
+   "message": "Possible null pointer dereference in com.alramz.controllers.RiskComplianceLegacyController.toLegacy(CountryRating) due to return value of called method",
+   "count": 1
+  }
+ ],
+ "new": []
+}

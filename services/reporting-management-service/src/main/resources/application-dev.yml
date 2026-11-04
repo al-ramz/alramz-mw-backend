@@ -103,6 +103,7 @@ company:
     secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
     login-url: /api/auth/login
     register-url: /api/auth/register
+    registration-enabled: true   # dev only: self-registration trusts caller-supplied roles; keep off (default) elsewhere
     refresh-url: /api/auth/refresh
     logout-url: /api/auth/logout
     validate-url: /api/auth/validate

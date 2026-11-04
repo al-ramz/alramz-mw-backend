@@ -17,3 +17,20 @@ spring:
 
 cipher:
   password: 1234567890123456
+
+# @SpringBootTest boots without a profile, so this file (not application-test.yml) is what tests load.
+# The middleware datasource must be on for DatasourceConfiguration (@Primary DataSource + transactionManager).
+company:
+  datasource:
+    middleware:
+      enabled: true
+      url: jdbc:h2:mem:testdb
+      driverClassName: org.h2.Driver
+      username: sa
+      password:
+      plainPassword: sa
+      startup-validation:
+        enabled: false
+      pool:
+        maximum-pool-size: 5
+        minimum-idle: 1

@@ -1,0 +1,2 @@
+{"gate": {"before": "OK", "after": "OK"}, "before": 38, "after": 33, "fixed": 5, "pending": 33, "new": 0, "changed": 0, "hotspots_before": 0, "hotspots_after": 0, "hotspots_to_review_after": 0}
+[17:34:22] Comparison: /Users/gtalele/Desktop/workspace/alramz-mw-backend/.claude/modules/sonar-scans/sonar-scan-04-11-2026/comparison/comparison.md

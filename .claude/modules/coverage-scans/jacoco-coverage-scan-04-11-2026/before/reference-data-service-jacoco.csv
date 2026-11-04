@@ -1,0 +1,27 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+reference-data-service,com.alramz,ReferenceDataServiceApplication,6,59,1,1,2,15,2,4,1,4
+reference-data-service,com.alramz.controllers,RedisCacheController,0,115,0,0,0,34,0,6,0,6
+reference-data-service,com.alramz.controllers,ApplicationController,0,26,0,0,0,6,0,2,0,2
+reference-data-service,com.alramz.config,CompanyRedisProperties.Cache,0,10,0,0,0,4,0,3,0,3
+reference-data-service,com.alramz.config,CacheMappingProperties,0,10,0,0,0,4,0,3,0,3
+reference-data-service,com.alramz.config,RedisConfig.new RedisStandaloneConfiguration() {...},5,8,0,0,1,1,1,1,1,1
+reference-data-service,com.alramz.config,CompanyRedisProperties.Connection,0,55,0,0,0,21,0,11,0,11
+reference-data-service,com.alramz.config,MiddlewareDataSourceProperties,9,103,0,0,3,35,3,15,3,15
+reference-data-service,com.alramz.config,MiddlewareDataSourceProperties.StartupValidation,0,13,0,0,0,5,0,3,0,3
+reference-data-service,com.alramz.config,CacheWarmupRunner,0,66,0,6,0,18,0,8,0,5
+reference-data-service,com.alramz.config,JacksonConfig,0,12,0,0,0,4,0,2,0,2
+reference-data-service,com.alramz.config,CompanyRedisProperties.Deployment,0,13,0,0,0,5,0,3,0,3
+reference-data-service,com.alramz.config,RedisConfig,41,142,2,6,10,36,3,9,1,7
+reference-data-service,com.alramz.config,MiddlewareDataSourceProperties.SqlLogging,0,13,0,0,0,5,0,3,0,3
+reference-data-service,com.alramz.config,MiddlewareDataSourceProperties.Pool,0,23,0,0,0,9,0,5,0,5
+reference-data-service,com.alramz.config,DatasourceConfiguration,0,7,0,0,0,3,0,3,0,3
+reference-data-service,com.alramz.config,AsyncConfig,0,23,0,0,0,8,0,2,0,2
+reference-data-service,com.alramz.config,CompanyRedisProperties.Cache.CacheMapping,0,41,0,0,0,17,0,11,0,11
+reference-data-service,com.alramz.config,CacheMappingProperties.CacheMapping,0,41,0,0,0,17,0,11,0,11
+reference-data-service,com.alramz.config,CompanyRedisProperties.Connection.Ssl,0,13,0,0,0,5,0,3,0,3
+reference-data-service,com.alramz.config,CompanyRedisProperties,0,39,0,0,0,13,0,7,0,7
+reference-data-service,com.alramz.scheduler.job,CacheReloadScheduledJob,0,103,1,7,0,25,1,6,0,3
+reference-data-service,com.alramz.service,SchedulerLockService,50,165,3,5,4,36,3,6,0,5
+reference-data-service,com.alramz.service,CacheAuditService,0,61,0,0,0,17,0,3,0,3
+reference-data-service,com.alramz.service,RedisCacheService.new TypeReference() {...},0,3,0,0,0,1,0,1,0,1
+reference-data-service,com.alramz.service,RedisCacheService,7,797,8,44,2,174,8,41,0,23

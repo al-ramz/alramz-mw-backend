@@ -99,6 +99,7 @@ company:
   jwt:
     secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890} # no default: an unset secret must fail startup, not fall back to the starter's public default key
     enabled: true
+    registration-enabled: true   # dev only: self-registration trusts caller-supplied roles; keep off (default) elsewhere
     access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:86400000}   # 24h (dev only)
     permit-all-urls:
       - /api/v1/info

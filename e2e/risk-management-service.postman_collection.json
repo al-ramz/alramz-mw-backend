@@ -1,0 +1,470 @@
+{
+	"info": {
+		"_postman_id": "09f82199-9681-4ad4-b2c9-7f66c9af5c71",
+		"name": "risk-management-service",
+		"description": "Risk Management Service (KnowYourCountry countries / country ratings). Generated from services/risk-management-service/specs/apiSpecs.yaml and apiCollection.http; assertions checked against the running service. See e2e/README.md for how to run.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "risk-management-apis",
+			"item": [
+				{
+					"name": "00_info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();\n\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Service info\", function () {\n    pm.expect(jsonData.applicationName).to.eql(\"risk-management-service\");\n    pm.expect(jsonData).to.have.property(\"host\");\n    pm.expect(jsonData).to.have.property(\"timestamp\");\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/info",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();\n\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Access token issued\", function () {\n    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\n    pm.expect(jsonData.accessToken).to.be.a(\"string\").and.not.empty;\n    pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/auth/login",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"consumer\": \"{{v_risk_management_consumer}}\",\n    \"consumerPassword\": \"{{v_consumer_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02_get_countries",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest({\n          url: pm.environment.get(\"baseurl\") + \":\" + pm.environment.get(\"risk-management-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_risk_management_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n          }\n      });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();\n\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"GenericResponse envelope\", function () {\n    pm.expect(jsonData).to.have.all.keys(\"responseCode\", \"responseMessage\", \"errorCode\", \"errorMsg\", \"correlationId\", \"response\");\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n    pm.expect(jsonData.errorCode).to.eql(null);\n    pm.expect(jsonData.errorMsg).to.eql(null);\n    pm.expect(jsonData.correlationId).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);\n});\n\npm.test(\"response.countryList is an array of rows\", function () {\n    pm.expect(jsonData.response.countryList).to.be.an(\"array\");\n    jsonData.response.countryList.forEach(function (row) {\n        pm.expect(row).to.have.property(\"name\");\n        pm.expect(row.iso2).to.match(/^[A-Z]{2}$/);\n        pm.expect(row.iso3).to.match(/^[A-Z]{3}$/);\n    });\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{v_access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/countries",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03_get_country_ratings",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest({\n          url: pm.environment.get(\"baseurl\") + \":\" + pm.environment.get(\"risk-management-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_risk_management_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n          }\n      });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();\n\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"GenericResponse envelope\", function () {\n    pm.expect(jsonData).to.have.all.keys(\"responseCode\", \"responseMessage\", \"errorCode\", \"errorMsg\", \"correlationId\", \"response\");\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n    pm.expect(jsonData.responseMessage).to.eql(\"OK\");\n    pm.expect(jsonData.errorCode).to.eql(null);\n    pm.expect(jsonData.errorMsg).to.eql(null);\n    pm.expect(jsonData.correlationId).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);\n});\n\npm.test(\"response.countryRating is an array of rows\", function () {\n    pm.expect(jsonData.response.countryRating).to.be.an(\"array\");\n    jsonData.response.countryRating.forEach(function (row) {\n        pm.expect(row).to.have.property(\"name\");\n        pm.expect(row.iso2).to.match(/^[A-Z]{2}$/);\n        pm.expect(row.iso3).to.match(/^[A-Z]{3}$/);\n        pm.expect(row.riskLevel).to.be.oneOf([\"H\", \"M\", \"L\"]);\n        pm.expect(row.rating).to.eql({ H: 20, M: 9, L: 1 }[row.riskLevel]);\n    });\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{v_access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/country-ratings",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"country-ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "04_get_countries_legacy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest({\n          url: pm.environment.get(\"baseurl\") + \":\" + pm.environment.get(\"risk-management-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_risk_management_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n          }\n      });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();\n\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Legacy envelope: success\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n    pm.expect(jsonData.responseMessage).to.eql(\"success\");\n    pm.expect(jsonData.correlationID).to.eql(\"e2e-risk-countries-001\");\n});\n\npm.test(\"response.countryList (omitted when there is no data)\", function () {\n    if (!jsonData.response) { return; }\n    pm.expect(jsonData.response.countryList).to.be.an(\"array\");\n    jsonData.response.countryList.forEach(function (row) {\n        pm.expect(row).to.have.property(\"name\");\n        pm.expect(row.iso2).to.match(/^[A-Z]{2}$/);\n        pm.expect(row.iso3).to.match(/^[A-Z]{3}$/);\n    });\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{v_access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/countries",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"countries"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"correlationID\": \"e2e-risk-countries-001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"description": "Legacy webMethods shape. Always HTTP 200; the outcome is in the inner responseCode (200 / 1018 / 500). The caller's correlationID is echoed back."
+					},
+					"response": []
+				},
+				{
+					"name": "05_get_country_ratings_legacy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest({\n          url: pm.environment.get(\"baseurl\") + \":\" + pm.environment.get(\"risk-management-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_risk_management_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n          }\n      });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();\n\npm.test(\"HTTP status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Legacy envelope: success\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"200\");\n    pm.expect(jsonData.responseMessage).to.eql(\"success\");\n    pm.expect(jsonData.correlationID).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);\n});\n\npm.test(\"response.countryRating (omitted when there is no data)\", function () {\n    if (!jsonData.response) { return; }\n    pm.expect(jsonData.response.countryRating).to.be.an(\"array\");\n    jsonData.response.countryRating.forEach(function (row) {\n        pm.expect(row).to.have.property(\"name\");\n        pm.expect(row.iso2).to.match(/^[A-Z]{2}$/);\n        pm.expect(row.iso3).to.match(/^[A-Z]{3}$/);\n        pm.expect(row.riskLevel).to.be.oneOf([\"H\", \"M\", \"L\"]);\n        pm.expect(row.rating).to.eql({ H: \"20\", M: \"9\", L: \"1\" }[row.riskLevel]);\n    });\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{v_access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/countryRatings",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"countryRatings"
+							]
+						},
+						"description": "Legacy webMethods shape, sent with no body: the service generates a correlationID. rating is a string here."
+					},
+					"response": []
+				},
+				{
+					"name": "06_get_countries_no_token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"HTTP status code is 403 without a valid token\", function () {\n    pm.response.to.have.status(403);\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/countries",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"countries"
+							]
+						},
+						"description": "Negative: no Authorization header. The running service answers 403 with an empty body (the spec documents 401)."
+					},
+					"response": []
+				},
+				{
+					"name": "07_get_country_ratings_invalid_token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"HTTP status code is 403 without a valid token\", function () {\n    pm.response.to.have.status(403);\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid-token"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/country-ratings",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"country-ratings"
+							]
+						},
+						"description": "Negative: garbage bearer token."
+					},
+					"response": []
+				},
+				{
+					"name": "08_countryRatings_legacy_no_token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"HTTP status code is 403 without a valid token\", function () {\n    pm.response.to.have.status(403);\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/countryRatings",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"countryRatings"
+							]
+						},
+						"description": "Negative: legacy route without a token. The denial is NOT in the legacy shape."
+					},
+					"response": []
+				},
+				{
+					"name": "09_put_countries_method_not_allowed",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest({\n          url: pm.environment.get(\"baseurl\") + \":\" + pm.environment.get(\"risk-management-service-port\") + \"/api/auth/login\",\n          method: \"POST\",\n          header: {\n              \"Content-Type\": \"application/json\"\n          },\n          body: {\n              mode: \"raw\",\n              raw: JSON.stringify({\n                  consumer: pm.environment.get(\"v_risk_management_consumer\"),\n                  consumerPassword: pm.environment.get(\"v_consumer_password\")\n              })\n          }\n      }, function (err, response) {\n          if (err) {\n              console.log(\"jwt-auth error:\", err);\n          } else {\n              const jsonData = response.json();\n              pm.collectionVariables.set(\"v_access_token\", jsonData.accessToken);\n          }\n      });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();\n\npm.test(\"HTTP status code is 405\", function () {\n    pm.response.to.have.status(405);\n});\n\npm.test(\"GenericResponse 405, not a 500\", function () {\n    pm.expect(jsonData.responseCode).to.eql(\"405\");\n    pm.expect(jsonData.responseMessage).to.eql(\"Method Not Allowed\");\n    pm.expect(jsonData.response).to.eql(null);\n});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{v_access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}:{{risk-management-service-port}}/api/v1/countries",
+							"host": [
+								"{{baseurl}}"
+							],
+							"port": "{{risk-management-service-port}}",
+							"path": [
+								"api",
+								"v1",
+								"countries"
+							]
+						},
+						"description": "Negative: unsupported verb must be a 405 GenericResponse, not a 500."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [],
+	"variable": [
+		{
+			"key": "v_access_token",
+			"value": ""
+		}
+	]
+}

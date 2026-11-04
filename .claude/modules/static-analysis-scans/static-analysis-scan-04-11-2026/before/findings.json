@@ -1,0 +1,1331 @@
+{
+ "scanned": {
+  "checkstyle": [
+   "alramz-api-starter",
+   "alramz-common-bom",
+   "alramz-notification-service",
+   "onboarding-service",
+   "reference-data-service",
+   "reporting-management-service",
+   "risk-management-service",
+   "utility-service",
+   "wealth-management-service"
+  ],
+  "pmd": [
+   "alramz-notification-service",
+   "onboarding-service",
+   "reference-data-service",
+   "reporting-management-service",
+   "risk-management-service",
+   "utility-service",
+   "wealth-management-service"
+  ],
+  "spotbugs": [
+   "alramz-notification-service",
+   "onboarding-service",
+   "reference-data-service",
+   "reporting-management-service",
+   "risk-management-service",
+   "utility-service",
+   "wealth-management-service"
+  ]
+ },
+ "findings": [
+  {
+   "tool": "checkstyle",
+   "module": "alramz-api-starter",
+   "file": "services/alramz-api-starter/src/main/java/com/alramz/audit/ApiAuditLogFilter.java",
+   "line": 63,
+   "rule": "NPathComplexity",
+   "severity": "MEDIUM",
+   "message": "NPath Complexity is 321 (max allowed is 200)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "alramz-api-starter",
+   "file": "services/alramz-api-starter/src/main/java/com/alramz/logging/aspect/MethodExecutionLoggingAspect.java",
+   "line": 30,
+   "rule": "NPathComplexity",
+   "severity": "MEDIUM",
+   "message": "NPath Complexity is 1,150 (max allowed is 200)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "alramz-api-starter",
+   "file": "services/alramz-api-starter/src/main/java/com/alramz/logging/config/LoggingAutoConfiguration.java",
+   "line": 50,
+   "rule": "ClassFanOutComplexity",
+   "severity": "MEDIUM",
+   "message": "Class Fan-Out Complexity is 35 (max allowed is 30)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "alramz-api-starter",
+   "file": "services/alramz-api-starter/src/main/java/com/alramz/logging/util/LoggingHelper.java",
+   "line": 260,
+   "rule": "NPathComplexity",
+   "severity": "MEDIUM",
+   "message": "NPath Complexity is 225 (max allowed is 200)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "alramz-api-starter",
+   "file": "services/alramz-api-starter/src/main/java/com/alramz/scheduler/service/impl/JobScheduleManager.java",
+   "line": 400,
+   "rule": "NPathComplexity",
+   "severity": "MEDIUM",
+   "message": "NPath Complexity is 225 (max allowed is 200)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java",
+   "line": 60,
+   "rule": "ClassFanOutComplexity",
+   "severity": "MEDIUM",
+   "message": "Class Fan-Out Complexity is 36 (max allowed is 30)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 83,
+   "rule": "NPathComplexity",
+   "severity": "MEDIUM",
+   "message": "NPath Complexity is 294 (max allowed is 200)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 140,
+   "rule": "NPathComplexity",
+   "severity": "MEDIUM",
+   "message": "NPath Complexity is 720 (max allowed is 200)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java",
+   "line": 205,
+   "rule": "NPathComplexity",
+   "severity": "MEDIUM",
+   "message": "NPath Complexity is 512 (max allowed is 200)."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 14,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 16,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 17,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 18,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 20,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 21,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 22,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 23,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 24,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 25,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 26,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 27,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 28,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 29,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 30,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 31,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 32,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 33,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 34,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/RiskManagementServiceApplication.java",
+   "line": 35,
+   "rule": "FileTabCharacter",
+   "severity": "MEDIUM",
+   "message": "Line contains a tab character."
+  },
+  {
+   "tool": "checkstyle",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 44,
+   "rule": "ClassFanOutComplexity",
+   "severity": "MEDIUM",
+   "message": "Class Fan-Out Complexity is 35 (max allowed is 30)."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/controllers/OtpController.java",
+   "line": 39,
+   "rule": "ShortMethodName",
+   "category": "Code Style",
+   "severity": "MEDIUM",
+   "message": "Avoid using short method names"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/controllers/SmsController.java",
+   "line": 62,
+   "rule": "ShortMethodName",
+   "category": "Code Style",
+   "severity": "MEDIUM",
+   "message": "Avoid using short method names"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 28,
+   "rule": "GodClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Possible God Class (WMC=53, ATFD=26, TCC=0.000%)"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 28,
+   "rule": "TooManyMethods",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has too many methods, consider refactoring it."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 62,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'handleTemplatedEmail(TemplatedEmailException)' has a cyclomatic complexity of 10."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 75,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'handleSms(SmsException)' has a cyclomatic complexity of 10."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 88,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'handleOtp(OtpException)' has a cyclomatic complexity of 10."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/repository/OtpRepository.java",
+   "line": 24,
+   "rule": "TooManyMethods",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has too many methods, consider refactoring it."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java",
+   "line": 1,
+   "rule": "CouplingBetweenObjects",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A value of 32 may denote a high amount of coupling within the class (threshold: 20)"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java",
+   "line": 64,
+   "rule": "GodClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Possible God Class (WMC=115, ATFD=56, TCC=5.291%)"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java",
+   "line": 180,
+   "rule": "ExceptionAsFlowControl",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Exception thrown at line 151 is caught in this block."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java",
+   "line": 180,
+   "rule": "ExceptionAsFlowControl",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Exception thrown at line 176 is caught in this block."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/OtpService.java",
+   "line": 216,
+   "rule": "ExceptionAsFlowControl",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Exception thrown at line 212 is caught in this block."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 1,
+   "rule": "ExcessiveImports",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A high number of imports can indicate a high degree of coupling within an object."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 48,
+   "rule": "GodClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Possible God Class (WMC=109, ATFD=47, TCC=1.449%)"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 129,
+   "rule": "ExceptionAsFlowControl",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Exception thrown at line 108 is caught in this block."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 129,
+   "rule": "ExceptionAsFlowControl",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Exception thrown at line 98 is caught in this block."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 140,
+   "rule": "NPathComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'checkFields(TemplatedEmailRequest, List<String>, List<String>, List<String>, List<TemplateAttachment>)' has an NPath complexity of 288, current threshold is 200"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 207,
+   "rule": "PreserveStackTrace",
+   "category": "Best Practices",
+   "severity": "MEDIUM",
+   "message": "Thrown exception does not preserve the stack trace of exception 'e' on all code paths"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 245,
+   "rule": "PreserveStackTrace",
+   "category": "Best Practices",
+   "severity": "MEDIUM",
+   "message": "Thrown exception does not preserve the stack trace of exception 'e' on all code paths"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 248,
+   "rule": "PreserveStackTrace",
+   "category": "Best Practices",
+   "severity": "MEDIUM",
+   "message": "Thrown exception does not preserve the stack trace of exception 'e' on all code paths"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 249,
+   "rule": "PreserveStackTrace",
+   "category": "Best Practices",
+   "severity": "MEDIUM",
+   "message": "Thrown exception does not preserve the stack trace of exception 'e' on all code paths"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/TemplatedEmailService.java",
+   "line": 251,
+   "rule": "PreserveStackTrace",
+   "category": "Best Practices",
+   "severity": "MEDIUM",
+   "message": "Thrown exception does not preserve the stack trace of exception 'e' on all code paths"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java",
+   "line": 1,
+   "rule": "CouplingBetweenObjects",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A value of 25 may denote a high amount of coupling within the class (threshold: 20)"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java",
+   "line": 1,
+   "rule": "ExcessiveImports",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A high number of imports can indicate a high degree of coupling within an object."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java",
+   "line": 46,
+   "rule": "GodClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Possible God Class (WMC=78, ATFD=57, TCC=1.471%)"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java",
+   "line": 205,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'validate(EmailRequest, String, List<String>, List<String>, List<String>, List<EmailAttachment>)' has a cyclomatic complexity of 15."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java",
+   "line": 205,
+   "rule": "NPathComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'validate(EmailRequest, String, List<String>, List<String>, List<String>, List<EmailAttachment>)' has an NPath complexity of 512, current threshold is 200"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EmailServiceImpl.java",
+   "line": 249,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'validateAttachments(List<EmailAttachment>)' has a cyclomatic complexity of 12."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EtisalatSmsClient.java",
+   "line": 57,
+   "rule": "UseObjectForClearerAPI",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Rather than using a lot of String arguments, consider using a container object for those values."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/EtisalatSmsClient.java",
+   "line": 101,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'token(boolean)' has a cyclomatic complexity of 10."
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/SmsServiceImpl.java",
+   "line": 35,
+   "rule": "GodClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Possible God Class (WMC=53, ATFD=28, TCC=15.385%)"
+  },
+  {
+   "tool": "pmd",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/impl/WaselneySmsClient.java",
+   "line": 132,
+   "rule": "PreserveStackTrace",
+   "category": "Best Practices",
+   "severity": "MEDIUM",
+   "message": "Thrown exception does not preserve the stack trace of exception 'e' on all code paths"
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/config/ETradeTokenProvider.java",
+   "line": 56,
+   "rule": "NullAssignment",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Assigning an Object to null is a code smell.  Consider refactoring."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/config/ETradeTokenProvider.java",
+   "line": 57,
+   "rule": "NullAssignment",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Assigning an Object to null is a code smell.  Consider refactoring."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingPayload.java",
+   "line": 98,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'from(DfmInvestorRegistrationRequest, String, String)' has a cyclomatic complexity of 15."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingPayload.java",
+   "line": 98,
+   "rule": "NPathComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'from(DfmInvestorRegistrationRequest, String, String)' has an NPath complexity of 16384, current threshold is 200"
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/exception/DfmInvestorExceptionHandler.java",
+   "line": 37,
+   "rule": "TooManyMethods",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has too many methods, consider refactoring it."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 25,
+   "rule": "TooManyMethods",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has too many methods, consider refactoring it."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 39,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'friendlyMessage(String, String)' has a cyclomatic complexity of 13."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 54,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'mapFieldToInternalErrorCode(String)' has a cyclomatic complexity of 13."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/exception/OnboardingExceptionHandler.java",
+   "line": 18,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'friendlyMessage(String, String)' has a cyclomatic complexity of 13."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/exception/OnboardingExceptionHandler.java",
+   "line": 33,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'mapFieldToInternalErrorCode(String)' has a cyclomatic complexity of 13."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/repository/DfmOnboardingRepositoryImpl.java",
+   "line": 36,
+   "rule": "NcssCount",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'insert(OnboardingRequest, String)' has a NCSS line count of 94."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/repository/DfmOnboardingRequest.java",
+   "line": 13,
+   "rule": "TooManyFields",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Too many fields"
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/service/DuplicateCheckService.java",
+   "line": 5,
+   "rule": "UseObjectForClearerAPI",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Rather than using a lot of String arguments, consider using a container object for those values."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/service/impl/DfmInvestorServiceImpl.java",
+   "line": 1,
+   "rule": "CouplingBetweenObjects",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A value of 22 may denote a high amount of coupling within the class (threshold: 20)"
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/service/impl/DfmInvestorServiceImpl.java",
+   "line": 38,
+   "rule": "TooManyMethods",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has too many methods, consider refactoring it."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/service/impl/DuplicateCheckServiceImpl.java",
+   "line": 20,
+   "rule": "UseObjectForClearerAPI",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Rather than using a lot of String arguments, consider using a container object for those values."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/service/impl/IBANValidationServiceImpl.java",
+   "line": 50,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'validate(IBANRequest)' has a cyclomatic complexity of 15."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/service/impl/NinTradingNumberValidationService.java",
+   "line": 29,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'checkIfNinOrTradingNumberExists(String, String, String)' has a cyclomatic complexity of 14."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/service/impl/OnboardingServiceImpl.java",
+   "line": 63,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'validateRequiredFields(OnboardingRequest)' has a cyclomatic complexity of 11."
+  },
+  {
+   "tool": "pmd",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/service/impl/PhoneValidationServiceImpl.java",
+   "line": 47,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'validate(PhoneRequest)' has a cyclomatic complexity of 15."
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/config/CacheMappingProperties.java",
+   "line": 22,
+   "rule": "DataClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The class 'CacheMapping' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=10, WMC=10)"
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/config/CompanyRedisProperties.java",
+   "line": 10,
+   "rule": "DataClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The class 'CompanyRedisProperties' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=6, WMC=6)"
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/config/CompanyRedisProperties.java",
+   "line": 52,
+   "rule": "DataClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The class 'Connection' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=10, WMC=10)"
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/config/CompanyRedisProperties.java",
+   "line": 99,
+   "rule": "ShortClassName",
+   "category": "Code Style",
+   "severity": "LOW",
+   "message": "Avoid short class names like Ssl"
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/config/CompanyRedisProperties.java",
+   "line": 123,
+   "rule": "DataClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The class 'CacheMapping' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=10, WMC=10)"
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/config/MiddlewareDataSourceProperties.java",
+   "line": 11,
+   "rule": "DataClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The class 'MiddlewareDataSourceProperties' is suspected to be a Data Class (WOC=5.882%, NOPA=0, NOAM=16, WMC=17)"
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/config/MiddlewareDataSourceProperties.java",
+   "line": 109,
+   "rule": "DataClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The class 'Pool' is suspected to be a Data Class (WOC=0.000%, NOPA=0, NOAM=4, WMC=4)"
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/config/MiddlewareDataSourceProperties.java",
+   "line": 109,
+   "rule": "ShortClassName",
+   "category": "Code Style",
+   "severity": "LOW",
+   "message": "Avoid short class names like Pool"
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/service/CacheAuditService.java",
+   "line": 23,
+   "rule": "UseObjectForClearerAPI",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Rather than using a lot of String arguments, consider using a container object for those values."
+  },
+  {
+   "tool": "pmd",
+   "module": "reference-data-service",
+   "file": "services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java",
+   "line": 26,
+   "rule": "TooManyMethods",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has too many methods, consider refactoring it."
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/controllers/ApplicationController.java",
+   "line": 25,
+   "rule": "SignatureDeclareThrowsException",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A method/constructor should not explicitly throw java.lang.Exception"
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceController.java",
+   "line": 38,
+   "rule": "ShortMethodName",
+   "category": "Code Style",
+   "severity": "MEDIUM",
+   "message": "Avoid using short method names"
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/exception/ErrorCode.java",
+   "line": 22,
+   "rule": "AvoidFieldNameMatchingMethodName",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Field status has the same name as a method"
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/exception/ErrorCode.java",
+   "line": 23,
+   "rule": "AvoidFieldNameMatchingMethodName",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Field message has the same name as a method"
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryClient.java",
+   "line": 74,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'classify(RuntimeException)' has a cyclomatic complexity of 10."
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/RiskBand.java",
+   "line": 11,
+   "rule": "AvoidFieldNameMatchingMethodName",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Field rating has the same name as a method"
+  },
+  {
+   "tool": "pmd",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/RiskBand.java",
+   "line": 12,
+   "rule": "AvoidFieldNameMatchingMethodName",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Field code has the same name as a method"
+  },
+  {
+   "tool": "pmd",
+   "module": "utility-service",
+   "file": "services/utility-service/src/main/java/com/alramz/config/FinouxProperties.java",
+   "line": 30,
+   "rule": "ShortClassName",
+   "category": "Code Style",
+   "severity": "LOW",
+   "message": "Avoid short class names like Post"
+  },
+  {
+   "tool": "pmd",
+   "module": "utility-service",
+   "file": "services/utility-service/src/main/java/com/alramz/exception/ErrorCode.java",
+   "line": 19,
+   "rule": "AvoidFieldNameMatchingMethodName",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Field code has the same name as a method"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java",
+   "line": 13,
+   "rule": "ExcessivePublicCount",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has a bunch of public methods and attributes"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java",
+   "line": 90,
+   "rule": "AvoidFieldNameMatchingMethodName",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Field code has the same name as a method"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java",
+   "line": 91,
+   "rule": "AvoidFieldNameMatchingMethodName",
+   "category": "Error Prone",
+   "severity": "MEDIUM",
+   "message": "Field defaultMessage has the same name as a method"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 1,
+   "rule": "CouplingBetweenObjects",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A value of 30 may denote a high amount of coupling within the class (threshold: 20)"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 1,
+   "rule": "ExcessiveImports",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A high number of imports can indicate a high degree of coupling within an object."
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 47,
+   "rule": "GodClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Possible God Class (WMC=64, ATFD=77, TCC=1.087%)"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 47,
+   "rule": "TooManyMethods",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has too many methods, consider refactoring it."
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+   "line": 166,
+   "rule": "CognitiveComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'handleNotReadable(HttpMessageNotReadableException, HandlerMethod)' has a cognitive complexity of 15, current threshold is 15"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java",
+   "line": 1,
+   "rule": "CouplingBetweenObjects",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A value of 28 may denote a high amount of coupling within the class (threshold: 20)"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java",
+   "line": 1,
+   "rule": "ExcessiveImports",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "A high number of imports can indicate a high degree of coupling within an object."
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java",
+   "line": 58,
+   "rule": "GodClass",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "Possible God Class (WMC=73, ATFD=27, TCC=18.333%)"
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java",
+   "line": 58,
+   "rule": "TooManyMethods",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "This class has too many methods, consider refactoring it."
+  },
+  {
+   "tool": "pmd",
+   "module": "wealth-management-service",
+   "file": "services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java",
+   "line": 99,
+   "rule": "CyclomaticComplexity",
+   "category": "Design",
+   "severity": "MEDIUM",
+   "message": "The method 'listSweeps(String, LocalDate, LocalDate)' has a cyclomatic complexity of 10."
+  },
+  {
+   "tool": "spotbugs",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/config/RequestSizeLimitConfig.java",
+   "line": 52,
+   "rule": "THROWS_METHOD_THROWS_RUNTIMEEXCEPTION",
+   "category": "BAD_PRACTICE",
+   "severity": "LOW",
+   "rank": 19,
+   "message": "Method intentionally throws RuntimeException."
+  },
+  {
+   "tool": "spotbugs",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/SmsService.java",
+   "line": 24,
+   "rule": "EI_EXPOSE_REP",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "com.alramz.service.SmsService$Outcome.result() may expose internal representation by returning SmsService$Outcome.result"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "alramz-notification-service",
+   "file": "services/alramz-notification-service/src/main/java/com/alramz/service/SmsService.java",
+   "line": 24,
+   "rule": "EI_EXPOSE_REP2",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "new com.alramz.service.SmsService$Outcome(SmsSendResult, boolean) may expose internal representation by storing an externally mutable object into SmsService$Outcome.result"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingOutcome.java",
+   "line": 12,
+   "rule": "EI_EXPOSE_REP",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "com.alramz.dfm.DfmOnboardingOutcome$Unavailable.cause() may expose internal representation by returning DfmOnboardingOutcome$Unavailable.cause"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "onboarding-service",
+   "file": "services/onboarding-service/src/main/java/com/alramz/dfm/DfmOnboardingOutcome.java",
+   "line": 12,
+   "rule": "EI_EXPOSE_REP2",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "new com.alramz.dfm.DfmOnboardingOutcome$Unavailable(DfmOnboardingOutcome$Reason, Throwable) may expose internal representation by storing an externally mutable object into DfmOnboardingOutcome$Unavailable.cause"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/controllers/ApplicationController.java",
+   "line": 27,
+   "rule": "THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION",
+   "category": "BAD_PRACTICE",
+   "severity": "LOW",
+   "rank": 19,
+   "message": "Method lists Exception in its throws clause, but it could be more specific."
+  },
+  {
+   "tool": "spotbugs",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceLegacyController.java",
+   "line": 129,
+   "rule": "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+   "category": "STYLE",
+   "severity": "MEDIUM",
+   "rank": 13,
+   "message": "Possible null pointer dereference in com.alramz.controllers.RiskComplianceLegacyController.toLegacy(CountryRating) due to return value of called method"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryClient.java",
+   "line": 89,
+   "rule": "THROWS_METHOD_THROWS_RUNTIMEEXCEPTION",
+   "category": "BAD_PRACTICE",
+   "severity": "LOW",
+   "rank": 19,
+   "message": "Method intentionally throws RuntimeException."
+  },
+  {
+   "tool": "spotbugs",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryResult.java",
+   "line": 26,
+   "rule": "EI_EXPOSE_REP",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "com.alramz.knowyourcountry.KnowYourCountryResult$Unavailable.cause() may expose internal representation by returning KnowYourCountryResult$Unavailable.cause"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "risk-management-service",
+   "file": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryResult.java",
+   "line": 26,
+   "rule": "EI_EXPOSE_REP2",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "new com.alramz.knowyourcountry.KnowYourCountryResult$Unavailable(Throwable) may expose internal representation by storing an externally mutable object into KnowYourCountryResult$Unavailable.cause"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "utility-service",
+   "file": "services/utility-service/src/main/java/com/alramz/finoux/FinouxData.java",
+   "line": 10,
+   "rule": "EI_EXPOSE_REP",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "com.alramz.finoux.FinouxData.table() may expose internal representation by returning FinouxData.table"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "utility-service",
+   "file": "services/utility-service/src/main/java/com/alramz/finoux/FinouxInsertPostDataRequest.java",
+   "line": 9,
+   "rule": "EI_EXPOSE_REP",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "com.alramz.finoux.FinouxInsertPostDataRequest.param() may expose internal representation by returning FinouxInsertPostDataRequest.param"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "utility-service",
+   "file": "services/utility-service/src/main/java/com/alramz/finoux/FinouxResult.java",
+   "line": 9,
+   "rule": "EI_EXPOSE_REP",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "com.alramz.finoux.FinouxResult$Posted.post() may expose internal representation by returning FinouxResult$Posted.post"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "utility-service",
+   "file": "services/utility-service/src/main/java/com/alramz/finoux/FinouxResult.java",
+   "line": 9,
+   "rule": "EI_EXPOSE_REP2",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "new com.alramz.finoux.FinouxResult$Posted(CommunityPost) may expose internal representation by storing an externally mutable object into FinouxResult$Posted.post"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "utility-service",
+   "file": "services/utility-service/src/main/java/com/alramz/finoux/FinouxResult.java",
+   "line": 21,
+   "rule": "EI_EXPOSE_REP",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "com.alramz.finoux.FinouxResult$Unavailable.cause() may expose internal representation by returning FinouxResult$Unavailable.cause"
+  },
+  {
+   "tool": "spotbugs",
+   "module": "utility-service",
+   "file": "services/utility-service/src/main/java/com/alramz/finoux/FinouxResult.java",
+   "line": 21,
+   "rule": "EI_EXPOSE_REP2",
+   "category": "MALICIOUS_CODE",
+   "severity": "MEDIUM",
+   "rank": 18,
+   "message": "new com.alramz.finoux.FinouxResult$Unavailable(Throwable) may expose internal representation by storing an externally mutable object into FinouxResult$Unavailable.cause"
+  }
+ ]
+}

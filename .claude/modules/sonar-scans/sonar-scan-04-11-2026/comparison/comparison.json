@@ -1,0 +1,505 @@
+{
+  "changed": [],
+  "counts": {
+    "after": 33,
+    "before": 38,
+    "changed": 0,
+    "fixed": 5,
+    "hotspots_after": 0,
+    "hotspots_before": 0,
+    "hotspots_to_review_after": 0,
+    "new": 0,
+    "pending": 33
+  },
+  "fixed": [
+    {
+      "file": "services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceLegacyController.java",
+      "impacts": "LOW",
+      "key": "AaGmZi9IybIuGKihOzIW",
+      "line": 42,
+      "message": "Refactor your code to get this URI from a customizable parameter.",
+      "rule": "java:S1075",
+      "severity": "MINOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/risk-management-service/src/main/java/com/alramz/controllers/RiskComplianceLegacyController.java",
+      "impacts": "LOW",
+      "key": "AaGmZi9IybIuGKihOzIX",
+      "line": 43,
+      "message": "Refactor your code to get this URI from a customizable parameter.",
+      "rule": "java:S1075",
+      "severity": "MINOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/risk-management-service/src/main/java/com/alramz/service/RiskComplianceService.java",
+      "impacts": "MEDIUM",
+      "key": "AaGmZi9NybIuGKihOzIY",
+      "line": 93,
+      "message": "Use the record pattern instead of this pattern match variable.",
+      "rule": "java:S6878",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/risk-management-service/src/main/java/com/alramz/service/RiskComplianceService.java",
+      "impacts": "MEDIUM",
+      "key": "AaGmZi9NybIuGKihOzIZ",
+      "line": 96,
+      "message": "Use the record pattern instead of this pattern match variable.",
+      "rule": "java:S6878",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/risk-management-service/src/test/java/com/alramz/knowyourcountry/KnowYourCountryClientTest.java",
+      "impacts": "MEDIUM",
+      "key": "AaGmZi8-ybIuGKihOzIT",
+      "line": 247,
+      "message": "Refactor the code of the lambda to have only one invocation possibly throwing a runtime exception.",
+      "rule": "java:S5778",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    }
+  ],
+  "gate": {
+    "after": "OK",
+    "before": "OK"
+  },
+  "measures": {
+    "alert_status": {
+      "after": "OK",
+      "before": "OK"
+    },
+    "blocker_violations": {
+      "after": "0",
+      "before": "0"
+    },
+    "bugs": {
+      "after": "0",
+      "before": "0"
+    },
+    "code_smells": {
+      "after": "33",
+      "before": "38"
+    },
+    "coverage": {
+      "after": "77.6",
+      "before": "77.6"
+    },
+    "critical_violations": {
+      "after": "0",
+      "before": "0"
+    },
+    "duplicated_lines_density": {
+      "after": "4.1",
+      "before": "4.1"
+    },
+    "info_violations": {
+      "after": "2",
+      "before": "2"
+    },
+    "line_coverage": {
+      "after": "77.4",
+      "before": "77.4"
+    },
+    "major_violations": {
+      "after": "26",
+      "before": "29"
+    },
+    "minor_violations": {
+      "after": "5",
+      "before": "7"
+    },
+    "ncloc": {
+      "after": "19127",
+      "before": "19126"
+    },
+    "new_violations": {
+      "after": null,
+      "before": null
+    },
+    "reliability_rating": {
+      "after": "1.0",
+      "before": "1.0"
+    },
+    "security_hotspots": {
+      "after": "0",
+      "before": "0"
+    },
+    "security_hotspots_reviewed": {
+      "after": "100.0",
+      "before": "100.0"
+    },
+    "security_rating": {
+      "after": "1.0",
+      "before": "1.0"
+    },
+    "security_review_rating": {
+      "after": "1.0",
+      "before": "1.0"
+    },
+    "software_quality_maintainability_issues": {
+      "after": "33",
+      "before": "38"
+    },
+    "software_quality_reliability_issues": {
+      "after": "0",
+      "before": "0"
+    },
+    "software_quality_security_issues": {
+      "after": "0",
+      "before": "0"
+    },
+    "sqale_index": {
+      "after": "420",
+      "before": "475"
+    },
+    "sqale_rating": {
+      "after": "1.0",
+      "before": "1.0"
+    },
+    "violations": {
+      "after": "33",
+      "before": "38"
+    },
+    "vulnerabilities": {
+      "after": "0",
+      "before": "0"
+    }
+  },
+  "new": [],
+  "pending": [
+    {
+      "file": "services/onboarding-service/src/test/java/com/alramz/config/ETradeTokenProviderTest.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyY4oF4k1D0H0huK",
+      "line": 45,
+      "message": "Remove this call to a deprecated method, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/service/impl/DuplicateCheckServiceImpl.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyVHoF4k1D0H0hpJ",
+      "line": 10,
+      "message": "Remove this unused method parameter \"value\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/WebClientConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyZSoF4k1D0H0hu7",
+      "line": 21,
+      "message": "Remove this call to a deprecated method, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/main/java/com/alramz/scheduler/model/ScheduleInfoBean.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyV6oF4k1D0H0hqH",
+      "line": 24,
+      "message": "Constructor has 9 parameters, which is greater than 7 authorized.",
+      "rule": "java:S107",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyWjoF4k1D0H0hrC",
+      "line": 49,
+      "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+      "rule": "java:S2139",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/WebClientConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyZSoF4k1D0H0hu6",
+      "line": 18,
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/client/AuditProbeClient.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyUgoF4k1D0H0hn9",
+      "line": 6,
+      "message": "Remove this unused method parameter \"endpoint\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/test/java/com/alramz/config/ETradeTokenProviderTest.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyY4oF4k1D0H0huL",
+      "line": 45,
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java",
+      "impacts": "LOW",
+      "key": "AaGmZi6rybIuGKihOzIP",
+      "line": 178,
+      "message": "Combine this catch with the one at line 175, which has the same body.",
+      "rule": "java:S2147",
+      "severity": "MINOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/ExternalVeriPhoneServiceConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyZToF4k1D0H0hu9",
+      "line": 43,
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/ExternalIbanServiceConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyZVoF4k1D0H0hu_",
+      "line": 43,
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyVCoF4k1D0H0ho-",
+      "line": 40,
+      "message": "Remove this unused method parameter \"clientSecret\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/service/impl/IBANValidationServiceImpl.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyVJoF4k1D0H0hpL",
+      "line": 10,
+      "message": "Remove this unused method parameter \"value\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/main/java/com/alramz/jwt/service/TokenProvider.java",
+      "impacts": "INFO",
+      "key": "AaGbpyWuoF4k1D0H0hrR",
+      "line": null,
+      "message": "Use the \"java.time\" API for date and time.",
+      "rule": "java:S2143",
+      "severity": "INFO",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java",
+      "impacts": "MEDIUM",
+      "key": "AaGmZi6rybIuGKihOzIR",
+      "line": 178,
+      "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+      "rule": "java:S2139",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/WebClientConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGmZi8gybIuGKihOzIS",
+      "line": 18,
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyVCoF4k1D0H0ho9",
+      "line": 36,
+      "message": "Remove these unused method parameters \"path\", \"method\", \"password\", \"body\", \"unused\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryClient.java",
+      "impacts": "LOW",
+      "key": "AaGmZi9EybIuGKihOzIV",
+      "line": 36,
+      "message": "Refactor your code to get this URI from a customizable parameter.",
+      "rule": "java:S1075",
+      "severity": "MINOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/ExternalETradeServiceConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyZXoF4k1D0H0hvA",
+      "line": 43,
+      "message": "Remove this call to a deprecated method, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyWjoF4k1D0H0hrD",
+      "line": 71,
+      "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+      "rule": "java:S2139",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/risk-management-service/src/main/java/com/alramz/knowyourcountry/KnowYourCountryClient.java",
+      "impacts": "LOW",
+      "key": "AaGmZi9EybIuGKihOzIU",
+      "line": 35,
+      "message": "Refactor your code to get this URI from a customizable parameter.",
+      "rule": "java:S1075",
+      "severity": "MINOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/ExternalVeriPhoneServiceConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyZToF4k1D0H0hu8",
+      "line": 43,
+      "message": "Remove this call to a deprecated method, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/logging/MethodExecutionLoggingAspectTest.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyUvoF4k1D0H0hol",
+      "line": 221,
+      "message": "Remove these unused method parameters \"arg1\", \"arg2\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/ExternalETradeServiceConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyZXoF4k1D0H0hvB",
+      "line": 43,
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/controllers/AuditProbeController.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyVLoF4k1D0H0hpM",
+      "line": 9,
+      "message": "Remove this unused method parameter \"body\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/main/java/com/alramz/utils/DataValidationUtil.java",
+      "impacts": "INFO",
+      "key": "AaGbpyW5oF4k1D0H0hra",
+      "line": null,
+      "message": "Use the \"java.time\" API for date and time.",
+      "rule": "java:S2143",
+      "severity": "INFO",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/reference-data-service/src/main/java/com/alramz/service/RedisCacheService.java",
+      "impacts": "MEDIUM",
+      "key": "AaGmZi6rybIuGKihOzIQ",
+      "line": 175,
+      "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+      "rule": "java:S2139",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/main/java/com/alramz/globalconfigurationsettings/repository/JdbcGlobalConfigurationSettingsRepository.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyWjoF4k1D0H0hrF",
+      "line": 121,
+      "message": "Either log this exception and handle it, or rethrow it with some contextual information.",
+      "rule": "java:S2139",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/config/ExternalIbanServiceConfig.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyZVoF4k1D0H0hu-",
+      "line": 43,
+      "message": "Remove this call to a deprecated method, it has been marked for removal.",
+      "rule": "java:S5738",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/service/impl/PhoneValidationServiceImpl.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyVIoF4k1D0H0hpK",
+      "line": 10,
+      "message": "Remove this unused method parameter \"value\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+      "impacts": "LOW",
+      "key": "AaGbpyZcoF4k1D0H0hvK",
+      "line": 27,
+      "message": "Refactor your code to get this URI from a customizable parameter.",
+      "rule": "java:S1075",
+      "severity": "MINOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/onboarding-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java",
+      "impacts": "LOW",
+      "key": "AaGbpyZcoF4k1D0H0hvL",
+      "line": 28,
+      "message": "Refactor your code to get this URI from a customizable parameter.",
+      "rule": "java:S1075",
+      "severity": "MINOR",
+      "type": "CODE_SMELL"
+    },
+    {
+      "file": "services/alramz-api-starter/src/test/java/com/alramz/audit/ApiAuditAspectTest.java",
+      "impacts": "MEDIUM",
+      "key": "AaGbpyVCoF4k1D0H0ho8",
+      "line": 32,
+      "message": "Remove this unused method parameter \"endpoint\".",
+      "rule": "java:S1172",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+[17:16:53] mvn clean verify -> /Users/gtalele/Desktop/workspace/alramz-mw-backend/.claude/modules/sonar-scans/sonar-scan-04-11-2026/before/build.log
+[17:20:17] sonar analysis -> /Users/gtalele/Desktop/workspace/alramz-mw-backend/.claude/modules/sonar-scans/sonar-scan-04-11-2026/before/scan.log
+[17:21:24] build exit=0 sonar exit=0; exported to /Users/gtalele/Desktop/workspace/alramz-mw-backend/.claude/modules/sonar-scans/sonar-scan-04-11-2026/before
+[17:21:24] Baseline: /Users/gtalele/Desktop/workspace/alramz-mw-backend/.claude/modules/sonar-scans/sonar-scan-04-11-2026/before/summary.md

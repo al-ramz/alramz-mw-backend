@@ -1,0 +1,33 @@
+severity	tool	rule	file:line	message
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:14	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:16	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:17	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:18	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:20	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:21	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:22	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:23	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:24	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:25	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:26	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:27	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:28	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:29	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:30	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:31	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:32	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:33	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:34	Line contains a tab character.
+MEDIUM	checkstyle	FileTabCharacter	com/alramz/RiskManagementServiceApplication.java:35	Line contains a tab character.
+MEDIUM	pmd	SignatureDeclareThrowsException	com/alramz/controllers/ApplicationController.java:25	A method/constructor should not explicitly throw java.lang.Exception
+MEDIUM	pmd	ShortMethodName	com/alramz/controllers/RiskComplianceController.java:38	Avoid using short method names
+MEDIUM	pmd	AvoidFieldNameMatchingMethodName	com/alramz/exception/ErrorCode.java:22	Field status has the same name as a method
+MEDIUM	pmd	AvoidFieldNameMatchingMethodName	com/alramz/exception/ErrorCode.java:23	Field message has the same name as a method
+MEDIUM	pmd	CyclomaticComplexity	com/alramz/knowyourcountry/KnowYourCountryClient.java:74	The method 'classify(RuntimeException)' has a cyclomatic complexity of 10.
+MEDIUM	pmd	AvoidFieldNameMatchingMethodName	com/alramz/knowyourcountry/RiskBand.java:11	Field rating has the same name as a method
+MEDIUM	pmd	AvoidFieldNameMatchingMethodName	com/alramz/knowyourcountry/RiskBand.java:12	Field code has the same name as a method
+LOW	spotbugs	THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION	com/alramz/controllers/ApplicationController.java:27	Method lists Exception in its throws clause, but it could be more specific.
+MEDIUM	spotbugs	NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE	com/alramz/controllers/RiskComplianceLegacyController.java:129	Possible null pointer dereference in com.alramz.controllers.RiskComplianceLegacyController.toLegacy(CountryRating) due to return value of called method
+LOW	spotbugs	THROWS_METHOD_THROWS_RUNTIMEEXCEPTION	com/alramz/knowyourcountry/KnowYourCountryClient.java:89	Method intentionally throws RuntimeException.
+MEDIUM	spotbugs	EI_EXPOSE_REP	com/alramz/knowyourcountry/KnowYourCountryResult.java:26	com.alramz.knowyourcountry.KnowYourCountryResult$Unavailable.cause() may expose internal representation by returning KnowYourCountryResult$Unavailable.cause
+MEDIUM	spotbugs	EI_EXPOSE_REP2	com/alramz/knowyourcountry/KnowYourCountryResult.java:26	new com.alramz.knowyourcountry.KnowYourCountryResult$Unavailable(Throwable) may expose internal representation by storing an externally mutable object into Know

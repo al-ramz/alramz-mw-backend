@@ -1,13 +1,37 @@
 package com.alramz;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.sql.DataSource;
 
 @SpringBootTest
 class __APP_CLASS__Tests {
 
+	@Autowired
+	private ApplicationContext context;
+
 	@Test
 	void contextLoads() {
+	}
+
+	/**
+	 * The starter's JPA repositories (e.g. UserRepository.save on POST /api/auth/register) resolve the bean
+	 * named "transactionManager"; the starter only defines "middlewareTransactionManager". Without
+	 * config/DatasourceConfiguration the context still loads and /api/auth/login still works, but the first
+	 * write fails at runtime with NoSuchBeanDefinitionException. DB-less services: delete this test.
+	 */
+	@Test
+	void middlewareIsWiredAsPrimaryDataSourceAndTransactionManager() {
+		assertThat(context.containsBean("transactionManager")).isTrue();
+		assertThat(context.getBean(PlatformTransactionManager.class))
+				.isSameAs(context.getBean("middlewareTransactionManager"));
+		assertThat(context.getBean(DataSource.class)).isSameAs(context.getBean("middlewareDataSource"));
 	}
 
 }

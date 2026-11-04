@@ -15,6 +15,19 @@
 #                           Non-dev profiles get the endpoints only from the TRACING_OTLP_ENDPOINT /
 #                           LOGS_OTLP_ENDPOINT env variables.
 #   __JWT_ACCESS_TOKEN_EXPIRATION_MS__  dev: 86400000 (24h)   preprod/prod: 900000 (15 min, starter default)
+#
+# Security-sensitive placeholders — dev keeps local defaults; preprod/prod MUST get the no-default form
+# (a missing secret fails startup instead of falling back to a value committed in git). Exact values are
+# in SKILL.md §2 ("Per-profile values"); don't improvise them.
+#   __ACTUATOR_EXPOSURE__          dev: "*"            preprod/prod: health,info,prometheus
+#   __CIPHER_PASSWORD__            dev: UseMostSecretKey   preprod/prod: ${CIPHER_MASTER_KEY}
+#   __JWT_SECRET__                 dev: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+#                                   preprod/prod: ${JWT_SECRET}
+#   __REGISTRATION_ENABLED__       dev: true           preprod/prod: false (self-registration trusts caller roles)
+#   __MIDDLEWARE_PASSWORD_LINE__   dev: plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD:alramz!321*}
+#                                   preprod/prod: password: ${COMPANY_DATASOURCE_MIDDLEWARE_PASSWORD}
+#   __MIDDLEWARE_VECTOR_LINE__     dev: # passwordVector: not used with plainPassword
+#                                   preprod/prod: passwordVector: ${COMPANY_DATASOURCE_MIDDLEWARE_PASSWORD_VECTOR}
 spring:
   liquibase:
     change-log: classpath:db/changelog/__PROFILE__/db.changelog-master.yaml
@@ -28,7 +41,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: __ACTUATOR_EXPOSURE__
   # Observability (tracing/logs/metrics) — present in EVERY profile; never in application.yml.
   # Local collector instead of the shared dev one: http://localhost:4318/v1/traces, http://localhost:3100/otlp/v1/logs
   tracing:
@@ -60,7 +73,7 @@ management:
         enabled: false   # Jaeger accepts traces only
 
 cipher:
-  password: UseMostSecretKey
+  password: __CIPHER_PASSWORD__
 
 company:
   scheduler:
@@ -102,9 +115,10 @@ company:
   jwt:
     enabled: true
     access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:__JWT_ACCESS_TOKEN_EXPIRATION_MS__}
-    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+    secret: __JWT_SECRET__
     login-url: /api/auth/login
     register-url: /api/auth/register
+    registration-enabled: __REGISTRATION_ENABLED__
     refresh-url: /api/auth/refresh
     logout-url: /api/auth/logout
     validate-url: /api/auth/validate
@@ -119,11 +133,10 @@ company:
       enabled: true
       url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://localhost:5432/__MIDDLEWARE_DB__}
       username: ${COMPANY_DATASOURCE_MIDDLEWARE_USERNAME:alramzmw}
-      # __PROFILE__ == dev: plainPassword is acceptable (dev-only, logs a warning).
-      # __PROFILE__ == preprod or prod: replace plainPassword with cipher-encrypted `password` +
-      # `passwordVector` (cipher.password above activates PWProtector) — never commit a plaintext
-      # password for a non-dev profile. See CLAUDE.md "Do Not Use / Anti-Patterns".
-      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD:alramz!321*}
+      # dev: plainPassword (dev-only, logs a warning). preprod/prod: cipher-encrypted `password` +
+      # `passwordVector` (cipher.password above activates PWProtector) — never a plaintext password.
+      __MIDDLEWARE_PASSWORD_LINE__
+      __MIDDLEWARE_VECTOR_LINE__
       driverClassName: ${COMPANY_DATASOURCE_MIDDLEWARE_DRIVERCLASSNAME:org.postgresql.Driver}
       startup-validation:
         enabled: ${COMPANY_DATASOURCE_MIDDLEWARE_STARTUP_VALIDATION_ENABLED:false}

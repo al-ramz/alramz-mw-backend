@@ -1,0 +1,58 @@
+[
+  {
+    "service": "alramz-notification-service",
+    "port": "18080",
+    "result": "STARTED_BUT_HEALTHCHECK_FAILED",
+    "health": "HTTP 403 ",
+    "seconds": 12,
+    "detail": "STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured)"
+  },
+  {
+    "service": "onboarding-service",
+    "port": "18080",
+    "result": "BLOCKED_BY_DEPENDENCY",
+    "health": "n/a",
+    "seconds": 22,
+    "detail": "STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=aHNsOqItSGWOMezD9Le9fQ==)"
+  },
+  {
+    "service": "reference-data-service",
+    "port": "18080",
+    "result": "BLOCKED_BY_DEPENDENCY",
+    "health": "n/a",
+    "seconds": 24,
+    "detail": "STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=5IkWghguRkKVv6hITjCzrQ==)"
+  },
+  {
+    "service": "reporting-management-service",
+    "port": "18080",
+    "result": "BLOCKED_BY_DEPENDENCY",
+    "health": "n/a",
+    "seconds": 23,
+    "detail": "STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=izUm833HSqi89vFa7N7z2w==)"
+  },
+  {
+    "service": "risk-management-service",
+    "port": "18080",
+    "result": "STARTED_BUT_HEALTHCHECK_FAILED",
+    "health": "HTTP 403 ",
+    "seconds": 12,
+    "detail": "STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured)"
+  },
+  {
+    "service": "utility-service",
+    "port": "18080",
+    "result": "STARTED_BUT_HEALTHCHECK_FAILED",
+    "health": "HTTP 403 ",
+    "seconds": 13,
+    "detail": "STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured)"
+  },
+  {
+    "service": "wealth-management-service",
+    "port": "18080",
+    "result": "BLOCKED_BY_DEPENDENCY",
+    "health": "n/a",
+    "seconds": 23,
+    "detail": "STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=QG5oBVMpRc6SltWfHHMd1Q==)"
+  }
+]

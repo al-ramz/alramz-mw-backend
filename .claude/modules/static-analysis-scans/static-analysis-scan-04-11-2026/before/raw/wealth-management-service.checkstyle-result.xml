@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.21.0">
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/WealthManagementServiceApplication.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/repository/MmfRepository.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/repository/MmfRepositoryImpl.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/config/MmfProperties.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/config/JacksonConfig.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/config/DatasourceConfiguration.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/config/MmfConfiguration.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/service/impl/MmfServiceImpl.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/service/MmfService.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/controllers/MmfController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/controllers/ApplicationController.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/exception/ErrorCode.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/exception/MmfNotFoundException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/exception/GlobalExceptionHandler.java">
+<error line="44" column="1" severity="warning" message="Class Fan-Out Complexity is 35 (max allowed is 30)." source="com.puppycrawl.tools.checkstyle.checks.metrics.ClassFanOutComplexityCheck"/>
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/exception/ApplicationException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/exception/MmfConflictException.java">
+</file>
+<file name="/private/tmp/claude-502/-Users-gtalele-Library-CloudStorage-OneDrive-AlRamz-Desktop-workspace-alramz-mw-backend/fa31e267-4f32-4ba2-b850-3d3590e5389e/scratchpad/snap-lint-before/services/wealth-management-service/src/main/java/com/alramz/exception/MmfBackendUnavailableException.java">
+</file>
+</checkstyle>

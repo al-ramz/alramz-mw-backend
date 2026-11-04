@@ -1,0 +1,27 @@
+[17:27:17] alramz-notification-service: java -jar alramz-notification-service-0.0.1-SNAPSHOT.jar on :18080 (dev)
+[17:27:41] alramz-notification-service: STARTED_BUT_HEALTHCHECK_FAILED (HTTP 403 ) 14s
+grep: services/document-management-service//pom.xml: No such file or directory
+[17:27:41] onboarding-service: java -jar onboarding-service-0.0.1-SNAPSHOT.jar on :18080 (dev)
+[17:28:04] onboarding-service: BLOCKED_BY_DEPENDENCY (n/a) 23s
+[17:28:04] reference-data-service: java -jar reference-data-service-0.0.1-SNAPSHOT.jar on :18080 (dev)
+[17:28:31] reference-data-service: BLOCKED_BY_DEPENDENCY (n/a) 27s
+[17:28:31] reporting-management-service: java -jar reporting-management-service-0.0.1-SNAPSHOT.jar on :18080 (dev)
+[17:28:54] reporting-management-service: BLOCKED_BY_DEPENDENCY (n/a) 23s
+[17:28:54] risk-management-service: java -jar risk-management-service-0.0.1-SNAPSHOT.jar on :18080 (dev)
+[17:29:17] risk-management-service: STARTED_BUT_HEALTHCHECK_FAILED (HTTP 403 ) 12s
+grep: services/untitled folder//pom.xml: No such file or directory
+[17:29:17] utility-service: java -jar utility-service-0.0.1-SNAPSHOT.jar on :18080 (dev)
+[17:29:40] utility-service: STARTED_BUT_HEALTHCHECK_FAILED (HTTP 403 ) 12s
+[17:29:40] wealth-management-service: java -jar wealth-management-service-0.0.1-SNAPSHOT.jar on :18080 (dev)
+[17:30:03] wealth-management-service: BLOCKED_BY_DEPENDENCY (n/a) 23s
+# Startup check (profile: dev)
+
+| Service | Port | Result | Health | Seconds | Detail |
+|---|---|---|---|---|---|
+| alramz-notification-service | 18080 | STARTED_BUT_HEALTHCHECK_FAILED | HTTP 403  | 14 | STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured) |
+| onboarding-service | 18080 | BLOCKED_BY_DEPENDENCY | n/a | 23 | STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=U08BBTgLRumVVyWyMHlFMA==) |
+| reference-data-service | 18080 | BLOCKED_BY_DEPENDENCY | n/a | 27 | STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=ic2zgcYATiKuhlyWa+30zQ==) |
+| reporting-management-service | 18080 | BLOCKED_BY_DEPENDENCY | n/a | 23 | STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=PY7xSP/ESPG4iC0c3PQ75g==) |
+| risk-management-service | 18080 | STARTED_BUT_HEALTHCHECK_FAILED | HTTP 403  | 12 | STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured) |
+| utility-service | 18080 | STARTED_BUT_HEALTHCHECK_FAILED | HTTP 403  | 12 | STARTUP_FREE_PORT: ran on 18080; context started; /actuator/health is not in the JWT permit-all list (secured) |
+| wealth-management-service | 18080 | BLOCKED_BY_DEPENDENCY | n/a | 23 | STARTUP_FREE_PORT: ran on 18080; Caused by: oracle.net.ns.NetException: ORA-12541: Cannot connect. No listener at host localhost port 1. (CONNECTION_ID=7H3kIHv1TQiys0WcCHiqCw==) |

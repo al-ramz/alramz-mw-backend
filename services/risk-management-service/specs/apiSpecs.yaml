@@ -1,0 +1,524 @@
+openapi: 3.0.3
+
+info:
+  title: Risk Management API
+  version: 1.0.0
+  description: API for risk management.
+
+servers:
+  - url: http://localhost:8086
+    description: Local Development
+  - url: https://api-dev.alramz.com/risk-management
+    description: Development Environment
+  - url: https://api-test.alramz.com/risk-management
+    description: Test Environment
+  - url: https://api-preprod.alramz.com/risk-management
+    description: Pre-Production Environment
+  - url: https://api.alramz.com/risk-management
+    description: Production Environment
+
+security:
+  - BearerAuth: []
+
+paths:
+  /api/v1/info:
+    get:
+      tags:
+        - Info
+      summary: Service info
+      description: Returns basic service information.
+      operationId: getInfo
+      responses:
+        '200':
+          description: Info retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "200"
+                responseMessage: "OK"
+                response:
+                  service: risk-management-service
+                  version: 1.0.0
+
+  /countries:
+    get:
+      tags:
+        - RiskCompliance
+      summary: List countries
+      description: >-
+        Returns every country from the KnowYourCountry vendor as name / ISO alpha-2 / ISO alpha-3,
+        in vendor order. An empty vendor list returns an empty countryList array.
+      operationId: getCountries
+      responses:
+        '200':
+          description: Countries retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                success:
+                  summary: Countries returned
+                  value:
+                    responseCode: "200"
+                    responseMessage: "OK"
+                    errorCode: null
+                    errorMsg: null
+                    correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    response:
+                      countryList:
+                        - name: Afghanistan
+                          iso2: AF
+                          iso3: AFG
+                        - name: Åland Islands
+                          iso2: AX
+                          iso3: ALA
+                empty:
+                  summary: Vendor returned no countries
+                  value:
+                    responseCode: "200"
+                    responseMessage: "OK"
+                    errorCode: null
+                    errorMsg: null
+                    correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    response:
+                      countryList: []
+        '401':
+          description: Missing or invalid JWT (rejected by the starter security filter before the controller).
+        '403':
+          description: The JWT does not carry role APP_RISK_MANAGEMENT.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "403"
+                responseMessage: "Forbidden"
+                errorCode: null
+                errorMsg: "Access denied"
+                correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                response: null
+        '500':
+          description: Unexpected failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: CLS004
+                errorMsg: "Internal Server Error"
+                correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                response: null
+        '502':
+          description: The vendor returned a non-2xx status (CLS001) or an invalid body (CLS002).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                vendorError:
+                  summary: Vendor non-2xx
+                  value:
+                    responseCode: "502"
+                    responseMessage: "Bad Gateway"
+                    errorCode: CLS001
+                    errorMsg: "Country data provider returned an error"
+                    correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    response: null
+                invalidResponse:
+                  summary: Vendor body empty, unparsable or not an array
+                  value:
+                    responseCode: "502"
+                    responseMessage: "Bad Gateway"
+                    errorCode: CLS002
+                    errorMsg: "Country data provider returned an invalid response"
+                    correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    response: null
+        '503':
+          description: Vendor timeout, connection failure or circuit breaker open.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "503"
+                responseMessage: "Service Unavailable"
+                errorCode: CLS003
+                errorMsg: "Country data provider unavailable"
+                correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                response: null
+    post:
+      tags:
+        - RiskComplianceLegacy
+      summary: List countries (legacy webMethods-compatible shape)
+      description: >-
+        Legacy RiskCompliance countriesList contract. Always answers HTTP 200; the outcome is in the
+        inner responseCode (200 success, 1018 vendor error, 500 anything else). The response property
+        is omitted when there is no data or on failure.
+      operationId: getCountriesLegacy
+      deprecated: true
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LegacyRiskComplianceRequest'
+      responses:
+        '200':
+          description: Legacy envelope (inspect responseCode for the outcome)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyCountryListEnvelope'
+              examples:
+                success:
+                  summary: Countries returned
+                  value:
+                    correlationID: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    responseCode: "200"
+                    responseMessage: "success"
+                    response:
+                      countryList:
+                        - name: Afghanistan
+                          iso2: AF
+                          iso3: AFG
+                empty:
+                  summary: Vendor returned no countries (response omitted)
+                  value:
+                    correlationID: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    responseCode: "200"
+                    responseMessage: "success"
+                vendorError:
+                  summary: Vendor non-2xx
+                  value:
+                    correlationID: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    responseCode: "1018"
+                    responseMessage: "Failed to get countrylist"
+                internalError:
+                  summary: Any other failure
+                  value:
+                    correlationID: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    responseCode: "500"
+                    responseMessage: "Internal Server Error"
+        '401':
+          description: >-
+            Missing or invalid JWT. Produced by the starter security filter, so it is NOT in the legacy
+            shape.
+        '403':
+          description: >-
+            The JWT does not carry role APP_RISK_MANAGEMENT. Uses the GenericResponse shape, NOT the
+            legacy shape.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+  /country-ratings:
+    get:
+      tags:
+        - RiskCompliance
+      summary: List country risk ratings
+      description: >-
+        Returns every country with a mapped risk band (rating 20/H, 9/M, 1/L), in vendor order.
+        Countries whose vendor risk_level is unknown are omitted (logged and counted).
+      operationId: getCountryRatings
+      responses:
+        '200':
+          description: Country ratings retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                success:
+                  summary: Ratings returned
+                  value:
+                    responseCode: "200"
+                    responseMessage: "OK"
+                    errorCode: null
+                    errorMsg: null
+                    correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    response:
+                      countryRating:
+                        - name: Afghanistan
+                          iso2: AF
+                          iso3: AFG
+                          rating: 20
+                          riskLevel: H
+                        - name: Åland Islands
+                          iso2: AX
+                          iso3: ALA
+                          rating: 1
+                          riskLevel: L
+                empty:
+                  summary: No ratings
+                  value:
+                    responseCode: "200"
+                    responseMessage: "OK"
+                    errorCode: null
+                    errorMsg: null
+                    correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    response:
+                      countryRating: []
+        '401':
+          description: Missing or invalid JWT (rejected by the starter security filter before the controller).
+        '403':
+          description: The JWT does not carry role APP_RISK_MANAGEMENT.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "403"
+                responseMessage: "Forbidden"
+                errorCode: null
+                errorMsg: "Access denied"
+                correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                response: null
+        '500':
+          description: Unexpected failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "500"
+                responseMessage: "Internal Server Error"
+                errorCode: CRT004
+                errorMsg: "Internal Server Error"
+                correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                response: null
+        '502':
+          description: The vendor returned a non-2xx status (CRT001) or an invalid body (CRT002).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                vendorError:
+                  summary: Vendor non-2xx
+                  value:
+                    responseCode: "502"
+                    responseMessage: "Bad Gateway"
+                    errorCode: CRT001
+                    errorMsg: "Country data provider returned an error"
+                    correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    response: null
+                invalidResponse:
+                  summary: Vendor body empty, unparsable or not an array
+                  value:
+                    responseCode: "502"
+                    responseMessage: "Bad Gateway"
+                    errorCode: CRT002
+                    errorMsg: "Country data provider returned an invalid response"
+                    correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    response: null
+        '503':
+          description: Vendor timeout, connection failure or circuit breaker open.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                responseCode: "503"
+                responseMessage: "Service Unavailable"
+                errorCode: CRT003
+                errorMsg: "Country data provider unavailable"
+                correlationId: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                response: null
+  /countryRatings:
+    post:
+      tags:
+        - RiskComplianceLegacy
+      summary: List country risk ratings (legacy webMethods-compatible shape)
+      description: >-
+        Legacy RiskCompliance countriesRatings contract. Always answers HTTP 200; the outcome is in the
+        inner responseCode (200 success, 1018 vendor error, 500 anything else). rating is a string.
+        The response property is omitted when there is no data or on failure.
+      operationId: getCountryRatingsLegacy
+      deprecated: true
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LegacyRiskComplianceRequest'
+      responses:
+        '200':
+          description: Legacy envelope (inspect responseCode for the outcome)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyCountryRatingEnvelope'
+              examples:
+                success:
+                  summary: Ratings returned
+                  value:
+                    correlationID: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    responseCode: "200"
+                    responseMessage: "success"
+                    response:
+                      countryRating:
+                        - name: Afghanistan
+                          iso2: AF
+                          iso3: AFG
+                          rating: "20"
+                          riskLevel: H
+                empty:
+                  summary: No ratings (response omitted)
+                  value:
+                    correlationID: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    responseCode: "200"
+                    responseMessage: "success"
+                vendorError:
+                  summary: Vendor non-2xx
+                  value:
+                    correlationID: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    responseCode: "1018"
+                    responseMessage: "Failed to get countryRating"
+                internalError:
+                  summary: Any other failure
+                  value:
+                    correlationID: "a3eac7fd-8693-468a-b194-48a90ce9a3b7"
+                    responseCode: "500"
+                    responseMessage: "Internal Server Error"
+        '401':
+          description: >-
+            Missing or invalid JWT. Produced by the starter security filter, so it is NOT in the legacy
+            shape.
+        '403':
+          description: >-
+            The JWT does not carry role APP_RISK_MANAGEMENT. Uses the GenericResponse shape, NOT the
+            legacy shape.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  # Add every new endpoint's contract here BEFORE writing the controller — the
+  # openapi-generator-maven-plugin (bound to `generate`, see pom.xml) produces interface-only
+  # Spring MVC stubs (com.alramz.api) and DTOs (com.alramz.model) from this file on every build.
+  # A hand-written @RestController implements the generated interface; it is not written from
+  # scratch against this YAML by hand.
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    GenericResponse:
+      type: object
+      properties:
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        response:
+          type: object
+        correlationId:
+          type: string
+          format: uuid
+        errorCode:
+          type: string
+          nullable: true
+        errorMsg:
+          type: string
+          nullable: true
+    Country:
+      type: object
+      properties:
+        name:
+          type: string
+        iso2:
+          type: string
+          description: ISO 3166-1 alpha-2 code as supplied by the vendor (not validated).
+        iso3:
+          type: string
+          description: ISO 3166-1 alpha-3 code as supplied by the vendor (not validated).
+    CountryListResponse:
+      type: object
+      properties:
+        countryList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Country'
+    CountryRating:
+      type: object
+      properties:
+        name:
+          type: string
+        iso2:
+          type: string
+        iso3:
+          type: string
+        rating:
+          type: integer
+          format: int32
+          description: "Risk score: 20 (H), 9 (M) or 1 (L)."
+        riskLevel:
+          type: string
+          enum: [H, M, L]
+    CountryRatingResponse:
+      type: object
+      properties:
+        countryRating:
+          type: array
+          items:
+            $ref: '#/components/schemas/CountryRating'
+    LegacyRiskComplianceRequest:
+      type: object
+      properties:
+        correlationID:
+          type: string
+          description: Optional caller correlation ID; echoed back when it contains a non-space character.
+    LegacyCountryRating:
+      type: object
+      properties:
+        name:
+          type: string
+        iso2:
+          type: string
+        iso3:
+          type: string
+        rating:
+          type: string
+          description: "Risk score as a string: \"20\" (H), \"9\" (M) or \"1\" (L)."
+        riskLevel:
+          type: string
+          enum: [H, M, L]
+    LegacyCountryRatingData:
+      type: object
+      properties:
+        countryRating:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegacyCountryRating'
+    LegacyCountryListEnvelope:
+      type: object
+      x-class-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
+      properties:
+        correlationID:
+          type: string
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        response:
+          $ref: '#/components/schemas/CountryListResponse'
+    LegacyCountryRatingEnvelope:
+      type: object
+      x-class-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
+      properties:
+        correlationID:
+          type: string
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        response:
+          $ref: '#/components/schemas/LegacyCountryRatingData'

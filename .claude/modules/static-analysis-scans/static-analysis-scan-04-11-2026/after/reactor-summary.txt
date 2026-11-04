@@ -1,0 +1,11 @@
+alramz-common-bom 1.0-SNAPSHOT ..................... SUCCESS [  0.957 s]
+alramz-api-starter 1.0-SNAPSHOT .................... SUCCESS [  3.879 s]
+onboarding-service 0.0.1-SNAPSHOT .................. SUCCESS [  8.842 s]
+alramz-notification-service 0.0.1-SNAPSHOT ......... SUCCESS [  6.233 s]
+reference-data-service 0.0.1-SNAPSHOT .............. SUCCESS [  3.712 s]
+utility-service 0.0.1-SNAPSHOT ..................... SUCCESS [  3.638 s]
+reporting-management-service 0.0.1-SNAPSHOT ........ SUCCESS [  3.209 s]
+wealth-management-service 0.0.1-SNAPSHOT ........... SUCCESS [  3.937 s]
+risk-management-service 0.0.1-SNAPSHOT ............. SUCCESS [  3.592 s]
+alramz-mw-oss 1.0-SNAPSHOT ......................... SUCCESS [  0.016 s]
+BUILD SUCCESS
