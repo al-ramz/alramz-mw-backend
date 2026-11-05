@@ -27,7 +27,7 @@ app:
 
 # The starter's middleware datasource requires a PWProtector bean even with plainPassword (which bypasses it).
 cipher:
-  password: ${CIPHER_MASTER_KEY:UseMostSecretKey}
+  password: ${CIPHER_MASTER_KEY}
 
 company:
   # Postgres: email_configurations / email_log (Liquibase) and the starter scheduler's schedule_job.

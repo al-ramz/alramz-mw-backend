@@ -79,7 +79,7 @@ company:
       enabled: true
       url: ${COMPANY_DATASOURCE_MIDDLEWARE_URL:jdbc:postgresql://postgres:5432/alramzmwdb?sslmode=disable}
       username: ${COMPANY_DATASOURCE_MIDDLEWARE_USERNAME:alramzmw}
-      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD:alramz!321*}
+      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD}
       driverClassName: ${COMPANY_DATASOURCE_MIDDLEWARE_DRIVERCLASSNAME:org.postgresql.Driver}
       startup-validation:
         enabled: ${COMPANY_DATASOURCE_MIDDLEWARE_STARTUP_VALIDATION_ENABLED:false}
@@ -96,7 +96,7 @@ company:
 
   jwt:
     enabled: true
-    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+    secret: ${JWT_SECRET}
     login-url: /api/auth/login
     register-url: /api/auth/register
     refresh-url: /api/auth/refresh
@@ -107,4 +107,4 @@ company:
       - /actuator/prometheus   # scraped by Prometheus
 
 cipher:
-  password: ${CIPHER_PASSWORD:UseMostSecretKey}
+  password: ${CIPHER_PASSWORD}

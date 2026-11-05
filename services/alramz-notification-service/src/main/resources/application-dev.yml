@@ -60,7 +60,7 @@ app:
 
 # The starter's middleware datasource requires a PWProtector bean even with plainPassword (which bypasses it).
 cipher:
-  password: ${CIPHER_MASTER_KEY:UseMostSecretKey}
+  password: ${CIPHER_MASTER_KEY}
 
 company:
   # Postgres: email_configurations / email_log (Liquibase) and the starter scheduler's schedule_job.
@@ -97,7 +97,7 @@ company:
         readTimeout: ${COMPANY_DATASOURCE_BROK_ORACLE_READ_TIMEOUT:60000}
         defaultRowPrefetch: ${COMPANY_DATASOURCE_BROK_ORACLE_DEFAULT_ROW_PREFETCH:100}
   jwt:
-    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890} # no default: an unset secret must fail startup, not fall back to the starter's public default key
+    secret: ${JWT_SECRET} # no default: an unset secret must fail startup, not fall back to the starter's public default key
     enabled: true
     registration-enabled: true   # dev only: self-registration trusts caller-supplied roles; keep off (default) elsewhere
     access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:86400000}   # 24h (dev only)

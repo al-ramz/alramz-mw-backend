@@ -60,7 +60,7 @@ management:
         enabled: false   # Jaeger accepts traces only
 
 cipher:
-  password: UseMostSecretKey
+  password: ${CIPHER_PASSWORD}
 
 company:
   scheduler:
@@ -102,7 +102,7 @@ company:
   jwt:
     enabled: true
     access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:86400000}
-    secret: ${JWT_SECRET:defaultSecretKeyChangeMeInProduction1234567890}
+    secret: ${JWT_SECRET}
     login-url: /api/auth/login
     register-url: /api/auth/register
     registration-enabled: true   # dev only: self-registration trusts caller-supplied roles; keep off (default) elsewhere
@@ -124,7 +124,7 @@ company:
       # dev == preprod or prod: replace plainPassword with cipher-encrypted `password` +
       # `passwordVector` (cipher.password above activates PWProtector) — never commit a plaintext
       # password for a non-dev profile. See CLAUDE.md "Do Not Use / Anti-Patterns".
-      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD:alramz!321*}
+      plainPassword: ${COMPANY_DATASOURCE_MIDDLEWARE_PLAINPASSWORD}
       driverClassName: ${COMPANY_DATASOURCE_MIDDLEWARE_DRIVERCLASSNAME:org.postgresql.Driver}
       startup-validation:
         enabled: ${COMPANY_DATASOURCE_MIDDLEWARE_STARTUP_VALIDATION_ENABLED:false}
